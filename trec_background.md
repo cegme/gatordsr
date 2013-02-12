@@ -1,9 +1,14 @@
-# This page contains links that are helpful for understanding the trec kba tasks.
+# Treck KBA Background
 
+This page contains links that are helpful for understanding the trec kba tasks.
+
+
+## Notebook 2012
 
 Here is a link to the trec kba 2012 notebook [trecnotebook2012].
 
-Example final reports: 
+
+## Final Reports
 
 + UMass by Jeffrey Dalton and Laura Deitz [umass2012].
 
