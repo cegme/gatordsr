@@ -1,5 +1,4 @@
 
-
 ## [Natural Language Processing](http://en.wikipedia.org/wiki/Outline_of_natural_language_processing)
 
 + [Stanford NLP](http://www-nlp.stanford.edu/links/statnlp.html)
@@ -20,7 +19,7 @@
 
 ## [Learning to Rank](http://en.wikipedia.org/wiki/Learning_to_rank)
 
-+ [C++ learning to rank library] http://yaschool.github.com/ltr/
++ [C++ learning to rank library] (http://yaschool.github.com/ltr/)
 + [Ivory](http://lintool.github.com/Ivory/)
 + [Mallet](http://mallet.cs.umass.edu/)
 
