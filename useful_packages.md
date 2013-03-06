@@ -1,4 +1,3 @@
-
 ## [Natural Language Processing](http://en.wikipedia.org/wiki/Outline_of_natural_language_processing)
 
 + [Stanford NLP](http://www-nlp.stanford.edu/links/statnlp.html)
@@ -22,4 +21,15 @@
 + [C++ learning to rank library] (http://yaschool.github.com/ltr/)
 + [Ivory](http://lintool.github.com/Ivory/)
 + [Mallet](http://mallet.cs.umass.edu/)
+ 
+## [Knowledge Bases](http://en.wikipedia.org/wiki/Knowledge_base)
 
++ [Alchemy](http://alchemy.cs.washington.edu/)
++ [Felix](http://hazy.cs.wisc.edu/hazy/felix/)
+
+## Data Processing
+
++ Datapath
++ Spark & Shark & Spark Streaming
++ Hadoop
+ 
