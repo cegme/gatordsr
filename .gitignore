@@ -15,3 +15,7 @@
 # Extra Folders
 target/
 trec-kba-rsa.secret-key
+.classpath/
+.project/
+.classpath
+.project

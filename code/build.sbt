@@ -6,6 +6,8 @@ scalaVersion := "2.9.2"
 
 resolvers += "spray repo" at "http://repo.spray.io"
 
+resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases"
+
 libraryDependencies += "org.apache.thrift" % "libthrift" % "0.9.0"
 
 libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "1.3.4"
@@ -17,4 +19,3 @@ libraryDependencies += "com.typesafe.akka" % "akka-camel_2.10.0-M7" % "2.1-M2"
 libraryDependencies += "com.typesafe.akka" % "akka-actor_2.10" % "2.2-M1"
 
 libraryDependencies += "com.typesafe.akka" % "akka-remote_2.10" % "2.2-M1"
-
