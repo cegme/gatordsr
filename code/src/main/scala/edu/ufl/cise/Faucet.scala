@@ -8,7 +8,7 @@ import org.apache.thrift.transport.TMemoryInputTransport
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TTransportException
 
-object Faucet {
+object Faucet extends Logging{
 
   /**
    * Loads the secrekey for decryprion.
@@ -16,6 +16,7 @@ object Faucet {
    * gatordsr/code directory.
    */
   def loadKey: Unit = {
+    logInfo("loadKey")
     "gpg --no-permission-warning --import trec-kba-rsa.secret-key".! 
   }
 
@@ -31,6 +32,8 @@ object Faucet {
    * Gets, dencrypts and uncompresses the requested file and returns an ByteStream.
    */
   def GrabGPG(date:String, fileName:String):java.io.ByteArrayOutputStream = {
+    logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
+
     val baos = new java.io.ByteArrayOutputStream
     (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/"+
       "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| 
@@ -49,6 +52,8 @@ object Faucet {
    *   GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
   def GetStreams(date:String, fileName:String):Stream[Option[StreamItem]] = {
+    logInfo("Running GetStreams(%s,%s) ".format(date,fileName))
+
     val data = GrabGPG(date, fileName) 
     val transport = new TMemoryInputTransport(data.toByteArray)
     val protocol = new TBinaryProtocol(transport)
@@ -63,7 +68,7 @@ object Faucet {
         s.read(protocol)
         successful = true
       } catch {
-        case e:TTransportException => None 
+        case e:TTransportException => logDebug("Error in mkStreamItem"); None 
       }
       if (successful) Some(s) else None
     }
@@ -82,7 +87,7 @@ object Faucet {
         }
       }
       catch {
-        case e:TTransportException => Stream.empty
+        case e:TTransportException => logDebug("Error in getItem"); Stream.empty
       }
     }
     // Stop streaming after the first None
@@ -94,9 +99,10 @@ object Faucet {
 
   def main(args:Array[String]) = {
     
+    logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
     val z = GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
-    println(z.take(2)) 
-    println(z.length) 
+    logInfo("The first StreamItem: %s ".format(z.head.toString)) 
+    logInfo("Length of stream is %d".format(z.length))
   }
 
 }
