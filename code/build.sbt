@@ -19,3 +19,5 @@ libraryDependencies += "com.typesafe.akka" % "akka-camel_2.10.0-M7" % "2.1-M2"
 libraryDependencies += "com.typesafe.akka" % "akka-actor_2.10" % "2.2-M1"
 
 libraryDependencies += "com.typesafe.akka" % "akka-remote_2.10" % "2.2-M1"
+
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.3"
