@@ -8,6 +8,20 @@ import org.apache.thrift.transport.TMemoryInputTransport
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TTransportException
 
+/**
+ * we need to read a whole directory and append the StreamItems. later on receive filtering 
+ * options and e.g. only filter some dates or hours. later on put delays on the thread based 
+ * on real delays.
+ * 
+ * Scala ProcessBuilder runs shell commands as pipelines 
+ * 
+ * To run:
+ * ~/gatordsr/code $ sbt
+ * ~/gatordsr/code $ run Faucet
+ * [1]
+ * 
+ */
+
 object Faucet extends Logging{
 
   /**
@@ -95,6 +109,14 @@ object Faucet extends Logging{
       .takeWhile(_ match { case None => false; case _ => true})
       .toIterator
     getItem(streamiter)
+  }
+  
+  def getStreamsToString(si : Stream[Option[StreamItem]]) : String  = {
+    val s = ""
+      for ( i <- 0 until si.size){
+    //    s = s + si[i].toString
+      }
+    return ""
   }
 
   def main(args:Array[String]) = {
