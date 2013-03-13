@@ -21,3 +21,5 @@ libraryDependencies += "com.typesafe.akka" % "akka-actor_2.10" % "2.2-M1"
 libraryDependencies += "com.typesafe.akka" % "akka-remote_2.10" % "2.2-M1"
 
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.3"
+
+libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp-models" % "2012-11-09" from "http://nlp.stanford.edu/software/stanford-corenlp-caseless-2012-11-09-models.jar"
