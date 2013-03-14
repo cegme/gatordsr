@@ -125,6 +125,9 @@ object Faucet extends Logging{
     val z = GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
     logInfo("The first StreamItem: %s ".format(z.head.toString)) 
     logInfo("Length of stream is %d".format(z.length))
+    
+    logInfo("\n")
+    logInfo(getStreamsToString(z))
   }
 
 }
