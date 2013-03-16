@@ -1,24 +1,33 @@
 package edu.ufl.cise.util
 
-import java.io.{BufferedReader,FileInputStream,InputStreamReader}
+import java.io.{BufferedReader,FileInputStream,InputStreamReader,StringReader}
 import java.util.zip.GZIPInputStream
+
+import scala.io.Source
+import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import com.google.common.hash.BloomFilter
 import com.google.common.hash.Funnels
 
-import scala.io.Source
+import edu.stanford.nlp.ling.Word
+import edu.stanford.nlp.process.PTBTokenizer
+import edu.stanford.nlp.process.WordTokenFactory
+
 
 import edu.ufl.cise.Logging
 
 
 object RelationChecker extends Logging {
 
+  val MAXRELATIONLENGTH = 5
+
   private val wikiFileName = "reverb_clueweb_relations-1.1.txt.gz"
   private val WIKIRELATIONS = 2*1220394
   private val wikiRelationBF = BloomFilter.create(Funnels.stringFunnel, WIKIRELATIONS, .0001)
 
   private lazy val isFilterLoaded:Boolean = {
-    //val fileStream = new FileInputStream(wikiFileName)
+    logInfo("Retrieving the relation file %s ...".format(wikiFileName))
     val fileStream = this.getClass.getClassLoader.getResourceAsStream(wikiFileName)
     val gzipStream = new GZIPInputStream(fileStream)
     val decoder = new InputStreamReader(gzipStream, "UTF-8")
@@ -37,6 +46,7 @@ object RelationChecker extends Logging {
         case x => logError("Bad line from %s: %s".format(wikiFileName,x))
       }
     }
+    logInfo("Finished building the wikirelation bloom filter.")
     true
   }
 
@@ -64,6 +74,20 @@ object RelationChecker extends Logging {
       (key:String) => false
   }
 
+  def WikiRelations(text:String):Iterator[String] = {
+    val tokenizer = new PTBTokenizer(new StringReader(text), new WordTokenFactory, "")
+    val sentence = tokenizer.tokenize
+    logInfo("Extracting relation from the sentence %s".format(sentence))
+    val bf = createWikiBloomChecker
+
+    (1 until MAXRELATIONLENGTH).view.map{ relLength =>
+      sentence.sliding(relLength).map{_.mkString(" ")}
+    }
+      .flatMap(x => x)
+      .filter{bf(_)}
+      .toIterator
+  }
+
 
   def main(args: Array[String]) {
 
@@ -71,6 +95,10 @@ object RelationChecker extends Logging {
     logInfo("was born in => " + bf("was born in").toString)
     logInfo("is paid to => " + bf("was born in").toString)
     logInfo("hello => " + bf("was born in").toString)
+
+    val testSentence = "Did you know that Bejing is the capital of China?"
+    val rels = WikiRelations(testSentence)
+    rels.foreach{ r => logInfo("Relation: %s".format(r))}
   }
       
 
