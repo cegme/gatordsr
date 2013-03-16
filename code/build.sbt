@@ -8,6 +8,8 @@ resolvers += "spray repo" at "http://repo.spray.io"
 
 resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases"
 
+resolvers += "opennlp sourceforge repo" at "http://opennlp.sourceforge.net/maven2"
+
 libraryDependencies += "org.apache.thrift" % "libthrift" % "0.9.0"
 
 libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "1.3.4"
@@ -26,3 +28,6 @@ libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp-models" % "1.3.4" 
 
 libraryDependencies += "com.google.guava" % "guava" % "14.0"
 
+libraryDependencies += "edu.washington.cs.knowitall" % "reverb-core" % "1.4.1"
+
+libraryDependencies += "edu.washington.cs.knowitall" % "reverb-models" % "1.4.0"
