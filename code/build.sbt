@@ -24,7 +24,7 @@ libraryDependencies += "com.typesafe.akka" % "akka-remote_2.10" % "2.2-M1"
 
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.3"
 
-libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp-models" % "1.3.4" from "http://scalasbt.artifactoryonline.com/scalasbt/repo/edu/stanford/nlp/stanford-corenlp/1.3.4/"
+libraryDependencies += "edu.stanford.nlp.models" % "stanford-corenlp-models" % "1.3.4" from "http://scalasbt.artifactoryonline.com/scalasbt/repo/edu/stanford/nlp/stanford-corenlp/1.3.4/"
 
 libraryDependencies += "com.google.guava" % "guava" % "14.0"
 
