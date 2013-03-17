@@ -26,7 +26,7 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.3"
 
 libraryDependencies += "edu.stanford.nlp.models" % "stanford-corenlp-models" % "1.3.4" from "http://scalasbt.artifactoryonline.com/scalasbt/repo/edu/stanford/nlp/stanford-corenlp/1.3.4/stanford-corenlp-1.3.4-models.jar"
 
-libraryDependencies += "com.google.guava" % "guava" % "14.0"
+libraryDependencies += "com.google.guava" % "guava" % "14.0.1"
 
 libraryDependencies += "edu.washington.cs.knowitall" % "reverb-core" % "1.4.1"
 
