@@ -8,20 +8,7 @@ import org.apache.thrift.transport.TMemoryInputTransport
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TTransportException
 
-/**
- * This class reads a URL line by line
- */
-class URLLineReader(url: String) extends Iterator[String] {
-  val reader = new java.io.BufferedReader(new java.io.InputStreamReader(new java.net.URL(url).openStream()))
-  var line: String = null;
-
-  def hasNext = {
-    line = reader.readLine()
-    line != null
-  }
-
-  def next = line
-}
+import edu.ufl.cise.util.URLLineReader
 
 /**
  * we need to read a whole directory and append the StreamItems. later on receive filtering
@@ -60,7 +47,7 @@ object Faucet extends Logging {
   /**
    * Gets, dencrypts and uncompresses the requested file and returns an ByteStream.
    */
-  def GrabGPG(date: String, fileName: String): java.io.ByteArrayOutputStream = {
+  def grabGPG(date: String, fileName: String): java.io.ByteArrayOutputStream = {
     logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
 
     val baos = new java.io.ByteArrayOutputStream
@@ -109,10 +96,10 @@ object Faucet extends Logging {
    * Example usage:
    *   GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
-  def GetStreams(date: String, fileName: String): Stream[Option[StreamItem]] = {
+  def getStreams(date: String, fileName: String): Stream[Option[StreamItem]] = {
     logInfo("Running GetStreams(%s,%s) ".format(date, fileName))
 
-    val data = GrabGPG(date, fileName)
+    val data = grabGPG(date, fileName)
     val transport = new TMemoryInputTransport(data.toByteArray)
     val protocol = new TBinaryProtocol(transport)
 
@@ -124,27 +111,54 @@ object Faucet extends Logging {
   }
 
   /**
-   * return the files pertaining to specific date.
+   * Returns all the streams for all the hours of a day
    */
   def getStreams(date: String): Stream[Option[StreamItem]] = {
-    val reader = new URLLineReader("http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/" + date)
-    val html = (for (line <- reader) yield line).mkString("")
-    val string = html
-    val pattern = """a href="(news[^"]+)"""".r
-
     var stream = Stream[Option[StreamItem]]()
-    pattern.findAllIn(string).matchData foreach {
-      m => println(m.group(1))
-     val z =  GetStreams(date, m.group(1))
-       logInfo("The first StreamItem: %s ".format(z.head.toString))
-       logInfo("Length of stream is %d".format(z.length))
-       if(stream == {})
-          stream = z
-       stream = Stream.concat(stream, z) 
+    for (hour <- 0 to 23) {
+      val z = getStreams(date, hour)
+      if (stream == {})
+        stream = z
+      else
+        stream = Stream.concat(stream, z)
     }
     return stream
   }
 
+  /**
+   * return the files pertaining to specific date.
+   */
+  def getStreams(date: String, hour: Int): Stream[Option[StreamItem]] = {
+    var hourStr = "";
+    if (hour < 10)
+      hourStr = "0" + hour
+    else
+      hourStr = "" + hour
+
+    //get list of files in a date-hour directory
+    val reader = new URLLineReader("http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/" + date + "-" + hourStr)
+    val html = (for (line <- reader) yield line).mkString("")
+    val string = html
+    val pattern = """a href="([^"]+.gpg)"""".r
+
+    var stream = Stream[Option[StreamItem]]()
+    pattern.findAllIn(string).matchData foreach {
+      m =>
+        println(m.group(1))
+        val z = getStreams(date, m.group(1))
+        logInfo("The first StreamItem: %s ".format(z.head.toString))
+        logInfo("Length of stream is %d".format(z.length))
+        if (stream == {})
+          stream = z
+        else
+          stream = Stream.concat(stream, z)
+    }
+    return stream
+  }
+
+  /**
+   * Returns the string representation of a whole stream
+   */
   def getStreamsToString(si: Stream[Option[StreamItem]]): String = {
     var s = ""
     s = si.flatten.mkString
@@ -154,13 +168,13 @@ object Faucet extends Logging {
   def main(args: Array[String]) = {
 
     logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
-    val z = GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
+    val z = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
     logInfo("The first StreamItem: %s ".format(z.head.toString))
     logInfo("Length of stream is %d".format(z.length))
 
     logInfo("\n")
     //    logInfo(getStreamsToString(z))
-    val z2 = getStreams("2012-05-02-00")
+    val z2 = getStreams("2012-05-02", 0)
   }
 
 }
