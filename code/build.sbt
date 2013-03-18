@@ -31,3 +31,5 @@ libraryDependencies += "com.google.guava" % "guava" % "14.0.1"
 libraryDependencies += "edu.washington.cs.knowitall" % "reverb-core" % "1.4.1"
 
 libraryDependencies += "edu.washington.cs.knowitall" % "reverb-models" % "1.4.0"
+
+libraryDependencies += "org.scalaz" %% "scalaz-core" % "6.0.4"

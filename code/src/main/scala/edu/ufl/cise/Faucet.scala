@@ -1,6 +1,12 @@
 package edu.ufl.cise
 
+import scala.annotation.tailrec
 import scala.sys.process._
+import scala.sys.process.ProcessLogger
+import scala.util.matching.Regex.Match
+
+
+import java.text.DecimalFormat
 
 import kba.{ ContentItem, CorpusItem, StreamItem, StreamTime }
 
@@ -26,6 +32,8 @@ import edu.ufl.cise.util.URLLineReader
 
 object Faucet extends Logging {
 
+  lazy val numberFormatter = new DecimalFormat("00")
+
   /**
    * Loads the secrekey for decryprion.
    * This requires the file 'trec-kba-rsa.secret-key' to be in the
@@ -37,8 +45,6 @@ object Faucet extends Logging {
   }
 
   def test = {
-    //("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/2012-05-02-00/news.f451b42043f1f387a36083ad0b089bfd.xz.gpg" #| "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| "xz --decompress").!!
-    //("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/2012-05-02-00/news.f451b42043f1f387a36083ad0b089bfd.xz.gpg" #| "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| "xz --decompress").lines_!
     val baos = new java.io.ByteArrayOutputStream
     "curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/2012-05-02-00/news.f451b42043f1f387a36083ad0b089bfd.xz.gpg" #| "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| "xz --decompress" #> baos
     baos
@@ -54,7 +60,7 @@ object Faucet extends Logging {
     (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
       "kba-stream-corpus-2012/%s/%s").format(date, fileName) #|
       "gpg --no-permission-warning --trust-model always --output - --decrypt -" #|
-      "xz --decompress" #> baos).!!
+      "xz --decompress" #> baos) ! ProcessLogger(line => ()) // Silence the linux stderr
     baos
   }
 
@@ -74,18 +80,16 @@ object Faucet extends Logging {
   }
 
   /*
-     * Builds a Stream using the iterator. This uses tail recursion.
-     * There will inevitably be an error, we just keep calm and catch it
-     */
-  def getItem(iter: Iterator[Option[StreamItem]]): Stream[Option[StreamItem]] = {
-    try {
-      if (!iter.hasNext) {
-        Stream.empty
-      } else {
-        Stream.cons(iter.next, getItem(iter))
-      }
-    } catch {
-      case e: TTransportException => logDebug("Error in getItem"); Stream.empty
+   * Builds a Stream using the iterator. This uses tail recursion.
+   * There will inevitably be an error, we just keep calm and catch it
+   */
+  @tailrec
+  def getItem(iter: Iterator[Option[StreamItem]], acc:Stream[Option[StreamItem]] = Stream.empty): Stream[Option[StreamItem]] = {
+    if (!iter.hasNext) {
+      acc
+    } else {
+      val si = iter.next
+      getItem(iter, si #:: acc)
     }
   }
 
@@ -93,18 +97,20 @@ object Faucet extends Logging {
    * Specify a date of the form "YYYY-MM-DD-HH" and the name of the file
    * and returns an option stream containing those StreamItems.
    *
+   * The returned stream is large and materialized.
+   *
    * Example usage:
    *   GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
   def getStreams(date: String, fileName: String): Stream[Option[StreamItem]] = {
-    logInfo("Running GetStreams(%s,%s) ".format(date, fileName))
+    //logInfo("Running GetStreams(%s,%s) ".format(date, fileName))
 
     val data = grabGPG(date, fileName)
     val transport = new TMemoryInputTransport(data.toByteArray)
     val protocol = new TBinaryProtocol(transport)
 
     // Stop streaming after the first None
-    val streamiter = Stream.continually(mkStreamItem(protocol))
+    lazy val streamiter = Stream.continually(mkStreamItem(protocol))
       .takeWhile(_ match { case None => false; case _ => true })
       .toIterator
     getItem(streamiter)
@@ -114,55 +120,49 @@ object Faucet extends Logging {
    * Returns all the streams for all the hours of a day
    */
   def getStreams(date: String): Stream[Option[StreamItem]] = {
-    var stream = Stream[Option[StreamItem]]()
-    for (hour <- 0 to 23) {
-      val z = getStreams(date, hour)
-      if (stream == {})
-        stream = z
+    @tailrec
+    def getStreamsHelper(hour:Int, acc:Stream[Option[StreamItem]] = Stream.empty):Stream[Option[StreamItem]] = {
+      if (hour > 23) 
+        acc
       else
-        stream = Stream.concat(stream, z)
+        getStreamsHelper(hour+1, acc ++ getStreams(date, hour))
     }
-    return stream
+    getStreamsHelper(0)
   }
 
   /**
    * return the files pertaining to specific date.
    */
   def getStreams(date: String, hour: Int): Stream[Option[StreamItem]] = {
-    var hourStr = "";
-    if (hour < 10)
-      hourStr = "0" + hour
-    else
-      hourStr = "" + hour
+    // This adds zero in case of a one digit number
+    val hourStr = numberFormatter.format(hour) 
 
     //get list of files in a date-hour directory
-    val reader = new URLLineReader("http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/" + date + "-" + hourStr)
-    val html = (for (line <- reader) yield line).mkString("")
-    val string = html
-    val pattern = """a href="([^"]+.gpg)"""".r
+    val folderName = "%s-%s".format(date,hourStr)
+    val reader = new URLLineReader("http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/%s".format(folderName))
+    val html = (for (line <- reader) yield line).mkString
+    val pattern = """a href="([^"]+.gpg)""".r
 
-    var stream = Stream[Option[StreamItem]]()
-    pattern.findAllIn(string).matchData foreach {
-      m =>
-        println(m.group(1))
-        val z = getStreams(date, m.group(1))
-        logInfo("The first StreamItem: %s ".format(z.head.toString))
-        logInfo("Length of stream is %d".format(z.length))
-        if (stream == {})
-          stream = z
-        else
-          stream = Stream.concat(stream, z)
+    /**
+     * Uses recursion to lazily grab streams.
+     */
+    @tailrec
+    //def lazyFileGrabber(fileIter:Iterator[Match], acc:Stream[Option[StreamItem]] = Stream.empty):Stream[Option[StreamItem]] = {
+    def lazyFileGrabber(fileIter:Stream[Match], acc:Stream[Option[StreamItem]] = Stream.empty):Stream[Option[StreamItem]] = {
+      if (fileIter.isEmpty) acc
+      else {
+        val file = fileIter.head.group(1)
+        lazyFileGrabber(fileIter.tail, acc ++ getStreams(folderName, file))
+      }
     }
-    return stream
+    lazyFileGrabber(pattern.findAllIn(html).matchData.toStream)
   }
 
   /**
    * Returns the string representation of a whole stream
    */
   def getStreamsToString(si: Stream[Option[StreamItem]]): String = {
-    var s = ""
-    s = si.flatten.mkString
-    return s
+    si.flatten.mkString
   }
 
   def main(args: Array[String]) = {
@@ -172,9 +172,11 @@ object Faucet extends Logging {
     logInfo("The first StreamItem: %s ".format(z.head.toString))
     logInfo("Length of stream is %d".format(z.length))
 
-    logInfo("\n")
     //    logInfo(getStreamsToString(z))
-    val z2 = getStreams("2012-05-02", 0)
+    lazy val z2 = getStreams("2012-05-01")
+    //for (v <- z2) 
+    //  logInfo("---"+v.toString)
+    //logInfo(z2.head.get + "")
   }
 
 }
