@@ -38,16 +38,13 @@ object Faucet extends Logging {
    * Loads the secrekey for decryprion.
    * This requires the file 'trec-kba-rsa.secret-key' to be in the
    * gatordsr/code directory.
+   *
+   * This only needs to be done once per filesystem.
+   * (Unless the gpg is reset or something.)
    */
   def loadKey: Unit = {
     logInfo("loadKey")
     "gpg --no-permission-warning --import trec-kba-rsa.secret-key".!
-  }
-
-  def test = {
-    val baos = new java.io.ByteArrayOutputStream
-    "curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/2012-05-02-00/news.f451b42043f1f387a36083ad0b089bfd.xz.gpg" #| "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| "xz --decompress" #> baos
-    baos
   }
 
   /**
@@ -57,6 +54,7 @@ object Faucet extends Logging {
     logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
 
     val baos = new java.io.ByteArrayOutputStream
+    // Use the linux file system to download, decrypt and decompress a file
     (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
       "kba-stream-corpus-2012/%s/%s").format(date, fileName) #|
       "gpg --no-permission-warning --trust-model always --output - --decrypt -" #|
@@ -86,7 +84,7 @@ object Faucet extends Logging {
    * The returned stream is large and materialized.
    *
    * Example usage:
-   *   GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
+   *   getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
   def getStreams(date: String, fileName: String): Iterator[Option[StreamItem]] = {
     //logInfo("Running GetStreams(%s,%s) ".format(date, fileName))
@@ -112,7 +110,7 @@ object Faucet extends Logging {
   }
 
   /**
-   * return the files pertaining to specific date.
+   * Return the files pertaining to specific date.
    */
   def getStreams(date: String, hour: Int): Iterator[StreamItem] = {
     // This adds zero in case of a one digit number
@@ -125,26 +123,19 @@ object Faucet extends Logging {
     val pattern = """a href="([^"]+.gpg)""".r
 
     /**
-     * Uses recursion to lazily grab streams.
+     * A round-about way to call getStream on sets of files
+     * whlie still making it lazy.
+     * Go ahead and try and improve it.
      */
     def lazyFileGrabber(fileIter:Iterator[Match]):Iterator[StreamItem] = {
       def lazyGrab(file:Match):Iterator[StreamItem] = {
         for(si <- getStreams(folderName, file.group(1)).flatten)
           yield si
       }
-      //fileIter.map{lazyGrab(_)}.reduceLeft((a,b) => b)
       fileIter.map{lazyGrab(_)}.flatMap(x=>x)
     }
     lazyFileGrabber(pattern.findAllIn(html).matchData)
   }
-
-  /**
-   * Returns the string representation of a whole stream
-   */
-  def getStreamsToString(si: Stream[Option[StreamItem]]): String = {
-    si.flatten.mkString
-  }
-
 
   def main(args: Array[String]) = {
 
@@ -153,13 +144,8 @@ object Faucet extends Logging {
     logInfo("The first StreamItem: %s ".format(z.next.toString))
     logInfo("Length of stream is %d".format(z.length))
 
-    //    logInfo(getStreamsToString(z))
     val z2 = getStreams("2012-05-01")
-    //for (v <- z2) 
-    //  logInfo("---"+v.toString)
-    //logInfo(z2.head.get + "")
-    //logInfo(z2.length.toString)
-    logInfo(z2.take(51).length.toString)
+    logInfo(z2.take(501).length.toString)
   }
 
 }

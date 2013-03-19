@@ -9,7 +9,9 @@ import edu.ufl.cise.Logging
  * This class reads a URL line by line
  */
 class URLLineReader(url: String) extends Iterator[String] with Logging {
-  private lazy val reader = new BufferedReader(new InputStreamReader(new URL(url).openStream))
+  private lazy val reader = new BufferedReader(
+                              new InputStreamReader(
+                                new URL(url).openStream))
 
   def hasNext = {
     try {
