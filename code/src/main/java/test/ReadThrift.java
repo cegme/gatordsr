@@ -1,6 +1,7 @@
 package test;
 
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.transport.TFileTransport;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransport;
 import streamcorpus.StreamItem;

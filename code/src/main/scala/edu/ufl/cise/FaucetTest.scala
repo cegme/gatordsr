@@ -20,8 +20,6 @@ import java.io.BufferedInputStream
 import org.apache.thrift.transport.TTransport
 import org.apache.thrift.transport.TIOStreamTransport
 import java.io.ByteArrayInputStream
-import org.apache.log4j.lf5.util.StreamUtils
-import edu.ufl.cise.util.StreamItemUtil
 
 /**
  * we need to read a whole directory and append the StreamItems.
@@ -43,7 +41,7 @@ import edu.ufl.cise.util.StreamItemUtil
  *
  */
 
-object Faucet extends Logging {
+object FaucetTest extends Logging {
 
   lazy val numberFormatter = new DecimalFormat("00")
 
@@ -70,8 +68,39 @@ object Faucet extends Logging {
     //Silence the linux stdout, stderr
       
     baos //return 
-  }  
+  }
   
+  def grabFile():Array[Byte] = {
+    
+    val u = new URL("http://www.java2s.com/binary.dat");
+    val uc = u.openConnection();
+    val contentType = uc.getContentType();
+    val contentLength = uc.getContentLength();
+    if (contentType.startsWith("text/") || contentLength == -1) {
+      throw new IOException("This is not a binary file.");
+    }
+    val raw = uc.getInputStream();
+    val in = new BufferedInputStream(raw);
+    val data = new Array[Byte](contentLength);
+    var bytesRead = 0;
+    var offset = 0;
+    var err = false;
+    while (offset < contentLength && ! err) {
+      bytesRead = in.read(data, offset, data.length - offset);
+      if (bytesRead == -1)
+        err = true;
+      offset = offset + bytesRead;
+    }
+    in.close();
+
+    if (offset != contentLength) {
+      throw new IOException("Only read " + offset + " bytes; Expected " + contentLength + " bytes");
+    }//data is filled with content
+
+    
+    return null;
+  }
+
   /**
    * Creates a StreamItem from a protocol. return an Option[StramItem] just in case
    * for some of them we don't have data we are safe.
@@ -118,7 +147,7 @@ object Faucet extends Logging {
   /**
    * Return the files pertaining to specific date.
    */
-  def getStreams(date: String, hour: Int): Iterator[Option[StreamItem]] = {
+  def getStreams(date: String, hour: Int): Iterator[StreamItem] = {
     // This adds zero in case of a one digit number
     val hourStr = numberFormatter.format(hour)
 
@@ -133,9 +162,9 @@ object Faucet extends Logging {
      * while still making it lazy.
      * Go ahead and try and improve it.
      */
-    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[Option[StreamItem]]= {
-      def lazyGrab(file: Match): Iterator[Option[StreamItem]] = {
-        for (si <- getStreams(folderName, file.group(1)))
+    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[StreamItem] = {
+      def lazyGrab(file: Match): Iterator[StreamItem] = {
+        for (si <- getStreams(folderName, file.group(1)).flatten)
           yield si
       }
       fileIter.map { lazyGrab(_) }.flatMap(x => x)
@@ -146,7 +175,7 @@ object Faucet extends Logging {
   /**
    * Returns all the streams for all the hours of a day
    */
-  def getStreams(date: String): Iterator[Option[StreamItem]] = {
+  def getStreams(date: String): Iterator[StreamItem] = {
     (0 to 23)
       .map { getStreams(date, _) } // Get all the streams for this
       .view // Make getting the streams lazy
@@ -164,7 +193,6 @@ object Faucet extends Logging {
     println(new String(si.body.raw.array(), "UTF-8"))
     
     def getString(array: Array[Byte]): String = new String(array, "UTF-8")
-    println(StreamItemUtil.toString(si))
 
    // val a = si.body.raw.asCharBuffer()
     //a.flip()
