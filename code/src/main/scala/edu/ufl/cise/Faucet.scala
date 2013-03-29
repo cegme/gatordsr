@@ -2,17 +2,17 @@ package edu.ufl.cise
 
 import java.io.ByteArrayInputStream
 import java.text.DecimalFormat
-
 import scala.sys.process.stringToProcess
 import scala.sys.process.ProcessLogger
 import scala.util.matching.Regex.Match
-
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
-
 import edu.ufl.cise.util.StreamItemUtil
 import edu.ufl.cise.util.URLLineReader
 import kba.StreamItem
+import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 /**
  * we need to read a whole directory and append the StreamItems.
@@ -153,17 +153,49 @@ object Faucet extends Logging {
     getStreams(date, 0, 23)
   }
 
+  def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[Option[StreamItem]] = {
+    val sdf = new SimpleDateFormat("yyyy-MM-dd");
+    val dFrom = sdf.parse(dateFrom)
+    val dTo = sdf.parse(dateTo)
+
+    if (dFrom.after(dTo))
+      return null
+
+    var tempDate = dFrom
+    val c = Calendar.getInstance();
+
+    var it = Iterator[Option[StreamItem]]()
+    while (tempDate.before(dTo) || tempDate.equals(dTo)) {
+      val dateStr = sdf.format(tempDate)
+      val z = getStreams(dateStr)
+      if (it.isEmpty)
+        it = z
+      else
+        z.append(it)
+
+      c.setTime(tempDate);
+      c.add(Calendar.DATE, 1); // number of days to add
+      tempDate = c.getTime()
+    }
+
+    //getStreams(date, 0, 23)
+    return it
+  }
+
   def main(args: Array[String]) = {
     logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
-    val z = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
-    val si = z.next.get
-    logInfo("The first StreamItem is: %s ".format(si.toString))
-    logInfo("Length of stream is: %d".format(z.length))
-
-    println(new String(si.body.raw.array(), "UTF-8"))
-
+//    val z = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
+//    val si = z.next.get
+//    logInfo("The first StreamItem is: %s ".format(si.toString))
+//    logInfo("Length of stream is: %d".format(z.length))
+//
+//    println(new String(si.body.raw.array(), "UTF-8"))
+    
     //    println(StreamItemUtil.toString(si))
     //val z2 = getStreams("2012-05-01")    
     //logInfo(z2.take(501).length.toString)
+    
+    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
+    logInfo(z3.take(501).length.toString)
   }
 }

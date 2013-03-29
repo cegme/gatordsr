@@ -20,3 +20,4 @@ trec-kba-rsa.secret-key
 .classpath
 .project
 .ensime
+.cache
