@@ -1,27 +1,18 @@
 package edu.ufl.cise
 
-import scala.annotation.tailrec
-import scala.sys.process._
+import java.io.ByteArrayInputStream
+import java.text.DecimalFormat
+
+import scala.sys.process.stringToProcess
 import scala.sys.process.ProcessLogger
 import scala.util.matching.Regex.Match
-import java.text.DecimalFormat
-import kba.{ ContentItem, CorpusItem, StreamItem, StreamTime }
-import org.apache.thrift.transport.TMemoryInputTransport
+
 import org.apache.thrift.protocol.TBinaryProtocol
-import org.apache.thrift.transport.TTransportException
-import edu.ufl.cise.util.URLLineReader
-import java.io.PrintWriter
-import java.io.File
-import java.io.IOException
-import java.net.URLConnection
-import java.net.URL
-import java.io.InputStream
-import java.io.BufferedInputStream
-import org.apache.thrift.transport.TTransport
 import org.apache.thrift.transport.TIOStreamTransport
-import java.io.ByteArrayInputStream
-import org.apache.log4j.lf5.util.StreamUtils
+
 import edu.ufl.cise.util.StreamItemUtil
+import edu.ufl.cise.util.URLLineReader
+import kba.StreamItem
 
 /**
  * we need to read a whole directory and append the StreamItems.
@@ -68,10 +59,10 @@ object Faucet extends Logging {
       "xz --decompress" #> //decompress it
       baos) ! ProcessLogger(line => ()) // ! Executes the previous commands, 
     //Silence the linux stdout, stderr
-      
+
     baos //return 
-  }  
-  
+  }
+
   /**
    * Creates a StreamItem from a protocol. return an Option[StramItem] just in case
    * for some of them we don't have data we are safe.
@@ -98,8 +89,6 @@ object Faucet extends Logging {
    *   getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
   def getStreams(date: String, fileName: String): Iterator[Option[StreamItem]] = {
-    //logInfo("Running GetStreams(%s,%s) ".format(date, fileName))
-
     val data = grabGPG(date, fileName)
     val bais = new ByteArrayInputStream(data.toByteArray())
     val transport = new TIOStreamTransport(bais)
@@ -110,9 +99,9 @@ object Faucet extends Logging {
     val it = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
       .takeWhile(_ match { case None => false; case _ => true })
       .toIterator
-      
-      transport.close()
-      it
+
+    transport.close()
+    it
   }
 
   /**
@@ -133,7 +122,7 @@ object Faucet extends Logging {
      * while still making it lazy.
      * Go ahead and try and improve it.
      */
-    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[Option[StreamItem]]= {
+    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[Option[StreamItem]] = {
       def lazyGrab(file: Match): Iterator[Option[StreamItem]] = {
         for (si <- getStreams(folderName, file.group(1)))
           yield si
@@ -154,7 +143,6 @@ object Faucet extends Logging {
   }
 
   def main(args: Array[String]) = {
-
     logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
     val z = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
     val si = z.next.get
@@ -162,29 +150,9 @@ object Faucet extends Logging {
     logInfo("Length of stream is: %d".format(z.length))
 
     println(new String(si.body.raw.array(), "UTF-8"))
-    
-    def getString(array: Array[Byte]): String = new String(array, "UTF-8")
-    println(StreamItemUtil.toString(si))
 
-   // val a = si.body.raw.asCharBuffer()
-    //a.flip()
-   // val s = a.toString()
-    //println(s)
-    
-   // println(a)
-//    val raw_body = getString(si.body.raw.array)
-//    val cleansed_body = getString(si.body.cleansed.array)
-//
-//    // write two strings into files 
-//    val pwRaw = new PrintWriter(new File("raw.html"))
-//    pwRaw.write(raw_body)
-//    pwRaw.close()
-//    val pwCleansed = new PrintWriter(new File("cleansed.html"))
-//    pwCleansed.write(cleansed_body)
-//    pwCleansed.close()
-
+    //    println(StreamItemUtil.toString(si))
     //val z2 = getStreams("2012-05-01")    
     //logInfo(z2.take(501).length.toString)
   }
-
 }

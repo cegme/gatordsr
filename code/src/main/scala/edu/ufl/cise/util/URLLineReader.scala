@@ -1,6 +1,7 @@
 package edu.ufl.cise.util
 
-import java.io.{ BufferedReader, FileNotFoundException, InputStreamReader }
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.net.URL
 
 import edu.ufl.cise.Logging
@@ -19,7 +20,6 @@ class URLLineReader(url: String) extends Iterator[String] with Logging {
     } catch {
       case e: java.io.FileNotFoundException => logError("File Not Found: %s".format(url)); false
     }
-
   }
 
   def next = {
