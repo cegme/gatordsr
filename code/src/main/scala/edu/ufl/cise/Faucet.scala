@@ -133,13 +133,24 @@ object Faucet extends Logging {
   }
 
   /**
+   * Returns streams in a specific hour range of a specific date
+   */
+  def getStreams(date: String, hour0: Int, hour1: Int): Iterator[Option[StreamItem]] = {
+    if (hour0 < 0 || hour1 > 23)
+      null
+    else {
+      (hour0 to hour1)
+        .map { getStreams(date, _) } // Get all the streams for this
+        .view // Make getting the streams lazy
+        .reduceLeft(_ ++ _) // Concatenate the iterators    
+    }
+  }
+
+  /**
    * Returns all the streams for all the hours of a day
    */
   def getStreams(date: String): Iterator[Option[StreamItem]] = {
-    (0 to 23)
-      .map { getStreams(date, _) } // Get all the streams for this
-      .view // Make getting the streams lazy
-      .reduceLeft(_ ++ _) // Concatenate the iterators
+    getStreams(date, 0, 23)
   }
 
   def main(args: Array[String]) = {

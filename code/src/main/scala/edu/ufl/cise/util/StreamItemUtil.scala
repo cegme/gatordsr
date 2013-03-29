@@ -1,7 +1,8 @@
 package edu.ufl.cise.util
 
-import kba.StreamItem
+
 import edu.ufl.cise.Faucet
+import kba.StreamItem
 
 /**
  * This class provides utility functions for StreamItem. For example
