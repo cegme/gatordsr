@@ -65,7 +65,7 @@ object Pipeline extends Logging{
 		dcoref = new DeterministicCorefAnnotator(new Properties)
 	}
 	
-	// used to filter out irrelavent documents, will be implemented in future
+	// used to filter out irrelevant documents, will be implemented in future
 	def filter (document:Annotation) : Boolean =
 	{
 		// output the ner results on tokens
