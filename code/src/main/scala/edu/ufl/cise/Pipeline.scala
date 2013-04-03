@@ -136,7 +136,7 @@ object Pipeline extends Logging{
 			}
 			
 	}
-	// transfer a list of Strings to a single String
+	// transform a list of Strings to a single String
 	def transfer(array:java.util.List[String]):String =
 	{
 	   var s = ""
