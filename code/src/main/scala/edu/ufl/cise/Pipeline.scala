@@ -24,7 +24,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import edu.ufl.cise.util.RelationChecker
 
-// used to process during the sentence relation extraction
+// used to represent relations during the sentence relation extraction
 class Relation(entity0:String, slot:String, entity1:String)
 {
   override def toString():String = 
@@ -36,6 +36,7 @@ class Relation(entity0:String, slot:String, entity1:String)
 
 object Pipeline extends Logging{
 	
+	// preprocessing pipelines, parser, and corefernce annotator
 	private var prepipeline : StanfordCoreNLP = null
 	private var parser: ParserAnnotator = null
 	private var dcoref : DeterministicCorefAnnotator = null
@@ -43,11 +44,11 @@ object Pipeline extends Logging{
 	private var corefMap : java.util.Map[Integer, String] = null
 	// the important sentences that contain the desired entity
 	private var critSens : ArrayList[Integer] = new ArrayList[Integer]
-	
+	// used in future for storing interesting sentences
 	private var sentences : ArrayList[ArrayList[String]] = null
-	
+	// use to store the extracted relations
 	private var relations : ArrayList[Relation] = null
-	
+	// a bloom filter to check relations
 	private val bf = RelationChecker.createWikiBloomChecker
 	
 	def init()
@@ -64,6 +65,7 @@ object Pipeline extends Logging{
 		dcoref = new DeterministicCorefAnnotator(new Properties)
 	}
 	
+	// used to filter out irrelavent documents, will be implemented in future
 	def filter (document:Annotation) : Boolean =
 	{
 		// output the ner results on tokens
@@ -88,12 +90,12 @@ object Pipeline extends Logging{
 	// prepare for relation extraction 
 	def prepare(document:Annotation)
 	{	
-		// get entities
+		// get coreference entities
 		val graph = document.get[java.util.Map[Integer, CorefChain],CorefChainAnnotation](classOf[CorefChainAnnotation])
-		corefMap = new HashMap[Integer, String]
-		for(i <-1 to graph.size())
+		corefMap = new HashMap[Integer, String] // used to store entities and corresponding corerference group
+		for(i <-1 to graph.size()) // to traverse the coreference graph
 		{
-			val corefChain : CorefChain = graph.get(i)
+			val corefChain : CorefChain = graph.get(i) // for each coref chain
 			if (corefChain != null)
 			{
 			val mentions = corefChain.getMentionsInTextualOrder()
@@ -114,7 +116,7 @@ object Pipeline extends Logging{
 		}
 	}
 	
-	// break a single sentence to corresponding array list of words and marks
+	// break a single sentence to corresponding array list of words and marks (mark = 0, non-entity; 1, entity)
 	def breakSentence(tokens : java.util.List[CoreLabel], words:ArrayList[String], marks:ArrayList[Integer])
 	{
 		val size = tokens.size()
@@ -126,7 +128,7 @@ object Pipeline extends Logging{
 				// this is the NER label of the token
 				val ne = token.get[String, NamedEntityTagAnnotation](classOf[NamedEntityTagAnnotation])
 				words.add(token.value())			
-				if (ne.length() > 1)
+				if (ne.length() > 1) // length > 1, ne is an entity
 					marks.add(1)
 				else
 					marks.add(0)
@@ -149,11 +151,12 @@ object Pipeline extends Logging{
 	   return s
 	}
 	
+	// used to extract two entities located at the nearest distance of the relation
 	def getEntity(words:java.util.List[String], marks:java.util.List[Integer], flag:Int) : String = 
 	{
 		var s = ""
 		
-		if (flag == 1)
+		if (flag == 1) // flag = 1, extract entity behind the relation, 0 before the relation
 		{
 			var k3 = -1
 			var k4 = -1
@@ -177,7 +180,7 @@ object Pipeline extends Logging{
 			}
 			
 			else
-			    s = "N*A"
+			    s = "N*A" // means no entity found
 		}
 		else
 		{
@@ -209,17 +212,17 @@ object Pipeline extends Logging{
 		return s
 	}
 	
-	// extract the relations from the words and marks
+	// extract the relations from the array of words and marks
 	def getRelations(words:ArrayList[String], marks:ArrayList[Integer]): ArrayList[Relation] =
 	{
-		var results = new ArrayList[Relation]
+		var results = new ArrayList[Relation] // used to store results
 		val size = words.size()
-		for ( i <- 0 until size)
+		for ( i <- 0 until size) // check all the possible i and j postions
 		{
 			for (j <- i until size)
 			{	
-			    val s =  transfer(words.subList(i, j + 1))
-				if (bf(s))
+			    val s =  transfer(words.subList(i, j + 1)).toLowercase()
+				if (bf(s)) // use the bloom filter to check
 				{
 					// println(s + " => " + true)
 					val entity0 = getEntity(words.subList(0, i), marks.subList(0, i), -1)
@@ -252,14 +255,17 @@ object Pipeline extends Logging{
 			// var x = tokens.toArray()
 			var words = new ArrayList[String](size)
 			var marks = new ArrayList[Integer](size)
-	
+			// break sentence to words and marks
 			breakSentence(tokens, words, marks)
+			// extrac relations
 			relations = getRelations(words, marks)
+			// log each relation
 			for(relation <- relations.toArray())logInfo(relation.toString())
 		}
 		
 	}
 	
+	// used to exactly match two relation triples
 	def matchTriples(query : Array[String], relation : Array[String]) : Boolean = 
 	{
 		if (query(0).equalsIgnoreCase(relation(0)) && query(0).equalsIgnoreCase(relation(0)) && query(0).equalsIgnoreCase(relation(0)))
@@ -268,6 +274,7 @@ object Pipeline extends Logging{
 			return false
 	}
 	
+	// the main logic
 	def run(text:String)
 	{
 
@@ -301,6 +308,7 @@ object Pipeline extends Logging{
 	{
 	  	// initialize the annotators
 		init()
+		// extract relations from a string
 		val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
 		run(text)
 	}
