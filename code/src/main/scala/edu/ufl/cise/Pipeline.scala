@@ -220,9 +220,10 @@ object Pipeline extends Logging{
 		for ( i <- 0 until size) // check all the possible i and j postions
 		{
 			for (j <- i until size)
-			{	
-			    val s =  transfer(words.subList(i, j + 1)).toLowercase()
-				if (bf(s)) // use the bloom filter to check
+			{
+				// use the bloom filter to check
+			    	val s =  transfer(words.subList(i, j + 1)).toLowerCase()
+				if (bf(s) || bf("is " + s)) // add "is " to recognize possible relations
 				{
 					// println(s + " => " + true)
 					val entity0 = getEntity(words.subList(0, i), marks.subList(0, i), -1)
