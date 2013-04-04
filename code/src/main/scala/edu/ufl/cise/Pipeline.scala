@@ -267,13 +267,13 @@ object Pipeline extends Logging{
 	}
 	
 	// used to exactly match two relation triples
-	def matchTriples(query : Array[String], relation : Array[String]) : Boolean = 
-	{
-		if (query(0).equalsIgnoreCase(relation(0)) && query(1).equalsIgnoreCase(relation(1)) && query(2).equalsIgnoreCase(relation(2)))
-			return true
-		else
-			return false
-	}
+	// def matchTriples(query : Array[String], relation : Array[String]) : Boolean = 
+	// {
+	// 	if (query(0).equalsIgnoreCase(relation(0)) && query(1).equalsIgnoreCase(relation(1)) && query(2).equalsIgnoreCase(relation(2)))
+	//		return true
+	//	else
+	//		return false
+	// }
 	
 	// the main logic
 	def run(text:String)
