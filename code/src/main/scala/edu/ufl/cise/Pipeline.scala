@@ -68,10 +68,10 @@ object Pipeline extends Logging{
 			val token = tokens.get(i)
 			val pos = token.get[String, PartOfSpeechAnnotation](classOf[PartOfSpeechAnnotation]);
 			val ne = token.get[String, NamedEntityTagAnnotation](classOf[NamedEntityTagAnnotation])
-			// println(token.value() + " : " + ne)
-			// println(token.beginPosition())
-			// println(token.endPosition())
-			// println(token.index())
+//			 println(token.value() + " : " + ne)
+//			 println(token.beginPosition())
+//			 println(token.endPosition())
+//			 println(token.index())
 		} 
 
 		// filter here: check entities by using ne labels
