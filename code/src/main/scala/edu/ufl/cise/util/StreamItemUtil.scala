@@ -18,7 +18,7 @@ object StreamItemUtil {
 
   def main(args: Array[String]) {
     val z = Faucet.getStreams("2011-12-13", 19)
-    val si = z.next.get
+    val si = z.next
     println(toString(si))
   }
 }
