@@ -242,7 +242,7 @@ object Pipeline extends Logging{
 			val sentence = sentences.get(i)
 			val line = sentence.toString()
 			// output the possible relations between two named entities
-			println(sentence.toString())
+			// println(sentence.toString())
 
 			val tokens = sentence.get[java.util.List[CoreLabel], TokensAnnotation](classOf[TokensAnnotation])
 			val size = tokens.size()
@@ -293,7 +293,7 @@ object Pipeline extends Logging{
 		// match the triples
 		// pipeline ends
 		logInfo("pipeline ends")
-		
+
 		return triples
 	}
 
