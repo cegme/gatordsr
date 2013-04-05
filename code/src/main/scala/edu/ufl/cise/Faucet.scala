@@ -221,8 +221,8 @@ object Faucet extends Logging {
   /**
    * Return the file size of all compressed data
    */
-  def getAllDataSize(fromDateStr: String, fromHour: Int, toDateStr: String, toHour: Int): Int = {
-    var sumSize = 0
+  def getAllDataSize(fromDateStr: String, fromHour: Int, toDateStr: String, toHour: Int): BigInt = {
+    var sumSize = BigInt(0)
 
     val fromDate = SIMPLE_DATE_FORMAT.parse(fromDateStr)
     val toDate = SIMPLE_DATE_FORMAT.parse(toDateStr)
@@ -233,32 +233,38 @@ object Faucet extends Logging {
     while (tempDate.before(toDate) || tempDate.equals(toDate)) {
       val dateStr = SIMPLE_DATE_FORMAT.format(tempDate)
 
-      sumSize += (fromHour to toHour).
-        map(hour =>
-          {
-            var size: Int = 0
-            val directoryName = getDirectoryName(SIMPLE_DATE_FORMAT.format(tempDate), hour)
-            val urlConnection = new URL(BASE_URL + dateStr).openConnection()
-            val values = urlConnection.getHeaderFields().get("content-Length")
-            if (values != null && !values.isEmpty()) {
+      var size: Int = 0
 
-              // getHeaderFields() returns a Map with key=(String) header 
-              // name, value = List of String values for that header field. 
-              // just use the first value here.
-              val sLength = values.get(0);
-              if (sLength != null) {
-                size = sLength.toInt
-              }
-            }
-            size
-          }).view.
-        reduce((a, b) => a + b)
+      val directoryName = getDirectoryName(SIMPLE_DATE_FORMAT.format(tempDate), 17)
+      val reader = new URLLineReader(BASE_URL + format(directoryName))
+      val html = reader.toList.mkString
+      val pattern = """a href="([^"]+.gpg)""".r
+
+      pattern.findAllIn(html).matchData foreach {
+        m =>
+
+          val str = BASE_URL + directoryName + "/" + m.group(1)
+          if(str.toUpperCase().contains("WIKI"))
+            println(str)
+          val url = new URL(str);
+          val conn = url.openConnection();
+          size = conn.getContentLength();
+          if (size < 0)
+            System.out.println("Could not determine file size.");
+          else {
+            //System.out.println(size);
+            sumSize += size
+          }
+          conn.getInputStream().close();
+
+      }
 
       c.setTime(tempDate);
       c.add(Calendar.DATE, 1); // number of days to add
       tempDate = c.getTime()
+      print(sumSize + "---")
     }
-
+    println("Total: " + sumSize)
     return sumSize
   }
 }
