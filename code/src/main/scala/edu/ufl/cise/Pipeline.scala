@@ -24,18 +24,10 @@ import java.util.ArrayList
 import java.util.HashMap
 import edu.ufl.cise.util.RelationChecker
 
-// used to represent relations during the sentence relation extraction
-class Relation(entity0:String, slot:String, entity1:String)
-{
-  override def toString():String = 
-	{
-		val s = entity0 + " - " + slot + " - " + entity1
-		return s
-	}
-}
+
 
 object Pipeline extends Logging{
-	
+
 	// preprocessing pipelines, parser, and corefernce annotator
 	private var prepipeline : StanfordCoreNLP = null
 	private var parser: ParserAnnotator = null
@@ -47,10 +39,10 @@ object Pipeline extends Logging{
 	// used in future for storing interesting sentences
 	private var sentences : ArrayList[ArrayList[String]] = null
 	// use to store the extracted relations
-	private var relations : ArrayList[Relation] = null
+	private var triples : ArrayList[Triple] = null
 	// a bloom filter to check relations
 	private val bf = RelationChecker.createWikiBloomChecker
-	
+
 	def init()
 	{
 		var props = new Properties()
@@ -64,7 +56,7 @@ object Pipeline extends Logging{
 	  	//coreference with default properties
 		dcoref = new DeterministicCorefAnnotator(new Properties)
 	}
-	
+
 	// used to filter out irrelevant documents, will be implemented in future
 	def filter (document:Annotation) : Boolean =
 	{
@@ -81,12 +73,12 @@ object Pipeline extends Logging{
 			// println(token.endPosition())
 			// println(token.index())
 		} 
-		
+
 		// filter here: check entities by using ne labels
 		// to filter needs quick pre-label
 		return true
 	}
-	
+
 	// prepare for relation extraction 
 	def prepare(document:Annotation)
 	{	
@@ -115,7 +107,7 @@ object Pipeline extends Logging{
 			}
 		}
 	}
-	
+
 	// break a single sentence to corresponding array list of words and marks (mark = 0, non-entity; 1, entity)
 	def breakSentence(tokens : java.util.List[CoreLabel], words:ArrayList[String], marks:ArrayList[Integer])
 	{
@@ -127,14 +119,15 @@ object Pipeline extends Logging{
 				val pos = token.get[String, PartOfSpeechAnnotation](classOf[PartOfSpeechAnnotation])
 				// this is the NER label of the token
 				val ne = token.get[String, NamedEntityTagAnnotation](classOf[NamedEntityTagAnnotation])
+				//println(pos.toString())
 				words.add(token.value())			
-				if (ne.length() > 1) // length > 1, ne is an entity
+				if (ne.length() > 1 && (pos.toString().equals("NNP")|| pos.toString().equals("NNPS"))) // length > 1, ne is an entity
 					marks.add(1)
 				else
 					marks.add(0)
-					
+
 			}
-			
+
 	}
 	// transform a list of Strings to a single String
 	def transfer(array:java.util.List[String]):String =
@@ -147,38 +140,38 @@ object Pipeline extends Logging{
 		   else
 			   s += array.get(i)
 	   }
-	   
+
 	   return s
 	}
-	
+
 	// used to extract two entities located at the nearest distance of the relation
 	def getEntity(words:java.util.List[String], marks:java.util.List[Integer], flag:Int) : String = 
 	{
 		var s = ""
-		
+
 		if (flag == 1) // flag = 1, extract entity behind the relation, 0 before the relation
 		{
 			var k3 = -1
 			var k4 = -1
-						
+
 			for (m <- 0 until words.size())
 			{
 				if (marks.get(m) != 0 && k3 == -1 && k4 == -1)
 				{
 					k3 = m
 				}
-							
+
 				if (marks.get(m) == 0 && k3 != -1 && k4 == -1)
 				{
 					k4 = m
 				}
 			}
-					
+
 			if(k3 != -1 && k4 != -1)
 			{
 				s = transfer(words.subList(k3, k4))
 			}
-			
+
 			else
 			    s = "N*A" // means no entity found
 		}
@@ -192,13 +185,13 @@ object Pipeline extends Logging{
 				{
 						k1 = k
 				}
-							
+
 				if (marks.get(k) == 0 && k1 != -1 && k2 == -1)
 				{
 					k2 = k
 				}
 			}
-			
+
 			k2 = k2 + 1
 			if (k2 != -1 && k1 != -1)
 			{
@@ -206,16 +199,16 @@ object Pipeline extends Logging{
 			}
 			else
 				s = "N*A"
-			
+
 		}
-		  
+
 		return s
 	}
-	
+
 	// extract the relations from the array of words and marks
-	def getRelations(words:ArrayList[String], marks:ArrayList[Integer]): ArrayList[Relation] =
+	def getRelations(words:ArrayList[String], marks:ArrayList[Integer]): ArrayList[Triple] =
 	{
-		var results = new ArrayList[Relation] // used to store results
+		var results = new ArrayList[Triple] // used to store results
 		val size = words.size()
 		for ( i <- 0 until size) // check all the possible i and j postions
 		{
@@ -230,7 +223,7 @@ object Pipeline extends Logging{
 					val entity1 = getEntity(words.subList(j + 1, size), marks.subList(j+1, size),1)
 					if (!entity0.equals("N*A") && !entity1.equals("N*A"))
 					{
-						val relation = new Relation(entity0, s, entity1)
+						val relation = new Triple(entity0, s, entity1)
 						results.add(relation)
 					}
 				}	
@@ -238,7 +231,7 @@ object Pipeline extends Logging{
 		}
 		return results
 	}
-	
+
 	// extract relations from sentences
 	def extract(document:Annotation)
 	{
@@ -259,13 +252,13 @@ object Pipeline extends Logging{
 			// break sentence to words and marks
 			breakSentence(tokens, words, marks)
 			// extrac relations
-			relations = getRelations(words, marks)
+			triples = getRelations(words, marks)
 			// log each relation
-			for(relation <- relations.toArray())logInfo(relation.toString())
+			for(relation <- triples.toArray())logInfo(relation.toString())
 		}
-		
+
 	}
-	
+
 	// used to exactly match two relation triples
 	// def matchTriples(query : Array[String], relation : Array[String]) : Boolean = 
 	// {
@@ -274,37 +267,37 @@ object Pipeline extends Logging{
 	//	else
 	//		return false
 	// }
-	
+
 	// the main logic
-	def run(text:String)
+	def run(text:String):ArrayList[Triple] = 
 	{
 
 		// create an empty Annotation just with the given text
 		val document = new Annotation(text)
-		
+
 		// preprocessing the document and get the named entities
 		prepipeline.annotate(document)
 		// filter out the document
-		val valid = filter(document)
-		if (!valid) return
-		
+		// val valid = filter(document)
+		// if (!valid) return null
+
 		// parsing the document
 		parser.annotate(document)
 		// coreference resolution
 		dcoref.annotate(document)
-		
+
 		// extract relations
 		prepare(document)
 		extract(document)
-		
+
 		// match the triples
-		
-		
 		// pipeline ends
 		logInfo("pipeline ends")
+		
+		return triples
 	}
-	
-	
+
+
 	def main (args: Array[String])
 	{
 	  	// initialize the annotators
@@ -313,8 +306,6 @@ object Pipeline extends Logging{
 		val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
 		run(text)
 	}
-	
+
 }
-
-
 
