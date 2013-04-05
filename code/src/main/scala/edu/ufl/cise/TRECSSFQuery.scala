@@ -16,7 +16,7 @@ object TRECSSFQuery {
     Faucet.getStreams("2012-05-02", 0).
       map(si => new String(si.get.body.cleansed.array(), "UTF-8")).
       map(Pipeline.run(_)).
-      flatMap(x => x)
+      flatMap(x => x.toArray())
      // filter(_.)
       
 
