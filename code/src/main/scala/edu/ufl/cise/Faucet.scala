@@ -13,6 +13,7 @@ import kba.StreamItem
 import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.net.URL
 
 /**
  * we need to read a whole directory and append the StreamItems.
@@ -37,6 +38,13 @@ import java.util.Calendar
 object Faucet extends Logging {
 
   lazy val numberFormatter = new DecimalFormat("00")
+  val BASE_URL = "http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/"
+  val MAX_FROM_DATE = "2011-10-07"
+  val MAX_FROM_HOUR = 14
+  val MAX_TO_DATE = "2012-05-02"
+  val MAX_TO_HOUR = 0
+
+  val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
    * Gets, dencrypts and uncompresses the requested file and returns an ByteStream.
@@ -104,16 +112,18 @@ object Faucet extends Logging {
     it
   }
 
+  def getDirectoryName(date: String, hour: Int): String = {
+    // This adds zero in case of a one digit number
+    val hourStr = numberFormatter.format(hour)
+    "%s-%s".format(date, hourStr)
+  }
+
   /**
    * Return the files pertaining to specific date.
    */
   def getStreams(date: String, hour: Int): Iterator[Option[StreamItem]] = {
-    // This adds zero in case of a one digit number
-    val hourStr = numberFormatter.format(hour)
-
-    //get list of files in a date-hour directory
-    val folderName = "%s-%s".format(date, hourStr)
-    val reader = new URLLineReader("http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/%s".format(folderName))
+    val directoryName = getDirectoryName(date, hour)
+    val reader = new URLLineReader(BASE_URL + format(directoryName))
     val html = reader.toList.mkString
     val pattern = """a href="([^"]+.gpg)""".r
 
@@ -124,12 +134,13 @@ object Faucet extends Logging {
      */
     def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[Option[StreamItem]] = {
       def lazyGrab(file: Match): Iterator[Option[StreamItem]] = {
-        for (si <- getStreams(folderName, file.group(1)))
+        for (si <- getStreams(directoryName, file.group(1)))
           yield si
       }
       fileIter.map { lazyGrab(_) }.flatMap(x => x)
     }
-    lazyFileGrabber(pattern.findAllIn(html).matchData)
+    val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
+    it
   }
 
   /**
@@ -153,10 +164,13 @@ object Faucet extends Logging {
     getStreams(date, 0, 23)
   }
 
+  /**
+   * Return the data between specific date ranges.
+   */
   def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[Option[StreamItem]] = {
-    val sdf = new SimpleDateFormat("yyyy-MM-dd");
-    val dFrom = sdf.parse(dateFrom)
-    val dTo = sdf.parse(dateTo)
+
+    val dFrom = SIMPLE_DATE_FORMAT.parse(dateFrom)
+    val dTo = SIMPLE_DATE_FORMAT.parse(dateTo)
 
     if (dFrom.after(dTo))
       return null
@@ -166,7 +180,7 @@ object Faucet extends Logging {
 
     var it = Iterator[Option[StreamItem]]()
     while (tempDate.before(dTo) || tempDate.equals(dTo)) {
-      val dateStr = sdf.format(tempDate)
+      val dateStr = SIMPLE_DATE_FORMAT.format(tempDate)
       val z = getStreams(dateStr)
       if (it.isEmpty)
         it = z
@@ -182,8 +196,12 @@ object Faucet extends Logging {
     return it
   }
 
+  /**
+   * Test the operation of the Faucet class
+   */
   def main(args: Array[String]) = {
-    logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
+
+    //logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
     //    val z = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
     //    val si = z.next.get
     //    logInfo("The first StreamItem is: %s ".format(si.toString))
@@ -195,7 +213,52 @@ object Faucet extends Logging {
     //val z2 = getStreams("2012-05-01")    
     //logInfo(z2.take(501).length.toString)
 
-    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
-    logInfo(z3.take(501).length.toString)
+    //    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
+    //    logInfo(z3.take(501).length.toString)
+    println(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
+  }
+
+  /**
+   * Return the file size of all compressed data
+   */
+  def getAllDataSize(fromDateStr: String, fromHour: Int, toDateStr: String, toHour: Int): Int = {
+    var sumSize = 0
+
+    val fromDate = SIMPLE_DATE_FORMAT.parse(fromDateStr)
+    val toDate = SIMPLE_DATE_FORMAT.parse(toDateStr)
+
+    var tempDate = fromDate
+    val c = Calendar.getInstance();
+
+    while (tempDate.before(toDate) || tempDate.equals(toDate)) {
+      val dateStr = SIMPLE_DATE_FORMAT.format(tempDate)
+
+      sumSize += (fromHour to toHour).
+        map(hour =>
+          {
+            var size: Int = 0
+            val directoryName = getDirectoryName(SIMPLE_DATE_FORMAT.format(tempDate), hour)
+            val urlConnection = new URL(BASE_URL + dateStr).openConnection()
+            val values = urlConnection.getHeaderFields().get("content-Length")
+            if (values != null && !values.isEmpty()) {
+
+              // getHeaderFields() returns a Map with key=(String) header 
+              // name, value = List of String values for that header field. 
+              // just use the first value here.
+              val sLength = values.get(0);
+              if (sLength != null) {
+                size = sLength.toInt
+              }
+            }
+            size
+          }).view.
+        reduce((a, b) => a + b)
+
+      c.setTime(tempDate);
+      c.add(Calendar.DATE, 1); // number of days to add
+      tempDate = c.getTime()
+    }
+
+    return sumSize
   }
 }

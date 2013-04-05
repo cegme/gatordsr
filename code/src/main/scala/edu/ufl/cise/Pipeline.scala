@@ -76,10 +76,10 @@ object Pipeline extends Logging{
 			val token = tokens.get(i)
 			val pos = token.get[String, PartOfSpeechAnnotation](classOf[PartOfSpeechAnnotation]);
 			val ne = token.get[String, NamedEntityTagAnnotation](classOf[NamedEntityTagAnnotation])
-			// println(token.value() + " : " + ne)
-			// println(token.beginPosition())
-			// println(token.endPosition())
-			// println(token.index())
+//			 println(token.value() + " : " + ne)
+//			 println(token.beginPosition())
+//			 println(token.endPosition())
+//			 println(token.index())
 		} 
 		
 		// filter here: check entities by using ne labels
@@ -276,7 +276,7 @@ object Pipeline extends Logging{
 	}
 	
 	// the main logic
-	def run(text:String)
+	def run(text:String): Array[Relation] =
 	{
 
 		// create an empty Annotation just with the given text
@@ -286,7 +286,7 @@ object Pipeline extends Logging{
 		prepipeline.annotate(document)
 		// filter out the document
 		val valid = filter(document)
-		if (!valid) return
+		if (!valid) return null
 		
 		// parsing the document
 		parser.annotate(document)
@@ -302,6 +302,7 @@ object Pipeline extends Logging{
 		
 		// pipeline ends
 		logInfo("pipeline ends")
+		return null
 	}
 	
 	
