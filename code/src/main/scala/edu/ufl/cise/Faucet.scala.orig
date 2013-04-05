@@ -122,9 +122,19 @@ object Faucet extends Logging {
   /**
    * Return the files pertaining to specific date.
    */
-  def getStreams(date: String, hour: Int): Iterator[StreamItem] = {
+<<<<<<< HEAD
+  def getStreams(date: String, hour: Int): Iterator[Option[StreamItem]] = {
     val directoryName = getDirectoryName(date, hour)
     val reader = new URLLineReader(BASE_URL + format(directoryName))
+=======
+  def getStreams(date: String, hour: Int): Iterator[StreamItem] = {
+    // This adds zero in case of a one digit number
+    val hourStr = numberFormatter.format(hour)
+
+    //get list of files in a date-hour directory
+    val folderName = "%s-%s".format(date, hourStr)
+    val reader = new URLLineReader("http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/%s".format(folderName))
+>>>>>>> upstream/master
     val html = reader.toList.mkString
     val pattern = """a href="([^"]+.gpg)""".r
 
@@ -133,9 +143,15 @@ object Faucet extends Logging {
      * while still making it lazy.
      * Go ahead and try and improve it.
      */
+<<<<<<< HEAD
+    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[Option[StreamItem]] = {
+      def lazyGrab(file: Match): Iterator[Option[StreamItem]] = {
+        for (si <- getStreams(directoryName, file.group(1)))
+=======
     def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[StreamItem] = {
       def lazyGrab(file: Match): Iterator[StreamItem] = {
-        for (si <- getStreams(directoryName, file.group(1)))
+        for (si <- getStreams(folderName, file.group(1)))
+>>>>>>> upstream/master
           yield si
       }
       fileIter.map { lazyGrab(_) }.flatMap(x => x)
@@ -165,12 +181,20 @@ object Faucet extends Logging {
     getStreams(date, 0, 23)
   }
 
-  def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[StreamItem] = {
+<<<<<<< HEAD
+  /**
    * Return the data between specific date ranges.
    */
+  def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[Option[StreamItem]] = {
 
     val dFrom = SIMPLE_DATE_FORMAT.parse(dateFrom)
     val dTo = SIMPLE_DATE_FORMAT.parse(dateTo)
+=======
+  def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[StreamItem] = {
+    val sdf = new SimpleDateFormat("yyyy-MM-dd");
+    val dFrom = sdf.parse(dateFrom)
+    val dTo = sdf.parse(dateTo)
+>>>>>>> upstream/master
 
     if (dFrom.after(dTo))
       return null
@@ -212,9 +236,9 @@ object Faucet extends Logging {
     //    println(StreamItemUtil.toString(si))
     //val z2 = getStreams("2012-05-01")    
     //logInfo(z2.take(501).length.toString)
+<<<<<<< HEAD
 
     //    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
-    //logInfo(z3.take(501).length.toString)
     //    logInfo(z3.take(501).length.toString)
     println(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
   }
@@ -267,5 +291,10 @@ object Faucet extends Logging {
     }
     println("Total: " + sumSize)
     return sumSize
+=======
+    
+    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
+    //logInfo(z3.take(501).length.toString)
+>>>>>>> upstream/master
   }
 }

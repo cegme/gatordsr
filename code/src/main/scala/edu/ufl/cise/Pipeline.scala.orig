@@ -304,11 +304,9 @@ object Pipeline extends Logging{
 	  	// initialize the annotators
 		init()
 		// extract relations from a string
+<<<<<<< HEAD
 		val text = "Abraham Lincoln was the 16th president of the United States, serving from March 1861 until his assassination in April 1865. Lincoln led the United States through its greatest constitutional, military, and moral crises—the American Civil War—preserving the Union, abolishing slavery, strengthening the national government and modernizing the economy. Reared in a poor family on the western frontier, Lincoln was self-educated, and became a country lawyer, a Whig Party leader, Illinois state legislator during the 1830s, and a one-term member of the United States House of Representatives during the 1840s."
 		  // "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
-
-    val text2 = """Princess Victoria of Hesse and by Rhine (1863–1950) was the eldest daughter of Louis IV, Grand Duke of Hesse and by Rhine, and his first wife Princess Alice of the United Kingdom. Victoria married Prince Louis of Battenberg, her father's first cousin and an officer in the UK's Royal Navy, in a love match and lived most of her married life in various parts of Europe at her husband's naval posts and visiting her many royal relations."""
-    run(text2)
 		  
 		  //Abraham Lincoln - president of - United States
 		val ret = run(text)
@@ -335,5 +333,12 @@ object Pipeline extends Logging{
          ( query.slotName.contains(triple.slot) ||
           triple.slot.contains(query.slotName))
       }).foreach(println)
+=======
+		val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
+		run(text)
+
+    val text2 = """Princess Victoria of Hesse and by Rhine (1863–1950) was the eldest daughter of Louis IV, Grand Duke of Hesse and by Rhine, and his first wife Princess Alice of the United Kingdom. Victoria married Prince Louis of Battenberg, her father's first cousin and an officer in the UK's Royal Navy, in a love match and lived most of her married life in various parts of Europe at her husband's naval posts and visiting her many royal relations."""
+    run(text2)
+>>>>>>> upstream/master
 	}
 }
