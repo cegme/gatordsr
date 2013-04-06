@@ -23,7 +23,7 @@ import edu.stanford.nlp.dcoref.CorefChain
 import java.util.ArrayList
 import java.util.HashMap
 import edu.ufl.cise.util.RelationChecker
-
+import Pipeline._
 
 
 object Pipeline extends Logging{
@@ -58,7 +58,7 @@ object Pipeline extends Logging{
 
 }
 
-import Pipeline._
+
 
 class Pipeline (text:String, query:SSFQuery) extends Logging{
 	
