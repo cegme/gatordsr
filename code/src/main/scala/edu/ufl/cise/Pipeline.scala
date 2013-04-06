@@ -23,15 +23,14 @@ import edu.stanford.nlp.dcoref.CorefChain
 import java.util.ArrayList
 import java.util.HashMap
 import edu.ufl.cise.util.RelationChecker
-import scala.collection.JavaConversions._
+
 
 
 object Pipeline extends Logging{
 
 	// preprocessing pipelines, parser, and corefernce annotator
 	private var prepipeline : StanfordCoreNLP = null
-	private var parser: ParserAnnotator = null
-	private var dcoref : DeterministicCorefAnnotator = null
+
 	// the entity coreference map
 	private var corefMap : java.util.Map[Integer, String] = null
 	// the important sentences that contain the desired entity
@@ -41,20 +40,16 @@ object Pipeline extends Logging{
 	// use to store the extracted relations
 	private var triples : ArrayList[Triple] = null
 	// a bloom filter to check relations
-	private val bf = RelationChecker.createWikiBloomChecker
+	private var bf : (String => Boolean) = null
 
 	def init()
 	{
+		// initialize preprocessing Stanford NLP pipeline
 		var props = new Properties()
-		props.put("annotators", "tokenize, ssplit, pos, lemma, ner");
-		// preprocessing pipeline for tokenize, ssplit, pos, lemma and ner
+		props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
 		prepipeline = new StanfordCoreNLP(props)
-		//prepipeline.addAnnotator(annotator)
-		// parser
-		val verbose = false
-		parser = new ParserAnnotator(verbose, -1)
-	  	//coreference with default properties
-		dcoref = new DeterministicCorefAnnotator(new Properties)
+		// initialize the bloomfilter of the ReVerb
+		bf = RelationChecker.createWikiBloomChecker
 	}
 
 	// used to filter out irrelevant documents, will be implemented in future
@@ -242,7 +237,7 @@ object Pipeline extends Logging{
 			val sentence = sentences.get(i)
 			val line = sentence.toString()
 			// output the possible relations between two named entities
-			// println(sentence.toString())
+			//println(sentence.toString())
 
 			val tokens = sentence.get[java.util.List[CoreLabel], TokensAnnotation](classOf[TokensAnnotation])
 			val size = tokens.size()
@@ -254,8 +249,7 @@ object Pipeline extends Logging{
 			// extrac relations
 			triples = getRelations(words, marks)
 			// log each relation
-			//for(relation <- triples.toArray())logInfo(relation.toString())
-      triples.foreach{t => logInfo(t.toString)} // XXX Do we need this?
+			for(relation <- triples.toArray())logInfo(relation.toString())
 		}
 
 	}
@@ -270,7 +264,7 @@ object Pipeline extends Logging{
 	// }
 
 	// the main logic
-	def run(text:String):Seq[Triple] = 
+	def run(text:String):ArrayList[Triple] = 
 	{
 
 		// create an empty Annotation just with the given text
@@ -281,12 +275,6 @@ object Pipeline extends Logging{
 		// filter out the document
 		// val valid = filter(document)
 		// if (!valid) return null
-
-		// parsing the document
-		parser.annotate(document)
-		// coreference resolution
-		dcoref.annotate(document)
-
 		// extract relations
 		prepare(document)
 		extract(document)
@@ -295,7 +283,7 @@ object Pipeline extends Logging{
 		// pipeline ends
 		logInfo("pipeline ends")
 
-		triples
+		return triples
 	}
 
 
@@ -306,10 +294,10 @@ object Pipeline extends Logging{
 		// extract relations from a string
 		val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
 		run(text)
-
-    val text2 = """Princess Victoria of Hesse and by Rhine (1863–1950) was the eldest daughter of Louis IV, Grand Duke of Hesse and by Rhine, and his first wife Princess Alice of the United Kingdom. Victoria married Prince Louis of Battenberg, her father's first cousin and an officer in the UK's Royal Navy, in a love match and lived most of her married life in various parts of Europe at her husband's naval posts and visiting her many royal relations."""
-    run(text2)
 	}
 
 }
+
+
+Class Pipeline(text:String, )
 
