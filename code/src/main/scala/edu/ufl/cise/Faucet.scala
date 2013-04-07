@@ -88,7 +88,7 @@ object Faucet extends Logging {
    * Example usage:
    *   getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
-  def getStreams(date: String, fileName: String): Iterator[Option[StreamItem]] = {
+  def getStreams(date: String, fileName: String): Iterator[StreamItem] = {
     val data = grabGPG(date, fileName)
     val bais = new ByteArrayInputStream(data.toByteArray())
     val transport = new TIOStreamTransport(bais)
@@ -98,6 +98,7 @@ object Faucet extends Logging {
     // Stop streaming after the first None. TODO why? what could happen? end of file?
     val it = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
       .takeWhile(_ match { case None => false; case _ => true })
+      .map{_.get}
       .toIterator
 
     transport.close()
@@ -107,7 +108,7 @@ object Faucet extends Logging {
   /**
    * Return the files pertaining to specific date.
    */
-  def getStreams(date: String, hour: Int): Iterator[Option[StreamItem]] = {
+  def getStreams(date: String, hour: Int): Iterator[StreamItem] = {
     // This adds zero in case of a one digit number
     val hourStr = numberFormatter.format(hour)
 
@@ -122,8 +123,8 @@ object Faucet extends Logging {
      * while still making it lazy.
      * Go ahead and try and improve it.
      */
-    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[Option[StreamItem]] = {
-      def lazyGrab(file: Match): Iterator[Option[StreamItem]] = {
+    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[StreamItem] = {
+      def lazyGrab(file: Match): Iterator[StreamItem] = {
         for (si <- getStreams(folderName, file.group(1)))
           yield si
       }
@@ -135,7 +136,7 @@ object Faucet extends Logging {
   /**
    * Returns streams in a specific hour range of a specific date
    */
-  def getStreams(date: String, hour0: Int, hour1: Int): Iterator[Option[StreamItem]] = {
+  def getStreams(date: String, hour0: Int, hour1: Int): Iterator[StreamItem] = {
     if (hour0 < 0 || hour1 > 23)
       null
     else {
@@ -149,11 +150,11 @@ object Faucet extends Logging {
   /**
    * Returns all the streams for all the hours of a day
    */
-  def getStreams(date: String): Iterator[Option[StreamItem]] = {
+  def getStreams(date: String): Iterator[StreamItem] = {
     getStreams(date, 0, 23)
   }
 
-  def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[Option[StreamItem]] = {
+  def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[StreamItem] = {
     val sdf = new SimpleDateFormat("yyyy-MM-dd");
     val dFrom = sdf.parse(dateFrom)
     val dTo = sdf.parse(dateTo)
@@ -164,7 +165,7 @@ object Faucet extends Logging {
     var tempDate = dFrom
     val c = Calendar.getInstance();
 
-    var it = Iterator[Option[StreamItem]]()
+    var it = Iterator[StreamItem]()
     while (tempDate.before(dTo) || tempDate.equals(dTo)) {
       val dateStr = sdf.format(tempDate)
       val z = getStreams(dateStr)
@@ -179,7 +180,7 @@ object Faucet extends Logging {
     }
 
     //getStreams(date, 0, 23)
-    return it
+    it
   }
 
   def main(args: Array[String]) = {
@@ -196,6 +197,6 @@ object Faucet extends Logging {
     //logInfo(z2.take(501).length.toString)
     
     val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
-    logInfo(z3.take(501).length.toString)
+    //logInfo(z3.take(501).length.toString)
   }
 }
