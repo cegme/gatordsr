@@ -6,11 +6,6 @@
  */
 package streamcorpus;
 
-
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
-
 /**
  * Versions of this protocol are enumerated so that when we expand,
  * everybody can see which version a particular data file used.
@@ -30,7 +25,8 @@ public enum Versions implements org.apache.thrift.TEnum {
   /**
    * Get the integer value of this enum value, as defined in the Thrift IDL.
    */
-  public int getValue() {
+  @Override
+public int getValue() {
     return value;
   }
 
