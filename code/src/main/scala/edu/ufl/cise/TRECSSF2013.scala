@@ -12,7 +12,7 @@ object TRECSSF2013 extends Logging {
     //val z = Faucet.getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
     val z = Faucet.getStreams("2012-05-02",0,1)
       //.take(100)
-      .map(si => new String(si.body.cleansed.array, "UTF-8").take(500))
+      .map(si => new String(si.body.cleansed.array, "UTF-8"))
       //.map(_.take(964))
       .map(Pipeline.run(_))
       .flatMap(x => x)
