@@ -12,23 +12,13 @@ import org.apache.thrift.scheme.StandardScheme;
 
 import org.apache.thrift.scheme.TupleScheme;
 import org.apache.thrift.protocol.TTupleProtocol;
-import org.apache.thrift.protocol.TProtocolException;
-import org.apache.thrift.EncodingUtils;
-import org.apache.thrift.TException;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.EnumMap;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * ContentItem is the thrift analog of
@@ -128,11 +118,13 @@ public class ContentItem implements org.apache.thrift.TBase<ContentItem, Content
       _fieldName = fieldName;
     }
 
-    public short getThriftFieldId() {
+    @Override
+	public short getThriftFieldId() {
       return _thriftId;
     }
 
-    public String getFieldName() {
+    @Override
+	public String getFieldName() {
       return _fieldName;
     }
   }
@@ -187,7 +179,8 @@ public class ContentItem implements org.apache.thrift.TBase<ContentItem, Content
     }
   }
 
-  public ContentItem deepCopy() {
+  @Override
+public ContentItem deepCopy() {
     return new ContentItem(this);
   }
 
@@ -325,7 +318,8 @@ public class ContentItem implements org.apache.thrift.TBase<ContentItem, Content
     }
   }
 
-  public void setFieldValue(_Fields field, Object value) {
+  @Override
+public void setFieldValue(_Fields field, Object value) {
     switch (field) {
     case RAW:
       if (value == null) {
@@ -362,7 +356,8 @@ public class ContentItem implements org.apache.thrift.TBase<ContentItem, Content
     }
   }
 
-  public Object getFieldValue(_Fields field) {
+  @Override
+public Object getFieldValue(_Fields field) {
     switch (field) {
     case RAW:
       return getRaw();
@@ -381,7 +376,8 @@ public class ContentItem implements org.apache.thrift.TBase<ContentItem, Content
   }
 
   /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-  public boolean isSet(_Fields field) {
+  @Override
+public boolean isSet(_Fields field) {
     if (field == null) {
       throw new IllegalArgumentException();
     }
@@ -507,15 +503,18 @@ public class ContentItem implements org.apache.thrift.TBase<ContentItem, Content
     return 0;
   }
 
-  public _Fields fieldForId(int fieldId) {
+  @Override
+public _Fields fieldForId(int fieldId) {
     return _Fields.findByThriftId(fieldId);
   }
 
-  public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+  @Override
+public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
     schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
   }
 
-  public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+  @Override
+public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
     schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
   }
 
@@ -585,14 +584,16 @@ public class ContentItem implements org.apache.thrift.TBase<ContentItem, Content
   }
 
   private static class ContentItemStandardSchemeFactory implements SchemeFactory {
-    public ContentItemStandardScheme getScheme() {
+    @Override
+	public ContentItemStandardScheme getScheme() {
       return new ContentItemStandardScheme();
     }
   }
 
   private static class ContentItemStandardScheme extends StandardScheme<ContentItem> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, ContentItem struct) throws org.apache.thrift.TException {
+    @Override
+	public void read(org.apache.thrift.protocol.TProtocol iprot, ContentItem struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -645,7 +646,8 @@ public class ContentItem implements org.apache.thrift.TBase<ContentItem, Content
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, ContentItem struct) throws org.apache.thrift.TException {
+    @Override
+	public void write(org.apache.thrift.protocol.TProtocol oprot, ContentItem struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -680,7 +682,8 @@ public class ContentItem implements org.apache.thrift.TBase<ContentItem, Content
   }
 
   private static class ContentItemTupleSchemeFactory implements SchemeFactory {
-    public ContentItemTupleScheme getScheme() {
+    @Override
+	public ContentItemTupleScheme getScheme() {
       return new ContentItemTupleScheme();
     }
   }

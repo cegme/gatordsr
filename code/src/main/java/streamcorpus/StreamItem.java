@@ -12,23 +12,15 @@ import org.apache.thrift.scheme.StandardScheme;
 
 import org.apache.thrift.scheme.TupleScheme;
 import org.apache.thrift.protocol.TTupleProtocol;
-import org.apache.thrift.protocol.TProtocolException;
-import org.apache.thrift.EncodingUtils;
-import org.apache.thrift.TException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.EnumMap;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the primary interface to the corpus data.  It is called
@@ -262,11 +254,13 @@ public class StreamItem implements org.apache.thrift.TBase<StreamItem, StreamIte
       _fieldName = fieldName;
     }
 
-    public short getThriftFieldId() {
+    @Override
+	public short getThriftFieldId() {
       return _thriftId;
     }
 
-    public String getFieldName() {
+    @Override
+	public String getFieldName() {
       return _fieldName;
     }
   }
@@ -416,7 +410,8 @@ public class StreamItem implements org.apache.thrift.TBase<StreamItem, StreamIte
     }
   }
 
-  public StreamItem deepCopy() {
+  @Override
+public StreamItem deepCopy() {
     return new StreamItem(this);
   }
 
@@ -880,7 +875,8 @@ public class StreamItem implements org.apache.thrift.TBase<StreamItem, StreamIte
     }
   }
 
-  public void setFieldValue(_Fields field, Object value) {
+  @Override
+public void setFieldValue(_Fields field, Object value) {
     switch (field) {
     case VERSION:
       if (value == null) {
@@ -981,7 +977,8 @@ public class StreamItem implements org.apache.thrift.TBase<StreamItem, StreamIte
     }
   }
 
-  public Object getFieldValue(_Fields field) {
+  @Override
+public Object getFieldValue(_Fields field) {
     switch (field) {
     case VERSION:
       return getVersion();
@@ -1024,7 +1021,8 @@ public class StreamItem implements org.apache.thrift.TBase<StreamItem, StreamIte
   }
 
   /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-  public boolean isSet(_Fields field) {
+  @Override
+public boolean isSet(_Fields field) {
     if (field == null) {
       throw new IllegalArgumentException();
     }
@@ -1318,15 +1316,18 @@ public class StreamItem implements org.apache.thrift.TBase<StreamItem, StreamIte
     return 0;
   }
 
-  public _Fields fieldForId(int fieldId) {
+  @Override
+public _Fields fieldForId(int fieldId) {
     return _Fields.findByThriftId(fieldId);
   }
 
-  public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+  @Override
+public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
     schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
   }
 
-  public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+  @Override
+public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
     schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
   }
 
@@ -1478,14 +1479,16 @@ public class StreamItem implements org.apache.thrift.TBase<StreamItem, StreamIte
   }
 
   private static class StreamItemStandardSchemeFactory implements SchemeFactory {
-    public StreamItemStandardScheme getScheme() {
+    @Override
+	public StreamItemStandardScheme getScheme() {
       return new StreamItemStandardScheme();
     }
   }
 
   private static class StreamItemStandardScheme extends StandardScheme<StreamItem> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, StreamItem struct) throws org.apache.thrift.TException {
+    @Override
+	public void read(org.apache.thrift.protocol.TProtocol iprot, StreamItem struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -1652,7 +1655,8 @@ public class StreamItem implements org.apache.thrift.TBase<StreamItem, StreamIte
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, StreamItem struct) throws org.apache.thrift.TException {
+    @Override
+	public void write(org.apache.thrift.protocol.TProtocol oprot, StreamItem struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -1770,7 +1774,8 @@ public class StreamItem implements org.apache.thrift.TBase<StreamItem, StreamIte
   }
 
   private static class StreamItemTupleSchemeFactory implements SchemeFactory {
-    public StreamItemTupleScheme getScheme() {
+    @Override
+	public StreamItemTupleScheme getScheme() {
       return new StreamItemTupleScheme();
     }
   }

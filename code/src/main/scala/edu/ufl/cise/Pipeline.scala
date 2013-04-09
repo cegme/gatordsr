@@ -233,4 +233,3 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 	}
 
 }
-
