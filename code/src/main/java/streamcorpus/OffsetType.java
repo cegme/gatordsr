@@ -6,11 +6,6 @@
  */
 package streamcorpus;
 
-
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
-
 /**
  * Offset and OffsetType are used by Annotation to identify the
  * portion of a ContentItem that a human labeled with a tag.
@@ -38,7 +33,8 @@ public enum OffsetType implements org.apache.thrift.TEnum {
   /**
    * Get the integer value of this enum value, as defined in the Thrift IDL.
    */
-  public int getValue() {
+  @Override
+public int getValue() {
     return value;
   }
 

@@ -106,7 +106,7 @@ object Faucet extends Logging {
     // Stop streaming after the first None. TODO why? what could happen? end of file?
     val it = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
       .takeWhile(_ match { case None => false; case _ => true })
-      .map{_.get}
+      .map { _.get }
       .toIterator
 
     transport.close()
@@ -165,9 +165,10 @@ object Faucet extends Logging {
     getStreams(date, 0, 23)
   }
 
-  def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[StreamItem] = {
+  /**
    * Return the data between specific date ranges.
    */
+  def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[StreamItem] = {
 
     val dFrom = SIMPLE_DATE_FORMAT.parse(dateFrom)
     val dTo = SIMPLE_DATE_FORMAT.parse(dateTo)
@@ -245,7 +246,7 @@ object Faucet extends Logging {
         m =>
 
           val str = BASE_URL + directoryName + "/" + m.group(1)
-          if(str.toUpperCase().contains("WIKI"))
+          if (str.toUpperCase().contains("WIKI"))
             println(str)
           val url = new URL(str);
           val conn = url.openConnection();

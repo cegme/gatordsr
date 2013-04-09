@@ -223,31 +223,6 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 
 		logInfo("pipeline ends")
 		return triples
-		  
-		  //Abraham Lincoln - president of - United States
-		val ret = run(text)
-		println("QUERY:::")
-		val query = new SSFQuery("Abraham Lincoln", "president of")    
-		
-		for(i<-0 until ret.size())
-		{
-			val triple = ret.get(i)
-			// println()
-			if( (triple.entity0.equals(query.entity) || query.entity.contains(triple.entity0)) &&
-					( query.slotName.contains(triple.slot) || triple.slot.equals(query.slotName)))
-			{
-			   println(triple)
-			}
-		}
-		
-		
-		ret.toArray()
-      .filter(p => {
-        val triple = p.asInstanceOf[Triple]
-        (triple.entity0.contains(query.entity) ||
-          query.entity.contains(triple.entity0)) &&
-         ( query.slotName.contains(triple.slot) ||
-          triple.slot.contains(query.slotName))
-      }).foreach(println)
 	}
+
 }

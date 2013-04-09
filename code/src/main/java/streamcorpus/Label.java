@@ -12,23 +12,12 @@ import org.apache.thrift.scheme.StandardScheme;
 
 import org.apache.thrift.scheme.TupleScheme;
 import org.apache.thrift.protocol.TTupleProtocol;
-import org.apache.thrift.protocol.TProtocolException;
-import org.apache.thrift.EncodingUtils;
-import org.apache.thrift.TException;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.EnumMap;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Labels are human generated assertions about a portion of a document
@@ -135,11 +124,13 @@ public class Label implements org.apache.thrift.TBase<Label, Label._Fields>, jav
       _fieldName = fieldName;
     }
 
-    public short getThriftFieldId() {
+    @Override
+	public short getThriftFieldId() {
       return _thriftId;
     }
 
-    public String getFieldName() {
+    @Override
+	public String getFieldName() {
       return _fieldName;
     }
   }
@@ -202,7 +193,8 @@ public class Label implements org.apache.thrift.TBase<Label, Label._Fields>, jav
     }
   }
 
-  public Label deepCopy() {
+  @Override
+public Label deepCopy() {
     return new Label(this);
   }
 
@@ -319,7 +311,8 @@ public class Label implements org.apache.thrift.TBase<Label, Label._Fields>, jav
     }
   }
 
-  public void setFieldValue(_Fields field, Object value) {
+  @Override
+public void setFieldValue(_Fields field, Object value) {
     switch (field) {
     case ANNOTATOR:
       if (value == null) {
@@ -348,7 +341,8 @@ public class Label implements org.apache.thrift.TBase<Label, Label._Fields>, jav
     }
   }
 
-  public Object getFieldValue(_Fields field) {
+  @Override
+public Object getFieldValue(_Fields field) {
     switch (field) {
     case ANNOTATOR:
       return getAnnotator();
@@ -364,7 +358,8 @@ public class Label implements org.apache.thrift.TBase<Label, Label._Fields>, jav
   }
 
   /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-  public boolean isSet(_Fields field) {
+  @Override
+public boolean isSet(_Fields field) {
     if (field == null) {
       throw new IllegalArgumentException();
     }
@@ -469,15 +464,18 @@ public class Label implements org.apache.thrift.TBase<Label, Label._Fields>, jav
     return 0;
   }
 
-  public _Fields fieldForId(int fieldId) {
+  @Override
+public _Fields fieldForId(int fieldId) {
     return _Fields.findByThriftId(fieldId);
   }
 
-  public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+  @Override
+public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
     schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
   }
 
-  public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+  @Override
+public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
     schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
   }
 
@@ -543,14 +541,16 @@ public class Label implements org.apache.thrift.TBase<Label, Label._Fields>, jav
   }
 
   private static class LabelStandardSchemeFactory implements SchemeFactory {
-    public LabelStandardScheme getScheme() {
+    @Override
+	public LabelStandardScheme getScheme() {
       return new LabelStandardScheme();
     }
   }
 
   private static class LabelStandardScheme extends StandardScheme<Label> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, Label struct) throws org.apache.thrift.TException {
+    @Override
+	public void read(org.apache.thrift.protocol.TProtocol iprot, Label struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -610,7 +610,8 @@ public class Label implements org.apache.thrift.TBase<Label, Label._Fields>, jav
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, Label struct) throws org.apache.thrift.TException {
+    @Override
+	public void write(org.apache.thrift.protocol.TProtocol oprot, Label struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -646,7 +647,8 @@ public class Label implements org.apache.thrift.TBase<Label, Label._Fields>, jav
   }
 
   private static class LabelTupleSchemeFactory implements SchemeFactory {
-    public LabelTupleScheme getScheme() {
+    @Override
+	public LabelTupleScheme getScheme() {
       return new LabelTupleScheme();
     }
   }
