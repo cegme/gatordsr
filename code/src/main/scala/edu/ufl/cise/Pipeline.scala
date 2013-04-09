@@ -46,12 +46,6 @@ object Pipeline extends Logging{
 	// get a Pipeline object for specific text and query
 	def getPipeline(text:String, query:SSFQuery):Pipeline = new Pipeline(text, query)
 	
-	def run(text:String):ArrayList[Triple]=
-	{
-		val pipeline = getPipeline(text, new SSFQuery("Abraham Lincoln", "president of"))
-		return pipeline.run(text)
-	}
-	
 	def main (args: Array[String])
 	{
 	  	// initialize the annotators
