@@ -1,10 +1,11 @@
 /*** SimpleJob.scala ***/
+package edu.ufl.cise
 
 import spark.SparkContext
-import spark.StreamingContext
+import spark.streaming.StreamingContext
 
 
 object SimpleJob extends Application {
-  val sc: SparkContext = null
-  val sc: StreamingContext = null
+  var sc: SparkContext = null
+  var stc: StreamingContext = null
 }
