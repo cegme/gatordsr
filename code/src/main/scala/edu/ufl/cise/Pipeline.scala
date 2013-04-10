@@ -55,6 +55,7 @@ object Pipeline extends Logging{
 		val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
 		val pipeline = getPipeline(text, new SSFQuery("Abraham Lincoln", "president of"))
 		pipeline.run(text)
+		// check how to push
 	}
 
 }
