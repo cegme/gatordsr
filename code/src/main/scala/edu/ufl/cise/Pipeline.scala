@@ -37,7 +37,8 @@ object Pipeline extends Logging{
 	{
 		// initialize preprocessing Stanford NLP pipeline
 		var props = new Properties()
-		props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+		props.put("annotators", "tokenize, ssplit, pos, lemma, ner");
+		//props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
 		prepipeline = new StanfordCoreNLP(props)
 		// initialize the bloomfilter using the ReVerb relation list
 		bf = RelationChecker.createWikiBloomChecker
