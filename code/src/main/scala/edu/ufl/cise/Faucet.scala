@@ -217,6 +217,7 @@ object Faucet extends Logging {
     //    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
     //logInfo(z3.take(501).length.toString)
     //    logInfo(z3.take(501).length.toString)
+    //test 1
     println(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
   }
 
