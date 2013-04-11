@@ -18,7 +18,7 @@ libraryDependencies += "org.spark-project" % "spark-core_2.9.2" % "0.7.0"
 
 libraryDependencies += "org.spark-project" % "spark-streaming_2.9.2" % "0.7.0"
 
-libraryDependencies += "com.typesafe.akka" % "akka-camel_2.10.0-M7" % "2.1-M2"
+
 
 
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.3"
