@@ -9,9 +9,37 @@ package edu.ufl.cise
  * An example is: (James_McCartney, founderOf, Beatles2) 
  * where James_McCartney is the entity and founderOf is the slot name.
  * We will not be given the final entity Beatles2, this will be inferred.
+ * 
+ * New query format: 
+ * Given a slot for each of the target entities, detect changes to the slot value, such as location of next performance or founder of ____.
+ * The hourly structured of the KBA stream corpus allows entities to evolve.
+
+ * 
  */
 
-class SSFQuery(val entity:String, val slotName:String) extends Logging {
+trait EntityType {
+    
+}
+
+object PER extends Enumeration with EntityType{
+    type PER = Value
+    val Affiliate, Contact_Meet_PlaceTime, AwardsWon, DateOfDeath, CauseOfDeath, Titles, FounderOf, EmployeeOf  = Value
+  }
+
+object FAC extends Enumeration with EntityType{
+    type FAC = Value
+    val Affiliate, Contact_Meet_Entity  = Value
+  }
+
+object ORG extends Enumeration with EntityType{
+    type ORG = Value
+    val Affiliate, TopMembers, FoundedBy   = Value
+  }
+
+class NewSSFQuery(val entity:String, val slotName: EntityType) extends Logging {
+
+}
+class SSFQuery(val entity:String, val slotName: String) extends Logging {
 
   // TODO : See if we are given a "time" for this query, if so add it to the constructor
   // TODO : Add a mutable dictionary of synonyms for the entity
