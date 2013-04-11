@@ -4,6 +4,6 @@ package edu.ufl.cise
 case class Triple (val entity0:String, val slot:String, val entity1:String) {
 	
 	override def toString():String = entity0 + " - " + slot + " - " + entity1
-	
+
 	def toArray(): Array[String] = Array(entity0, slot, entity1)
 }

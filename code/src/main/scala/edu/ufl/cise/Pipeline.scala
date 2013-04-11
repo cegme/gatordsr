@@ -1,45 +1,40 @@
 package edu.ufl.cise
 
+import Pipeline._
 import edu.stanford.nlp.pipeline.StanfordCoreNLP
+import edu.ufl.cise.util.RelationChecker
+import java.util.ArrayList
+import edu.stanford.nlp.pipeline.ParserAnnotator
+import edu.stanford.nlp.pipeline.DeterministicCorefAnnotator
 import java.util.Properties
 import edu.stanford.nlp.pipeline.Annotation
-import edu.stanford.nlp.ie.NERClassifierCombiner
-import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation
-import edu.stanford.nlp.pipeline.ParserAnnotator
 import edu.stanford.nlp.util.CoreMap
-import edu.stanford.nlp.pipeline.DeterministicCorefAnnotator
-import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation
 import edu.stanford.nlp.ling.CoreLabel
-import edu.stanford.nlp.pipeline.Annotator
-import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation
-import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation
+import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation
+import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation
-import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation
-import edu.stanford.nlp.trees.Tree
-import edu.stanford.nlp.trees.semgraph.SemanticGraph
-import edu.stanford.nlp.trees.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcessedDependenciesAnnotation
-import edu.stanford.nlp.dcoref.CorefCoreAnnotations.CorefChainAnnotation
-import edu.stanford.nlp.dcoref.CorefChain
-import java.util.ArrayList
-import java.util.HashMap
-import edu.ufl.cise.util.RelationChecker
-import Pipeline._
+import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation
 
 
 object Pipeline extends Logging{
 
-	// preprocessing pipelines, parser, and corefernce annotator
-	private var prepipeline : StanfordCoreNLP = null
+	// ssplit to preprocess the document to get sentences, nlppipeline fully annotate each sentence
+	private var ssplit : StanfordCoreNLP = null
+	private var nlppipeline : StanfordCoreNLP = null
 	// a bloom filter to check relations
 	private var bf : (String => Boolean) = null
 
 	def init()
 	{
-		// initialize preprocessing Stanford NLP pipeline
-		var props = new Properties()
-		props.put("annotators", "tokenize, ssplit, pos, lemma, ner");
-		//props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-		prepipeline = new StanfordCoreNLP(props)
+		// initialize ssplit and Stanford NLP pipeline 
+	  	val props0 = new Properties();
+		props0.put("annotators", "tokenize, ssplit")
+		ssplit = new StanfordCoreNLP(props0)
+	  
+		val props = new Properties();
+		props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref")
+		nlppipeline = new StanfordCoreNLP(props)
+	
 		// initialize the bloomfilter using the ReVerb relation list
 		bf = RelationChecker.createWikiBloomChecker
 	}
@@ -52,9 +47,11 @@ object Pipeline extends Logging{
 	  	// initialize the annotators
 		init()
 		// extract relations from a string
-		val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
+		val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865. " +
+				"Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
 		val pipeline = getPipeline(text, new SSFQuery("Abraham Lincoln", "president of"))
 		pipeline.run(text)
+		// check how to push
 	}
 
 }
@@ -64,8 +61,8 @@ object Pipeline extends Logging{
 class Pipeline (text:String, query:SSFQuery) extends Logging{
 	
 	// use to store the extracted relations
-	private var triples : ArrayList[Triple] = null
-  
+	private var triples : ArrayList[Triple] = new ArrayList[Triple]
+	
 	// break a single sentence to corresponding array list of words and marks (mark = 0, non-entity; 1, entity)
 	def breakSentence(tokens : java.util.List[CoreLabel], words:ArrayList[String], marks:ArrayList[Integer])
 	{
@@ -85,10 +82,10 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 					marks.add(0)
 
 			}
-
 	}
+	
 	// transform a list of Strings to a single String
-	def transfer(array:java.util.List[String]):String =
+	def transform(array:java.util.List[String]):String =
 	{
 	   var s = ""
 	   for (i <- 0 until array.size())
@@ -127,7 +124,7 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 
 			if(k3 != -1 && k4 != -1)
 			{
-				s = transfer(words.subList(k3, k4))
+				s = transform(words.subList(k3, k4))
 			}
 
 			else
@@ -153,7 +150,7 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 			k2 = k2 + 1
 			if (k2 != -1 && k1 != -1)
 			{
-				s = transfer(words.subList(k2, k1 + 1))
+				s = transform(words.subList(k2, k1 + 1))
 			}
 			else
 				s = "N*A"
@@ -173,7 +170,7 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 			for (j <- i until size)
 			{
 				// use the bloom-filter to check
-			    val s =  transfer(words.subList(i, j + 1)).toLowerCase()
+			    val s =  transform(words.subList(i, j + 1)).toLowerCase()
 				if (bf(s) || bf("is " + s)) // add "is " to recognize possible relations
 				{
 					val entity0 = getEntity(words.subList(0, i), marks.subList(0, i), -1)
@@ -190,39 +187,32 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 	}
 
 	// extract relations from sentences
-	def extract(document:Annotation)
+	def extract(sentence:CoreMap)
 	{
-		val sentences = document.get[java.util.List[CoreMap], SentencesAnnotation](classOf[SentencesAnnotation])
-		for (i <- 0 until sentences.size())
-		{
-			// get each sentence
-			val sentence = sentences.get(i)
-			val tokens = sentence.get[java.util.List[CoreLabel], TokensAnnotation](classOf[TokensAnnotation])
-			val size = tokens.size()
-			var words = new ArrayList[String](size)
-			var marks = new ArrayList[Integer](size)
-			// break sentence to words and marks
-			breakSentence(tokens, words, marks)
-			// extrac relations
-			triples = getRelations(words, marks)
-			// log each relation
-			for(relation <- triples.toArray())logInfo(relation.toString())
-		}
-
+		val tokens = sentence.get[java.util.List[CoreLabel], TokensAnnotation](classOf[TokensAnnotation])
+		val size = tokens.size()
+		var words = new ArrayList[String](size)
+		var marks = new ArrayList[Integer](size)
+		// break sentence to words and marks
+		breakSentence(tokens, words, marks)
+		// extract relations
+		val results = getRelations(words, marks)
+		for(relation <- results.toArray())logInfo(relation.toString())
+		if (results.size() != 0) triples.addAll(results)
 	}
 
 	// the main logic
 	def run(text:String):ArrayList[Triple] = 
 	{
-	  
 		// create an empty Annotation just with the given text
 		val document = new Annotation(text)
-
-		// preprocessing the document and get the named entities
-		prepipeline.annotate(document)
-		// extract relations
-		extract(document)
-
+		// annotate the document
+		ssplit.annotate(document)
+		// get sentences
+		val sentences = document.get[java.util.List[CoreMap], SentencesAnnotation](classOf[SentencesAnnotation])
+		// extract relations from each sentence, and parsing each sentence, and dcoref each sentence
+		sentences.toArray().foreach(sentence => 
+		  { nlppipeline.annotate(sentence.asInstanceOf[Annotation]);extract(sentence.asInstanceOf[Annotation])})
 		logInfo("pipeline ends")
 		return triples
 	}
