@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.net.URL
 
+import spark.SparkContext
+
 /**
  * we need to read a whole directory and append the StreamItems.
  * TODO: receive filtering options and e.g. only filter some dates or hours.
@@ -43,6 +45,9 @@ object Faucet extends Logging {
   val MAX_FROM_HOUR = 14
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
+  
+  val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
+    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
 
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
