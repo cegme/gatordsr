@@ -24,9 +24,10 @@ object Pipeline extends Logging {
   private var nlppipeline: StanfordCoreNLP = null
   // a bloom filter to check relations
   private var bf: (String => Boolean) = null
+ 
 
   def init() {
-
+    
     // initialize ssplit and Stanford NLP pipeline 
     val props0 = new Properties();
     props0.put("annotators", "tokenize, ssplit")
@@ -41,7 +42,7 @@ object Pipeline extends Logging {
   }
 
   // get a Pipeline object for specific text and query
-  def getPipeline(query: SSFQuery): Pipeline = new Pipeline(query)
+  def getPipeline( query: SSFQuery): Pipeline = new Pipeline( query)
 
   def main(args: Array[String]) {
     // initialize the annotators
@@ -49,9 +50,11 @@ object Pipeline extends Logging {
     // extract relations from a string
     val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865. " +
       "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
-    val pipeline = getPipeline(new SSFQuery("Abraham Lincoln", "president of"))
-
-    pipeline.run(text, SparkIntegrator.sc)
+    val pipeline = getPipeline( new SSFQuery("Abraham Lincoln", "president of"))
+    
+    val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
+    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
+    pipeline.run(text, sc)
     // check how to push
   }
 
@@ -192,13 +195,8 @@ class Pipeline(query: SSFQuery) extends Logging {
       // get sentences
       val sentences = document.get[java.util.List[CoreMap], SentencesAnnotation](classOf[SentencesAnnotation])
       // extract relations from each sentence, and parsing each sentence, and dcoref each sentence
-
-      sentences.toArray().foreach(sentence =>
+      sparkContext.parallelize(sentences.toArray()).foreach(sentence =>
         { nlppipeline.annotate(sentence.asInstanceOf[Annotation]); extract(sentence.asInstanceOf[Annotation]) })
-      logInfo("pipeline ends")
-
-      //      sparkContext.parallelize(sentences.toArray()).foreach(sentence =>
-      //        { nlppipeline.annotate(sentence.asInstanceOf[Annotation]); extract(sentence.asInstanceOf[Annotation]) })
       logInfo("pipeline ends")
       return triples
     }
