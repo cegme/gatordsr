@@ -14,10 +14,11 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.net.URL
-
 import spark.SparkContext
 import spark.streaming.Seconds
 import spark.streaming.StreamingContext
+import org.apache.thrift.transport.TTransportException
+import scala.collection.mutable.ArrayBuffer
 
 /**
  * we need to read a whole directory and append the StreamItems.
@@ -48,10 +49,11 @@ object Faucet extends Logging {
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
 
-  val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
-    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-  val ssc = new StreamingContext("local[2]", "gatordsrStreaming", Seconds(2),
-    "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
+    val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
+      List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
+    val ssc = new StreamingContext("local[2]", "gatordsrStreaming", Seconds(2),
+      "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
+  val NUM_SLICES = 2
 
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -84,42 +86,55 @@ object Faucet extends Logging {
    * Creates a StreamItem from a protocol. return an Option[StramItem] just in case
    * for some of them we don't have data we are safe.
    */
-  def mkStreamItem(protocol: org.apache.thrift.protocol.TProtocol): Option[StreamItem] = {
-    val s = new StreamItem
-    var successful = false
-    try {
-      s.read(protocol)
-      successful = true
-    } catch {
-      case e: Exception => logDebug("Error in mkStreamItem"); None
-    }
-    if (successful) Some(s) else None
-  }
+  //  def mkStreamItem(protocol: org.apache.thrift.protocol.TProtocol): Option[StreamItem] = {
+  //    val s = new StreamItem
+  //    var successful = false
+  //    try {
+  //      s.read(protocol)
+  //      successful = true
+  //    } catch {
+  //      case e: Exception => logDebug("Error in mkStreamItem"); None
+  //    }
+  //    if (successful) Some(s) else None
+  //  }
 
   /**
    * Specify a date of the form "YYYY-MM-DD-HH" and the name of the file
-   * and returns an option stream containing those StreamItems.
+   * and return all the stream items in one gpg file. 
    *
-   * The returned stream is large and materialized.
    *
    * Example usage:
    *   getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
-  def getStreams(date: String, fileName: String): Iterator[StreamItem] = {
+  def getStreams(date: String, fileName: String): Array[StreamItem] = {
     val data = grabGPG(date, fileName)
     val bais = new ByteArrayInputStream(data.toByteArray())
     val transport = new TIOStreamTransport(bais)
     transport.open()
     val protocol = new TBinaryProtocol(transport)
 
-    // Stop streaming after the first None. TODO why? what could happen? end of file?
-    val it = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => false; case _ => true })
-      .map { _.get }
-      .toIterator
+    val arrayBuffer = ArrayBuffer[StreamItem]()
+    val si = new StreamItem
+    var exception = false
+    while (!exception) {
+
+      try {
+        si.read(protocol);
+      } catch {
+        case e: TTransportException =>
+          if (e.getType() == TTransportException.END_OF_FILE) logDebug("End of File")
+          else logDebug("Exception happened.")
+          exception = true
+        case e: Exception =>
+          logDebug("Error in mkStreamItem")
+          exception = true
+      }
+      arrayBuffer += si      
+    }
 
     transport.close()
-    it
+
+    arrayBuffer.toArray
   }
 
   def getDirectoryName(date: String, hour: Int): String = {
@@ -137,20 +152,19 @@ object Faucet extends Logging {
     val html = reader.toList.mkString
     val pattern = """a href="([^"]+.gpg)""".r
 
-    /**
-     * A round-about way to call getStream on sets of files
-     * while still making it lazy.
-     * Go ahead and try and improve it.
-     */
-    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[StreamItem] = {
-      def lazyGrab(file: Match): Iterator[StreamItem] = {
-        for (si <- getStreams(directoryName, file.group(1)))
-          yield si
-      }
-      fileIter.map { lazyGrab(_) }.flatMap(x => x)
+    // returns an array of Stream item as when we read a file the whole content of it is already in
+    //memory, making it an iterator does no help. iterator helps us avoid loading the next file before the 
+    //previous file is processed.
+    
+    val dayHourFileList = pattern.findAllIn(html).matchData.toArray
+    for(fileName<-dayHourFileList){
+      val arr = getStreams(directoryName, fileName.group(1))
+      val rdd = sc.parallelize(arr, NUM_SLICES)
     }
-    val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
-    it
+    
+    
+    
+   
   }
 
   /**
@@ -220,14 +234,12 @@ object Faucet extends Logging {
     //    println(new String(si.body.raw.array(), "UTF-8"))
 
     //    println(StreamItemUtil.toString(si))
-    //val z2 = getStreams("2012-05-01")    
-    //logInfo(z2.take(501).length.toString)
+    //    val z2 = getStreams("2012-05-01")    
+    //    logInfo(z2.take(501).length.toString)
 
     //    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
-    //logInfo(z3.take(501).length.toString)
     //    logInfo(z3.take(501).length.toString)
-    //test 1
-    println(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
+    //println(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
   }
 
   /**
