@@ -15,6 +15,10 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.net.URL
 
+import spark.SparkContext
+import spark.RDD
+import spark.storage.StorageLevel
+
 /**
  * we need to read a whole directory and append the StreamItems.
  * TODO: receive filtering options and e.g. only filter some dates or hours.
@@ -113,6 +117,28 @@ object Faucet extends Logging {
     it
   }
 
+  def getRDD(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
+    val data = grabGPG(date, fileName)
+    val bais = new ByteArrayInputStream(data.toByteArray())
+    val transport = new TIOStreamTransport(bais)
+    transport.open()
+    val protocol = new TBinaryProtocol(transport)
+
+    // Stop streaming after the first None. TODO why? what could happen? end of file?
+    val a = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
+      .takeWhile(_ match { case None => transport.close(); false; case _ => true })
+      .map { _.get }
+      //.toIterator
+      //.toArray
+
+    //transport.close()
+    val rdd = sc.makeRDD[StreamItem](a).persist(StorageLevel.MEMORY_ONLY_SER)
+    //rdd.checkpoint
+    //logInfo("RDD Count: " + rdd.count)
+    rdd
+    //sc.makeRDD[StreamItem](getStreams(date,fileName).toArray)
+  }
+
   def getDirectoryName(date: String, hour: Int): String = {
     // This adds zero in case of a one digit number
     val hourStr = numberFormatter.format(hour)
@@ -143,6 +169,36 @@ object Faucet extends Logging {
     val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
     it
   }
+
+  def getRDDPause(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
+    val directoryName = getDirectoryName(date, hour)
+    val reader = new URLLineReader(BASE_URL + format(directoryName))
+    val html = reader.toList.mkString
+    val pattern = """a href="([^"]+.gpg)""".r
+    
+    pattern.findAllIn(html).matchData
+      .map(m => getRDD(sc, directoryName, m.group(1)))
+  }
+
+
+  def getRDD(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
+    val directoryName = getDirectoryName(date, hour)
+    val reader = new URLLineReader(BASE_URL + format(directoryName))
+    val html = reader.toList.mkString
+    val pattern = """a href="([^"]+.gpg)""".r
+    
+    //pattern.findAllIn(html).matchData
+    //  .map(m => getRDD(sc, directoryName, m.group(1)))
+    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[RDD[StreamItem]] = {
+      def lazyGrab(file: Match): RDD[StreamItem] = {
+        getRDD(sc, directoryName, file.group(1))
+      }
+      fileIter.map { lazyGrab(_) }
+    }
+    val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
+    it
+  }
+
 
   /**
    * Returns streams in a specific hour range of a specific date
@@ -198,30 +254,6 @@ object Faucet extends Logging {
   }
 
   /**
-   * Test the operation of the Faucet class
-   */
-  def main(args: Array[String]) = {
-
-    //logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
-    //    val z = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
-    //    val si = z.next.get
-    //    logInfo("The first StreamItem is: %s ".format(si.toString))
-    //    logInfo("Length of stream is: %d".format(z.length))
-    //
-    //    println(new String(si.body.raw.array(), "UTF-8"))
-
-    //    println(StreamItemUtil.toString(si))
-    //val z2 = getStreams("2012-05-01")    
-    //logInfo(z2.take(501).length.toString)
-
-    //    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
-    //logInfo(z3.take(501).length.toString)
-    //    logInfo(z3.take(501).length.toString)
-    //test 1
-    println(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
-  }
-
-  /**
    * Return the file size of all compressed data
    */
   def getAllDataSize(fromDateStr: String, fromHour: Int, toDateStr: String, toHour: Int): BigInt = {
@@ -270,4 +302,49 @@ object Faucet extends Logging {
     println("Total: " + sumSize)
     return sumSize
   }
+  /**
+   * Test the operation of the Faucet class
+   */
+  def main(args: Array[String]) = {
+
+    //logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
+    //    val z = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
+    //    val si = z.next.get
+    //    logInfo("The first StreamItem is: %s ".format(si.toString))
+    //    logInfo("Length of stream is: %d".format(z.length))
+    //
+    //    println(new String(si.body.raw.array(), "UTF-8"))
+
+    //    println(StreamItemUtil.toString(si))
+    //val z2 = getStreams("2012-05-01")    
+    //logInfo(z2.take(501).length.toString)
+
+    //    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
+    //logInfo(z3.take(501).length.toString)
+    //    logInfo(z3.take(501).length.toString)
+    //logInfo(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
+
+
+    System.setProperty("spark.storage.memoryFraction", "0.66")
+    System.setProperty("spark.rdd.compress", "true")
+    //System.setProperty("SPARK_MEM", "8G")
+    //logInfo("SPARK_MEM: %s".format(System.getProperty("SPARK_MEM")))
+
+    val sc = new SparkContext("local", "gatordsr", "/homes/cgrant/spark/",
+      List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
+    //sc.setCheckpointDir("/home/cgrant/data/checkpoint/mycheckpoints2")
+
+    lazy val z0 = getRDD(sc, "2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
+    lazy val z0b = getRDD(sc, "2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
+    logInfo("Stream Count z0: " + z0.count())
+    //z0.foreach( si => println(si.schost))
+    logInfo("Union count: " + z0.union(z0b).count())
+
+    // Not working yet
+    //lazy val z1 = getRDD(sc, "2012-05-01", 0)
+    //logInfo("Stream Count z1: " + z1.foldLeft(0L)((a,b) => a + b.count))
+
+  }
+
+
 }
