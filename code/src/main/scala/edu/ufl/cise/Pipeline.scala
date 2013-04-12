@@ -52,6 +52,8 @@ object Pipeline extends Logging {
     val pipeline = getPipeline(new SSFQuery("Abraham Lincoln", "president of"))
 
     pipeline.run(text, SparkIntegrator.sc)
+    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
+    pipeline.run(text, sc)
     // check how to push
   }
 
