@@ -51,8 +51,8 @@ object Faucet extends Logging {
 
   val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
   val query = new SSFQuery("Abraham Lincoln", "president of")
-
   Pipeline.init()
+  val pipeline = Pipeline.getPipeline(query)
 
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -163,7 +163,7 @@ object Faucet extends Logging {
       //all streamitems of one file in parallel
 
       rdd.foreach(p =>
-        Pipeline.getPipeline(query))
+        pipeline.run(new String(p.body.cleansed.array, "UTF-8"), SparkIntegrator.sc))
     }
 
     null
@@ -243,6 +243,9 @@ object Faucet extends Logging {
     //    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
     //    logInfo(z3.take(501).length.toString)
     //println(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
+
+    val z3 = getStreams("2011-10-08", 5)
+    //   logInfo(z3.take(501).length.toString)
   }
 
   /**
