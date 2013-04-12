@@ -20,6 +20,8 @@ import spark.streaming.StreamingContext
 import org.apache.thrift.transport.TTransportException
 import scala.collection.mutable.ArrayBuffer
 
+import spark.SparkContext
+
 /**
  * TODO: put delays on the thread based on real delays.
  * TODO: wrap StreamItems in Option?
@@ -39,6 +41,9 @@ object Faucet extends Logging {
   val MAX_FROM_HOUR = 14
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
+  
+  val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
+    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
 
   val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
   val query = new SSFQuery("Abraham Lincoln", "president of")
