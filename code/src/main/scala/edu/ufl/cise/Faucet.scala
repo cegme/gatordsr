@@ -47,6 +47,9 @@ object Faucet extends Logging {
   val MAX_FROM_HOUR = 14
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
+  
+  val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
+    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
 
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -170,7 +173,7 @@ object Faucet extends Logging {
     it
   }
 
-  def getRDDPause(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
+  def getRDD(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
     val directoryName = getDirectoryName(date, hour)
     val reader = new URLLineReader(BASE_URL + format(directoryName))
     val html = reader.toList.mkString
@@ -181,23 +184,23 @@ object Faucet extends Logging {
   }
 
 
-  def getRDD(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
-    val directoryName = getDirectoryName(date, hour)
-    val reader = new URLLineReader(BASE_URL + format(directoryName))
-    val html = reader.toList.mkString
-    val pattern = """a href="([^"]+.gpg)""".r
-    
-    //pattern.findAllIn(html).matchData
-    //  .map(m => getRDD(sc, directoryName, m.group(1)))
-    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[RDD[StreamItem]] = {
-      def lazyGrab(file: Match): RDD[StreamItem] = {
-        getRDD(sc, directoryName, file.group(1))
-      }
-      fileIter.map { lazyGrab(_) }
-    }
-    val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
-    it
-  }
+  //def getRDD(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
+  //  val directoryName = getDirectoryName(date, hour)
+  //  val reader = new URLLineReader(BASE_URL + format(directoryName))
+  //  val html = reader.toList.mkString
+  //  val pattern = """a href="([^"]+.gpg)""".r
+  //  
+  //  //pattern.findAllIn(html).matchData
+  //  //  .map(m => getRDD(sc, directoryName, m.group(1)))
+  //  def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[RDD[StreamItem]] = {
+  //    def lazyGrab(file: Match): RDD[StreamItem] = {
+  //      getRDD(sc, directoryName, file.group(1))
+  //    }
+  //    fileIter.map { lazyGrab(_) }
+  //  }
+  //  val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
+  //  it
+  //}
 
 
   /**
@@ -330,7 +333,7 @@ object Faucet extends Logging {
     //System.setProperty("SPARK_MEM", "8G")
     //logInfo("SPARK_MEM: %s".format(System.getProperty("SPARK_MEM")))
 
-    val sc = new SparkContext("local", "gatordsr", "/homes/cgrant/spark/",
+    val sc = new SparkContext("local", "gatordsr", "$YOUR_SPARK_HOME",
       List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
     //sc.setCheckpointDir("/home/cgrant/data/checkpoint/mycheckpoints2")
 
