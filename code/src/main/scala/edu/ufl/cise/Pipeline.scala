@@ -51,9 +51,8 @@ object Pipeline extends Logging {
       "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
     val pipeline = getPipeline(new SSFQuery("Abraham Lincoln", "president of"))
 
+    
     pipeline.run(text, SparkIntegrator.sc)
-    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-    pipeline.run(text, sc)
     // check how to push
   }
 
@@ -196,11 +195,8 @@ class Pipeline(query: SSFQuery) extends Logging {
       // extract relations from each sentence, and parsing each sentence, and dcoref each sentence
 
       sentences.toArray().foreach(sentence =>
+      sparkContext.parallelize(sentences.toArray()).foreach(sentence =>
         { nlppipeline.annotate(sentence.asInstanceOf[Annotation]); extract(sentence.asInstanceOf[Annotation]) })
-      logInfo("pipeline ends")
-
-      //      sparkContext.parallelize(sentences.toArray()).foreach(sentence =>
-      //        { nlppipeline.annotate(sentence.asInstanceOf[Annotation]); extract(sentence.asInstanceOf[Annotation]) })
       logInfo("pipeline ends")
       return triples
     }
