@@ -52,9 +52,8 @@ object Pipeline extends Logging {
       "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
     val pipeline = getPipeline( new SSFQuery("Abraham Lincoln", "president of"))
     
-    val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
-    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-    pipeline.run(text, sc)
+    
+    pipeline.run(text, SparkIntegrator.sc)
     // check how to push
   }
 
