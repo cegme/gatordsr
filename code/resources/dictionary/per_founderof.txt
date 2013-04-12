@@ -1,3 +1,24 @@
+architect
+author
+beginner
+benefactor
+builder
+constructor
+creator
+designer
+establisher
+forebearer
+framer
+generator
+initiator
+institutor
+inventor
+maker
+organizer
+originator
+patron
+planner
+prime mover
 begin
 commence
 constitute
