@@ -16,17 +16,10 @@ import java.util.Calendar
 import java.net.URL
 import spark.SparkContext
 import spark.streaming.StreamingContext
-<<<<<<< HEAD
-import spark.SparkContext._
-import scala.collection.mutable.ArrayBuffer
-=======
-import org.apache.thrift.transport.TTransportException
-import scala.collection.mutable.ArrayBuffer
 
 /**
  * we need to read a whole directory and append the StreamItems.
  * TODO: receive filtering options and e.g. only filter some dates or hours.
->>>>>>> Modify Faucet to support Spark parallel processing.
  * TODO: put delays on the thread based on real delays.
  *
  * TODO: takewhile will evaluate all the items in the stream. what's the use of
@@ -53,17 +46,12 @@ object Faucet extends Logging {
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
     val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
       List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
     val ssc = new StreamingContext("local[2]", "gatordsrStreaming", Seconds(2),
       "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
   val NUM_SLICES = 2
 
->>>>>>> Modify Faucet to support Spark parallel processing.
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
@@ -106,10 +94,6 @@ object Faucet extends Logging {
   //    }
   //    if (successful) Some(s) else None
   //  }
-<<<<<<< HEAD
-
-=======
->>>>>>> Modify Faucet to support Spark parallel processing.
 
   /**
    * Specify a date of the form "YYYY-MM-DD-HH" and the name of the file
@@ -130,40 +114,8 @@ object Faucet extends Logging {
     val si = new StreamItem
     var exception = false
     while (!exception) {
-<<<<<<< HEAD
-=======
-
->>>>>>> Modify Faucet to support Spark parallel processing.
-      try {
-        si.read(protocol);
-      } catch {
-        case e: TTransportException =>
-          if (e.getType() == TTransportException.END_OF_FILE) logDebug("End of File")
-          else logDebug("Exception happened.")
+      .toIterator
           exception = true
-        case e: Exception =>
-          logDebug("Error in mkStreamItem")
-          exception = true
-      }
-<<<<<<< HEAD
-      arrayBuffer += si
-    }
-
-      try {
-
-    arrayBuffer.toArray
-        case e: TTransportException =>
-          if (e.getType() == TTransportException.END_OF_FILE) logDebug("End of File")
-          else logDebug("Exception happened.")
-          exception = true
-        case e: Exception =>
-          logDebug("Error in mkStreamItem")
-          exception = true
-      }
-=======
->>>>>>> Modify Faucet to support Spark parallel processing.
-      arrayBuffer += si      
-    }
 
     transport.close()
 
@@ -190,28 +142,11 @@ object Faucet extends Logging {
     //previous file is processed.
     
     val dayHourFileList = pattern.findAllIn(html).matchData.toArray
-<<<<<<< HEAD
-    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[StreamItem] = {
-      def lazyGrab(file: Match): Iterator[StreamItem] = {
-        for (si <- getStreams(directoryName, file.group(1)))
-          yield si
-      }
-      fileIter.map { lazyGrab(_) }.flatMap(x => x)
-//      rdd.foreach(p =>
-//        pipeline.run(new String(p.body.cleansed.array, "UTF-8"), SparkIntegrator.sc))
-    val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
-    it
-
-=======
-    for(fileName<-dayHourFileList){
       val arr = getStreams(directoryName, fileName.group(1))
       val rdd = sc.parallelize(arr, NUM_SLICES)
->>>>>>> Modify Faucet to support Spark parallel processing.
-    }
+//      rdd.foreach(p =>
     
     
-    
-   
   }
 
   /**
