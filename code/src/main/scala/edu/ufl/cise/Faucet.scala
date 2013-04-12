@@ -46,11 +46,16 @@ object Faucet extends Logging {
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
 
-    val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
-      List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-    val ssc = new StreamingContext("local[2]", "gatordsrStreaming", Seconds(2),
-      "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
+  val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
+    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
+  val ssc = new StreamingContext("local[2]", "gatordsrStreaming", Seconds(2),
+    "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
   val NUM_SLICES = 2
+
+  val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
+  val query = new SSFQuery("Abraham Lincoln", "president of")
+
+  Pipeline.init()
 
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -97,7 +102,7 @@ object Faucet extends Logging {
 
   /**
    * Specify a date of the form "YYYY-MM-DD-HH" and the name of the file
-   * and return all the stream items in one gpg file. 
+   * and return all the stream items in one gpg file.
    *
    *
    * Example usage:
@@ -140,13 +145,21 @@ object Faucet extends Logging {
     // returns an array of Stream item as when we read a file the whole content of it is already in
     //memory, making it an iterator does no help. iterator helps us avoid loading the next file before the 
     //previous file is processed.
-    
+
     val dayHourFileList = pattern.findAllIn(html).matchData.toArray
+    Pipeline.init()
+    for(fileName<-dayHourFileList){
       val arr = getStreams(directoryName, fileName.group(1))
       val rdd = sc.parallelize(arr, NUM_SLICES)
-//      rdd.foreach(p =>
+    }
     
-    
+      rdd.foreach(p => 
+        Pipeline.getPipeline(text, query)
+      )
+    }
+
+    null
+   
   }
 
   /**
