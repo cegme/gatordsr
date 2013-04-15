@@ -21,17 +21,8 @@ import org.apache.thrift.transport.TTransportException
 import scala.collection.mutable.ArrayBuffer
 
 /**
- * we need to read a whole directory and append the StreamItems.
- * TODO: receive filtering options and e.g. only filter some dates or hours.
  * TODO: put delays on the thread based on real delays.
- *
- * TODO: takewhile will evaluate all the items in the stream. what's the use of
- * iterator anyways? in getStreams(date: String, fileName: String)
- *
- * TODO: get link to the KBA example source code, some code cleanup,
- * putting functions in order of dependency
- *
- * Scala ProcessBuilder runs shell commands as pipelines
+ * TODO: wrap StreamItems in Option?
  *
  * To run:
  * ~/gatordsr/code $ sbt
@@ -78,29 +69,16 @@ object Faucet extends Logging {
       baos) ! ProcessLogger(line => ()) // ! Executes the previous commands, 
     //Silence the linux stdout, stderr
 
-    baos //return 
+    baos
   }
-
-  /**
-   * Creates a StreamItem from a protocol. return an Option[StramItem] just in case
-   * for some of them we don't have data we are safe.
-   */
-  //  def mkStreamItem(protocol: org.apache.thrift.protocol.TProtocol): Option[StreamItem] = {
-  //    val s = new StreamItem
-  //    var successful = false
-  //    try {
-  //      s.read(protocol)
-  //      successful = true
-  //    } catch {
-  //      case e: Exception => logDebug("Error in mkStreamItem"); None
-  //    }
-  //    if (successful) Some(s) else None
-  //  }
 
   /**
    * Specify a date of the form "YYYY-MM-DD-HH" and the name of the file
    * and return all the stream items in one gpg file.
    *
+   * When we read a file the whole content of it is already in memory, making it 
+   * an iterator does no help. iterator helps us avoid loading the next file before the
+   * previous file is processed.
    *
    * Example usage:
    *   getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
@@ -132,12 +110,13 @@ object Faucet extends Logging {
     }
 
     transport.close()
-
     arrayBuffer.toArray
   }
 
+  /**
+   * Format directory names. Here, This adds zero in case of a one digit number
+   */
   def getDirectoryName(date: String, hour: Int): String = {
-    // This adds zero in case of a one digit number
     val hourStr = numberFormatter.format(hour)
     "%s-%s".format(date, hourStr)
   }
@@ -150,10 +129,6 @@ object Faucet extends Logging {
     val reader = new URLLineReader(BASE_URL + format(directoryName))
     val html = reader.toList.mkString
     val pattern = """a href="([^"]+.gpg)""".r
-
-    // returns an array of Stream item as when we read a file the whole content of it is already in
-    //memory, making it an iterator does no help. iterator helps us avoid loading the next file before the 
-    //previous file is processed.
 
     val dayHourFileList = pattern.findAllIn(html).matchData.toArray
     Pipeline.init()
@@ -218,8 +193,6 @@ object Faucet extends Logging {
       c.add(Calendar.DATE, 1); // number of days to add
       tempDate = c.getTime()
     }
-
-    //getStreams(date, 0, 23)
     it
   }
 
