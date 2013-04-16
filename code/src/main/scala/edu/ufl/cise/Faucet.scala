@@ -18,29 +18,10 @@ import java.net.URL
 import spark.SparkContext
 import spark.RDD
 import spark.storage.StorageLevel
+import spark.SparkContext._
 
-/**
- * we need to read a whole directory and append the StreamItems.
- * TODO: receive filtering options and e.g. only filter some dates or hours.
- * TODO: put delays on the thread based on real delays.
- *
- * TODO: takewhile will evaluate all the items in the stream. what's the use of
- * iterator anyways? in getStreams(date: String, fileName: String)
- *
- * TODO: get link to the KBA example source code, some code cleanup,
- * putting functions in order of dependency
- *
- * Scala ProcessBuilder runs shell commands as pipelines
- *
- * To run:
- * ~/gatordsr/code $ sbt
- * ~/gatordsr/code $ run Faucet
- * [1]
- *
- */
 
-object Faucet extends Logging {
-
+trait Faucet extends Logging {
   lazy val numberFormatter = new DecimalFormat("00")
   val BASE_URL = "http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/kba-stream-corpus-2012/"
   val MAX_FROM_DATE = "2011-10-07"
@@ -48,9 +29,6 @@ object Faucet extends Logging {
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
   
-  val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
-    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
@@ -59,8 +37,7 @@ object Faucet extends Logging {
    * gpg --no-permission-warning --import trec-kba-rsa.secret-key
    * Loads the secret key for decryption. This requires the
    * file 'trec-kba-rsa.secret-key' to be in the gatordsr/code directory.
-   *
-   * This only needs to be done once per file system.
+   * * This only needs to be done once per file system.
    * (Unless the gpg is reset or something.)
    */
   def grabGPG(date: String, fileName: String): java.io.ByteArrayOutputStream = {
@@ -94,6 +71,44 @@ object Faucet extends Logging {
     if (successful) Some(s) else None
   }
 
+  def getDirectoryName(date: String, hour: Int): String = {
+    // This adds zero in case of a one digit number
+    val hourStr = numberFormatter.format(hour)
+    "%s-%s".format(date, hourStr)
+  }
+
+
+}
+
+
+
+
+
+
+
+/**
+ * we need to read a whole directory and append the StreamItems.
+ * TODO: receive filtering options and e.g. only filter some dates or hours.
+ * TODO: put delays on the thread based on real delays.
+ *
+ * TODO: takewhile will evaluate all the items in the stream. what's the use of
+ * iterator anyways? in getStreams(date: String, fileName: String)
+ *
+ * TODO: get link to the KBA example source code, some code cleanup,
+ * putting functions in order of dependency
+ *
+ * Scala ProcessBuilder runs shell commands as pipelines
+ *
+ * To run:
+ * ~/gatordsr/code $ sbt
+ * ~/gatordsr/code $ run BaseFaucet
+ * [1]
+ *
+ */
+
+object StreamFaucet extends Faucet with Logging {
+
+
   /**
    * Specify a date of the form "YYYY-MM-DD-HH" and the name of the file
    * and returns an option stream containing those StreamItems.
@@ -120,33 +135,9 @@ object Faucet extends Logging {
     it
   }
 
-  def getRDD(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
-    val data = grabGPG(date, fileName)
-    val bais = new ByteArrayInputStream(data.toByteArray())
-    val transport = new TIOStreamTransport(bais)
-    transport.open()
-    val protocol = new TBinaryProtocol(transport)
+  
 
-    // Stop streaming after the first None. TODO why? what could happen? end of file?
-    val a = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => transport.close(); false; case _ => true })
-      .map { _.get }
-      //.toIterator
-      //.toArray
 
-    //transport.close()
-    val rdd = sc.makeRDD[StreamItem](a).persist(StorageLevel.MEMORY_ONLY_SER)
-    //rdd.checkpoint
-    //logInfo("RDD Count: " + rdd.count)
-    rdd
-    //sc.makeRDD[StreamItem](getStreams(date,fileName).toArray)
-  }
-
-  def getDirectoryName(date: String, hour: Int): String = {
-    // This adds zero in case of a one digit number
-    val hourStr = numberFormatter.format(hour)
-    "%s-%s".format(date, hourStr)
-  }
 
   /**
    * Return the files pertaining to specific date.
@@ -173,34 +164,8 @@ object Faucet extends Logging {
     it
   }
 
-  def getRDD(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
-    val directoryName = getDirectoryName(date, hour)
-    val reader = new URLLineReader(BASE_URL + format(directoryName))
-    val html = reader.toList.mkString
-    val pattern = """a href="([^"]+.gpg)""".r
-    
-    pattern.findAllIn(html).matchData
-      .map(m => getRDD(sc, directoryName, m.group(1)))
-  }
 
 
-  //def getRDD(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
-  //  val directoryName = getDirectoryName(date, hour)
-  //  val reader = new URLLineReader(BASE_URL + format(directoryName))
-  //  val html = reader.toList.mkString
-  //  val pattern = """a href="([^"]+.gpg)""".r
-  //  
-  //  //pattern.findAllIn(html).matchData
-  //  //  .map(m => getRDD(sc, directoryName, m.group(1)))
-  //  def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[RDD[StreamItem]] = {
-  //    def lazyGrab(file: Match): RDD[StreamItem] = {
-  //      getRDD(sc, directoryName, file.group(1))
-  //    }
-  //    fileIter.map { lazyGrab(_) }
-  //  }
-  //  val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
-  //  it
-  //}
 
 
   /**
@@ -328,24 +293,9 @@ object Faucet extends Logging {
     //logInfo(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
 
 
-    System.setProperty("spark.storage.memoryFraction", "0.66")
-    System.setProperty("spark.rdd.compress", "true")
-    //System.setProperty("SPARK_MEM", "8G")
-    //logInfo("SPARK_MEM: %s".format(System.getProperty("SPARK_MEM")))
 
-    val sc = new SparkContext("local", "gatordsr", "$YOUR_SPARK_HOME",
+    lazy val sc = new SparkContext("local", "gatordsr", "$YOUR_SPARK_HOME",
       List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-    //sc.setCheckpointDir("/home/cgrant/data/checkpoint/mycheckpoints2")
-
-    lazy val z0 = getRDD(sc, "2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
-    lazy val z0b = getRDD(sc, "2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
-    logInfo("Stream Count z0: " + z0.count())
-    //z0.foreach( si => println(si.schost))
-    logInfo("Union count: " + z0.union(z0b).count())
-
-    // Not working yet
-    //lazy val z1 = getRDD(sc, "2012-05-01", 0)
-    //logInfo("Stream Count z1: " + z1.foldLeft(0L)((a,b) => a + b.count))
 
   }
 
