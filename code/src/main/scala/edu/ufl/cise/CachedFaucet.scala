@@ -1,9 +1,14 @@
 package edu.ufl.cise
 
 import java.io.ByteArrayInputStream
+import java.util.zip.GZIPOutputStream
+import java.util.zip.GZIPInputStream
+import java.io.FileInputStream
 
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
+import org.apache.thrift.transport.TFileTransport
+import org.apache.thrift.transport.TStandardFile
 
 import com.google.common.hash.BloomFilter
 import com.google.common.hash.Funnels
@@ -15,6 +20,8 @@ import spark.RDD
 import spark.storage.StorageLevel
 import spark.SparkContext._
 
+import scala.sys.process.stringToProcess
+import scala.sys.process.ProcessLogger
 import scala.collection.mutable.WeakHashMap
 import scala.collection.mutable.ListBuffer
 
@@ -56,11 +63,13 @@ class CachedFaucet(
       }
       .toList
   }
+  
 
-  def getRDD(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
+  /*def getRDD(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
     
     System.gc();
     val data = grabGPG(date, fileName)
+    //val bais = new ByteArrayInputStream(data.buf)
     val bais = new ByteArrayInputStream(data.toByteArray())
     val transport = new TIOStreamTransport(bais)
     transport.open()
@@ -74,8 +83,56 @@ class CachedFaucet(
     //transport.close()
     val rdd = sc.makeRDD[StreamItem](a)//.persist(StorageLevel.DISK_ONLY)
     rdd
+  }*/
+  def getRDDZ(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
+    logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
+
+    // TODO can I not decompress and do with the GZIPOutputStream class?
+    val tmpFile = java.io.File.createTempFile("%s-%s".format(date, fileName),".tmp")
+
+    val baos = new java.io.FileOutputStream(tmpFile)
+    //bais.connect(baos)
+    //baos.connect(bais)
+    // Use the linux file system to download, decrypt and decompress a file
+    (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
+      "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
+      "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| //decrypt it, pipe it
+      "xz --decompress" #> //decompress it
+      baos) !! ProcessLogger(line => ()) // ! Executes the previous commands, 
+      //tmpFile) !! ProcessLogger(line => ()) // ! Executes the previous commands, 
+
+    baos.flush
+    //val bais = new java.io.FileInputStream(tmpFile)
+
+    logInfo("Got the file1. It is size %f MBs".format(tmpFile.length/1000.0/1000))
+
+    System.gc();
+    //val data = grabGPG(date, fileName)
+    //val bais = new ByteArrayInputStream(baos.toByteArray())
+    //val transport = new TFileTransport(new TStandardFile(tmpFile.getAbsolutePath), true)
+    //val transport = new TFileTransport(tmpFile.getAbsolutePath, true)
+    //val transport = new TIOStreamTransport(bais)
+    val transport = new TIOStreamTransport(new FileInputStream(tmpFile))
+    transport.open
+    //logInfo("numChunks: %d".format(transport.getNumChunks()))
+    val protocol = new TBinaryProtocol(transport)
+
+    // Stop streaming after the first None. TODO why? what could happen? end of file?
+    val a = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
+      .takeWhile(_ match { case None => transport.close(); logInfo("-"); false; case _ => logInfo("+"); true })
+      .map { _.get }
+      .toArray
+
+    //transport.close
+    logInfo("At the end the size is %f MBs".format(tmpFile.length/1000.0/1000))
+    tmpFile.delete
+    //val rdd = sc.makeRDD[StreamItem](a)//.persist(StorageLevel.DISK_ONLY)
+    //rdd
+    sc.parallelize(a)
   }
 
+
+  
   private class StreamIterator extends Iterator[RDD[StreamItem]] {
     val iterator = keyList.iterator
 
@@ -91,7 +148,7 @@ class CachedFaucet(
       //cache.put(c, getRDD(sc, c.date, c.fileName))
       //cache.get(c).get
       System.gc()
-      getRDD(sc, c.date, c.fileName)
+      getRDDZ(sc, c.date, c.fileName)
       // If it is not, get it and put it in the cache
     }
   }
@@ -102,9 +159,10 @@ class CachedFaucet(
 
 
 object CachedFaucet extends Faucet with Logging {
+  
 
 
-  def getRDD(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
+  /*def getRDD(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
     val directoryName = getDirectoryName(date, hour)
     val reader = new URLLineReader(BASE_URL + "%s".format(directoryName))
     val html = reader.toList.mkString
@@ -132,7 +190,7 @@ object CachedFaucet extends Faucet with Logging {
     //transport.close()
     val rdd = sc.makeRDD[StreamItem](a).persist(StorageLevel.DISK_ONLY)
     rdd
-  }
+  }*/
 
 
   def main(args: Array[String]):Unit = {
@@ -160,8 +218,13 @@ object CachedFaucet extends Faucet with Logging {
     val it = z.iterator
     while(it.hasNext) {
       {
-        it.next.count
+        val rdd = it.next
+        logInfo("The count: %d".format(rdd.count))
+        //logInfo(rdd.first.toString)
       }
+      sc.getRDDStorageInfo.foreach{x => logInfo("##%s".format(x.toString))}
+      logInfo(sc.hadoopConfiguration.toString)
+      sc.getExecutorMemoryStatus.foreach{x => logInfo("==%s".format(x.toString))}
       System.gc
     }
   }

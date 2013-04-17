@@ -7,6 +7,7 @@ import scala.sys.process.ProcessLogger
 import scala.util.matching.Regex.Match
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
+import org.apache.thrift.transport.TTransportException
 import edu.ufl.cise.util.StreamItemUtil
 import edu.ufl.cise.util.URLLineReader
 import kba.StreamItem
@@ -44,7 +45,7 @@ trait Faucet extends Logging {
     logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
 
     // TODO can I not decompress and do with the GZIPOutputStream class?
-    val baos = new java.io.ByteArrayOutputStream
+    val baos = new java.io.ByteArrayOutputStream(100 * 1024 * 1024)
     // Use the linux file system to download, decrypt and decompress a file
     (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
       "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
@@ -55,6 +56,8 @@ trait Faucet extends Logging {
 
     baos //return 
   }
+
+
 
   /**
    * Creates a StreamItem from a protocol. return an Option[StramItem] just in case
@@ -68,6 +71,10 @@ trait Faucet extends Logging {
       successful = true
     } catch {
       case e: Exception => logDebug("Error in mkStreamItem"); None
+      case e:TTransportException => e.getType match { 
+        case TTransportException.END_OF_FILE => logInfo("mkstream Finished."); 
+        case _ => logInfo("Error")
+      }
     }
     if (successful) Some(s) else None
   }
