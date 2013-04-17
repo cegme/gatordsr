@@ -10,6 +10,13 @@ resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/release
 
 resolvers += "opennlp sourceforge repo" at "http://opennlp.sourceforge.net/maven2"
 
+
+libraryDependencies += "net.sf.jwordnet" % "jwnl" % "1.4_rc3"
+
+libraryDependencies += "edu.mit" % "jwi" % "2.2.3"
+
+            
+
 libraryDependencies += "org.apache.thrift" % "libthrift" % "0.9.0"
 
 libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "1.3.4"
