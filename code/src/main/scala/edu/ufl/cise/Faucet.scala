@@ -43,6 +43,7 @@ trait Faucet extends Logging {
   def grabGPG(date: String, fileName: String): java.io.ByteArrayOutputStream = {
     logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
 
+    // TODO can I not decompress and do with the GZIPOutputStream class?
     val baos = new java.io.ByteArrayOutputStream
     // Use the linux file system to download, decrypt and decompress a file
     (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
@@ -163,8 +164,6 @@ object StreamFaucet extends Faucet with Logging {
     val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
     it
   }
-
-
 
 
 
@@ -291,7 +290,6 @@ object StreamFaucet extends Faucet with Logging {
     //logInfo(z3.take(501).length.toString)
     //    logInfo(z3.take(501).length.toString)
     //logInfo(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
-
 
 
     lazy val sc = new SparkContext("local", "gatordsr", "$YOUR_SPARK_HOME",
