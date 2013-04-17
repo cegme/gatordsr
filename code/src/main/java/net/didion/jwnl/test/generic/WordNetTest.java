@@ -12,16 +12,16 @@ public static void main(String[] args) {
 	  System.setProperty("wordnet.database.dir", "");
 	  String wordForm = "make";
 	  
-	  Synset[] synsets = database.getSynsets(wordForm,SynsetType.VERB);
-	  if (synsets.length > 0) {
-	       for (int i = 0; i < synsets.length; i++) {
-	    String[] wordForms = synsets[i].getWordForms();
-	    for (int j = 0; j < wordForms.length; j++) {
-	           if(!synonyms.contains(wordForms[j])){
-	        synonyms.add(wordForms[j]); }
-	                }
-	           }
-	     }
+//	  Synset[] synsets = database.getSynsets(wordForm,SynsetType.VERB);
+//	  if (synsets.length > 0) {
+//	       for (int i = 0; i < synsets.length; i++) {
+//	    String[] wordForms = synsets[i].getWordForms();
+//	    for (int j = 0; j < wordForms.length; j++) {
+//	           if(!synonyms.contains(wordForms[j])){
+//	        synonyms.add(wordForms[j]); }
+//	                }
+//	           }
+//	     }
 }
 }
 
