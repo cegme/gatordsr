@@ -23,10 +23,12 @@ public class DemoWordNet {
 
 	public static void main(String args[]) {
 		WordNet w = new WordNet();
-		w.searchWord("best", POS.ADJECTIVE);
-		w.searchWord("best", POS.ADVERB);
-		w.searchWord("best", POS.NOUN);
-		w.searchWord("best", POS.VERB);
+		String word = "best";
+		System.out.println("Word: " + word);
+		w.searchWord(word, POS.ADJECTIVE);
+		w.searchWord(word, POS.ADVERB);
+		w.searchWord(word, POS.NOUN);
+		w.searchWord(word, POS.VERB);
 
 	}
 }
@@ -65,20 +67,6 @@ class WordNet {
 	 */
 	public void searchWord(String key, POS pos) {
 
-		System.out
-				.println("-----------------------------------------------------------------------------------");
-		System.out
-				.println("-----------------------------------------------------------------------------------");
-		System.out.println("-----------------------------Word -> " + key
-				+ "------------");
-		System.out
-				.println("-----------------------------Par-Of-Speech searched for -> "
-						+ pos + "------");
-		System.out
-				.println("-----------------------------------------------------------------------------------");
-		System.out
-				.println("-----------------------------------------------------------------------------------");
-
 		/*
 		 * A word is having a different WordId in different synsets. Each Word
 		 * is having a unique Index.
@@ -88,10 +76,26 @@ class WordNet {
 		// e.g. NOUN.
 		IIndexWord idxWord = dictionary.getIndexWord(key, pos);
 
+		System.out
+				.println("-----------------------------------------------------------------------------------");
+		System.out
+				.println("-----------------------------------------------------------------------------------");
+		System.out.println("-----------------------------Look up for: " + key
+				+ "[" + pos.toString().toUpperCase() + "]" + "------");
+
+		// System.out
+		// .println("-----------------------------(Word, Par-Of-Speech) frequency  -> "
+		// + idxWord.getTagSenseCount() + "------");
+		System.out
+				.println("-----------------------------------------------------------------------------------");
+		System.out
+				.println("-----------------------------------------------------------------------------------");
+
 		int i = 1;
 
 		/*
-		 * getWordIDs() returns all the WordID associated with a index
+		 * getWordIDs() returns all the WordID associated with a index (the list
+		 * of meanings of the word)
 		 */
 		for (IWordID wordID : idxWord.getWordIDs()) {
 			// Construct an IWord object representing word associated with
@@ -100,74 +104,94 @@ class WordNet {
 			System.out.println("SENSE->" + i);
 			System.out.println("---------");
 
+			for (IWordID iwid : word.getRelatedWords(Pointer.ALSO_SEE)) {
+				System.out.println("lem " + iwid);
+				iwid.getSynsetID();
+			}
+
 			// Get the synset in which word is present.
 			ISynset wordSynset = word.getSynset();
 
-			System.out.print("Synset " + i + " {");
+			// process the wordsynset :
 
-			// Returns all the words present in the synset wordSynset
-			for (IWord synonym : wordSynset.getWords()) {
-				System.out.print(synonym.getLemma() + ", ");
+			{
+				checkGetWords(wordSynset);
+
+				System.out.println("getRelatedSynsets");
+				checkRelatedSynSets(wordSynset, Pointer.ALSO_SEE);
+				checkRelatedSynSets(wordSynset, Pointer.ANTONYM);
+				checkRelatedSynSets(wordSynset, Pointer.ATTRIBUTE);
+				checkRelatedSynSets(wordSynset, Pointer.CAUSE);
+				checkRelatedSynSets(wordSynset, Pointer.DERIVATIONALLY_RELATED);
+				checkRelatedSynSets(wordSynset, Pointer.DERIVED_FROM_ADJ);
+				checkRelatedSynSets(wordSynset, Pointer.ENTAILMENT);
+				checkRelatedSynSets(wordSynset, Pointer.HOLONYM_MEMBER);
+				checkRelatedSynSets(wordSynset, Pointer.HOLONYM_PART);
+				checkRelatedSynSets(wordSynset, Pointer.HOLONYM_SUBSTANCE);
+				checkRelatedSynSets(wordSynset, Pointer.HYPERNYM);
+				checkRelatedSynSets(wordSynset, Pointer.HYPERNYM_INSTANCE);
+				checkRelatedSynSets(wordSynset, Pointer.HYPONYM);
+				checkRelatedSynSets(wordSynset, Pointer.HYPONYM_INSTANCE);
+				checkRelatedSynSets(wordSynset, Pointer.MERONYM_MEMBER);
+				checkRelatedSynSets(wordSynset, Pointer.MERONYM_PART);
+				checkRelatedSynSets(wordSynset, Pointer.MERONYM_SUBSTANCE);
+				checkRelatedSynSets(wordSynset, Pointer.PARTICIPLE);
+				checkRelatedSynSets(wordSynset, Pointer.PERTAINYM);
+				checkRelatedSynSets(wordSynset, Pointer.REGION);
+				checkRelatedSynSets(wordSynset, Pointer.REGION_MEMBER);
+				checkRelatedSynSets(wordSynset, Pointer.SIMILAR_TO);
+				checkRelatedSynSets(wordSynset, Pointer.TOPIC);
+				checkRelatedSynSets(wordSynset, Pointer.TOPIC_MEMBER);
+				checkRelatedSynSets(wordSynset, Pointer.USAGE);
+				checkRelatedSynSets(wordSynset, Pointer.USAGE_MEMBER);
+				checkRelatedSynSets(wordSynset, Pointer.VERB_GROUP);
+
+				checkRelatedMap(wordSynset);
+
+				// Returns the gloss associated with the synset.
+				System.out.println("GLOSS -> " + wordSynset.getGloss());
 			}
-			System.out.print("}" + "\n");
-
-			System.out.println("getRelatedSynsets");
-			checkRelatedSynSets(wordSynset, Pointer.ALSO_SEE);
-			checkRelatedSynSets(wordSynset, Pointer.ANTONYM);
-			checkRelatedSynSets(wordSynset, Pointer.ATTRIBUTE);
-			checkRelatedSynSets(wordSynset, Pointer.CAUSE);
-			checkRelatedSynSets(wordSynset, Pointer.DERIVATIONALLY_RELATED);
-			checkRelatedSynSets(wordSynset, Pointer.DERIVED_FROM_ADJ);
-			checkRelatedSynSets(wordSynset, Pointer.ENTAILMENT);
-			checkRelatedSynSets(wordSynset, Pointer.HOLONYM_MEMBER);
-			checkRelatedSynSets(wordSynset, Pointer.HOLONYM_PART);
-			checkRelatedSynSets(wordSynset, Pointer.HOLONYM_SUBSTANCE);
-			checkRelatedSynSets(wordSynset, Pointer.HYPERNYM);
-			checkRelatedSynSets(wordSynset, Pointer.HYPERNYM_INSTANCE);
-			checkRelatedSynSets(wordSynset, Pointer.HYPONYM);
-			checkRelatedSynSets(wordSynset, Pointer.HYPONYM_INSTANCE);
-			checkRelatedSynSets(wordSynset, Pointer.MERONYM_MEMBER);
-			checkRelatedSynSets(wordSynset, Pointer.MERONYM_PART);
-			checkRelatedSynSets(wordSynset, Pointer.MERONYM_SUBSTANCE);
-			checkRelatedSynSets(wordSynset, Pointer.PARTICIPLE);
-			checkRelatedSynSets(wordSynset, Pointer.PERTAINYM);
-			checkRelatedSynSets(wordSynset, Pointer.REGION);
-			checkRelatedSynSets(wordSynset, Pointer.REGION_MEMBER);
-			checkRelatedSynSets(wordSynset, Pointer.SIMILAR_TO);
-			checkRelatedSynSets(wordSynset, Pointer.TOPIC);
-			checkRelatedSynSets(wordSynset, Pointer.TOPIC_MEMBER);
-			checkRelatedSynSets(wordSynset, Pointer.USAGE);
-			checkRelatedSynSets(wordSynset, Pointer.USAGE_MEMBER);
-			checkRelatedSynSets(wordSynset, Pointer.VERB_GROUP);
-
-			checkRelatedMap(wordSynset);
-
-			// Returns the gloss associated with the synset.
-			System.out.println("GLOSS -> " + wordSynset.getGloss());
 
 			System.out.println();
 			i++;
 		}
 	}
 
+	/**
+	 * print synonyms
+	 * 
+	 * @param wordSynset
+	 */
+	private void checkGetWords(ISynset wordSynset) {
+		System.out.print("Synset {");
+
+		// Returns all the words present in the synset wordSynset
+		for (IWord synonym : wordSynset.getWords()) {
+			System.out.print(synonym.getLemma() + ", ");
+		}
+		System.out.print("}" + "\n");
+	}
+
+	/**
+	 * print related synsets regarding to the pointer type
+	 * 
+	 * @param wordSynset
+	 * @param iPointer
+	 */
 	void checkRelatedSynSets(ISynset wordSynset, IPointer iPointer) {
 		List<ISynsetID> list = wordSynset.getRelatedSynsets(iPointer);
 		if (list.size() != 0) {
 			System.out.println("\t" + iPointer + " {");
-
-			// Returns all the words present in the synset wordSynset
-			for (ISynsetID isid : list) {
-				System.out.print("\t\t pos[" + isid.getPOS() + "]: ");
-
-				for (IWord hypernymWord : dictionary.getSynset(isid).getWords()) {
-					System.out.print(hypernymWord.getLemma() + "   ");
-				}
-				System.out.println();
-			}
+			printSynset(list);
 			System.out.print("\t}" + "\n");
 		}
 	}
 
+	/**
+	 * Semantically related (not lexically)
+	 * 
+	 * @param wordSynset
+	 */
 	void checkRelatedMap(ISynset wordSynset) {
 		System.out.println("getRelatedMap " + " {");
 
@@ -175,14 +199,22 @@ class WordNet {
 		for (Object o : wordSynset.getRelatedMap().keySet().toArray()) {
 			System.out.println("\t" + ((IPointer) o).getName() + " => ");
 			List<ISynsetID> list = wordSynset.getRelatedMap().get(o);
-			for (ISynsetID isid : list) {
-				System.out.print("\t\t");
-				System.out.println(dictionary.getSynset(isid).getWords().get(0)
-						.getLemma());
-			}
+			printSynset(list);
 			System.out.println();
 		}
 		System.out.print("}" + "\n");
+	}
+
+	void printSynset(List<ISynsetID> list) {
+		// Returns all the words present in the synset wordSynset
+		for (ISynsetID isid : list) {
+			System.out.print("\t\t pos[" + isid.getPOS() + "]: ");
+
+			for (IWord iw : dictionary.getSynset(isid).getWords()) {
+				System.out.print(iw.getLemma() + "   ");
+			}
+			System.out.println();
+		}
 	}
 
 }
