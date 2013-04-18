@@ -7,6 +7,7 @@ import java.net.URL;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.IIndexWord;
+import edu.mit.jwi.item.ISynset;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
@@ -29,8 +30,8 @@ public class mitwn {
 	public static void testDictionary() throws IOException {
 		// construct the URL to the Wordnet dictionary directory
 
-		String path = "/resources/wordnet/dict";
-		URL url = new URL(" file ", null, path);
+		String path = "./resources/wordnet/dict/";
+		URL url = new URL("file", null, path);    
 		// construct the dictionary object and open it
 		IDictionary dict = new Dictionary(url);
 		dict.open();
@@ -41,6 +42,13 @@ public class mitwn {
 		System.out.println(" Id = " + wordID);
 		System.out.println(" Lemma = " + word.getLemma());
 		System.out.println(" Gloss = " + word.getSynset().getGloss());
+		
+		
+	    ISynset synset = word.getSynset();
+	    String LexFileName = synset.getLexicalFile().getName();
+	    System.out.println("Lexical Name : "+ LexFileName);
+	    
+	    
 	}
 
 }
