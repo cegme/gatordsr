@@ -7,26 +7,22 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.net.URL
-
-
 import scala.sys.process.stringToProcess
 import scala.sys.process.ProcessLogger
 import scala.util.matching.Regex.Match
-
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
 import org.apache.thrift.transport.TTransportException
 import org.apache.thrift.transport.TFileTransport
 import org.apache.thrift.transport.TStandardFile
-
 import edu.ufl.cise.util.StreamItemUtil
 import edu.ufl.cise.util.URLLineReader
 import kba.StreamItem
-
 import spark.SparkContext
 import spark.RDD
 import spark.storage.StorageLevel
 import spark.SparkContext._
+import scala.collection.mutable.ArrayBuffer
 
 
 trait Faucet extends Logging {
@@ -36,7 +32,7 @@ trait Faucet extends Logging {
   val MAX_FROM_HOUR = 14
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
-  
+
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
@@ -70,6 +66,7 @@ trait Faucet extends Logging {
    * Creates a StreamItem from a protocol. return an Option[StramItem] just in case
    * for some of them we don't have data we are safe.
    */
+
   def mkStreamItem(protocol: org.apache.thrift.protocol.TProtocol): Option[StreamItem] = {
     val s = new StreamItem
     var successful = false
@@ -85,6 +82,7 @@ trait Faucet extends Logging {
     }
     if (successful) Some(s) else None
   }
+
 
   def getDirectoryName(date: String, hour: Int): String = {
     // This adds zero in case of a one digit number
@@ -128,28 +126,41 @@ object StreamFaucet extends Faucet with Logging {
 
   /**
    * Specify a date of the form "YYYY-MM-DD-HH" and the name of the file
-   * and returns an option stream containing those StreamItems.
+   * and return all the stream items in one gpg file.
    *
-   * The returned stream is large and materialized.
    *
    * Example usage:
    *   getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
-  def getStreams(date: String, fileName: String): Iterator[StreamItem] = {
+  def getStreams(date: String, fileName: String): Array[StreamItem] = {
     val data = grabGPG(date, fileName)
     val bais = new ByteArrayInputStream(data.toByteArray())
     val transport = new TIOStreamTransport(bais)
     transport.open()
     val protocol = new TBinaryProtocol(transport)
 
-    // Stop streaming after the first None. TODO why? what could happen? end of file?
-    val it = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => false; case _ => true })
-      .map { _.get }
-      .toIterator
+    val arrayBuffer = ArrayBuffer[StreamItem]()
+    val si = new StreamItem
+    var exception = false
+    while (!exception) {
+
+      try {
+        si.read(protocol);
+      } catch {
+        case e: TTransportException =>
+          if (e.getType() == TTransportException.END_OF_FILE) logDebug("End of File")
+          else logDebug("Exception happened.")
+          exception = true
+        case e: Exception =>
+          logDebug("Error in mkStreamItem")
+          exception = true
+      }
+      arrayBuffer += si
+    }
 
     transport.close()
-    it
+
+    arrayBuffer.toArray
   }
 
   
@@ -165,20 +176,23 @@ object StreamFaucet extends Faucet with Logging {
     val html = reader.toList.mkString
     val pattern = """a href="([^"]+.gpg)""".r
 
-    /**
-     * A round-about way to call getStream on sets of files
-     * while still making it lazy.
-     * Go ahead and try and improve it.
-     */
-    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[StreamItem] = {
-      def lazyGrab(file: Match): Iterator[StreamItem] = {
-        for (si <- getStreams(directoryName, file.group(1)))
-          yield si
-      }
-      fileIter.map { lazyGrab(_) }.flatMap(x => x)
+    // returns an array of Stream item as when we read a file the whole content of it is already in
+    //memory, making it an iterator does no help. iterator helps us avoid loading the next file before the 
+    //previous file is processed.
+
+    val dayHourFileList = pattern.findAllIn(html).matchData.toArray
+    Pipeline.init()
+    for (fileName <- dayHourFileList) {
+      val arr = getStreams(directoryName, fileName.group(1))
+      val rdd = SparkIntegrator.sc.parallelize(arr, SparkIntegrator.NUM_SLICES)
+      //all streamitems of one file in parallel
+
+//      rdd.foreach(p =>
+//        pipeline.run(new String(p.body.cleansed.array, "UTF-8"), SparkIntegrator.sc))
     }
-    val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
-    it
+
+    null
+
   }
 
 
@@ -236,7 +250,7 @@ object StreamFaucet extends Faucet with Logging {
     it
   }
 
-  /**
+ /**
    * Return the file size of all compressed data
    */
   def getAllDataSize(fromDateStr: String, fromHour: Int, toDateStr: String, toHour: Int): BigInt = {
