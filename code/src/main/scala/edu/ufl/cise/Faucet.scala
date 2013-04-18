@@ -15,14 +15,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.net.URL
 import spark.SparkContext
-import spark.streaming.Seconds
 import spark.streaming.StreamingContext
 import org.apache.thrift.transport.TTransportException
 import scala.collection.mutable.ArrayBuffer
-
-/**
- * we need to read a whole directory and append the StreamItems.
- * TODO: receive filtering options and e.g. only filter some dates or hours.
  * TODO: put delays on the thread based on real delays.
  *
  * TODO: takewhile will evaluate all the items in the stream. what's the use of
@@ -48,12 +43,9 @@ object Faucet extends Logging {
   val MAX_FROM_HOUR = 14
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
-
-    val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
-      List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-    val ssc = new StreamingContext("local[2]", "gatordsrStreaming", Seconds(2),
-      "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-  val NUM_SLICES = 2
+<<<<<<< HEAD
+  
+=======
 
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
