@@ -1,7 +1,11 @@
 package test;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
@@ -11,6 +15,7 @@ import edu.mit.jwi.item.ISynset;
 import edu.mit.jwi.item.ISynsetID;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
+import edu.mit.jwi.item.IndexWordID;
 import edu.mit.jwi.item.POS;
 import edu.mit.jwi.item.Pointer;
 
@@ -29,6 +34,13 @@ public class DemoWordNet {
 		w.searchWord(word, POS.ADVERB);
 		w.searchWord(word, POS.NOUN);
 		w.searchWord(word, POS.VERB);
+
+		// Set<String> s = w.getAntonyms(word);
+		// Iterator it = s.iterator();
+		// while (it.hasNext()) {
+		// Object o = it.next();
+		// System.out.println(o);
+		// }
 
 	}
 }
@@ -104,10 +116,23 @@ class WordNet {
 			System.out.println("SENSE->" + i);
 			System.out.println("---------");
 
-			for (IWordID iwid : word.getRelatedWords(Pointer.ALSO_SEE)) {
-				System.out.println("lem " + iwid);
-				iwid.getSynsetID();
+			List<IWordID> antonymIds = dictionary.getWord(wordID)
+					.getRelatedWords(Pointer.ANTONYM);
+			// get lemmas for each word ids
+			for (IWordID wordId : antonymIds) {
+				System.out.println("A: "
+						+ dictionary.getIndexWord(
+								new IndexWordID(wordID.getLemma(), pos))
+								.getTagSenseCount()); // getWord(wordId).getLemma());
 			}
+
+			// for (IWordID iwid : word.getRelatedWords(Pointer.ANTONYM)) {
+			// System.out.println("lem " + iwid);
+			// ISynsetID isid = iwid.getSynsetID();
+			// ISynset is = dictionary.getSynset(isid);
+			// List<ISynsetID> list = is.getRelatedSynsets(Pointer.ALSO_SEE);
+			// printSynset(list);
+			// }
 
 			// Get the synset in which word is present.
 			ISynset wordSynset = word.getSynset();
@@ -115,7 +140,7 @@ class WordNet {
 			// process the wordsynset :
 
 			{
-				checkGetWords(wordSynset);
+				checkGetWords(wordSynset, wordID, pos);
 
 				System.out.println("getRelatedSynsets");
 				checkRelatedSynSets(wordSynset, Pointer.ALSO_SEE);
@@ -162,8 +187,12 @@ class WordNet {
 	 * 
 	 * @param wordSynset
 	 */
-	private void checkGetWords(ISynset wordSynset) {
-		System.out.print("Synset {");
+	private void checkGetWords(ISynset wordSynset, IWordID wordID, POS pos) {
+		System.out.print(dictionary.getIndexWord(
+				new IndexWordID(wordID.getLemma(), pos))
+				.getTagSenseCount() + "Synset {");
+		// dictionary.getSynset(wordSynset.getID());
+		
 
 		// Returns all the words present in the synset wordSynset
 		for (IWord synonym : wordSynset.getWords()) {
@@ -217,4 +246,43 @@ class WordNet {
 		}
 	}
 
+	public Set<String> getAntonyms(String value) {
+		Set<String> lemmas = new HashSet<String>();
+		Set<IWordID> antonymIds = new HashSet<IWordID>();
+		List<IWordID> ids = getWordIdsForPos(value, POS.NOUN);
+		ids.addAll(getWordIdsForPos(value, POS.VERB));
+		ids.addAll(getWordIdsForPos(value, POS.ADVERB));
+		ids.addAll(getWordIdsForPos(value, POS.ADJECTIVE));
+		// get word ids of all antonyms
+		for (IWordID wordId : ids) {
+			antonymIds.addAll(dictionary.getWord(wordId).getRelatedWords(
+					Pointer.ANTONYM));
+		}
+		// get lemmas for each word ids
+		for (IWordID wordId : antonymIds) {
+			lemmas.add(dictionary.getWord(wordId).getLemma());
+		}
+
+		return lemmas;
+	}
+
+	/**
+	 * Returns all word id for a given word with its corresponding {@link POS}.
+	 * 
+	 * @param value
+	 *            the word
+	 * @return the list of word ids, an empty list if the association of
+	 *         {@code value} and {@code pos} does not exist
+	 */
+	private List<IWordID> getWordIdsForPos(String value, POS pos) {
+		// Get the index word for all POS !.
+		IIndexWord idxWord = dictionary
+				.getIndexWord(new IndexWordID(value, pos));
+
+		// Obtains all word ids for this word!
+		List<IWordID> allIds = new ArrayList<IWordID>();
+		if (idxWord != null)
+			allIds.addAll(idxWord.getWordIDs());
+		return allIds;
+	}
 }
