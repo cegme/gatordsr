@@ -24,8 +24,8 @@ import edu.ufl.cise.util.URLLineReader
 import kba.StreamItem
 
 import spark.SparkContext
-import spark.RDD
-import spark.storage.StorageLevel
+import spark.streaming.Seconds
+import spark.streaming.StreamingContext
 import spark.SparkContext._
 
 
@@ -36,7 +36,9 @@ trait Faucet extends Logging {
   val MAX_FROM_HOUR = 14
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
-  
+
+  val ssc = new StreamingContext("local[2]", "gatordsrStreaming", Seconds(2),
+    "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
