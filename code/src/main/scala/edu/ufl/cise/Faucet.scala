@@ -16,7 +16,7 @@ import java.util.Calendar
 import java.net.URL
 import spark.SparkContext
 import spark.streaming.StreamingContext
-import org.apache.thrift.transport.TTransportException
+import spark.SparkContext._
 import scala.collection.mutable.ArrayBuffer
  * TODO: put delays on the thread based on real delays.
  *
@@ -43,10 +43,9 @@ object Faucet extends Logging {
   val MAX_FROM_HOUR = 14
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
-<<<<<<< HEAD
-  
-=======
 
+<<<<<<< HEAD
+=======
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
@@ -90,6 +89,7 @@ object Faucet extends Logging {
   //    if (successful) Some(s) else None
   //  }
 
+
   /**
    * Specify a date of the form "YYYY-MM-DD-HH" and the name of the file
    * and return all the stream items in one gpg file. 
@@ -109,10 +109,23 @@ object Faucet extends Logging {
     val si = new StreamItem
     var exception = false
     while (!exception) {
-
       try {
         si.read(protocol);
       } catch {
+        case e: TTransportException =>
+          if (e.getType() == TTransportException.END_OF_FILE) logDebug("End of File")
+          else logDebug("Exception happened.")
+          exception = true
+        case e: Exception =>
+          logDebug("Error in mkStreamItem")
+          exception = true
+      }
+      arrayBuffer += si
+    }
+
+      try {
+
+    arrayBuffer.toArray
         case e: TTransportException =>
           if (e.getType() == TTransportException.END_OF_FILE) logDebug("End of File")
           else logDebug("Exception happened.")
@@ -149,9 +162,17 @@ object Faucet extends Logging {
     //previous file is processed.
     
     val dayHourFileList = pattern.findAllIn(html).matchData.toArray
-    for(fileName<-dayHourFileList){
-      val arr = getStreams(directoryName, fileName.group(1))
-      val rdd = sc.parallelize(arr, NUM_SLICES)
+    def lazyFileGrabber(fileIter: Iterator[Match]): Iterator[StreamItem] = {
+      def lazyGrab(file: Match): Iterator[StreamItem] = {
+        for (si <- getStreams(directoryName, file.group(1)))
+          yield si
+      }
+      fileIter.map { lazyGrab(_) }.flatMap(x => x)
+//      rdd.foreach(p =>
+//        pipeline.run(new String(p.body.cleansed.array, "UTF-8"), SparkIntegrator.sc))
+    val it = lazyFileGrabber(pattern.findAllIn(html).matchData)
+    it
+
     }
     
     
@@ -212,7 +233,7 @@ object Faucet extends Logging {
     it
   }
 
-  /**
+ /**
    * Test the operation of the Faucet class
    */
   def main(args: Array[String]) = {
