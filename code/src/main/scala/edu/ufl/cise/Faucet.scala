@@ -7,38 +7,22 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.net.URL
-
-
 import scala.sys.process.stringToProcess
 import scala.sys.process.ProcessLogger
 import scala.util.matching.Regex.Match
-
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
 import org.apache.thrift.transport.TTransportException
 import org.apache.thrift.transport.TFileTransport
 import org.apache.thrift.transport.TStandardFile
-
 import edu.ufl.cise.util.StreamItemUtil
 import edu.ufl.cise.util.URLLineReader
 import kba.StreamItem
-<<<<<<< HEAD
-import java.util.Date
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.net.URL
-import spark.SparkContext
-import spark.streaming.Seconds
-import spark.streaming.StreamingContext
-import org.apache.thrift.transport.TTransportException
-import scala.collection.mutable.ArrayBuffer
-=======
-
 import spark.SparkContext
 import spark.RDD
 import spark.storage.StorageLevel
 import spark.SparkContext._
->>>>>>> upstream/master
+import scala.collection.mutable.ArrayBuffer
 
 
 trait Faucet extends Logging {
@@ -48,16 +32,7 @@ trait Faucet extends Logging {
   val MAX_FROM_HOUR = 14
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
-<<<<<<< HEAD
 
-  val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
-  val query = new SSFQuery("Abraham Lincoln", "president of")
-  Pipeline.init()
-  val pipeline = Pipeline.getPipeline(query)
-
-=======
-  
->>>>>>> upstream/master
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
@@ -91,19 +66,7 @@ trait Faucet extends Logging {
    * Creates a StreamItem from a protocol. return an Option[StramItem] just in case
    * for some of them we don't have data we are safe.
    */
-<<<<<<< HEAD
-  //  def mkStreamItem(protocol: org.apache.thrift.protocol.TProtocol): Option[StreamItem] = {
-  //    val s = new StreamItem
-  //    var successful = false
-  //    try {
-  //      s.read(protocol)
-  //      successful = true
-  //    } catch {
-  //      case e: Exception => logDebug("Error in mkStreamItem"); None
-  //    }
-  //    if (successful) Some(s) else None
-  //  }
-=======
+
   def mkStreamItem(protocol: org.apache.thrift.protocol.TProtocol): Option[StreamItem] = {
     val s = new StreamItem
     var successful = false
@@ -119,7 +82,7 @@ trait Faucet extends Logging {
     }
     if (successful) Some(s) else None
   }
->>>>>>> upstream/master
+
 
   def getDirectoryName(date: String, hour: Int): String = {
     // This adds zero in case of a one digit number
@@ -224,8 +187,8 @@ object StreamFaucet extends Faucet with Logging {
       val rdd = SparkIntegrator.sc.parallelize(arr, SparkIntegrator.NUM_SLICES)
       //all streamitems of one file in parallel
 
-      rdd.foreach(p =>
-        pipeline.run(new String(p.body.cleansed.array, "UTF-8"), SparkIntegrator.sc))
+//      rdd.foreach(p =>
+//        pipeline.run(new String(p.body.cleansed.array, "UTF-8"), SparkIntegrator.sc))
     }
 
     null
@@ -287,35 +250,7 @@ object StreamFaucet extends Faucet with Logging {
     it
   }
 
-  /**
-<<<<<<< HEAD
-   * Test the operation of the Faucet class
-   */
-  def main(args: Array[String]) = {
-
-    //logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
-    //    val z = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
-    //    val si = z.next.get
-    //    logInfo("The first StreamItem is: %s ".format(si.toString))
-    //    logInfo("Length of stream is: %d".format(z.length))
-    //
-    //    println(new String(si.body.raw.array(), "UTF-8"))
-
-    //    println(StreamItemUtil.toString(si))
-    //    val z2 = getStreams("2012-05-01")    
-    //    logInfo(z2.take(501).length.toString)
-
-    //    val z3 = getStreamsDateRange("2011-10-08", "2011-10-11")
-    //    logInfo(z3.take(501).length.toString)
-    //println(getAllDataSize(MAX_FROM_DATE, MAX_FROM_HOUR, MAX_TO_DATE, MAX_TO_HOUR))
-
-    val z3 = getStreams("2011-10-08", 5)
-    //   logInfo(z3.take(501).length.toString)
-  }
-
-  /**
-=======
->>>>>>> upstream/master
+ /**
    * Return the file size of all compressed data
    */
   def getAllDataSize(fromDateStr: String, fromHour: Int, toDateStr: String, toHour: Int): BigInt = {
