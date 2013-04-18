@@ -2,6 +2,7 @@ package edu.ufl.cise.util
 
 
 import edu.ufl.cise.Faucet
+import edu.ufl.cise.StreamFaucet
 import kba.StreamItem
 
 /**
@@ -17,7 +18,7 @@ object StreamItemUtil {
   }
 
   def main(args: Array[String]) {
-    val z = Faucet.getStreams("2011-12-13", 19)
+    val z = StreamFaucet.getStreams("2011-12-13", 19)
     val si = z.next
     println(toString(si))
   }
