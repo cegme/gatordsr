@@ -1,20 +1,27 @@
 package edu.ufl.cise
 
 import java.io.ByteArrayInputStream
+import java.io.FileInputStream
 import java.text.DecimalFormat
-import scala.sys.process.stringToProcess
-import scala.sys.process.ProcessLogger
-import scala.util.matching.Regex.Match
-import org.apache.thrift.protocol.TBinaryProtocol
-import org.apache.thrift.transport.TIOStreamTransport
-import org.apache.thrift.transport.TTransportException
-import edu.ufl.cise.util.StreamItemUtil
-import edu.ufl.cise.util.URLLineReader
-import kba.StreamItem
 import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.net.URL
+
+
+import scala.sys.process.stringToProcess
+import scala.sys.process.ProcessLogger
+import scala.util.matching.Regex.Match
+
+import org.apache.thrift.protocol.TBinaryProtocol
+import org.apache.thrift.transport.TIOStreamTransport
+import org.apache.thrift.transport.TTransportException
+import org.apache.thrift.transport.TFileTransport
+import org.apache.thrift.transport.TStandardFile
+
+import edu.ufl.cise.util.StreamItemUtil
+import edu.ufl.cise.util.URLLineReader
+import kba.StreamItem
 
 import spark.SparkContext
 import spark.RDD
@@ -84,6 +91,8 @@ trait Faucet extends Logging {
     val hourStr = numberFormatter.format(hour)
     "%s-%s".format(date, hourStr)
   }
+
+
 
 
 }

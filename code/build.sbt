@@ -4,8 +4,9 @@ version := "0.01"
 
 scalaVersion := "2.9.2"
 
-scalacOptions ++= Seq("-unchecked", "-deprecation")
+scalacOptions ++= Seq("-unchecked", "-deprecation", "memoryMaximumSize=9G")
 
+javaOptions ++= Seq("-Xmx9G", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:MinHeapFreeRatio=60", "-XX:-PrintGC", "-XX:+UseParallelGC")
 
 resolvers += "spray repo" at "http://repo.spray.io"
 
@@ -20,11 +21,6 @@ libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "1.3.4"
 libraryDependencies += "org.spark-project" % "spark-core_2.9.2" % "0.7.0"
 
 libraryDependencies += "org.spark-project" % "spark-streaming_2.9.2" % "0.7.0"
-
-
-
-
-
 
 libraryDependencies += "edu.stanford.nlp.models" % "stanford-corenlp-models" % "1.3.4" from "http://scalasbt.artifactoryonline.com/scalasbt/repo/edu/stanford/nlp/stanford-corenlp/1.3.4/stanford-corenlp-1.3.4-models.jar"
 

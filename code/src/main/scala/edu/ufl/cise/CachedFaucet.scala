@@ -24,15 +24,17 @@ import scala.sys.process.stringToProcess
 import scala.sys.process.ProcessLogger
 import scala.collection.mutable.WeakHashMap
 import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConversions._
+
 
 import edu.ufl.cise.util.URLLineReader
 
 
 class CachedFaucet(
-  val sc:SparkContext = new SparkContext("local", "gatordsr", "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar")),
+  val sc:SparkContext = new SparkContext("local[32]", "gatordsr", "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar")),
   val dateFrom:String,
   val hour:Int
-  ) extends Faucet with Logging {
+  ) extends Faucet with Logging with Serializable {
 
   private case class CacheKey(val date:String, val fileName:String)
 
@@ -84,6 +86,27 @@ class CachedFaucet(
     val rdd = sc.makeRDD[StreamItem](a)//.persist(StorageLevel.DISK_ONLY)
     rdd
   }*/
+  
+
+  
+  private class StreamIterator extends Iterator[RDD[StreamItem]] {
+    val iterator = keyList.iterator
+
+    override def hasNext:Boolean = {
+      iterator.hasNext
+    }
+
+    override def next:RDD[StreamItem] = {
+      val c:CacheKey = iterator.next
+      
+      // Check to see if this cache was in the key
+      //val z:RDD[StreamItem] = getRDD(sc, c.date, c.fileName)
+      cache.put(c, getRDDZ(sc, c.date, c.fileName))
+      cache.get(c).get
+      //getRDDZ(sc, c.date, c.fileName)
+      // If it is not, get it and put it in the cache
+    }
+  }
   def getRDDZ(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
     logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
 
@@ -119,41 +142,30 @@ class CachedFaucet(
 
     // Stop streaming after the first None. TODO why? what could happen? end of file?
     val a = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => transport.close(); logInfo("-"); false; case _ => logInfo("+"); true })
+      .takeWhile(_ match { case None => transport.close(); logInfo("-"); false; case _ => true })
       .map { _.get }
       .toArray
 
     //transport.close
-    logInfo("At the end the size is %f MBs".format(tmpFile.length/1000.0/1000))
     tmpFile.delete
+    logInfo("Deleted tmp file of size %f MBs".format(tmpFile.length/1000.0/1000))
     //val rdd = sc.makeRDD[StreamItem](a)//.persist(StorageLevel.DISK_ONLY)
     //rdd
     sc.parallelize(a)
   }
-
-
-  
-  private class StreamIterator extends Iterator[RDD[StreamItem]] {
-    val iterator = keyList.iterator
-
-    override def hasNext:Boolean = {
-      iterator.hasNext
-    }
-
-    override def next:RDD[StreamItem] = {
-      val c:CacheKey = iterator.next
-      
-      // Check to see if this cache was in the key
-      //val z:RDD[StreamItem] = getRDD(sc, c.date, c.fileName)
-      //cache.put(c, getRDD(sc, c.date, c.fileName))
-      //cache.get(c).get
-      System.gc()
-      getRDDZ(sc, c.date, c.fileName)
-      // If it is not, get it and put it in the cache
-    }
-  }
-
   lazy val iterator:Iterator[RDD[StreamItem]] = new StreamIterator
+
+  def getAllRDDS:RDD[StreamItem] = {
+    //iterator.reduce(_ union_)
+    //sc.parallelize(keyList)
+    keyList
+      .par
+      .map{ c =>
+        getRDDZ(sc, c.date, c.fileName)
+      }
+     .reduce( _ union _) 
+    }
+
 }
 
 
@@ -215,17 +227,22 @@ object CachedFaucet extends Faucet with Logging {
     //logInfo("Stream Count z1: " + z1.foldLeft(0L)((a:Long,b:RDD[StreamItem]) => a + b.count))
 
     val z = new CachedFaucet(sc, "2012-05-01", 0)
-    val it = z.iterator
+
+    /*val it = z.iterator
     while(it.hasNext) {
       {
         val rdd = it.next
         logInfo("The count: %d".format(rdd.count))
         //logInfo(rdd.first.toString)
+        sc.getRDDStorageInfo.foreach{x => logInfo("##%s".format(x.toString))}
+        logInfo(sc.hadoopConfiguration.toString)
+        sc.getExecutorMemoryStatus.foreach{x => logInfo("==%s".format(x.toString))}
+        System.gc
       }
-      sc.getRDDStorageInfo.foreach{x => logInfo("##%s".format(x.toString))}
-      logInfo(sc.hadoopConfiguration.toString)
-      sc.getExecutorMemoryStatus.foreach{x => logInfo("==%s".format(x.toString))}
-      System.gc
-    }
+    }*/
+    lazy val z1 = z.iterator.reduce(_ union _) // Combine RDDS
+      //logInfo("Total records: %d".format(z1.count))
+      logInfo("Total records: %d".format(z.getAllRDDS.count))
   }
+
 }
