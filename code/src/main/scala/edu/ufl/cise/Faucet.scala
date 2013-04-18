@@ -36,8 +36,7 @@ trait Faucet extends Logging {
   val MAX_FROM_HOUR = 14
   val MAX_TO_DATE = "2012-05-02"
   val MAX_TO_HOUR = 0
-
-  val pipeline = Pipeline.getPipeline(query)
+  
   
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -239,9 +238,6 @@ object StreamFaucet extends Faucet with Logging {
   }
 
   /**
-
-    val z3 = getStreams("2011-10-08", 5)
-    //   logInfo(z3.take(501).length.toString)
    * Return the file size of all compressed data
    */
   def getAllDataSize(fromDateStr: String, fromHour: Int, toDateStr: String, toHour: Int): BigInt = {
