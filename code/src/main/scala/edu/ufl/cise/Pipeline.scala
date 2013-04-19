@@ -15,7 +15,6 @@ import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation
 
-import spark.SparkContext
 
 object Pipeline extends Logging{
 
@@ -24,13 +23,9 @@ object Pipeline extends Logging{
 	private var nlppipeline : StanfordCoreNLP = null
 	// a bloom filter to check relations
 	private var bf : (String => Boolean) = null
-	var sparkContext : SparkContext = null 
-	
 
 	def init()
 	{
-	   sparkContext = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
-    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
 		// initialize ssplit and Stanford NLP pipeline 
 	  	val props0 = new Properties();
 		props0.put("annotators", "tokenize, ssplit")
@@ -216,7 +211,7 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 		// get sentences
 		val sentences = document.get[java.util.List[CoreMap], SentencesAnnotation](classOf[SentencesAnnotation])
 		// extract relations from each sentence, and parsing each sentence, and dcoref each sentence
-		sparkContext.parallelize(sentences.toArray()).foreach(sentence => 
+		sentences.toArray().foreach(sentence => 
 		  { nlppipeline.annotate(sentence.asInstanceOf[Annotation]);extract(sentence.asInstanceOf[Annotation])})
 		logInfo("pipeline ends")
 		return triples
