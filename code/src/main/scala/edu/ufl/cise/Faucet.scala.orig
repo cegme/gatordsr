@@ -313,5 +313,10 @@ object StreamFaucet extends Faucet with Logging {
 
   }
 
+<<<<<<< HEAD
+
+}
+=======
  
 }
+>>>>>>> ea2810de7a5ea1bba877939b96a5613a9f3a93a7
