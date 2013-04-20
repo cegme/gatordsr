@@ -119,11 +119,23 @@ class WordNet {
 			List<IWordID> antonymIds = dictionary.getWord(wordID)
 					.getRelatedWords(Pointer.ANTONYM);
 			// get lemmas for each word ids
+
+			String strCount = "stack";
+			try {
+				System.out.println(strCount + ": count("
+						+ dictionary.getIndexWord(
+								new IndexWordID(strCount, pos))
+								.getTagSenseCount() + ")");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			for (IWordID wordId : antonymIds) {
-				System.out.println("A: "
+				System.out.println("A: count("
 						+ dictionary.getIndexWord(
 								new IndexWordID(wordID.getLemma(), pos))
-								.getTagSenseCount()); // getWord(wordId).getLemma());
+								.getTagSenseCount() + ")"); // getWord(wordId).getLemma());
 			}
 
 			// for (IWordID iwid : word.getRelatedWords(Pointer.ANTONYM)) {
@@ -188,11 +200,11 @@ class WordNet {
 	 * @param wordSynset
 	 */
 	private void checkGetWords(ISynset wordSynset, IWordID wordID, POS pos) {
-		System.out.print(dictionary.getIndexWord(
-				new IndexWordID(wordID.getLemma(), pos))
-				.getTagSenseCount() + "Synset {");
+		System.out.print("count("
+				+ dictionary.getIndexWord(
+						new IndexWordID(wordID.getLemma(), pos))
+						.getTagSenseCount() + ") Synset {");
 		// dictionary.getSynset(wordSynset.getID());
-		
 
 		// Returns all the words present in the synset wordSynset
 		for (IWord synonym : wordSynset.getWords()) {
