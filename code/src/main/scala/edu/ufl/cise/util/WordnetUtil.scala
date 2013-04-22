@@ -11,7 +11,6 @@ import java.io.File
 
 object WordnetUtil {
 
-  
   val path = "./resources/wordnet/dict/";
 
   //  val f = new File(path)
@@ -28,24 +27,19 @@ object WordnetUtil {
   def getSynonyms(word: String, pos: POS): Array[String] = {
 
     val idxWord = dictionary.getIndexWord(word, pos);
-    
-    val listIWord = idxWord.getWordIDs().map(a => dictionary.getWord(a).getSynset().getWords())
-//    listIWord.foreach(a => dictionary.getWord(a).getSynset().getWords())
-    listIWord.foreach(a => println(a.get(0).getLemma()))
-//    println(listIWord)
-//    val d = listIWord.foreach(_.getLemma())
-    //val iword = dictionary.getWord(wordID);
-//    println(listIWord)
-//    println(d)
 
-//    for (wordID <- idxWord.getWordIDs()) {
-//      val iword = dictionary.getWord(wordID);
-//      val wordSynset = iword.getSynset();
-//
-//      for (synonym <- wordSynset.getWords()) {
-//        System.out.print(synonym.getLemma() + ", ");
-//      }
-//    }
+    val listIWord = idxWord.getWordIDs().flatMap(a => dictionary.getWord(a).getSynset().getWords())
+    listIWord.map(a => a.getLemma()).foreach(println)
+
+    println("Java direct code translation:"); 
+    for (wordID <- idxWord.getWordIDs()) {
+      val iword = dictionary.getWord(wordID);
+      val wordSynset = iword.getSynset();
+
+      for (synonym <- wordSynset.getWords()) {
+        println(synonym.getLemma() + ", ");
+      }
+    }
 
     return null
   }
