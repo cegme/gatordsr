@@ -1,4 +1,4 @@
-package test;
+package wordnet.jwi;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 
-public class mitwn {
+public class JWIDemo {
 
 	/**
 	 * @param args

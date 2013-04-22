@@ -1,4 +1,4 @@
-package test;
+package wordnet.jwi;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,11 +20,11 @@ import edu.mit.jwi.item.POS;
 import edu.mit.jwi.item.Pointer;
 
 /**
- * 
+ * MIT Java Wordnet Interface
  * @author www.cse.iitb.ac.in/~cs626-449/JWI_JWKTL/DemoWordNet.java
  * 
  */
-public class DemoWordNet {
+public class JWFullDemo {
 
 	public static void main(String args[]) {
 		WordNet w = new WordNet();
@@ -112,7 +112,7 @@ class WordNet {
 		for (IWordID wordID : idxWord.getWordIDs()) {
 			// Construct an IWord object representing word associated with
 			// wordID
-			IWord word = dictionary.getWord(wordID);
+			IWord iword = dictionary.getWord(wordID);
 			System.out.println("SENSE->" + i);
 			System.out.println("---------");
 
@@ -147,7 +147,7 @@ class WordNet {
 			// }
 
 			// Get the synset in which word is present.
-			ISynset wordSynset = word.getSynset();
+			ISynset wordSynset = iword.getSynset();
 
 			// process the wordsynset :
 
