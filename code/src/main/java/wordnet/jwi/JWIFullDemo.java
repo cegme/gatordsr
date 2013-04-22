@@ -24,7 +24,7 @@ import edu.mit.jwi.item.Pointer;
  * @author www.cse.iitb.ac.in/~cs626-449/JWI_JWKTL/DemoWordNet.java
  * 
  */
-public class JWFullDemo {
+public class JWIFullDemo {
 
 	public static void main(String args[]) {
 		WordNet w = new WordNet();

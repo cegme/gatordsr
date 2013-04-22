@@ -8,40 +8,33 @@ import edu.mit.jwi.item.POS
 import scala.collection.JavaConversions._
 import net.didion.jwnl.data.Pointer
 import java.io.File
+import edu.ufl.cise.Logging
 
-object WordnetUtil {
-
+/**
+ * Utility object handling Wordnet features we need.
+ */
+object WordnetUtil extends Logging {
   val path = "./resources/wordnet/dict/";
-
-  //  val f = new File(path)
-  //  println(f.isDirectory())
 
   val url = new URL("file", null, path);
   val dictionary: IDictionary = new Dictionary(url);
   dictionary.open();
 
   def main(args: Array[String]): Unit = {
-    getSynonyms("best", POS.ADJECTIVE)
+    getSynonyms("best", POS.NOUN)
   }
 
-  def getSynonyms(word: String, pos: POS): Array[String] = {
+  /**
+   * Get all the synonyms of a kyword regarded witha part of speech of POS.
+   */
+  def getSynonyms(keyword: String, pos: POS): Seq[String] = {
 
-    val idxWord = dictionary.getIndexWord(word, pos);
+    val idxWord = dictionary.getIndexWord(keyword, pos);
 
     val listIWord = idxWord.getWordIDs().flatMap(a => dictionary.getWord(a).getSynset().getWords())
-    listIWord.map(a => a.getLemma()).foreach(println)
-
-    println("Java direct code translation:"); 
-    for (wordID <- idxWord.getWordIDs()) {
-      val iword = dictionary.getWord(wordID);
-      val wordSynset = iword.getSynset();
-
-      for (synonym <- wordSynset.getWords()) {
-        println(synonym.getLemma() + ", ");
-      }
-    }
-
-    return null
+    val res = listIWord.map(a => a.getLemma()).distinct
+    logInfo(res.mkString(", "))
+    //res.foreach(logInfo(_))
+    return res
   }
-
 }
