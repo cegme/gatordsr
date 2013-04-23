@@ -12,6 +12,7 @@ import edu.ufl.cise.Logging
 
 /**
  * Utility object handling Wordnet features we need.
+ * TODO add-in RelatedWords or RelatedMaps too.
  */
 object WordnetUtil extends Logging {
   val path = "./resources/wordnet/dict/";
@@ -25,16 +26,24 @@ object WordnetUtil extends Logging {
   }
 
   /**
-   * Get all the synonyms of a kyword regarded witha part of speech of POS.
+   * Get all the synonyms of a keyword regarded a noun POS.
+   */
+  def getSynonyms(keyword: String): Seq[String] = {
+    getSynonyms(keyword, POS.NOUN)
+  }
+
+  /**
+   * Get all the synonyms of a keyword regarded with a part of speech of POS.
    */
   def getSynonyms(keyword: String, pos: POS): Seq[String] = {
-
-    val idxWord = dictionary.getIndexWord(keyword, pos);
-
-    val listIWord = idxWord.getWordIDs().flatMap(a => dictionary.getWord(a).getSynset().getWords())
-    val res = listIWord.map(a => a.getLemma()).distinct
-    logInfo(res.mkString(", "))
-    //res.foreach(logInfo(_))
-    return res
+    val idxWord = dictionary.getIndexWord(keyword, pos)
+    if (idxWord != null) {
+      val listIWord = idxWord.getWordIDs().flatMap(a => dictionary.getWord(a).getSynset().
+        getWords().map(_.getLemma().replace('_', ' ').toLowerCase()))
+      val res = listIWord.distinct //.map(a => a.getLemma()).distinct
+      logInfo(res.mkString(", "))
+      res
+    } else
+      List[String]()
   }
 }
