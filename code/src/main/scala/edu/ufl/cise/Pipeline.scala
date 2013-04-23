@@ -37,7 +37,7 @@ object Pipeline extends Logging{
 		ssplit = new StanfordCoreNLP(props0)
 	  
 		val props = new Properties();
-		props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref")
+		props.put("annotators", "tokenize, ssplit, pos, lemma, ner")
 		nlppipeline = new StanfordCoreNLP(props)
 	
 		// initialize the bloomfilter using the ReVerb relation list
@@ -85,7 +85,6 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 					marks.add(1)
 				else
 					marks.add(0)
-
 			}
 	}
 	
