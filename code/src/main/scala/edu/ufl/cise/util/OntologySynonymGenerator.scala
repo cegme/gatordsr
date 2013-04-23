@@ -14,6 +14,7 @@ import edu.mit.jwi.item.POS
  * type PER: Affiliate, Contact_Meet_PlaceTime, AwardsWon, DateOfDeath, CauseOfDeath, Titles, FounderOf, EmployeeOf
  * type FAC: Affiliate, Contact_Meet_Entity
  * type ORG: Affiliate, TopMembers, FoundedBy
+ * TODO add FAC, ORG
  */
 object OntologySynonymGenerator {
 
@@ -42,7 +43,7 @@ object OntologySynonymGenerator {
     .flatMap(WordnetUtil.getSynonyms(_, POS.NOUN)).distinct
 
   def main(args: Array[String]) {
-    println(getSynonyms(PER.CauseOfDeath).mkString(", "))
+    println(getSynonyms(PER.Titles).mkString(", "))
   }
 
   /**
@@ -66,7 +67,7 @@ object OntologySynonymGenerator {
       case PER.EmployeeOf =>
         per_founderof_dic
       case PER.Titles =>
-        per_time_dic
+        per_title_dic
     }
   }
 
@@ -79,5 +80,4 @@ object OntologySynonymGenerator {
     }
     lb
   }
-
 }

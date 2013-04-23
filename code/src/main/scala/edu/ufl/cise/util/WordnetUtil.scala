@@ -12,6 +12,7 @@ import edu.ufl.cise.Logging
 
 /**
  * Utility object handling Wordnet features we need.
+ * TODO add-in RelatedWords or RelatedMaps too.
  */
 object WordnetUtil extends Logging {
   val path = "./resources/wordnet/dict/";
@@ -38,8 +39,8 @@ object WordnetUtil extends Logging {
     val idxWord = dictionary.getIndexWord(keyword, pos)
     if (idxWord != null) {
       val listIWord = idxWord.getWordIDs().flatMap(a => dictionary.getWord(a).getSynset().
-        getWords().map(_.getLemma().replace('_', ' ')))
-      val res = listIWord //.map(a => a.getLemma()).distinct
+        getWords().map(_.getLemma().replace('_', ' ').toLowerCase()))
+      val res = listIWord.distinct //.map(a => a.getLemma()).distinct
       logInfo(res.mkString(", "))
       res
     } else
