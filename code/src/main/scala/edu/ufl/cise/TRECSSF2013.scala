@@ -1,6 +1,9 @@
 package edu.ufl.cise
 
 import spark.SparkContext
+import edu.ufl.cise.util.WordnetUtil
+import edu.mit.jwi.item.Pointer
+import edu.mit.jwi.item.POS
 
 object TRECSSF2013 extends Logging {
 
@@ -13,7 +16,7 @@ object TRECSSF2013 extends Logging {
     val pipeline = Pipeline.getPipeline(query)
     pipeline.run(text, SparkIntegrator.sc)
 
-//    new SSFQuery("Richard Radcliffe", "topped")
+    //    new SSFQuery("Richard Radcliffe", "topped")
     //    logInfo("SSFQuery : %s".format(query))
 
     val z = Faucet.getStreams("2011-10-08", 0, 1)
@@ -23,11 +26,15 @@ object TRECSSF2013 extends Logging {
       .map(pipeline.run(_, SparkIntegrator.sc).toArray())
       .flatMap(x => x)
       .filter(p =>
-        p.asInstanceOf[Triple].entity0.toLowerCase.equalsIgnoreCase(query.entity.toLowerCase) //||
-        //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
-        //query.slotName.toLowerCase.contains(p.slot.toLowerCase()) ||
-        //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
-        )
+        {
+          val e0 = p.asInstanceOf[Triple].entity0.toLowerCase
+          val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
+          
+          e0.equalsIgnoreCase(query.entity.toLowerCase) //||
+          //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
+          //query.slotName.toLowerCase.contains(p.slot.toLowerCase()) ||
+          //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
+        })
       .foreach(t => logInfo("Answer: %s".format(t.toString)))
 
   }
