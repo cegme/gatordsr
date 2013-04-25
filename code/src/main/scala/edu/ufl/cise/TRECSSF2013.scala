@@ -1,16 +1,17 @@
 package edu.ufl.cise
 
-import edu.ufl.cise.util.WordnetUtil
-import edu.mit.jwi.item.Pointer
 import edu.mit.jwi.item.POS
+import edu.ufl.cise.util.WordnetUtil
+import edu.ufl.cise.util.OntologySynonymGenerator
 object TRECSSF2013 extends Logging {
 
   val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
   val query = new SSFQuery("Abraham Lincoln", "president of")
-  val pipeline = Pipeline.getPipeline(query)
+  lazy val pipeline = Pipeline.getPipeline(query)
 
   def main(args: Array[String]): Unit = {
-    pipeline.run(text)
+    //runFaucet()
+    runCachedFaucet()
   }
 
   /**
@@ -35,13 +36,29 @@ object TRECSSF2013 extends Logging {
         })
       .foreach(t => logInfo("Answer: %s".format(t.toString)))
   }
-  
-  
+
   /**
    * This will execute the program using CashedFaucet.scala
    */
-  def runCachedFaucet(){
-    
+  def runCachedFaucet() {
+    val z = new CachedFaucet(SparkIntegrator.sc, "2012-05-01", 0)
+    val itVal = z.iterator.next
+    val filtered = itVal.map(si =>
+      new String(si.body.cleansed.array(), "UTF-8")).
+      filter(s => s.contains("Atacocha")).
+      flatMap(s => pipeline.run(s).toArray()).
+      filter(o => {
+        val t = o.asInstanceOf[Triple]
+        OntologySynonymGenerator.getSynonyms(PER.Affiliate).
+        filter(s => s.contains(t.slot)).length > 0
+
+      })
+
+    println(filtered.count)
+    //    for(temp <- itVal){
+    //      temp.
+    //    }
+    val z1 = z.iterator.reduce(_ union _)
   }
 
 }

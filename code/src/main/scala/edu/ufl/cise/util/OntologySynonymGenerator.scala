@@ -43,7 +43,17 @@ object OntologySynonymGenerator {
     .flatMap(WordnetUtil.getSynonyms(_, POS.NOUN)).distinct
 
   def main(args: Array[String]) {
-    println(getSynonyms(PER.Titles).mkString(", "))
+    println(getSynonyms().mkString(", "))
+    //println(getSynonyms(PER.Titles).mkString(", "))
+  }
+  
+  /**
+   * Global synonym finder: gets the synonyms of all the ontology categories.
+   */
+  def getSynonyms():Seq[String] = {
+    //per_affiliate_dic ++ per_awards_dic ++ per_death_dic
+    val a = PER.values.flatMap(a => getSynonyms(a))
+    a.toSeq
   }
 
   /**
