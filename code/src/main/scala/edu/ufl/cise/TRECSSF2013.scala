@@ -13,8 +13,8 @@ object TRECSSF2013 extends Logging {
 
     val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
     val query = new SSFQuery("Abraham Lincoln", "president of")
-    val pipeline = Pipeline.getPipeline(query)
-    pipeline.run(text, SparkIntegrator.sc)
+    val pipeline = Pipeline.getPipeline(text, query)
+    pipeline.run(text)
 
     //    new SSFQuery("Richard Radcliffe", "topped")
     //    logInfo("SSFQuery : %s".format(query))
@@ -23,7 +23,7 @@ object TRECSSF2013 extends Logging {
       //.take(100)
       .map(si => new String(si.body.cleansed.array, "UTF-8"))
       //.map(_.take(964))
-      .map(pipeline.run(_, SparkIntegrator.sc).toArray())
+      .map(pipeline.run(_).toArray())
       .flatMap(x => x)
       .filter(p =>
         {
