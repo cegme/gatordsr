@@ -1,6 +1,8 @@
 gatordsr
 ========
 
-University of Florida Trec KBA code and more
+University of Florida for Text REtrieval Conference [T-R-E-C] the Knowledge Base Acceleration [K-B-A] track code and more
 
-Please see the [wiki](https://github.com/cegme/gatordsr/wiki) for information.
+http://trec-kba.org/
+
+Please see the wiki for more info

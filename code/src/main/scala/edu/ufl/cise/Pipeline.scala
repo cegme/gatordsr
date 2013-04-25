@@ -15,7 +15,6 @@ import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation
 
-import spark.SparkContext
 
 object Pipeline extends Logging{
 
@@ -26,7 +25,8 @@ object Pipeline extends Logging{
 	private var bf : (String => Boolean) = null
 	var sparkContext : SparkContext = null 
 	
-
+	def init()
+	{
 	def init()
 	{
 	   sparkContext = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
@@ -216,6 +216,7 @@ class Pipeline (text:String, query:SSFQuery) extends Logging{
 		val sentences = document.get[java.util.List[CoreMap], SentencesAnnotation](classOf[SentencesAnnotation])
 		// extract relations from each sentence, and parsing each sentence, and dcoref each sentence
 		sparkContext.parallelize(sentences.toArray()).foreach(sentence => 
+		sentences.toArray().foreach(sentence => 
 		  { nlppipeline.annotate(sentence.asInstanceOf[Annotation]);extract(sentence.asInstanceOf[Annotation])})
 		logInfo("pipeline ends")
 		return triples

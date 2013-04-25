@@ -1,10 +1,8 @@
 package edu.ufl.cise
 
-import spark.SparkContext
 import edu.ufl.cise.util.WordnetUtil
 import edu.mit.jwi.item.Pointer
 import edu.mit.jwi.item.POS
-
 object TRECSSF2013 extends Logging {
 
   def main(args: Array[String]): Unit = {
@@ -19,7 +17,7 @@ object TRECSSF2013 extends Logging {
     //    new SSFQuery("Richard Radcliffe", "topped")
     //    logInfo("SSFQuery : %s".format(query))
 
-    val z = Faucet.getStreams("2011-10-08", 0, 1)
+    val z = StreamFaucet.getStreams("2011-10-08", 0, 23)
       //.take(100)
       .map(si => new String(si.body.cleansed.array, "UTF-8"))
       //.map(_.take(964))
