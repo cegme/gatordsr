@@ -18,7 +18,7 @@ class URLLineReader(url: String) extends Iterator[String] with Logging {
     try {
       reader.ready
     } catch {
-      case e: java.io.FileNotFoundException => logError("File Not Found: %s".format(url)); false
+      case e: java.io.FileNotFoundException => logDebug("File Not Found: %s".format(url)); false
     }
   }
 

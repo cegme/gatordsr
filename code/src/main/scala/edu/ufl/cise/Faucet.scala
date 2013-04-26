@@ -288,7 +288,7 @@ object StreamFaucet extends Faucet with Logging {
   /**
    * Test the operation of the Faucet class
    */
-  def main(args: Array[String]) = {
+  def main(args: Array[String]) {
 
     //logInfo("""Running test with GetStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")""")
     //    val z = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")

@@ -31,7 +31,7 @@ import edu.ufl.cise.util.URLLineReader
 
 
 class CachedFaucet(
-  val sc:SparkContext = new SparkContext("local[32]", "gatordsr", "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar")),
+  val sc:SparkContext = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar")),
   val dateFrom:String,
   val hour:Int
   ) extends Faucet with Logging with Serializable {
@@ -65,27 +65,6 @@ class CachedFaucet(
       }
       .toList
   }
-  
-
-  /*def getRDD(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
-    
-    System.gc();
-    val data = grabGPG(date, fileName)
-    //val bais = new ByteArrayInputStream(data.buf)
-    val bais = new ByteArrayInputStream(data.toByteArray())
-    val transport = new TIOStreamTransport(bais)
-    transport.open()
-    val protocol = new TBinaryProtocol(transport)
-
-    // Stop streaming after the first None. TODO why? what could happen? end of file?
-    val a = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => transport.close(); false; case _ => true })
-      .map { _.get }
-
-    //transport.close()
-    val rdd = sc.makeRDD[StreamItem](a)//.persist(StorageLevel.DISK_ONLY)
-    rdd
-  }*/
   
 
   
@@ -164,7 +143,7 @@ class CachedFaucet(
         getRDDZ(sc, c.date, c.fileName)
       }
      .reduce( _ union _) 
-    }
+  }
 
 }
 
@@ -172,39 +151,7 @@ class CachedFaucet(
 
 object CachedFaucet extends Faucet with Logging {
   
-
-
-  /*def getRDD(sc:SparkContext, date:String, hour:Int): Iterator[RDD[StreamItem]] = {
-    val directoryName = getDirectoryName(date, hour)
-    val reader = new URLLineReader(BASE_URL + "%s".format(directoryName))
-    val html = reader.toList.mkString
-    val pattern = """a href="([^"]+.gpg)""".r
-   
-    pattern.findAllIn(html).matchData
-      .map(m => getRDD(sc, directoryName, m.group(1)))
-  }
-
-
-  def getRDD(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
-    
-    System.gc();
-    val data = grabGPG(date, fileName)
-    val bais = new ByteArrayInputStream(data.toByteArray())
-    val transport = new TIOStreamTransport(bais)
-    transport.open()
-    val protocol = new TBinaryProtocol(transport)
-
-    // Stop streaming after the first None. TODO why? what could happen? end of file?
-    val a = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => transport.close(); false; case _ => true })
-      .map { _.get }
-
-    //transport.close()
-    val rdd = sc.makeRDD[StreamItem](a).persist(StorageLevel.DISK_ONLY)
-    rdd
-  }*/
-
-
+  
   def main(args: Array[String]):Unit = {
 
     //System.setProperty("spark.storage.memoryFraction", "0.66")

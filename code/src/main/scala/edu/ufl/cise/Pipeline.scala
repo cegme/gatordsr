@@ -194,6 +194,7 @@ class Pipeline(query: SSFQuery) extends Logging {
       sentences.toArray().foreach(sentence =>
         { nlppipeline.annotate(sentence.asInstanceOf[Annotation]); extract(sentence.asInstanceOf[Annotation]) })
       logInfo("pipeline ends")
+      println(triples)
       return triples
     }
 }
