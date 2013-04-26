@@ -65,7 +65,7 @@ object EmbededFaucet extends Logging {
       "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
       "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| //decrypt it, pipe it
       "xz --decompress" #> //decompress it
-      baos) ! ProcessLogger(line => ()) // ! Executes the previous commands, 
+      baos) !  // ! Executes the previous commands, 
     //Silence the linux stdout, stderr
 
     baos
