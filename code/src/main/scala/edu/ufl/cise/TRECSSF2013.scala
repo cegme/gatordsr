@@ -10,13 +10,13 @@ object TRECSSF2013 extends Logging {
 
     val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
     val query = new SSFQuery("Abraham Lincoln", "president of")
-    val pipeline = Pipeline.getPipeline(query)
-    pipeline.run(text, SparkIntegrator.sc)
+    //val pipeline = Pipeline.getPipeline(text, query)
+    //pipeline.run(text, SparkIntegrator.sc)
 
 //    new SSFQuery("Richard Radcliffe", "topped")
     //    logInfo("SSFQuery : %s".format(query))
 
-    val z = StreamFaucet.getStreams("2011-10-08", 0, 23)
+    /*val z = StreamFaucet.getStreams("2011-10-08", 0, 23)
       //.take(100)
       .map(si => new String(si.body.cleansed.array, "UTF-8"))
       //.map(_.take(964))
@@ -29,6 +29,7 @@ object TRECSSF2013 extends Logging {
         //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
         )
       .foreach(t => logInfo("Answer: %s".format(t.toString)))
+      */
 
   }
 

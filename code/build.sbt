@@ -6,7 +6,7 @@ scalaVersion := "2.9.2"
 
 scalacOptions ++= Seq("-unchecked", "-deprecation", "memoryMaximumSize=9G")
 
-javaOptions ++= Seq("-Xmx9G", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:MinHeapFreeRatio=60", "-XX:-PrintGC", "-XX:+UseParallelGC")
+javaOptions ++= Seq("-Xmx9G", "-Xms5G", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:MinHeapFreeRatio=60", "-XX:-PrintGC", "-XX:+UseParallelGC")
 
 resolvers += "spray repo" at "http://repo.spray.io"
 
@@ -34,3 +34,6 @@ libraryDependencies += "org.scalaz" %% "scalaz-core" % "6.0.4"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 
+libraryDependencies += "org.tukaani" % "xz" % "1.2"
+
+libraryDependencies += "org.apache.commons" % "commons-compress" % "1.5"

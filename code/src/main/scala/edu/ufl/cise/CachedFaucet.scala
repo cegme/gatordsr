@@ -9,6 +9,8 @@ import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
 import org.apache.thrift.transport.TFileTransport
 import org.apache.thrift.transport.TStandardFile
+import org.apache.thrift.protocol.TCompactProtocol
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
 
 import com.google.common.hash.BloomFilter
 import com.google.common.hash.Funnels
@@ -30,10 +32,16 @@ import scala.collection.JavaConversions._
 import edu.ufl.cise.util.URLLineReader
 
 
-class CachedFaucet(
+/*class CachedFaucet(
   val sc:SparkContext = new SparkContext("local[32]", "gatordsr", "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar")),
   val dateFrom:String,
   val hour:Int
+  ) extends Faucet with Logging with Serializable {
+*/
+
+class CachedFaucet(
+  val sc:SparkContext = new SparkContext("local[32]", "gatordsr", "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar")),
+  val sr:StreamRange
   ) extends Faucet with Logging with Serializable {
 
   private case class CacheKey(val date:String, val fileName:String)
@@ -51,7 +59,7 @@ class CachedFaucet(
   private lazy val keyList:List[CacheKey] = {
     logInfo("Priming the iterator file list")
 
-    // TODO make this more general not just using the dateFrom, hour
+    /*// TODO make this more general not just using the dateFrom, hour
     val directoryName = getDirectoryName(dateFrom, hour)
     val reader = new URLLineReader(BASE_URL + "%s".format(directoryName))
     val html = reader.toList.mkString
@@ -64,9 +72,15 @@ class CachedFaucet(
         case _ => throw new Exception }
       }
       .toList
+      */
+      sr.getFileList.map{ _ match { 
+        case (date,file) => new CacheKey(date,file)
+        case _ => throw new Exception("Invalid format") }
+      }
   }
-  
 
+  final def getKeyList = keyList.map(x => (x.date, x.fileName)) 
+  
   
   private class StreamIterator extends Iterator[RDD[StreamItem]] {
     val iterator = keyList.iterator
@@ -80,9 +94,10 @@ class CachedFaucet(
       
       // Check to see if this cache was in the key
       //val z:RDD[StreamItem] = getRDD(sc, c.date, c.fileName)
-      cache.put(c, getRDDZ(sc, c.date, c.fileName))
-      cache.get(c).get
+      //cache.put(c, getRDDZ(sc, c.date, c.fileName))
+      //cache.get(c).get
       //getRDDZ(sc, c.date, c.fileName)
+      getRDDCompressed(sc, c.date, c.fileName)
       // If it is not, get it and put it in the cache
     }
   }
@@ -132,7 +147,33 @@ class CachedFaucet(
     //rdd
     sc.parallelize(a)
   }
+
+  def getRDDCompressed(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
+    val xzGPG = grabGPGCompressed(date, fileName)
+    val is = new ByteArrayInputStream(xzGPG.toByteArray)
+    val bais = new XZCompressorInputStream(is)
+    val transport = new TIOStreamTransport(bais)
+    transport.open
+    val protocol = new TBinaryProtocol(transport)
+
+    val a = Iterator.continually(mkStreamItem(protocol, new StreamItem)) //TODO adds items one bye one to the stream
+      .takeWhile(_ match { case None => transport.close; logInfo("-"); false; case _ => true })
+      .map { _.get }
+      .toSeq
+
+    xzGPG.reset // Stop a leak
+    transport.close
+
+    sc.parallelize(a)
+  }
+
+
+  /**
+   * TODO change this to an function?
+   */
   lazy val iterator:Iterator[RDD[StreamItem]] = new StreamIterator
+
+  //def createNewStreamIterator = new StreamIterator
 
   def getAllRDDS:RDD[StreamItem] = {
     //iterator.reduce(_ union_)
@@ -140,17 +181,14 @@ class CachedFaucet(
     keyList
       .par
       .map{ c =>
-        getRDDZ(sc, c.date, c.fileName)
+        getRDDCompressed(sc, c.date, c.fileName)
       }
      .reduce( _ union _) 
   }
-
 }
 
 
-
 object CachedFaucet extends Faucet with Logging {
-  
   
   def main(args: Array[String]):Unit = {
 
@@ -173,23 +211,31 @@ object CachedFaucet extends Faucet with Logging {
     //lazy val z1 = getRDD(sc, "2012-05-01", 0)
     //logInfo("Stream Count z1: " + z1.foldLeft(0L)((a:Long,b:RDD[StreamItem]) => a + b.count))
 
-    val z = new CachedFaucet(sc, "2012-05-01", 0)
+    
+    //val z = new CachedFaucet(sc, "2012-05-01", 0)
+    val sr = new StreamRange
+    sr.addFromDate("2012-05-01")
+    sr.addFromHour(0)
+    //sr.addToDate("2012-05-01")
+    //sr.addToHour(0)
+    val z = new CachedFaucet(sc, sr)
 
-    /*val it = z.iterator
-    while(it.hasNext) {
+    val it = z.iterator
+    if(it.hasNext) {
       {
         val rdd = it.next
         logInfo("The count: %d".format(rdd.count))
-        //logInfo(rdd.first.toString)
-        sc.getRDDStorageInfo.foreach{x => logInfo("##%s".format(x.toString))}
-        logInfo(sc.hadoopConfiguration.toString)
-        sc.getExecutorMemoryStatus.foreach{x => logInfo("==%s".format(x.toString))}
-        System.gc
+        logInfo(rdd.first.toString)
+        logInfo("Is body null: %s".format(rdd.first.body == null))
+        //sc.getRDDStorageInfo.foreach{x => logInfo("##%s".format(x.toString))}
+        //logInfo(sc.hadoopConfiguration.toString)
+        //sc.getExecutorMemoryStatus.foreach{x => logInfo("==%s".format(x.toString))}
+        //System.gc
       }
-    }*/
+    }
     lazy val z1 = z.iterator.reduce(_ union _) // Combine RDDS
       //logInfo("Total records: %d".format(z1.count))
-      logInfo("Total records: %d".format(z.getAllRDDS.count))
+      //logInfo("Total records: %d".format(z.getAllRDDS.count))
   }
 
 }
