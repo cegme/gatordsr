@@ -32,13 +32,6 @@ import scala.collection.JavaConversions._
 import edu.ufl.cise.util.URLLineReader
 
 
-/*class CachedFaucet(
-  val sc:SparkContext = new SparkContext("local[32]", "gatordsr", "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar")),
-  val dateFrom:String,
-  val hour:Int
-  ) extends Faucet with Logging with Serializable {
-*/
-
 class CachedFaucet(
   val sc:SparkContext = new SparkContext("local[32]", "gatordsr", "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar")),
   val sr:StreamRange
