@@ -59,7 +59,7 @@ object Pipeline extends Logging {
 class Pipeline(query: SSFQuery) extends Logging {
 
   // use to store the extracted relations
-  private var triples: ArrayList[Triple] = new ArrayList[Triple]
+  //private var triples: ArrayList[Triple] = new ArrayList[Triple]
 
   // break a single sentence to corresponding array list of words and marks (mark = 0, non-entity; 1, entity)
   def breakSentence(tokens: java.util.List[CoreLabel], words: ArrayList[String], marks: ArrayList[Integer]) {
@@ -167,7 +167,7 @@ class Pipeline(query: SSFQuery) extends Logging {
     }
 
   // extract relations from sentences
-  def extract(sentence: CoreMap) {
+  def extract(sentence: CoreMap, triples: ArrayList[Triple]) {
     val tokens = sentence.get[java.util.List[CoreLabel], TokensAnnotation](classOf[TokensAnnotation])
     val size = tokens.size()
     var words = new ArrayList[String](size)
@@ -177,12 +177,14 @@ class Pipeline(query: SSFQuery) extends Logging {
     // extract relations
     val results = getRelations(words, marks)
     for (relation <- results.toArray()) logInfo(relation.toString())
-    if (results.size() != 0) triples.addAll(results)
+    if (results.size() != 0)
+      triples.addAll(results)
   }
 
   // the main logic
   def run(text: String): ArrayList[Triple] =
     {
+      var triples: ArrayList[Triple] = new ArrayList[Triple]
       // create an empty Annotation just with the given text
       val document = new Annotation(text)
       // annotate the document
@@ -192,7 +194,10 @@ class Pipeline(query: SSFQuery) extends Logging {
       // extract relations from each sentence, and parsing each sentence, and dcoref each sentence
       //sparkContext.parallelize(sentences.toArray()).foreach(sentence => 
       sentences.toArray().foreach(sentence =>
-        { nlppipeline.annotate(sentence.asInstanceOf[Annotation]); extract(sentence.asInstanceOf[Annotation]) })
+        {
+          nlppipeline.annotate(sentence.asInstanceOf[Annotation]);
+          extract(sentence.asInstanceOf[Annotation], triples)
+        })
       logInfo("pipeline ends")
       println(triples)
       return triples
