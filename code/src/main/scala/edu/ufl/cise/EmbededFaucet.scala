@@ -148,27 +148,18 @@ object EmbededFaucet extends Logging {
               val str = new String(bb, "UTF-8")
               //println(str)
               //println("Enter pipeline")
-              val b = pipeline.run(str)
-              //println("exit pipeline")
+              //val b = pipeline.run(str)              
+              println("exit pipeline")
               str
             } else
-              " "
+              ""
           }
-          " "
+          ""
         }).flatMap(line => line.split(" "))
-        .map(word => if (word.toLowerCase()
-          .contains("today"))
-          1
-        else
-          0)
-      //.reduce(_ + _)
-      if (temp.count > 0) {
-        val count = temp.reduce(_ + _)
-        println("Found Today: " + count)
-      }
-
-      //println("Found Today: " + temp)
-
+        .filter(a => a.equalsIgnoreCase("today"))
+        .map(word => 1)
+        .reduce((a, b) => a + b)
+      println("Found Today: " + temp)
       //.foreach(println _)
     }
   }
@@ -177,11 +168,11 @@ object EmbededFaucet extends Logging {
    * Returns streams in a specific hour range of a specific date
    */
   def getStreams(date: String, hour0: Int, hour1: Int): Unit = {
-    (hour0 to hour1)
-    .map(h => getStreams(date, h))
-    //    for (h <- hour0 to hour1) {
-    //      getStreams(date, h)
-    //    }
+    if (hour0 > 0 && hour1 < 23) {
+      for (h <- hour0 to hour1) {
+        getStreams(date, h)
+      }
+    }
   }
 
   /**
@@ -227,8 +218,7 @@ object EmbededFaucet extends Logging {
    * Test the operation of the Faucet class
    */
   def main(args: Array[String]) = {
-    //val z3 = getStreams("2011-10-08", 5)
-    val z3 = getStreams("2011-10-08")
+    val z3 = getStreams("2011-10-08", 5)
 
   }
 
