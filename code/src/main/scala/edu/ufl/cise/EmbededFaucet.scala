@@ -20,6 +20,8 @@ import spark.streaming.StreamingContext
 import org.apache.thrift.transport.TTransportException
 import scala.collection.mutable.ArrayBuffer
 
+import scala.collection.mutable.ListBuffer
+
 /**
  * TODO: put delays on the thread based on real delays.
  * TODO: wrap StreamItems in Option?
@@ -42,7 +44,7 @@ object EmbededFaucet extends Logging {
 
   val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
   val query = new SSFQuery("Abraham Lincoln", "president of")
-  val pipeline = Pipeline.getPipeline(query)
+  lazy val pipeline = Pipeline.getPipeline(query)
 
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -65,7 +67,7 @@ object EmbededFaucet extends Logging {
       "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
       "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| //decrypt it, pipe it
       "xz --decompress" #> //decompress it
-      baos) !  // ! Executes the previous commands, 
+      baos) ! // ! Executes the previous commands, 
     //Silence the linux stdout, stderr
 
     baos
@@ -82,18 +84,19 @@ object EmbededFaucet extends Logging {
    * Example usage:
    *   getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
-  def getStreams(date: String, fileName: String): Array[StreamItem] = {
+  def getStreams(date: String, fileName: String): List[StreamItem] = {
     val data = grabGPG(date, fileName)
     val bais = new ByteArrayInputStream(data.toByteArray())
     val transport = new TIOStreamTransport(bais)
     transport.open()
     val protocol = new TBinaryProtocol(transport)
 
-    val arrayBuffer = ArrayBuffer[StreamItem]()
-    val si = new StreamItem
+    var list = List[StreamItem]()
+
     var exception = false
     while (!exception) {
 
+      val si = new StreamItem
       try {
         si.read(protocol);
       } catch {
@@ -105,11 +108,12 @@ object EmbededFaucet extends Logging {
           logDebug("Error in mkStreamItem")
           exception = true
       }
-      arrayBuffer += si
+      list = si :: list
     }
 
     transport.close()
-    arrayBuffer.toArray
+    list
+
   }
 
   /**
@@ -123,77 +127,91 @@ object EmbededFaucet extends Logging {
   /**
    * Return the files pertaining to specific date.
    */
-  def getStreams(date: String, hour: Int): Iterator[StreamItem] = {
+  def getStreams(date: String, hour: Int): Unit = {
     val directoryName = getDirectoryName(date, hour)
     val reader = new URLLineReader(BASE_URL + format(directoryName))
     val html = reader.toList.mkString
     val pattern = """a href="([^"]+.gpg)""".r
 
     val dayHourFileList = pattern.findAllIn(html).matchData.toArray
+
     for (fileName <- dayHourFileList) {
-      val arr = getStreams(directoryName, fileName.group(1))
-      val rdd = SparkIntegrator.sc.parallelize(arr, SparkIntegrator.NUM_SLICES)
+      val list = getStreams(directoryName, fileName.group(1))
+      val rdd = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
       //all streamitems of one file in parallel
-println("Hello Spark!")
-      rdd.map(p =>
+      println("Hello Spark!")
+      val temp = rdd.map(p =>
         {
-          println("Enter pipeline")
-          pipeline.run(new String(p.body.cleansed.array, "UTF-8"))
-          println("exit pipeline")
-        })
+          if (p.body != null && p.body.cleansed != null) {
+            val bb = p.body.cleansed.array
+            if (bb.length > 0) {
+              val str = new String(bb, "UTF-8")
+              //println(str)
+              //println("Enter pipeline")
+              //val b = pipeline.run(str)              
+              println("exit pipeline")
+              str
+            } else
+              ""
+          }
+          ""
+        }).flatMap(line => line.split(" "))
+        .filter(a => a.equalsIgnoreCase("today"))
+        .map(word => 1)
+        .reduce((a, b) => a + b)
+      println("Found Today: " + temp)
+      //.foreach(println _)
     }
-    null
   }
 
   /**
    * Returns streams in a specific hour range of a specific date
    */
-  def getStreams(date: String, hour0: Int, hour1: Int): Iterator[StreamItem] = {
-    if (hour0 < 0 || hour1 > 23)
-      null
-    else {
-      (hour0 to hour1)
-        .map { getStreams(date, _) } // Get all the streams for this
-        .view // Make getting the streams lazy
-        .reduceLeft(_ ++ _) // Concatenate the iterators    
+  def getStreams(date: String, hour0: Int, hour1: Int): Unit = {
+    if (hour0 > 0 && hour1 < 23) {
+      for (h <- hour0 to hour1) {
+        getStreams(date, h)
+      }
     }
   }
 
   /**
    * Returns all the streams for all the hours of a day
    */
-  def getStreams(date: String): Iterator[StreamItem] = {
+  def getStreams(date: String): Unit = {
     getStreams(date, 0, 23)
   }
 
   /**
    * Return the data between specific date ranges.
    */
-  def getStreamsDateRange(dateFrom: String, dateTo: String): Iterator[StreamItem] = {
+  def getStreamsDateRange(dateFrom: String, dateTo: String): List[StreamItem] = {
 
-    val dFrom = SIMPLE_DATE_FORMAT.parse(dateFrom)
-    val dTo = SIMPLE_DATE_FORMAT.parse(dateTo)
+    //    val dFrom = SIMPLE_DATE_FORMAT.parse(dateFrom)
+    //    val dTo = SIMPLE_DATE_FORMAT.parse(dateTo)
+    //
+    //    if (dFrom.after(dTo))
+    //      return null
+    //
+    //    var tempDate = dFrom
+    //    val c = Calendar.getInstance();
 
-    if (dFrom.after(dTo))
-      return null
-
-    var tempDate = dFrom
-    val c = Calendar.getInstance();
-
-    var it = Iterator[StreamItem]()
-    while (tempDate.before(dTo) || tempDate.equals(dTo)) {
-      val dateStr = SIMPLE_DATE_FORMAT.format(tempDate)
-      val z = getStreams(dateStr)
-      if (it.isEmpty)
-        it = z
-      else
-        it = it ++ z
-
-      c.setTime(tempDate);
-      c.add(Calendar.DATE, 1); // number of days to add
-      tempDate = c.getTime()
-    }
-    it
+    //    val list = List[StreamItem]();
+    //    
+    //    
+    //
+    //    while (tempDate.before(dTo) || tempDate.equals(dTo)) {
+    //      val dateStr = SIMPLE_DATE_FORMAT.format(tempDate)
+    //      val z = getStreams(dateStr)
+    //      //list.addall
+    //      list.prepend(z)
+    //
+    //      c.setTime(tempDate);
+    //      c.add(Calendar.DATE, 1); // number of days to add
+    //      tempDate = c.getTime()
+    //    }
+    //    list
+    null
   }
 
   /**
@@ -201,5 +219,7 @@ println("Hello Spark!")
    */
   def main(args: Array[String]) = {
     val z3 = getStreams("2011-10-08", 5)
+
   }
+
 }
