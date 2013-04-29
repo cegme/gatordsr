@@ -6,11 +6,11 @@ scalaVersion := "2.9.2"
 
 scalacOptions ++= Seq("-unchecked", "-deprecation")
 
-scalacOptions += "memoryMaximumSize=9G"
+//scalacOptions += "memoryMaximumSize=9G"
 
 javaOptions ++= Seq("-XX:+HeapDumpOnOutOfMemoryError", "-XX:MinHeapFreeRatio=60", "-XX:-PrintGC", "-XX:+UseParallelGC")
 
-javaOptions ++= Seq("-Xmx9G", "-Xms5G")
+//javaOptions ++= Seq("-Xmx9G", "-Xms5G")
 
 resolvers += "spray repo" at "http://repo.spray.io"
 
