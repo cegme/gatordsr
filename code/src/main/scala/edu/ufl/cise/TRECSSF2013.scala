@@ -3,6 +3,8 @@ package edu.ufl.cise
 import edu.mit.jwi.item.POS
 import edu.ufl.cise.util.WordnetUtil
 import edu.ufl.cise.util.OntologySynonymGenerator
+
+
 object TRECSSF2013 extends Logging {
 
   val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
