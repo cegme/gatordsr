@@ -1,6 +1,10 @@
 package edu.ufl.cise
 
-case class Result(triple:Triple) {
+case class KBAOutput (triple:Triple){
+	
+}
+
+case class Row(triple:Triple) {
 	
 	val team_id = ""; // first column: team_id
 	val system_id ="" // second column: system_id
