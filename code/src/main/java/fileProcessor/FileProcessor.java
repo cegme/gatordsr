@@ -13,23 +13,24 @@ import java.util.regex.Pattern;
 public class FileProcessor {
 
 	public static void main(String[] args) {
-		URL url;
-		InputStream is = null;
-		BufferedReader br;
-		BufferedReader br2;
 
+		int threadCount = 32;
+		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		try {
+			URL url;
+			InputStream is = null;
+			BufferedReader br;
+			BufferedReader br2;
 			url = new URL(
 					"http://s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/index.html");
 			is = url.openStream(); // throws an IOException
 			br = new BufferedReader(new InputStreamReader(is));
 
 			String s = "";
-			int threadCount = 32;
-			ExecutorService executor = Executors
-					.newFixedThreadPool(threadCount);
 
-			while (true) {
+			int i = 0;
+			boolean finished = false;
+			while (!finished) {
 
 				// Thread t1 = myThread(br.readLine());
 
@@ -44,19 +45,21 @@ public class FileProcessor {
 							linkStr.indexOf('/'));
 					System.out.println(dir);
 
-					Runnable worker = new Thread("" + linkStr) {
+					Runnable worker = new Thread(i++ + " " + linkStr) {
 						public void run() {
 							downloadDir(dir);
 						};
 					};
 					executor.execute(worker);
+				} else if (i > 1) {//skip initial no line
+					finished = true;
 				}
-
-				executor.shutdown();
-				while (!executor.isTerminated()) {
-				}
-				System.out.println("Finished all threads");
 			}
+
+			executor.shutdown();
+			while (!executor.isTerminated()) {
+			}
+			System.out.println("Finished all threads");
 
 		} catch (Exception ioe) {
 			ioe.printStackTrace();
