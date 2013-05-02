@@ -142,20 +142,24 @@ class CachedFaucet(
   }
 
   def getRDDCompressed(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
+    logInfo("getRDDCompressed")
     val xzGPG = grabGPGCompressed(date, fileName)
     val is = new ByteArrayInputStream(xzGPG.toByteArray)
     val bais = new XZCompressorInputStream(is)
     val transport = new TIOStreamTransport(bais)
     transport.open
     val protocol = new TBinaryProtocol(transport)
+    assert(transport.isOpen)
 
-    val a = Iterator.continually(mkStreamItem(protocol, new StreamItem)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => transport.close; logInfo("-"); false; case _ => true })
+
+    val a = Iterator.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
+      .takeWhile(_ match { case None => transport.close; xzGPG.reset; logInfo("-"); false; case _ => true })
       .map { _.get }
       .toSeq
 
-    xzGPG.reset // Stop a leak
-    transport.close
+    // If we keep ths reset/close here it cause the items not to be read
+    //xzGPG.reset // Stop a leak
+    //transport.close
 
     sc.parallelize(a)
   }
