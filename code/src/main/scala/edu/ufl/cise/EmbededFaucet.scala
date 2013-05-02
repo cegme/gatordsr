@@ -21,6 +21,12 @@ import org.apache.thrift.transport.TTransportException
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ListBuffer
 import java.io.ByteArrayOutputStream
+import java.util.Arrays
+import java.io.PrintWriter
+import java.io.File
+import java.util.ArrayList
+import edu.ufl.cise.util.WordnetUtil
+import edu.mit.jwi.item.POS
 
 /**
  * TODO: put delays on the thread based on real delays.
@@ -43,8 +49,9 @@ object EmbededFaucet extends Logging {
   val MAX_TO_HOUR = 0
 
   val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
-  val query = new SSFQuery("Abraham Lincoln", "president of")
-   val pipeline = Pipeline.getPipeline(query)
+  // val query = new SSFQuery("Abraham Lincoln", "president of") 
+  val query = new SSFQuery("roosevelt", "president")
+  lazy val pipeline = Pipeline.getPipeline(query)
 
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -76,7 +83,7 @@ object EmbededFaucet extends Logging {
         baos) ! // ! Executes the previous commands, 
       //Silence the linux stdout, stderr
     } else {
-"gpg --no-permission-warning --trust-model always --output - --decrypt " + fileName #| //decrypt it, pipe it
+      "gpg --no-permission-warning --trust-model always --output - --decrypt /home/morteza/zproject/trec-kba/social.3a51732f846b630e98c9f02e1fd0c8d4.xz.gpg" #| //decrypt it, pipe it
         "xz --decompress" #> //decompress it
         baos !
     }
@@ -150,44 +157,55 @@ object EmbededFaucet extends Logging {
     }
   }
 
-  def processData(data: ByteArrayOutputStream) : Unit = {
+  def processData(data: ByteArrayOutputStream): Unit = {
     val list = getStreams(data)
+
+    val pw: PrintWriter = new PrintWriter(new File("/home/morteza/streamitem200.txt"));
+    for (i <- (0 to 200))
+      try {
+        pw.println("morteza " + i)
+        val temp = new String(list.apply(i).body.cleansed.array, "UTF-8")
+        pw.println(temp)
+        pw.println("morteza " + i)
+      } catch {
+        case e: Exception =>
+          logDebug("Error in get")
+      }
+    pipeline.run(new String(list.apply(115).body.cleansed.array, "UTF-8"));
+
     val rdd = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
     //all streamitems of one file in parallel
     println("Hello Spark!")
-    val temp11 = pipeline.run("book is good for you.");
-    
+    //   val temp11 = pipeline.run(text);
     val temp = rdd.map(p =>
       {
+        val a: ArrayList[Triple] = new ArrayList[Triple] {}
+        a.add(new Triple("", "", ""))
+
         if (p.body != null && p.body.cleansed != null) {
           val bb = p.body.cleansed.array
           if (bb.length > 0) {
             val str = new String(bb, "UTF-8")
-            //println(str)
-            //println("Enter pipeline")
             val b = pipeline.run(str)
-            //println("exit pipeline")
-            str
-          } else
-            " "
-        }
-        " "
-      }).flatMap(line => line.split(" "))
-      .map(word => if (word.toLowerCase()
-        .contains("today"))
-        1
-      else
-        0)
-    //.reduce(_ + _)
-    if (temp.count > 0) {
-      val count = temp.reduce(_ + _)
-      println("Found Today: " + count)
-    }
+            b.toArray
+          } else {
+            a.toArray
+          }
+        } else
+          a.toArray
+      }).flatMap(x => x)
+      .filter(p =>
+        {
+          val t = p.asInstanceOf[Triple]
+          val e0 = t.entity0.toLowerCase
+        //  val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
 
-    //println("Found Today: " + temp)
-
-    //.foreach(println _)
-
+          e0.toLowerCase().equals(query.entity) //||
+          //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
+          //query.slotName.toLowerCase.contains(p.slot.toLowerCase()) ||
+          //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
+        })
+      .foreach(t => logInfo("Answer: %s".format(t.toString)))
   }
 
   /**
@@ -239,7 +257,7 @@ object EmbededFaucet extends Logging {
     //    list
     null
   }
-  
+
   def getStreams(date: String, fileName: String) {
     val data = grabGPG(date, fileName);
     processData(data);
@@ -255,7 +273,8 @@ object EmbededFaucet extends Logging {
    */
   def main(args: Array[String]) = {
     //val z3 = getStreams("2011-10-08", 5)
-    getStreams("2011-10-08", "social.7e67c3f4fdee17f0c07751b075e3f649.xz.gpg")
+    //getStreams("2011-10-08-5", "social.7e67c3f4fdee17f0c07751b075e3f649.xz.gpg")
+    getStreams(null, null)
     // val z3 = getStreams("2011-10-08")
     // getStreamsOffline("/home/morteza/zproject/trec-kba/social.3a51732f846b630e98c9f02e1fd0c8d4.xz.gpg")
   }

@@ -177,12 +177,12 @@ class Pipeline(query: SSFQuery) extends Logging {
     // extract relations
     val results = getRelations(words, marks)
     var s = ""
-    for (relation <- results.toArray())
-      s = s + " (" + relation.toString() + ") "
-    
-    if (s.length() > 0) {
-      logInfo(s)
-    }
+//    for (relation <- results.toArray())   //morteza 
+//      s = s + " (" + relation.toString() + ") "
+//    
+//    if (s.length() > 0) {
+//      logInfo(s)
+//    }
     if (results.size() != 0)
       triples.addAll(results)
   }
