@@ -4,6 +4,14 @@ version := "0.01"
 
 scalaVersion := "2.9.2"
 
+scalacOptions ++= Seq("-unchecked", "-deprecation")
+
+//scalacOptions += "memoryMaximumSize=9G"
+
+javaOptions ++= Seq("-XX:+HeapDumpOnOutOfMemoryError", "-XX:MinHeapFreeRatio=60", "-XX:-PrintGC", "-XX:+UseParallelGC")
+
+//javaOptions ++= Seq("-Xmx9G", "-Xms5G")
+
 resolvers += "spray repo" at "http://repo.spray.io"
 
 resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases"
@@ -37,3 +45,6 @@ libraryDependencies += "edu.washington.cs.knowitall" % "reverb-models" % "1.4.0"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 
+libraryDependencies += "org.tukaani" % "xz" % "1.2"
+
+libraryDependencies += "org.apache.commons" % "commons-compress" % "1.5"

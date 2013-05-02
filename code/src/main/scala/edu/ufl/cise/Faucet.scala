@@ -1,12 +1,17 @@
 package edu.ufl.cise
 
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.text.DecimalFormat
 import java.util.Date
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.net.URL
+import java.util.Calendar
+import java.util.zip.GZIPInputStream
+import java.util.zip.GZIPOutputStream
+import java.io.PipedOutputStream
+import java.io.PipedInputStream
 
 
 import scala.sys.process.stringToProcess
@@ -18,6 +23,7 @@ import org.apache.thrift.transport.TIOStreamTransport
 import org.apache.thrift.transport.TTransportException
 import org.apache.thrift.transport.TFileTransport
 import org.apache.thrift.transport.TStandardFile
+import org.apache.thrift.protocol.TCompactProtocol
 
 import edu.ufl.cise.util.StreamItemUtil
 import edu.ufl.cise.util.URLLineReader
@@ -64,24 +70,42 @@ trait Faucet extends Logging {
     baos //return 
   }
 
+  def grabGPGCompressed(date: String, fileName: String): ByteArrayOutputStream = {
+    logInfo("Fetching, decrypting with GrabGPG(%s,%s)".format(date, fileName))
+
+    // TODO can I not decompress and do with the GZIPOutputStream class?
+    val baos = new ByteArrayOutputStream(100 * 1024 * 1024)
+    // Use the linux file system to download, decrypt and decompress a file
+    (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
+      "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
+      "gpg --no-permission-warning --trust-model always --output - --decrypt -" #> //decrypt it, pipe it
+      baos) ! ProcessLogger(line => ()) // ! Executes the previous commands, 
+    //Silence the linux stdout, stderr
+
+    baos.flush
+    baos //return 
+  }
+
 
 
   /**
    * Creates a StreamItem from a protocol. return an Option[StramItem] just in case
    * for some of them we don't have data we are safe.
    */
-  def mkStreamItem(protocol: org.apache.thrift.protocol.TProtocol): Option[StreamItem] = {
-    val s = new StreamItem
+   // TODO TProtocol
+  def mkStreamItem(protocol: TBinaryProtocol, s:StreamItem = new StreamItem): Option[StreamItem] = {
+    //val s = new StreamItem
     var successful = false
     try {
       s.read(protocol)
       successful = true
     } catch {
-      case e: Exception => logDebug("Error in mkStreamItem"); None
+      case e:java.lang.OutOfMemoryError => logError("OOM Error: %s".format(e.getStackTrace.toList.toString)); None
       case e:TTransportException => e.getType match { 
-        case TTransportException.END_OF_FILE => logInfo("mkstream Finished."); 
-        case _ => logInfo("Error")
+        case TTransportException.END_OF_FILE => logInfo("mkstream Finished."); None
+        case _ => logInfo("Error"); None
       }
+      case e: Exception => logDebug("Error in mkStreamItem"); None
     }
     if (successful) Some(s) else None
   }

@@ -3,6 +3,8 @@ package edu.ufl.cise
 import edu.mit.jwi.item.POS
 import edu.ufl.cise.util.WordnetUtil
 import edu.ufl.cise.util.OntologySynonymGenerator
+
+
 object TRECSSF2013 extends Logging {
 
   val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
@@ -41,7 +43,12 @@ object TRECSSF2013 extends Logging {
    * This will execute the program using CashedFaucet.scala
    */
   def runCachedFaucet() {
-    val z = new CachedFaucet(SparkIntegrator.sc, "2012-05-01", 0)
+    val sr = new StreamRange
+    sr.addFromDate("2012-05-01")
+    sr.addFromHour(0)
+    sr.addToDate("2012-05-01")
+    sr.addToHour(23)
+    val z = new CachedFaucet(SparkIntegrator.sc, sr)
     val itVal = z.iterator.next
     val filtered = itVal.map(si =>
       new String(si.body.cleansed.array(), "UTF-8")).
