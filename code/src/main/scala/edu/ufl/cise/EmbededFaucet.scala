@@ -83,7 +83,7 @@ object EmbededFaucet extends Logging {
         baos) ! // ! Executes the previous commands, 
       //Silence the linux stdout, stderr
     } else {
-      "gpg --no-permission-warning --trust-model always --output - --decrypt /home/morteza/zproject/trec-kba/social.3a51732f846b630e98c9f02e1fd0c8d4.xz.gpg" #| //decrypt it, pipe it
+      "gpg --no-permission-warning --trust-model always --output - --decrypt /home/morteza/zproject/trec-kba/social.3a51732f846b630e98c9f02e1fd0c8d4.xz.gpg" #| //2011-10-07-14
         "xz --decompress" #> //decompress it
         baos !
     }
@@ -171,17 +171,30 @@ object EmbededFaucet extends Logging {
         case e: Exception =>
           logDebug("Error in get")
       }
-    pipeline.run(new String(list.apply(115).body.cleansed.array, "UTF-8"));
+    //pipeline.run(new String(list.apply(115).body.cleansed.array, "UTF-8"));
+    println(new String(list.apply(115).body.cleansed.array, "UTF-8"))
 
-    val rdd = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
-    //all streamitems of one file in parallel
-    println("Hello Spark!")
-    //   val temp11 = pipeline.run(text);
-    val temp = rdd.map(p =>
+    //val rdd = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
+    //    val temp = rdd.map(p =>
+    //      {
+    //        if (p.body != null && p.body.cleansed != null) {
+    //          val bb = p.body.cleansed.array
+    //          if (bb.length > 0) {
+    //            val str = new String(bb, "UTF-8").toLowerCase()
+    //            // val b = pipeline.run(str)
+    //            str
+    //          } else
+    //            " "
+    //        } else
+    //          " "
+    //      })
+    //      .filter(_.contains("roosevelt"))
+    //    println(temp.count)
+
+    val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray()
+
+    val temp = list.map(p =>
       {
-        val a: ArrayList[Triple] = new ArrayList[Triple] {}
-        a.add(new Triple("", "", ""))
-
         if (p.body != null && p.body.cleansed != null) {
           val bb = p.body.cleansed.array
           if (bb.length > 0) {
@@ -189,18 +202,17 @@ object EmbededFaucet extends Logging {
             val b = pipeline.run(str)
             b.toArray
           } else {
-            a.toArray
+            a
           }
         } else
-          a.toArray
+          a
       }).flatMap(x => x)
       .filter(p =>
         {
           val t = p.asInstanceOf[Triple]
-          val e0 = t.entity0.toLowerCase
-        //  val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
+          //  val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
 
-          e0.toLowerCase().equals(query.entity) //||
+          t.entity0.equals(query.entity) //||
           //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
           //query.slotName.toLowerCase.contains(p.slot.toLowerCase()) ||
           //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
@@ -214,9 +226,6 @@ object EmbededFaucet extends Logging {
   def getStreams(date: String, hour0: Int, hour1: Int): Unit = {
     (hour0 to hour1)
       .map(h => getStreams(date, h))
-    //    for (h <- hour0 to hour1) {
-    //      getStreams(date, h)
-    //    }
   }
 
   /**
