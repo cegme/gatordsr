@@ -103,7 +103,11 @@ trait Faucet extends Logging {
       case e:java.lang.OutOfMemoryError => logError("OOM Error: %s".format(e.getStackTrace.toList.toString)); None
       case e:TTransportException => e.getType match { 
         case TTransportException.END_OF_FILE => logInfo("mkstream Finished."); None
-        case _ => logInfo("Error"); None
+        case TTransportException.ALREADY_OPEN => logError("mkstream already opened."); None
+        case TTransportException.NOT_OPEN => logError("mkstream not open."); None
+        case TTransportException.TIMED_OUT => logError("mkstream timed out."); None
+        case TTransportException.UNKNOWN => logError("mkstream unknown."); None
+        case e => logError("Error: %s".format(e.toString)); None
       }
       case e: Exception => logDebug("Error in mkStreamItem"); None
     }
