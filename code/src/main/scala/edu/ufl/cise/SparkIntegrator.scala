@@ -8,7 +8,7 @@ import spark.streaming.Seconds
  */
 object SparkIntegrator {
 
-  val sc = new SparkContext("local[2]", "gatordsr", "$YOUR_SPARK_HOME",
+  val sc = new SparkContext("local[64]", "gatordsr", "$YOUR_SPARK_HOME",
     List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
 //  val ssc = new StreamingContext("local[2]", "gatordsrStreaming", Seconds(2),
 //    "$YOUR_SPARK_HOME", List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
