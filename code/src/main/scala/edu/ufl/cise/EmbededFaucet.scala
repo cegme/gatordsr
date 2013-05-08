@@ -193,13 +193,16 @@ object EmbededFaucet extends Logging {
 
     val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray()
 
-    val temp = list.map(p =>
+    //list
+    val temp = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
+    .map(p =>
       {
         if (p.body != null && p.body.cleansed != null) {
           val bb = p.body.cleansed.array
           if (bb.length > 0) {
             val str = new String(bb, "UTF-8")
-            val b = pipeline.run(str)
+            val strEnglish = str.replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
+            val b = pipeline.run(strEnglish)
             b.toArray
           } else {
             a

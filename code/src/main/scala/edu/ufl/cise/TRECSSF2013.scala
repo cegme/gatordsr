@@ -3,6 +3,7 @@ package edu.ufl.cise
 import edu.mit.jwi.item.POS
 import edu.ufl.cise.util.WordnetUtil
 import edu.ufl.cise.util.OntologySynonymGenerator
+import java.util.ArrayList
 
 object TRECSSF2013 extends Logging {
 
@@ -51,10 +52,39 @@ object TRECSSF2013 extends Logging {
 
     lazy val z1 = z.iterator.reduce(_ union _) // Combine RDDS
 
-    val filtered = z1.map(si =>
-      new String(si.body.cleansed.array(), "UTF-8").toLowerCase()).
-      filter(s => s.contains("roosevelt"))
-    println(filtered.count)
+//    val filtered = z1.map(si =>
+//      new String(si.body.cleansed.array(), "UTF-8").toLowerCase()).
+//      filter(s => s.contains("roosevelt"))
+//    println(filtered.count)
+    
+      val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray()
+    z1.map(p =>
+      {
+        logInfo("Current doc: %s".format(p.doc_id))
+        if (p.body != null && p.body.cleansed != null) {
+          val bb = p.body.cleansed.array
+          if (bb.length > 0) {
+            val str = new String(bb, "UTF-16")
+            val b = pipeline.run(str)
+            b.toArray
+          } else {
+            a
+          }
+        } else
+          a
+      }).flatMap(x => x)
+      .filter(p =>
+        {
+          val t = p.asInstanceOf[Triple]
+          //  val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
+
+          t.entity0.equals(query.entity) //||
+          //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
+          //query.slotName.toLowerCase.contains(p.slot.toLowerCase()) ||
+          //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
+        })
+      .foreach(t => logInfo("Answer: %s".format(t.toString)))
+
   }
 
    //      .
