@@ -201,7 +201,8 @@ object EmbededFaucet extends Logging {
           val bb = p.body.cleansed.array
           if (bb.length > 0) {
             val str = new String(bb, "UTF-8")
-            val strEnglish = str.replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
+                        
+            val strEnglish = str.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
             val b = pipeline.run(strEnglish)
             b.toArray
           } else {
@@ -214,8 +215,9 @@ object EmbededFaucet extends Logging {
         {
           val t = p.asInstanceOf[Triple]
           //  val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
+          print(query.entity + "->" + t.entity0)
 
-          t.entity0.equals(query.entity) //||
+          t.entity0.contains(query.entity) //||
           //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
           //query.slotName.toLowerCase.contains(p.slot.toLowerCase()) ||
           //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
