@@ -1,4 +1,5 @@
-package fileProcessor;
+package kba;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,11 +11,11 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FileProcessor {
+public class FileProcessor_bak {
 
 	public static void main(String[] args) {
 
-		int threadCount = 32;
+		int threadCount = 128;
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		try {
 			URL url;
@@ -51,7 +52,7 @@ public class FileProcessor {
 						};
 					};
 					executor.execute(worker);
-				} else if (i > 1) {//skip initial no line
+				} else if (i > 1) {
 					finished = true;
 				}
 			}
@@ -66,11 +67,30 @@ public class FileProcessor {
 		}
 	}
 
+	// static Thread myThread(String line) {
+	// Thread t = null;
+	// Pattern p = Pattern.compile("a href=\"([^\"]+)\"");
+	// final Matcher m1 = p.matcher(line);
+	// if (m1.find()) {
+	// t = new Thread() {
+	// public void run() {
+	// String linkStr = m1.group(1);
+	// System.out.println(linkStr);
+	// String dir = linkStr.substring(0, linkStr.indexOf('/'));
+	// System.out.println(dir);
+	// downloadDir(dir);
+	// };
+	// };
+	// t.start();
+	// }
+	// return t;
+	// }
+
 	static void downloadDir(String dir) {
 		try {
 			String localDir = "/media/sdd/corpus/";
 
-			//(new File(localDir + dir)).mkdirs();
+			(new File(localDir + dir)).mkdirs();
 
 			String line;
 
@@ -86,17 +106,13 @@ public class FileProcessor {
 				if (m.find()) {
 					String linkStr = m.group(1);
 					if (linkStr.contains("gpg")) {
-						
-						Runtime.getRuntime().exec("");
-						
 						System.out.println(linkStr);
 						String gpgStr = "http://s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
 								+ dir + "/" + linkStr;
 
 						String command = "wget -O - "
 								+ gpgStr
-								+ " |   gpg --no-permission-warning --trust-model always  " +
-								" | hdfs dfs " 
+								+ " |   gpg --no-permission-warning --trust-model always --output "
 								+ localDir + dir + "/"
 								+ linkStr.substring(0, linkStr.length() - 4);
 

@@ -176,7 +176,13 @@ class Pipeline(query: SSFQuery) extends Logging {
     breakSentence(tokens, words, marks)
     // extract relations
     val results = getRelations(words, marks)
-    for (relation <- results.toArray()) logInfo(relation.toString())
+    var s = ""
+//    for (relation <- results.toArray())   //morteza 
+//      s = s + " (" + relation.toString() + ") "
+//    
+//    if (s.length() > 0) {
+//      logInfo(s)
+//    }
     if (results.size() != 0)
       triples.addAll(results)
   }
@@ -198,8 +204,8 @@ class Pipeline(query: SSFQuery) extends Logging {
           nlppipeline.annotate(sentence.asInstanceOf[Annotation]);
           extract(sentence.asInstanceOf[Annotation], triples)
         })
-      logInfo("pipeline ends")
-      println(triples)
+      // logInfo("pipeline ends")
+      // println(triples)
       return triples
     }
 }

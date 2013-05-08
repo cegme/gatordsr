@@ -19,8 +19,14 @@ import spark.streaming.Seconds
 import spark.streaming.StreamingContext
 import org.apache.thrift.transport.TTransportException
 import scala.collection.mutable.ArrayBuffer
-
 import scala.collection.mutable.ListBuffer
+import java.io.ByteArrayOutputStream
+import java.util.Arrays
+import java.io.PrintWriter
+import java.io.File
+import java.util.ArrayList
+import edu.ufl.cise.util.WordnetUtil
+import edu.mit.jwi.item.POS
 
 /**
  * TODO: put delays on the thread based on real delays.
@@ -43,7 +49,8 @@ object EmbededFaucet extends Logging {
   val MAX_TO_HOUR = 0
 
   val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
-  val query = new SSFQuery("Abraham Lincoln", "president of")
+  // val query = new SSFQuery("Abraham Lincoln", "president of") 
+  val query = new SSFQuery("roosevelt", "president")
   lazy val pipeline = Pipeline.getPipeline(query)
 
   val SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -61,15 +68,25 @@ object EmbededFaucet extends Logging {
   def grabGPG(date: String, fileName: String): java.io.ByteArrayOutputStream = {
     logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
 
+    val fetchFileCommandOnline = ("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
+      "kba-stream-corpus-2012/%s/%s").format(date, fileName)
+    val fetchFileCommandOffline = "echo " + fileName
+    var fetchFileCommand = if (date != null) fetchFileCommandOnline else fetchFileCommandOffline
+
     val baos = new java.io.ByteArrayOutputStream
     // Use the linux file system to download, decrypt and decompress a file
-    (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
-      "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
-      "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| //decrypt it, pipe it
-      "xz --decompress" #> //decompress it
-      baos) ! // ! Executes the previous commands, 
-    //Silence the linux stdout, stderr
-
+    if (date != null) {
+      (
+        fetchFileCommandOnline #| //get the file, pipe it
+        "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| //decrypt it, pipe it
+        "xz --decompress" #> //decompress it
+        baos) ! // ! Executes the previous commands, 
+      //Silence the linux stdout, stderr
+    } else {
+      "gpg --no-permission-warning --trust-model always --output - --decrypt /home/morteza/zproject/trec-kba/social.3a51732f846b630e98c9f02e1fd0c8d4.xz.gpg" #| //2011-10-07-14
+        "xz --decompress" #> //decompress it
+        baos !
+    }
     baos
   }
 
@@ -84,8 +101,7 @@ object EmbededFaucet extends Logging {
    * Example usage:
    *   getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
    */
-  def getStreams(date: String, fileName: String): List[StreamItem] = {
-    val data = grabGPG(date, fileName)
+  def getStreams(data: ByteArrayOutputStream): List[StreamItem] = {
     val bais = new ByteArrayInputStream(data.toByteArray())
     val transport = new TIOStreamTransport(bais)
     transport.open()
@@ -136,41 +152,75 @@ object EmbededFaucet extends Logging {
     val dayHourFileList = pattern.findAllIn(html).matchData.toArray
 
     for (fileName <- dayHourFileList) {
-      val list = getStreams(directoryName, fileName.group(1))
-      val rdd = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
-      //all streamitems of one file in parallel
-      println("Hello Spark!")
-      val temp = rdd.map(p =>
-        {
-          if (p.body != null && p.body.cleansed != null) {
-            val bb = p.body.cleansed.array
-            if (bb.length > 0) {
-              val str = new String(bb, "UTF-8")
-              //println(str)
-              //println("Enter pipeline")
-              val b = pipeline.run(str)
-              //println("exit pipeline")
-              str
-            } else
-              " "
-          }
-          " "
-        }).flatMap(line => line.split(" "))
-        .map(word => if (word.toLowerCase()
-          .contains("today"))
-          1
-        else
-          0)
-      //.reduce(_ + _)
-      if (temp.count > 0) {
-        val count = temp.reduce(_ + _)
-        println("Found Today: " + count)
-      }
-
-      //println("Found Today: " + temp)
-
-      //.foreach(println _)
+      val data = grabGPG(directoryName, fileName.group(1))
+      processData(data)
     }
+  }
+
+  def processData(data: ByteArrayOutputStream): Unit = {
+    val list = getStreams(data)
+
+    val pw: PrintWriter = new PrintWriter(new File("/home/morteza/streamitem200.txt"));
+    for (i <- (0 to 200))
+      try {
+        pw.println("morteza " + i)
+        val temp = new String(list.apply(i).body.cleansed.array, "UTF-8")
+        pw.println(temp)
+        pw.println("morteza " + i)
+      } catch {
+        case e: Exception =>
+          logDebug("Error in get")
+      }
+    //pipeline.run(new String(list.apply(115).body.cleansed.array, "UTF-8"));
+    println(new String(list.apply(115).body.cleansed.array, "UTF-8"))
+
+    //val rdd = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
+    //    val temp = rdd.map(p =>
+    //      {
+    //        if (p.body != null && p.body.cleansed != null) {
+    //          val bb = p.body.cleansed.array
+    //          if (bb.length > 0) {
+    //            val str = new String(bb, "UTF-8").toLowerCase()
+    //            // val b = pipeline.run(str)
+    //            str
+    //          } else
+    //            " "
+    //        } else
+    //          " "
+    //      })
+    //      .filter(_.contains("roosevelt"))
+    //    println(temp.count)
+
+    val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray()
+
+    //list
+    val temp = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
+    .map(p =>
+      {
+        if (p.body != null && p.body.cleansed != null) {
+          val bb = p.body.cleansed.array
+          if (bb.length > 0) {
+            val str = new String(bb, "UTF-8")
+            val strEnglish = str.replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
+            val b = pipeline.run(strEnglish)
+            b.toArray
+          } else {
+            a
+          }
+        } else
+          a
+      }).flatMap(x => x)
+      .filter(p =>
+        {
+          val t = p.asInstanceOf[Triple]
+          //  val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
+
+          t.entity0.equals(query.entity) //||
+          //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
+          //query.slotName.toLowerCase.contains(p.slot.toLowerCase()) ||
+          //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
+        })
+      .foreach(t => logInfo("Answer: %s".format(t.toString)))
   }
 
   /**
@@ -178,10 +228,7 @@ object EmbededFaucet extends Logging {
    */
   def getStreams(date: String, hour0: Int, hour1: Int): Unit = {
     (hour0 to hour1)
-    .map(h => getStreams(date, h))
-    //    for (h <- hour0 to hour1) {
-    //      getStreams(date, h)
-    //    }
+      .map(h => getStreams(date, h))
   }
 
   /**
@@ -223,13 +270,25 @@ object EmbededFaucet extends Logging {
     null
   }
 
+  def getStreams(date: String, fileName: String) {
+    val data = grabGPG(date, fileName);
+    processData(data);
+  }
+
+  def getStreamsOffline(fileName: String) {
+    val data = grabGPG(null, fileName);
+    processData(data);
+  }
+
   /**
    * Test the operation of the Faucet class
    */
   def main(args: Array[String]) = {
     //val z3 = getStreams("2011-10-08", 5)
-    val z3 = getStreams("2011-10-08")
-
+    //getStreams("2011-10-08-5", "social.7e67c3f4fdee17f0c07751b075e3f649.xz.gpg")
+    getStreams(null, null)
+    // val z3 = getStreams("2011-10-08")
+    // getStreamsOffline("/home/morteza/zproject/trec-kba/social.3a51732f846b630e98c9f02e1fd0c8d4.xz.gpg")
   }
 
 }
