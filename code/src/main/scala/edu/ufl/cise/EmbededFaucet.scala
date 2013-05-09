@@ -128,6 +128,7 @@ object EmbededFaucet extends Logging {
    * Return the files pertaining to specific date.
    */
   def getStreams(date: String, hour: Int): Unit = {
+    
     val directoryName = getDirectoryName(date, hour)
     val reader = new URLLineReader(BASE_URL + format(directoryName))
     val html = reader.toList.mkString
@@ -148,7 +149,7 @@ object EmbededFaucet extends Logging {
               val str = new String(bb, "UTF-8")
               //println(str)
               //println("Enter pipeline")
-              val b = pipeline.run(str)
+              val b = Pipeline.getPipeline(query).run(str)
               //println("exit pipeline")
               str
             } else
@@ -161,13 +162,13 @@ object EmbededFaucet extends Logging {
           1
         else
           0)
-      //.reduce(_ + _)
-      if (temp.count > 0) {
-        val count = temp.reduce(_ + _)
-        println("Found Today: " + count)
-      }
+      .reduce(_ + _)
+      //if (temp.count > 0) {
+      //  val count = temp.reduce(_ + _)
+      //  println("Found Today: " + count)
+      //}
 
-      //println("Found Today: " + temp)
+      println("Found Today: " + temp)
 
       //.foreach(println _)
     }
@@ -227,8 +228,10 @@ object EmbededFaucet extends Logging {
    * Test the operation of the Faucet class
    */
   def main(args: Array[String]) = {
-    //val z3 = getStreams("2011-10-08", 5)
-    val z3 = getStreams("2011-10-08")
+    Pipeline.init
+    val z3 = getStreams("2011-10-08", 5)
+    //val z3 = getStreams("2011-10-08")
+    //val z3 = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")
 
   }
 
