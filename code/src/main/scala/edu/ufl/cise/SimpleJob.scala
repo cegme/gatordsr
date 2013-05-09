@@ -30,8 +30,6 @@ object SimpleJob extends Logging {
 
   def testPipeline {
 
-    val query = new SSFQuery("roosevelt", "president of")
-    val pipe = Pipeline.getPipeline(query)
 
     val sr = new StreamRange
     sr.addFromDate("2011-10-07")
@@ -45,7 +43,7 @@ object SimpleJob extends Logging {
     //val z = new CachedFaucet(SparkIntegrator.sc, sr)
 
     logInfo("About to start the iterator")
-    z.iterator.map{rdd =>
+    z.piterator.map{rdd =>
             logInfo("RDD size: %d".format(rdd.count))
             rdd.filter{ si => si.body != null &&
                         si.body.cleansed != null && 
@@ -54,6 +52,8 @@ object SimpleJob extends Logging {
             //.take(5) // Only take a few of the documents
             .flatMap{ si => 
               //logInfo("%s".format(new String(si.body.cleansed.array, "UTF-8")))
+    val query = new SSFQuery("roosevelt", "president of")
+    val pipe = Pipeline.getPipeline(query)
               pipe.run(new String(si.body.cleansed.array, "UTF-8").toLowerCase)
             }
             //.take(1) // Only take the first relation
@@ -61,6 +61,10 @@ object SimpleJob extends Logging {
           }
           //.take(10)
           .foreach(t => logInfo("%s".format(t)))
+          
+
+     //logInfo("Document count of %s is : %d".format(sr,z.piterator.map{rdd => rdd.count()}.sum))
+
 
   }
 
