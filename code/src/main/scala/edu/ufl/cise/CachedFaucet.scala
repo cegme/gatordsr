@@ -27,6 +27,7 @@ import scala.sys.process.ProcessLogger
 import scala.collection.mutable.WeakHashMap
 import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConversions._
+import scala.collection.parallel
 
 
 import edu.ufl.cise.util.URLLineReader
@@ -94,6 +95,26 @@ class CachedFaucet(
       // If it is not, get it and put it in the cache
     }
   }
+
+
+  /*private class PStreamIterator 
+    extends parallel.immutable.ParIterable[RDD[StreamItem]] {
+
+    val docs = keyList
+
+    private lazy val keyListSize:Int = keyList.size
+    def size:Int = keyListSize // This needs to be constant time
+
+    //def splitter: IterableSplitter[RDD[StreamIteem]]
+
+    //def split: Seq[Splitter]
+
+    //class ParFileSplitter
+
+  }*/
+
+
+
   def getRDDZ(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
     logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
 
