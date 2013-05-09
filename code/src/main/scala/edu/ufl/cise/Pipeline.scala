@@ -31,7 +31,7 @@ object Pipeline extends Logging {
 
   var num = 0
   
-  def init1() {
+  def init() {
     // initialize ssplit and Stanford NLP pipeline 
     val props0 = new Properties();
     props0.put("annotators", "tokenize, ssplit")
@@ -46,10 +46,7 @@ object Pipeline extends Logging {
   }
 
   // get a Pipeline object for specific text and query
-  def getPipeline(query: SSFQuery): Pipeline = {
-    init1();
-    new Pipeline(query)
-  }
+  def getPipeline(query: SSFQuery): Pipeline = new Pipeline(query)
 
   def main(args: Array[String]) {
     // extract relations from a string
@@ -248,8 +245,9 @@ class Pipeline(query: SSFQuery) extends Logging {
       val c = out - in
       val c0 = out0 - in
       
-      logInfo("pipeline ends executeion for document " + num + " : prepare " + c0/1000000.0 + "ms, " +
-      		"annotation " + x/1000000.0 + "ms, " + " extraction " + y/1000000.0 + "ms, total " + c/1000000.0 + "ms")
+      logInfo("document " + num  + " : length " + document.toString().length() + 
+      		", prepare " + c0/1000000.0 + "ms, " +
+      		"annotate " + x/1000000.0 + "ms, " + "extract " + y/1000000.0 + "ms, total " + c/1000000.0 + "ms")
       //println(triples)
       return triples
     }
