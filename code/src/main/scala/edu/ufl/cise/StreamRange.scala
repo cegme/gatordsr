@@ -47,6 +47,12 @@ class StreamRange extends Logging {
     sr
   }
 
+  override def toString:String = {
+    def sm = settingsMap.apply(_)
+    "StreamRange(fromDate:%s, fromHour:%s, toDate:%s, toHour:%s)"
+    .format(sm(FROMDATE), sm(FROMHOUR), sm(TODATE), sm(TOHOUR))
+  }
+
   def getFileList:List[(String,String)] = {
     logInfo("Getting the File List with the settingsMap: %s".format(settingsMap.toString))
 
