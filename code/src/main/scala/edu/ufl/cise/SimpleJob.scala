@@ -31,6 +31,7 @@ object SimpleJob extends Logging {
   def testPipeline {
 
     val query = new SSFQuery("roosevelt", "president of")
+    Pipeline.init
     val pipe = Pipeline.getPipeline(query)
 
     val sr = new StreamRange
