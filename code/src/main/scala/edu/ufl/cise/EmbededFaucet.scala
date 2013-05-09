@@ -192,6 +192,7 @@ object EmbededFaucet extends Logging {
     //    println(temp.count)
 
     val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray()
+println("StreamItem list size is: " + list.size)
 
     //list
     val temp = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
@@ -210,12 +211,12 @@ object EmbededFaucet extends Logging {
           }
         } else
           a
-      }).flatMap(x => x)
+      }).flatMap(x => {println(); x})
       .filter(p =>
         {
           val t = p.asInstanceOf[Triple]
           //  val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
-          print(query.entity + "->" + t.entity0)
+          print(query.entity + "->(" + t + ")   ")
 
           t.entity0.contains(query.entity) //||
           //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
