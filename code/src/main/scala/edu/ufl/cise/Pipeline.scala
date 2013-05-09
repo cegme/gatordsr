@@ -88,7 +88,7 @@ object Pipeline extends Logging {
 
 }
 
-class Pipeline(query: SSFQuery) extends Logging {
+class Pipeline(query: SSFQuery) extends Logging with Serializable {
 
   // use to store the extracted relations
   //private var triples: ArrayList[Triple] = new ArrayList[Triple]
