@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -15,12 +14,13 @@ import java.util.regex.Pattern;
 public class FileProcessor {
 
 	int threadCount = 32;
-	static String localDirSDD = "/media/sdd/corpus/";
-	static String localDirSDE = "/media/sde/corpus/";
+	static String localDirSDD = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	static String localDirSDE = "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	static String localDirPrefix = "s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	String AWS_URL = "http://s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 
 	private boolean isStorableInSDD(int size) {
-		String s = "/home/morteza";// "/media/sdd";
+		String s = "/media/sdd";
 		File file = new File(s);
 		long totalSpace = file.getTotalSpace();
 		// total disk space in bytes.
@@ -54,8 +54,19 @@ public class FileProcessor {
 		}
 	}
 
+	// private boolean isAlreadyDownloaded(String localDir, String file, String
+	// dir){
+	//
+	// File f = new File(localDir + localDirPrefix);
+	// if(f.exists()) { /* do something */ }
+	// }
+
+	/**
+	 * This method will download the corpus into two disks, fills one first then
+	 * fills the other one.
+	 */
 	private void download() {
-		
+
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		URL url;
 		InputStream is = null;
@@ -97,14 +108,12 @@ public class FileProcessor {
 								int size;
 								try {
 									size = getDirSize(dir);
-									// System.out.println(dir + " Size:" + size
-									// /
-									// 1024
-									// + " KB");
+
 									if (isStorableInSDD(size))
 										downloadDir(localDirSDD, dir);
 									else
 										downloadDir(localDirSDE, dir);
+
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -155,7 +164,12 @@ public class FileProcessor {
 						// + size);
 						size += tempSize;
 					}
-					conn.getInputStream().close();
+					try {
+						conn.getInputStream().close();
+					} catch (Exception e) {
+						System.err.println(dir + " " + gpgFileURL);
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -165,8 +179,9 @@ public class FileProcessor {
 	void downloadDir(String localDir, String dir) throws Exception {
 		String line;
 
+		InputStream is;
 		URL url = new URL(AWS_URL + dir + "/index.html");
-		InputStream is = url.openStream(); // throws an IOException
+		is = url.openStream();
 		BufferedReader br2 = new BufferedReader(new InputStreamReader(is));
 
 		Pattern p = Pattern.compile("a href=\"([^\"]+)\"");
@@ -179,19 +194,10 @@ public class FileProcessor {
 					// System.out.println(linkStr);
 					String gpgFileURL = AWS_URL + dir + "/" + linkStr;
 
-					url = new URL(gpgFileURL);
-					URLConnection conn = url.openConnection();
-					int size = conn.getContentLength();
-					if (size < 0)
-						System.out.println(dir + "/" + linkStr
-								+ " Could not determine file size.");
-					// else
-					// System.out.println(dir + "/" + linkStr + " Size: "
-					// + size);
-					conn.getInputStream().close();
+					// printFileSize(gpgFileURL);
 
-					String commandWget = "wget -q -p " + localDir + dir + "/ "
-							+ gpgFileURL;
+					String commandWget = "wget -nc -q -P " + localDir + dir
+							+ "/ " + gpgFileURL;
 
 					// String commandDecrypytHDFS = "wget -O - "
 					// + gpgStr
@@ -208,24 +214,42 @@ public class FileProcessor {
 		}
 	}
 
-	private void runShellCommand(String command) throws Exception {
+	private void runShellCommand(String command) {
 		String line;
 		String[] cmd = { "/bin/sh", "-c", command };
 		System.out.println(command);
-		Process process = Runtime.getRuntime().exec(cmd);
-		// System.out.println(process.exitValue());
-		BufferedReader stdOut = new BufferedReader(new InputStreamReader(
-				process.getInputStream()));
-		BufferedReader stdErr = new BufferedReader(new InputStreamReader(
-				process.getErrorStream()));
-		while ((line = stdOut.readLine()) != null) {
-			System.out.println(line);
+		Process process;
+		try {
+			process = Runtime.getRuntime().exec(cmd);
+
+			// System.out.println(process.exitValue());
+			BufferedReader stdOut = new BufferedReader(new InputStreamReader(
+					process.getInputStream()));
+			BufferedReader stdErr = new BufferedReader(new InputStreamReader(
+					process.getErrorStream()));
+			while ((line = stdOut.readLine()) != null) {
+				System.out.println(line);
+			}
+			System.out.println("");
+			while ((line = stdErr.readLine()) != null) {
+				System.out.println(line);
+			}
+			process.destroy();
+		} catch (IOException e) {
+			System.err.println(command);
+			e.printStackTrace();
 		}
-		System.out.println("");
-		while ((line = stdErr.readLine()) != null) {
-			System.out.println(line);
-		}
-		process.destroy();
+	}
+
+	private void printFileSize(String gpgFileURL) throws Exception {
+		URL url = new URL(gpgFileURL);
+		URLConnection conn = url.openConnection();
+		int size = conn.getContentLength();
+		if (size < 0)
+			System.out.println(gpgFileURL + " Could not determine file size.");
+		else
+			System.out.println(gpgFileURL + " Size: " + size);
+		conn.getInputStream().close();
 	}
 
 	public static void main(String[] args) {
