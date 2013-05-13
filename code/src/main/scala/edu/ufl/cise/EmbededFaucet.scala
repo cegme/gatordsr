@@ -70,8 +70,6 @@ object EmbededFaucet extends Logging {
 
     val fetchFileCommandOnline = ("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
       "kba-stream-corpus-2012/%s/%s").format(date, fileName)
-    val fetchFileCommandOffline = "echo " + fileName
-    var fetchFileCommand = if (date != null) fetchFileCommandOnline else fetchFileCommandOffline
 
     val baos = new java.io.ByteArrayOutputStream
     // Use the linux file system to download, decrypt and decompress a file
@@ -81,10 +79,10 @@ object EmbededFaucet extends Logging {
         "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| //decrypt it, pipe it
         "xz --decompress" #> //decompress it
         baos) ! // ! Executes the previous commands, 
-      //Silence the linux stdout, stderr
     } else {
-      "gpg --no-permission-warning --trust-model always --output - --decrypt /home/morteza/zproject/trec-kba/social.3a51732f846b630e98c9f02e1fd0c8d4.xz.gpg" #| //2011-10-07-14
-        "xz --decompress" #> //decompress it
+      //2011-10-07-14
+      "gpg --no-permission-warning --trust-model always --output - --decrypt /home/morteza/zproject/trec-kba/social.3a51732f846b630e98c9f02e1fd0c8d4.xz.gpg" #|
+        "xz --decompress" #>
         baos !
     }
     baos
@@ -129,7 +127,6 @@ object EmbededFaucet extends Logging {
 
     transport.close()
     list
-
   }
 
   /**
@@ -192,30 +189,31 @@ object EmbededFaucet extends Logging {
     //    println(temp.count)
 
     val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray()
+    println("StreamItem list size is: " + list.size)
 
     //list
     val temp = SparkIntegrator.sc.parallelize(list, SparkIntegrator.NUM_SLICES)
-    .map(p =>
-      {
-        if (p.body != null && p.body.cleansed != null) {
-          val bb = p.body.cleansed.array
-          if (bb.length > 0) {
-            val str = new String(bb, "UTF-8")
-                        
-            val strEnglish = str.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
-            val b = pipeline.run(strEnglish)
-            b.toArray
-          } else {
+      .map(p =>
+        {
+          if (p.body != null && p.body.cleansed != null) {
+            val bb = p.body.cleansed.array
+            if (bb.length > 0) {
+              val str = new String(bb, "UTF-8")
+
+              val strEnglish = str.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
+              val b = pipeline.run(strEnglish)
+              b.toArray
+            } else {
+              a
+            }
+          } else
             a
-          }
-        } else
-          a
-      }).flatMap(x => x)
+        }).flatMap(x => { println(); x })
       .filter(p =>
         {
           val t = p.asInstanceOf[Triple]
           //  val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
-          print(query.entity + "->" + t.entity0)
+          print(query.entity + "->(" + t + ")   ")
 
           t.entity0.contains(query.entity) //||
           //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
