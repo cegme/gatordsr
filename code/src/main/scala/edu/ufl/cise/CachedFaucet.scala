@@ -26,7 +26,12 @@ import scala.sys.process.stringToProcess
 import scala.sys.process.ProcessLogger
 import scala.collection.mutable.WeakHashMap
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.JavaConversions._
+import scala.collection.parallel
+import scala.collection.parallel.SeqSplitter
+import scala.collection.generic.Signalling
+import scala.collection.generic.IdleSignalling
 
 
 import edu.ufl.cise.util.URLLineReader
@@ -37,7 +42,7 @@ class CachedFaucet(
   val sr:StreamRange
   ) extends Faucet with Logging with Serializable {
 
-  private case class CacheKey(val date:String, val fileName:String)
+  protected case class CacheKey(val date:String, val fileName:String)
 
   /** This cache helps manage the garbage. **/
   private lazy val cache:WeakHashMap[CacheKey,RDD[StreamItem]] = new WeakHashMap[CacheKey,RDD[StreamItem]]()
@@ -75,7 +80,8 @@ class CachedFaucet(
   final def getKeyList = keyList.map(x => (x.date, x.fileName)) 
   
   
-  private class StreamIterator extends Iterator[RDD[StreamItem]] {
+  protected class StreamIterator
+  extends Iterator[RDD[StreamItem]] {
     val iterator = keyList.iterator
 
     override def hasNext:Boolean = {
@@ -94,6 +100,76 @@ class CachedFaucet(
       // If it is not, get it and put it in the cache
     }
   }
+
+
+  /**
+    * This parallel iterator is for iterating over gpg files. 
+    * We turn each gpg file into an RDD[StreamItem].
+    * This implementation was taken from 
+    * http://docs.scala-lang.org/overviews/parallel-collections/custom-parallel-collections.html
+    */
+  protected class PStreamIterator
+    extends parallel.immutable.ParSeq[RDD[StreamItem]] {
+
+    val docs = keyList.toArray
+
+    override def size: Int = docs.size 
+    def length: Int = size
+
+    def apply(i: Int):RDD[StreamItem] = {
+      val c:CacheKey = docs(i)
+      getRDDCompressed(sc, c.date, c.fileName)
+    }
+
+    def seq = {
+      iterator
+      .toSeq
+      .asInstanceOf[scala.collection.immutable.Seq[spark.RDD[kba.StreamItem]]]
+    }
+
+    def splitter = new ParFileSplitter(docs, 0, docs.size)
+
+    class ParFileSplitter(private var fileDocs:Seq[CacheKey],
+                          private var current:Int,
+                          private var totalSize:Int)
+    extends SeqSplitter[RDD[StreamItem]] {
+
+      var signalDelegate: Signalling = IdleSignalling
+   
+      final def hasNext:Boolean = current < totalSize
+
+      final def next:RDD[StreamItem] = {
+        val c:CacheKey = docs(current)
+        current += 1
+        getRDDCompressed(sc, c.date, c.fileName)
+      }
+
+      def remaining = totalSize - current
+
+      def dup = new ParFileSplitter(docs, current, totalSize)
+
+      def split = {
+        // TODO we can make this split in larger bundles...
+        val rem = remaining
+        if (rem >= 2) psplit(rem / 2, rem - rem/2)
+        else Seq(this)
+      }
+
+      def psplit(sizes: Int*): Seq[ParFileSplitter] = {
+        val splitted = new ArrayBuffer[ParFileSplitter](sizes.sum)
+        for (sz <- sizes) {
+          val next = (current + sz) min totalSize
+          splitted += new ParFileSplitter(docs, current, next)
+          current = next
+        }
+        if (remaining > 0) splitted += new ParFileSplitter(docs, current, totalSize)
+        splitted
+      }
+    }
+  }
+
+
+
   def getRDDZ(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
     logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
 
@@ -169,6 +245,7 @@ class CachedFaucet(
    * TODO change this to an function?
    */
   lazy val iterator:Iterator[RDD[StreamItem]] = new StreamIterator
+  lazy val piterator:PStreamIterator = new PStreamIterator
 
   //def createNewStreamIterator = new StreamIterator
 

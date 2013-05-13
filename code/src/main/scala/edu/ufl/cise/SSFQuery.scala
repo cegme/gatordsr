@@ -37,7 +37,7 @@ object ORG extends Enumeration with EntityType {
 class NewSSFQuery(val entity: String, val slotName: EntityType) extends Logging {
 
 }
-class SSFQuery(val entity: String, val slotName: String) extends Logging {
+class SSFQuery(val entity: String, val slotName: String) extends Logging with Serializable {
 
   // TODO : See if we are given a "time" for this query, if so add it to the constructor
   // TODO : Add a mutable dictionary of synonyms for the entity

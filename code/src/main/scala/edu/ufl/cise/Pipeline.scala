@@ -14,6 +14,10 @@ import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation
+import spark.SparkContext
+import com.google.common.base.Stopwatch
+import java.util.concurrent.TimeUnit
+import java.util.Date
 
 object Pipeline extends Logging {
 
@@ -25,7 +29,9 @@ object Pipeline extends Logging {
   // a bloom filter to check relations
   private var bf: (String => Boolean) = null
 
-  def init1() {
+  var num = 0
+  
+  def init() {
     // initialize ssplit and Stanford NLP pipeline 
     val props0 = new Properties();
     props0.put("annotators", "tokenize, ssplit")
@@ -40,10 +46,7 @@ object Pipeline extends Logging {
   }
 
   // get a Pipeline object for specific text and query
-  def getPipeline(query: SSFQuery): Pipeline = {
-    init1();
-    new Pipeline(query)
-  }
+  def getPipeline(query: SSFQuery): Pipeline = new Pipeline(query)
 
   def main(args: Array[String]) {
     // extract relations from a string
@@ -51,18 +54,44 @@ object Pipeline extends Logging {
       "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
     val pipeline = getPipeline(new SSFQuery("Abraham Lincoln", "president of"))
     pipeline.run(text)
-    // check how to push
+    /*
+    //val z = new CachedFaucet(sc, "2012-05-01", 0)
+    val sc = new SparkContext("local", "gatordsr", "$YOUR_SPARK_HOME",
+    List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
+    val sr = new StreamRange
+    sr.addFromDate("2012-05-01")
+    sr.addFromHour(0)
+    //sr.addToDate("2012-05-01")
+    //sr.addToHour(0)
+    val z = new CachedFaucet(sc, sr)
+
+    val it = z.iterator
+    if(it.hasNext) {
+      {
+        val rdd = it.next
+        logInfo("The count: %d".format(rdd.count))
+        logInfo(rdd.first.toString)
+        logInfo("Is body null: %s".format(rdd.first.body == null))
+        //sc.getRDDStorageInfo.foreach{x => logInfo("##%s".format(x.toString))}
+        //logInfo(sc.hadoopConfiguration.toString)
+        //sc.getExecutorMemoryStatus.foreach{x => logInfo("==%s".format(x.toString))}
+        //System.gc
+      }
+    }
+    lazy val z1 = z.iterator.reduce(_ union _) // Combine RDDS
+      //logInfo("Total records: %d".format(z1.count))
+      //logInfo("Total records: %d".format(z.getAllRDDS.count)) */
   }
 
 }
 
-class Pipeline(query: SSFQuery) extends Logging {
+class Pipeline(query: SSFQuery) extends Logging with Serializable {
 
   // use to store the extracted relations
   //private var triples: ArrayList[Triple] = new ArrayList[Triple]
 
   // break a single sentence to corresponding array list of words and marks (mark = 0, non-entity; 1, entity)
-  def breakSentence(tokens: java.util.List[CoreLabel], words: ArrayList[String], marks: ArrayList[Integer]) {
+  def breakSentence(tokens: java.util.List[CoreLabel], words: ArrayList[String], marks: ArrayList[java.lang.Integer]) {
     val size = tokens.size()
     for (j <- 0 until size) {
       // this is the text of the token
@@ -171,18 +200,12 @@ class Pipeline(query: SSFQuery) extends Logging {
     val tokens = sentence.get[java.util.List[CoreLabel], TokensAnnotation](classOf[TokensAnnotation])
     val size = tokens.size()
     var words = new ArrayList[String](size)
-    var marks = new ArrayList[Integer](size)
+    var marks = new ArrayList[java.lang.Integer](size)
     // break sentence to words and marks
     breakSentence(tokens, words, marks)
     // extract relations
     val results = getRelations(words, marks)
-    var s = ""
-//    for (relation <- results.toArray())   //morteza 
-//      s = s + " (" + relation.toString() + ") "
-//    
-//    if (s.length() > 0) {
-//      logInfo(s)
-//    }
+    // for (relation <- results.toArray()) logInfo(relation.toString())
     if (results.size() != 0)
       triples.addAll(results)
   }
@@ -190,22 +213,42 @@ class Pipeline(query: SSFQuery) extends Logging {
   // the main logic
   def run(text: String): ArrayList[Triple] =
     {
+	  val in = System.nanoTime()
+	  num = num + 1
       var triples: ArrayList[Triple] = new ArrayList[Triple]
       // create an empty Annotation just with the given text
       val document = new Annotation(text)
       // annotate the document
       ssplit.annotate(document)
+      // nlppipeline.annotate(document)
       // get sentences
       val sentences = document.get[java.util.List[CoreMap], SentencesAnnotation](classOf[SentencesAnnotation])
       // extract relations from each sentence, and parsing each sentence, and dcoref each sentence
       //sparkContext.parallelize(sentences.toArray()).foreach(sentence => 
+      var x = 0.0
+      var y = 0.0
+      val out0 = System.nanoTime()
       sentences.toArray().foreach(sentence =>
         {
+          // measure time cost
+          val begin = System.nanoTime()
           nlppipeline.annotate(sentence.asInstanceOf[Annotation]);
+          val end1 = System.nanoTime()
           extract(sentence.asInstanceOf[Annotation], triples)
+          val end2 = System.nanoTime()
+          x = x + end1 - begin
+          y = y + end2 - end1
+          
         })
-      // logInfo("pipeline ends")
-      // println(triples)
+        
+      val out = System.nanoTime()
+      val c = out - in
+      val c0 = out0 - in
+      
+      logInfo("document " + num  + " : length " + document.toString().length() + 
+      		", prepare " + c0/1000000.0 + "ms, " +
+      		"annotate " + x/1000000.0 + "ms, " + "extract " + y/1000000.0 + "ms, total " + c/1000000.0 + "ms")
+      //println(triples)
       return triples
     }
 }
