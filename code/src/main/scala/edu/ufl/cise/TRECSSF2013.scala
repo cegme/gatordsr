@@ -24,7 +24,7 @@ object TRECSSF2013 extends Logging {
       //.take(100)
       .map(si => new String(si.body.cleansed.array, "UTF-8"))
       //.map(_.take(964))
-      .map(pipeline.run(_).toArray())
+      .map(pipeline.run(_))
       .flatMap(x => x)
       .filter(p =>
         {
@@ -53,7 +53,7 @@ object TRECSSF2013 extends Logging {
     val filtered = itVal.map(si =>
       new String(si.body.cleansed.array(), "UTF-8")).
       filter(s => s.contains("Atacocha")).
-      flatMap(s => pipeline.run(s).toArray()).
+      flatMap(s => pipeline.run(s).toIterator).
       filter(o => {
         val t = o.asInstanceOf[Triple]
         OntologySynonymGenerator.getSynonyms(PER.Affiliate).
