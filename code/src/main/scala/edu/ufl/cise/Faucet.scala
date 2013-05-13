@@ -13,7 +13,6 @@ import java.util.zip.GZIPOutputStream
 import java.io.PipedOutputStream
 import java.io.PipedInputStream
 
-
 import scala.sys.process.stringToProcess
 import scala.sys.process.ProcessLogger
 import scala.util.matching.Regex.Match
@@ -33,6 +32,10 @@ import spark.SparkContext
 import spark.RDD
 import spark.storage.StorageLevel
 import spark.SparkContext._
+
+import java.util.concurrent.TimeUnit
+import scala.collection.JavaConversions._
+import com.google.common.base.Stopwatch
 
 
 trait Faucet extends Logging {
@@ -71,10 +74,12 @@ trait Faucet extends Logging {
   }
 
   def grabGPGCompressed(date: String, fileName: String): ByteArrayOutputStream = {
-    logInfo("Fetching, decrypting with GrabGPG(%s,%s)".format(date, fileName))
+    logInfo("Fetching, decrypting with grabGPGCompressed(%s,%s)".format(date, fileName))
 
-    // TODO can I not decompress and do with the GZIPOutputStream class?
-    val baos = new ByteArrayOutputStream(100 * 1024 * 1024)
+    val watch = new Stopwatch
+    watch.start
+    
+    val baos = new ByteArrayOutputStream//(100 * 1024 * 1024)
     // Use the linux file system to download, decrypt and decompress a file
     (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
       "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
@@ -83,6 +88,9 @@ trait Faucet extends Logging {
     //Silence the linux stdout, stderr
 
     baos.flush
+    watch.stop
+    logInfo("grabGPGCompressed(%s,%s) in %s ms".format(date, fileName, watch.elapsed(TimeUnit.MILLISECONDS)))
+
     baos //return 
   }
 
@@ -100,7 +108,7 @@ trait Faucet extends Logging {
       s.read(protocol)
       successful = true
     } catch {
-      case e:java.lang.OutOfMemoryError => logError("OOM Error: %s".format(e.getStackTrace.toList.toString)); None
+      case e:java.lang.OutOfMemoryError => logError("OOM Error: %s".format(e.getStackTrace.mkString("\n"))); None
       case e:TTransportException => e.getType match { 
         case TTransportException.END_OF_FILE => logInfo("mkstream Finished."); None
         case TTransportException.ALREADY_OPEN => logError("mkstream already opened."); None

@@ -228,7 +228,7 @@ object EmbededFaucet extends Logging {
    * Test the operation of the Faucet class
    */
   def main(args: Array[String]) = {
-    Pipeline.init
+    //Pipeline.init
     val z3 = getStreams("2011-10-08", 5)
     //val z3 = getStreams("2011-10-08")
     //val z3 = getStreams("2012-05-02-00", "news.f451b42043f1f387a36083ad0b089bfd.xz.gpg")

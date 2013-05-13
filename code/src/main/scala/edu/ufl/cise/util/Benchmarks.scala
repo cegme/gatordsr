@@ -27,7 +27,7 @@ object Benchmark extends Logging {
 
     // Time to get all the RDDS
     stopwatch.start
-    val data = z.getAllRDDS
+    val data = z.pIterator.reduce(_ union _)
     stopwatch.stop
 
     val timeGetAllRDDS = stopwatch.elapsed(TimeUnit.MILLISECONDS)

@@ -30,8 +30,8 @@ class StreamRange extends Logging {
 
   def addToDate(date:String):Unit = settingsMap += (TODATE -> date)
   def addFromDate(date:String):Unit = settingsMap += (FROMDATE -> date)
-  def addToHour(hour:Integer):Unit = settingsMap += (TOHOUR -> hour.toString)
-  def addFromHour(hour:Integer):Unit = settingsMap += (FROMHOUR -> hour.toString)
+  def addToHour(hour:Int):Unit = settingsMap += (TOHOUR -> hour.toString)
+  def addFromHour(hour:Int):Unit = settingsMap += (FROMHOUR -> hour.toString)
   def addFile(file:String):Unit = settingsMap += (FILE -> file)
 
   def apply(fromDate:String, fromHour:Int, toDate:String, toHour:Int):StreamRange = {
@@ -125,7 +125,7 @@ object StreamRange extends Logging {
 
   def getAllFiles:List[(String,String)] = getFiles(MIN_DATE, MIN_HOUR, MAX_DATE, MAX_HOUR)
 
-  def getFiles(date:String, hour:Integer, file:String):List[(String,String)] = {
+  def getFiles(date:String, hour:Int, file:String):List[(String,String)] = {
     List(("%s-%s".format(date, hourFormatter.format(hour)), file))
   }
 
@@ -176,7 +176,7 @@ object StreamRange extends Logging {
     pattern
       .findAllIn(html)
       .matchData
-      .map( x => (date, x.group(1))) // TODO maybe remove this
+      .map(x => (date, x.group(1))) // TODO maybe remove this
       .toList
   }
   

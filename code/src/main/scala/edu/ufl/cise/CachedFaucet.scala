@@ -42,6 +42,7 @@ class CachedFaucet(
   val sr:StreamRange
   ) extends Faucet with Logging with Serializable {
 
+  /** Used internally to identify fileNames and dates */
   protected case class CacheKey(val date:String, val fileName:String)
 
   /** This cache helps manage the garbage. **/
@@ -57,29 +58,43 @@ class CachedFaucet(
   private lazy val keyList:List[CacheKey] = {
     logInfo("Priming the iterator file list")
 
-    /*// TODO make this more general not just using the dateFrom, hour
-    val directoryName = getDirectoryName(dateFrom, hour)
-    val reader = new URLLineReader(BASE_URL + "%s".format(directoryName))
-    val html = reader.toList.mkString
-    val pattern = """a href="([^"]+.gpg)""".r
-
-    Stream.continually(directoryName)
-      .zip(pattern.findAllIn(html).matchData.toArray.map(_.group(1)))
-      .map { _ match {
-        case (date:String, fileName:String) =>  CacheKey(date, fileName)
-        case _ => throw new Exception }
-      }
-      .toList
-      */
       sr.getFileList.map{ _ match { 
         case (date,file) => new CacheKey(date,file)
         case _ => throw new Exception("Invalid format") }
       }
   }
 
+  /** 
+    * This is a public function to get a list of all the files
+    * that this faucet class will iterator over
+    */
   final def getKeyList = keyList.map(x => (x.date, x.fileName)) 
   
+
+  /**
+   * This class is an internal iterator that makes each
+   * file a Seq object. It also iterate serially over
+   * the files.
+   */ 
+  protected class StreamIteratorSeq
+  extends Iterator[Iterator[StreamItem]] {
+    val iterator = keyList.iterator
+
+    override def hasNext:Boolean = {
+      iterator.hasNext
+    }
+
+    override def next:Iterator[StreamItem] ={
+      val c:CacheKey = iterator.next
+      getStreamCompressed(c.date, c.fileName)
+    }
+  }
   
+  /**
+   * This class is an internal iterator that makes each
+   * file a RDD object. It also iterate serially over
+   * the files.
+   */ 
   protected class StreamIterator
   extends Iterator[RDD[StreamItem]] {
     val iterator = keyList.iterator
@@ -95,8 +110,8 @@ class CachedFaucet(
       //val z:RDD[StreamItem] = getRDD(sc, c.date, c.fileName)
       //cache.put(c, getRDDZ(sc, c.date, c.fileName))
       //cache.get(c).get
-      //getRDDZ(sc, c.date, c.fileName)
-      getRDDCompressed(sc, c.date, c.fileName)
+      val rdd = getStreamCompressed(c.date, c.fileName)
+      sc.parallelize(rdd.toSeq)
       // If it is not, get it and put it in the cache
     }
   }
@@ -118,7 +133,8 @@ class CachedFaucet(
 
     def apply(i: Int):RDD[StreamItem] = {
       val c:CacheKey = docs(i)
-      getRDDCompressed(sc, c.date, c.fileName)
+      val rdd = getStreamCompressed(c.date, c.fileName)
+      sc.parallelize(rdd.toSeq)
     }
 
     def seq = {
@@ -141,7 +157,8 @@ class CachedFaucet(
       final def next:RDD[StreamItem] = {
         val c:CacheKey = docs(current)
         current += 1
-        getRDDCompressed(sc, c.date, c.fileName)
+        val rdd = getStreamCompressed(c.date, c.fileName)
+        sc.parallelize(rdd.toSeq)
       }
 
       def remaining = totalSize - current
@@ -168,57 +185,76 @@ class CachedFaucet(
     }
   }
 
+  /**
+   * This class is an internal iterator that makes each
+   * file a Seq object. It also iterate serially over
+   * the files.
+   */ 
+  protected class PStreamIteratorSeq
+    extends parallel.immutable.ParSeq[Iterator[StreamItem]] {
 
+    val docs = keyList.toArray
 
-  def getRDDZ(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
-    logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
+    override def size: Int = docs.size 
+    def length: Int = size
 
-    // TODO can I not decompress and do with the GZIPOutputStream class?
-    val tmpFile = java.io.File.createTempFile("%s-%s".format(date, fileName),".tmp")
+    def apply(i: Int):Iterator[StreamItem] = {
+      val c:CacheKey = docs(i)
+      getStreamCompressed(c.date, c.fileName)
+    }
 
-    val baos = new java.io.FileOutputStream(tmpFile)
-    //bais.connect(baos)
-    //baos.connect(bais)
-    // Use the linux file system to download, decrypt and decompress a file
-    (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
-      "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
-      "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| //decrypt it, pipe it
-      "xz --decompress" #> //decompress it
-      baos) !! ProcessLogger(line => ()) // ! Executes the previous commands, 
-      //tmpFile) !! ProcessLogger(line => ()) // ! Executes the previous commands, 
+    def seq = {
+      iterator
+      .toSeq
+      .asInstanceOf[scala.collection.immutable.Seq[Iterator[kba.StreamItem]]]
+    }
 
-    baos.flush
-    //val bais = new java.io.FileInputStream(tmpFile)
+    def splitter = new ParFileSplitter(docs, 0, docs.size)
 
-    logInfo("Got the file1. It is size %f MBs".format(tmpFile.length/1000.0/1000))
+    class ParFileSplitter(private var fileDocs:Seq[CacheKey],
+                          private var current:Int,
+                          private var totalSize:Int)
+    extends SeqSplitter[Iterator[StreamItem]] {
 
-    System.gc();
-    //val data = grabGPG(date, fileName)
-    //val bais = new ByteArrayInputStream(baos.toByteArray())
-    //val transport = new TFileTransport(new TStandardFile(tmpFile.getAbsolutePath), true)
-    //val transport = new TFileTransport(tmpFile.getAbsolutePath, true)
-    //val transport = new TIOStreamTransport(bais)
-    val transport = new TIOStreamTransport(new FileInputStream(tmpFile))
-    transport.open
-    //logInfo("numChunks: %d".format(transport.getNumChunks()))
-    val protocol = new TBinaryProtocol(transport)
+      var signalDelegate: Signalling = IdleSignalling
+   
+      final def hasNext:Boolean = current < totalSize
 
-    // Stop streaming after the first None. TODO why? what could happen? end of file?
-    val a = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => transport.close(); logInfo("-"); false; case _ => true })
-      .map { _.get }
-      .toArray
+      final def next:Iterator[StreamItem] = {
+        val c:CacheKey = docs(current)
+        current += 1
+        getStreamCompressed(c.date, c.fileName)
+      }
 
-    //transport.close
-    tmpFile.delete
-    logInfo("Deleted tmp file of size %f MBs".format(tmpFile.length/1000.0/1000))
-    //val rdd = sc.makeRDD[StreamItem](a)//.persist(StorageLevel.DISK_ONLY)
-    //rdd
-    sc.parallelize(a)
+      def remaining = totalSize - current
+
+      def dup = new ParFileSplitter(docs, current, totalSize)
+
+      def split = {
+        // TODO we can make this split in larger bundles...
+        val rem = remaining
+        if (rem >= 2) psplit(rem / 2, rem - rem/2)
+        else Seq(this)
+      }
+
+      def psplit(sizes: Int*): Seq[ParFileSplitter] = {
+        val splitted = new ArrayBuffer[ParFileSplitter](sizes.sum)
+        for (sz <- sizes) {
+          val next = (current + sz) min totalSize
+          splitted += new ParFileSplitter(docs, current, next)
+          current = next
+        }
+        if (remaining > 0) splitted += new ParFileSplitter(docs, current, totalSize)
+        splitted
+      }
+    }
   }
 
-  def getRDDCompressed(sc:SparkContext, date:String, fileName:String): RDD[StreamItem] = {
-    logInfo("getRDDCompressed")
+  /**
+    * This fetches a particular file and turns it into an Array.
+    */
+  def getStreamCompressed(date:String, fileName:String): Iterator[StreamItem] = {
+    logInfo("getStreamCompressed")
     val xzGPG = grabGPGCompressed(date, fileName)
     val is = new ByteArrayInputStream(xzGPG.toByteArray)
     val bais = new XZCompressorInputStream(is)
@@ -227,38 +263,34 @@ class CachedFaucet(
     val protocol = new TBinaryProtocol(transport)
     assert(transport.isOpen)
 
-
-    val a = Iterator.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
+   Iterator.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
       .takeWhile(_ match { case None => transport.close; xzGPG.reset; logInfo("-"); false; case _ => true })
       .map { _.get }
-      .toSeq
+      //.toArray
 
     // If we keep ths reset/close here it cause the items not to be read
     //xzGPG.reset // Stop a leak
     //transport.close
-
-    sc.parallelize(a)
   }
 
 
-  /**
-   * TODO change this to an function?
-   */
+
+  /**Iterators****************************************************************/
+  /** This is a serial itterator that uses RDDs for each object */
   lazy val iterator:Iterator[RDD[StreamItem]] = new StreamIterator
-  lazy val piterator:PStreamIterator = new PStreamIterator
 
-  //def createNewStreamIterator = new StreamIterator
+  /** A parallel stream iterator that uses RDD for collections */
+  lazy val pIterator:PStreamIterator = new PStreamIterator
 
-  def getAllRDDS:RDD[StreamItem] = {
-    //iterator.reduce(_ union_)
-    //sc.parallelize(keyList)
-    keyList
-      .par
-      .map{ c =>
-        getRDDCompressed(sc, c.date, c.fileName)
-      }
-     .reduce( _ union _) 
-  }
+  /** A streamm iterator that does not use RDD */
+  lazy val sIterator:Iterator[Iterator[StreamItem]] = new StreamIteratorSeq
+
+  /** A parallel stream iterator that does not use RDD */
+  lazy val psIterator:PStreamIteratorSeq = new PStreamIteratorSeq
+
+  //def createNewStreamIterator = new StreamIterator <-- Iterate as a stream instead of chuncks
+  /**************************************************************************/
+
 }
 
 
