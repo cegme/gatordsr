@@ -23,7 +23,7 @@ object TRECSSF2013 extends Logging {
       //.take(100)
       .map(si => new String(si.body.cleansed.array, "UTF-8"))
       //.map(_.take(964))
-      .map(pipeline.run(_))
+      .map(pipeline.run(_).toArray())
       .flatMap(x => x)
       .filter(p =>
         {
@@ -49,15 +49,6 @@ object TRECSSF2013 extends Logging {
     sr.addToDate("2011-10-07")
     sr.addToHour(14)
     val z = new CachedFaucet(SparkIntegrator.sc, sr)
-    val itVal = z.iterator.next
-    val filtered = itVal.map(si =>
-      new String(si.body.cleansed.array(), "UTF-8")).
-      filter(s => s.contains("Atacocha")).
-      flatMap(s => pipeline.run(s).toIterator).
-      filter(o => {
-        val t = o.asInstanceOf[Triple]
-        OntologySynonymGenerator.getSynonyms(PER.Affiliate).
-        filter(s => s.contains(t.slot)).length > 0
 
     lazy val z1 = z.iterator.reduce(_ union _) // Combine RDDS
 
