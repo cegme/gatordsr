@@ -3,12 +3,11 @@ package edu.ufl.cise
 import edu.mit.jwi.item.POS
 import edu.ufl.cise.util.WordnetUtil
 import edu.ufl.cise.util.OntologySynonymGenerator
-
+import java.util.ArrayList
 
 object TRECSSF2013 extends Logging {
 
-  val text = "Abraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865."
-  val query = new SSFQuery("Abraham Lincoln", "president of")
+  val query = new SSFQuery("roosevelt", "president")
   lazy val pipeline = Pipeline.getPipeline(query)
 
   def main(args: Array[String]): Unit = {
@@ -43,29 +42,56 @@ object TRECSSF2013 extends Logging {
    * This will execute the program using CashedFaucet.scala
    */
   def runCachedFaucet() {
+
     val sr = new StreamRange
-    sr.addFromDate("2012-05-01")
-    sr.addFromHour(0)
-    sr.addToDate("2012-05-01")
-    sr.addToHour(23)
+    sr.addFromDate("2011-10-07")
+    sr.addFromHour(14)
+    sr.addToDate("2011-10-07")
+    sr.addToHour(14)
     val z = new CachedFaucet(SparkIntegrator.sc, sr)
-    val itVal = z.iterator.next
-    val filtered = itVal.map(si =>
-      new String(si.body.cleansed.array(), "UTF-8")).
-      filter(s => s.contains("Atacocha")).
-      flatMap(s => pipeline.run(s).toArray()).
-      filter(o => {
-        val t = o.asInstanceOf[Triple]
-        OntologySynonymGenerator.getSynonyms(PER.Affiliate).
-        filter(s => s.contains(t.slot)).length > 0
 
-      })
+    lazy val z1 = z.iterator.reduce(_ union _) // Combine RDDS
 
-    println(filtered.count)
-    //    for(temp <- itVal){
-    //      temp.
-    //    }
-    val z1 = z.iterator.reduce(_ union _)
+//    val filtered = z1.map(si =>
+//      new String(si.body.cleansed.array(), "UTF-8").toLowerCase()).
+//      filter(s => s.contains("roosevelt"))
+//    println(filtered.count)
+    
+      val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray()
+    z1.map(p =>
+      {
+        logInfo("Current doc: %s".format(p.doc_id))
+        if (p.body != null && p.body.cleansed != null) {
+          val bb = p.body.cleansed.array
+          if (bb.length > 0) {
+            val str = new String(bb, "UTF-16")
+            val b = pipeline.run(str)
+            b.toArray
+          } else {
+            a
+          }
+        } else
+          a
+      }).flatMap(x => x)
+      .filter(p =>
+        {
+          val t = p.asInstanceOf[Triple]
+          //  val e0DicArr = WordnetUtil.getSynonyms(e0, POS.NOUN)
+
+          t.entity0.equals(query.entity) //||
+          //query.entity.toLowerCase.contains(p.entity0.toLowerCase()) ||
+          //query.slotName.toLowerCase.contains(p.slot.toLowerCase()) ||
+          //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
+        })
+      .foreach(t => logInfo("Answer: %s".format(t.toString)))
+
   }
 
+   //      .
+    //      flatMap(s => pipeline.run(s).toArray()).
+    //      filter(o => {
+    //        val t = o.asInstanceOf[Triple]
+    //        OntologySynonymGenerator.getSynonyms(PER.Affiliate).
+    //          filter(s => s.contains(t.slot)).length > 0
+    //      })
 }
