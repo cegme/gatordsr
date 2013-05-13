@@ -20,7 +20,10 @@ object Benchmark extends Logging {
     
     // Read and count all the file
     val sr = new StreamRange
-    sr.addFromDate("2012-05-01")
+   sr.addFromDate("2011-10-07")
+    sr.addFromHour(14)
+    sr.addToDate("2011-10-07")
+    sr.addToHour(14)
     val z = new CachedFaucet(sc, sr) 
     //z.getKeyList.foreach(x => logInfo("%s/%s".format(x._1,x._2)))
     val stopwatch = new Stopwatch
@@ -45,7 +48,7 @@ object Benchmark extends Logging {
     // And count all the si items with that string
     stopwatch.reset
     stopwatch.start
-    val searchString1 = "clinton"
+    val searchString1 = "roosevelt"
     //val stringCount = z.iterator.map(rdd => rdd.count).sum
     val stringCount = z.iterator.map(rdd => rdd.filter(si => si.body.getRaw != null)
                                                .filter(si => new String(si.body.getRaw.array, "utf-8").toLowerCase.contains(searchString1))
