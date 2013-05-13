@@ -4,6 +4,10 @@ import java.util.ArrayList
 import opennlp.tools.chunker.ChunkerME
 import opennlp.tools.chunker.ChunkerModel
 import java.io.FileInputStream
+import opennlp.tools.postag.POSTaggerME
+import opennlp.tools.postag.POSModel
+import opennlp.tools.tokenize.TokenizerME
+import opennlp.tools.tokenize.TokenizerModel
 
 object Pattern extends Logging {
   
@@ -12,7 +16,7 @@ object Pattern extends Logging {
   val pattern_list = new ArrayList[Pattern]
   
   def main(args: Array[String]){
-    chunking()
+    chunking("AAbraham Lincoln was the 16th President of the United States, serving from March 1861 until his assassination in April 1865.")
   }
   
   
@@ -32,35 +36,28 @@ object Pattern extends Logging {
     else
       log.info("no match")
     
-      
-    
-
   }
   
-  def chunking(){
+  def chunking(s:String){
     
-    val modelIn = new FileInputStream("en-chunker.bin");
-    val model = new ChunkerModel(modelIn);
-    val chunker = new ChunkerME(model);
+    // opennlp tokenizer, postagger and chunker
+    val tokenizer = new TokenizerME(new TokenizerModel(this.getClass().getClassLoader().getResourceAsStream("en-token.bin")))
+	val tagger = new POSTaggerME(new POSModel(this.getClass().getClassLoader().getResourceAsStream("en-pos-maxent.bin")))
+    val chunker = new ChunkerME(new ChunkerModel(this.getClass().getClassLoader().getResourceAsStream("en-chunker.bin")))
     
-    val sent = Array( "Rockwell", "International", "Corp.", "'s",
-    "Tulsa", "unit", "said", "it", "signed", "a", "tentative", "agreement",
-    "extending", "its", "contract", "with", "Boeing", "Co.", "to",
-    "provide", "structural", "parts", "for", "Boeing", "'s", "747",
-    "jetliners", "." )
+    
+    val sent = tokenizer.tokenize(s)
 
-    val pos = Array( "NNP", "NNP", "NNP", "POS", "NNP", "NN",
-    "VBD", "PRP", "VBD", "DT", "JJ", "NN", "VBG", "PRP$", "NN", "IN",
-    "NNP", "NNP", "TO", "VB", "JJ", "NNS", "IN", "NNP", "POS", "CD", "NNS",
-    "." )
+    val pos = tagger.tag(sent)
 
-    val tag = chunker.chunk(sent, pos);
-    val probs = chunker.probs();
-    val topSequences = chunker.topKSequences(sent, pos);
+    val tag = chunker.chunk(sent, pos).toList;
+    //val probs = chunker.probs().toSeq;
+    //val topSequences = chunker.topKSequences(sent, pos).toSeq;
     
     println(tag)
-    println(probs)
-    println(topSequences)
+    //println(probs)
+    //println(topSequences)
+    
   }
 
   
@@ -69,7 +66,7 @@ object Pattern extends Logging {
 }
 
 class Pattern(entity:Entity, slot:Slot, regex:String){
-  var relation:Triple // generate the corresponding result relation triple
+  var relation:Triple = null // generate the corresponding result relation triple
   
   def matches(s:String):Boolean = 
   {
@@ -83,6 +80,7 @@ class Pattern(entity:Entity, slot:Slot, regex:String){
 class Entity(addr:String, names:Array[String]){
   // addr represents the ip address of the entity's wikipedia page or twitter page
   // names is the list of all the alias names of that entity
+  // the trec kba ccr ssf topic json file
   
 }
 
