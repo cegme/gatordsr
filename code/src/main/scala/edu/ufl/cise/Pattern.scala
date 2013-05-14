@@ -18,7 +18,7 @@ object Pattern {
   
 }
 
-class Pattern(entity:Entity, slot:Slot, regex:String){
+abstract class Pattern(entity:Entity, slot:Slot, regex:String){
   var relation:Triple // generate the corresponding result relation triple
   
   def patternMatch(s:String):Boolean = 

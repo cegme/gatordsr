@@ -48,7 +48,7 @@ object TRECSSF2013 extends Logging {
     sr.addFromHour(14)
     sr.addToDate("2011-10-07")
     sr.addToHour(14)
-    val z = new CachedFaucet(SparkIntegrator.sc, sr)
+    val z = new CachedFaucet(sr)
 
     lazy val z1 = z.iterator.reduce(_ union _) // Combine RDDS
 
