@@ -8,7 +8,7 @@ scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 //scalacOptions += "memoryMaximumSize=9G"
 
-javaOptions ++= Seq("-XX:+HeapDumpOnOutOfMemoryError", "-XX:MinHeapFreeRatio=60", "-XX:-PrintGC", "-XX:+UseParallelGC")
+//javaOptions ++= Seq("-XX:+HeapDumpOnOutOfMemoryError", "-XX:MinHeapFreeRatio=60", "-XX:-PrintGC", "-XX:+UseParallelGC")
 
 //javaOptions ++= Seq("-Xmx9G", "-Xms5G")
 
