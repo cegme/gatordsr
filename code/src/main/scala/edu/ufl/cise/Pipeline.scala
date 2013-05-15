@@ -86,7 +86,7 @@ class Pipeline(query: SSFQuery) extends Logging with Serializable {
   // used to extract two entities located at the nearest distance of the relation
   def getEntity(words: java.util.List[String], marks: java.util.List[Int], flag: Int): String =
     {
-      var sb = new StringBuilder
+      var sb = new java.lang.StringBuilder
 
       if (flag == 1) // flag = 1, extract entity behind the relation, 0 before the relation
       {
@@ -104,9 +104,11 @@ class Pipeline(query: SSFQuery) extends Logging with Serializable {
         }
 
         if (k3 != -1 && k4 != -1) {
-          sb ++= transform(words.subList(k3, k4))
+          sb.append(transform(words.subList(k3, k4)))
+          //sb ++= transform(words.subList(k3, k4))
         } else
-          sb ++= "N*A" // means no entity found
+          sb.append("N*A") // means no entity found
+          //sb ++= "N*A" // means no entity found
       } else {
         var k1 = -1
         var k2 = -1
@@ -122,9 +124,11 @@ class Pipeline(query: SSFQuery) extends Logging with Serializable {
 
         k2 = k2 + 1
         if (k2 != -1 && k1 != -1) {
-          sb ++= transform(words.subList(k2, k1 + 1))
+          sb.append(transform(words.subList(k2, k1 + 1)))
+          //sb ++= transform(words.subList(k2, k1 + 1))
         } else
-          sb ++= "N*A"
+          sb.append("N*A")
+          //sb ++= "N*A"
 
       }
 

@@ -99,7 +99,7 @@ object SimpleJob extends Logging {
     //sr.addFromHour(14)
     //sr.addToDate("2011-10-07")
     //sr.addToHour(14)
-    sr.addToDate("2011-10-08")
+    sr.addToDate("2011-10-14")
     val sc = new SparkContext("local[64]", "gatordsr", "$YOUR_SPARK_HOME",
       List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
     val z = new CachedFaucet(sc, sr)
@@ -115,7 +115,7 @@ object SimpleJob extends Logging {
 
     //val tuplesList = new ListBuffer
     
-    val gpgIterator = z.psIterator
+    val gpgIterator = z.sIterator
 
     gpgIterator.foreach{ gpgFile => 
 
@@ -129,13 +129,13 @@ object SimpleJob extends Logging {
           siCount += 1
           
           val body = new String(si.body.cleansed.array, "UTF-8").toLowerCase
-          /*
+          
           // Run the pipeline code
-          val tuples = pipe.run(body)
-          logInfo("Tuple size: %d".format(tuples.size))
-          */
+          //val tuples = pipe.run(body)
+          //logInfo("Tuple size: %d".format(tuples.size))
+          
         }
-     
+        System.gc
         logInfo("gpgFile.ize: %s".format(gpgFile.size))
     }
 

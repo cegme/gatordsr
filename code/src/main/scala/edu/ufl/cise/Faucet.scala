@@ -86,6 +86,7 @@ trait Faucet extends Logging {
       "gpg --no-permission-warning --trust-model always --output - --decrypt -" #> //decrypt it, pipe it
       baos) ! ProcessLogger(line => ()) // ! Executes the previous commands, 
     //Silence the linux stdout, stderr
+    
 
     baos.flush
     watch.stop
