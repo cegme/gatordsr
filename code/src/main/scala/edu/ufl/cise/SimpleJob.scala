@@ -115,7 +115,7 @@ object SimpleJob extends Logging {
 
     //val tuplesList = new ListBuffer
     
-    val gpgIterator = z.sIterator
+    val gpgIterator = z.psIterator
 
     gpgIterator.foreach{ gpgFile => 
 
