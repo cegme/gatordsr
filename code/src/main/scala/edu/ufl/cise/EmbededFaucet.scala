@@ -9,7 +9,7 @@ import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
 import edu.ufl.cise.util.StreamItemUtil
 import edu.ufl.cise.util.URLLineReader
-import kba.StreamItem
+import streamcorpus.StreamItem
 import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -44,6 +44,8 @@ import scala.collection.JavaConversions._
 
 object EmbededFaucet extends Logging {
 
+  val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+
   val SDD_MIN_DATE = "2011-10-05"
   val SDD_MIN_HOUR = 0
   val SDD_MAX_DATE = "2012-08-18"
@@ -74,27 +76,31 @@ object EmbededFaucet extends Logging {
    * This only needs to be done once per file system.
    * (Unless the gpg is reset or something.)
    */
-  def grabGPG(date: String, fileName: String): java.io.ByteArrayOutputStream = {
-   // logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
-   // logInfo(date + " " + fileName)
+  def grabGPG(day: String, hour: Int, fileName: String): java.io.ByteArrayOutputStream = {
+    // logInfo("Fetching, decrypting and decompressing with GrabGPG(%s,%s)".format(date, fileName))
+    // logInfo(date + " " + fileName)
 
-    val fetchFileCommandOnline = ("curl -s http://s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/" +
-      "%s/%s").format(date, fileName)
+    //    val fetchFileCommandOnline = ("curl -s http://s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/" +
+    //      "%s/%s").format(date, fileName)
 
     val baos = new java.io.ByteArrayOutputStream
     // Use the linux file system to download, decrypt and decompress a file
-    if (date != null) {
-      //      (
-      //        fetchFileCommandOnline #| //get the file, pipe it
-      //        "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| //decrypt it, pipe it
-      //        "xz --decompress" #> //decompress it
-      //        baos) ! // ! Executes the previous commands, 
-      //    } else {
-      //2011-10-07-14
-      "gpg --no-permission-warning --trust-model always --output - --decrypt " + fileName #|
-        "xz --decompress" #>
-        baos !
-    }
+    //    if (date != null) {
+    //      (
+    //        fetchFileCommandOnline #| //get the file, pipe it
+    //        "gpg --no-permission-warning --trust-model always --output - --decrypt -" #| //decrypt it, pipe it
+    //        "xz --decompress" #> //decompress it
+    //        baos) ! // ! Executes the previous commands, 
+    //    } else {
+    //2011-10-07-14
+    println("gpg --no-permission-warning --trust-model always --output - --decrypt " + fileName +
+      "xz --decompress")
+    ("gpg --no-permission-warning --trust-model always --output - --decrypt " + fileName) #|
+      "xz --decompress" #>
+      baos !;
+    //    }
+    val temp = baos.toByteArray()
+    println(temp.size)
     baos
   }
 
@@ -133,12 +139,12 @@ object EmbededFaucet extends Logging {
           logDebug("Error in mkStreamItem")
           exception = true
       }
-
       list = new StreamItemWrapper(date, hour, fileName, index, si) :: list
       index = index + 1
     }
 
     transport.close()
+    println(list.size)
     list
   }
 
@@ -150,28 +156,11 @@ object EmbededFaucet extends Logging {
     "%s-%s".format(date, hourStr)
   }
 
-  /**
-   * Return the files pertaining to specific date.
-   */
-  def getStreams(date: String, hour: Int): Unit = {
-    val directoryName = getDirectoryName(date, hour)
-    val reader = new URLLineReader(BASE_URL + format(directoryName))
-    val html = reader.toList.mkString
-    val pattern = """a href="([^"]+.gpg)""".r
-
-    val dayHourFileList = pattern.findAllIn(html).matchData.toArray
-
-    for (fileName <- dayHourFileList) {
-      val fileNameStr = fileName.group(1)
-      val data = grabGPG(directoryName, fileNameStr)
-      processData(date, hour, fileNameStr, data)
-    }
-  }
-
   def processData(date: String, hour: Int, fileName: String, data: ByteArrayOutputStream): Unit = {
     val list = getStreams(date, hour, fileName, data)
 
-    val rooseveltDoc: String = new String(list.apply(115).streamItem.body.cleansed.array, "UTF-8")
+    //val rooseveltDoc: String = new String(list.apply(115).streamItem.body.clean_html, "UTF-8")
+    val rooseveltDoc: String = list.apply(115).streamItem.body.clean_html
     println(rooseveltDoc)
 
     // print roosevelt count
@@ -182,52 +171,33 @@ object EmbededFaucet extends Logging {
       //      if (p.streamItem.title != null)
       //        println("  ----   " + new String(p.streamItem.title.getCleansed(), "UTF-8"))
 
-      if (p.streamItem.body != null && p.streamItem.body.cleansed != null) {
-        val bb = p.streamItem.body.cleansed.array
-        if (bb.length > 0) {
-          val str = new String(bb, "UTF-8")
-          val strEnglish = str.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ").replaceAll("\\s+", " ")
-            .replaceAll("(\r\n)+", "\r\n").replaceAll("(\n)+", "\n").replaceAll("(\r)+", "\r").toLowerCase()
-          // val b = pipeline.run(str)
-          //println(str)
-          strEnglish.contains("roosevelt")
-        } else
-          false
-      } else
-        false
+      if (p.streamItem.body != null && p.streamItem.body.clean_html != null) {
+        println(p.streamItem.body.clean_html)
+//        val bb = p.streamItem.body.cleansed.array
+//        if (bb.length > 0) {
+//          val str = new String(bb, "UTF-8")
+//          val strEnglish = str.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ").replaceAll("\\s+", " ")
+//            .replaceAll("(\r\n)+", "\r\n").replaceAll("(\n)+", "\n").replaceAll("(\r)+", "\r").toLowerCase()
+//          //println(str)
+//          strEnglish.contains("roosevelt")
+//        } else
+//          false
+//      } else
+//        false
+      }
+        true
     })
 
-    tempFilter.foreach(p => {
-      println("==================================nokte\n" +
-        "============================\n============================\n")
-      val str = new String(p.streamItem.body.cleansed.array(), "UTF-8")
-      val strEnglish = str.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ").replaceAll("\\s+", " ")
-        .replaceAll("(\r\n)+", "\r\n").replaceAll("(\n)+", "\n").replaceAll("(\r)+", "\r").toLowerCase()
-      println(strEnglish)
-    })
+//    tempFilter.foreach(p => {
+//      println("==================================nokte\n" +
+//        "============================\n============================\n")
+//      val str = new String(p.streamItem.body.cleansed.array(), "UTF-8")
+//      val strEnglish = str.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ").replaceAll("\\s+", " ")
+//        .replaceAll("(\r\n)+", "\r\n").replaceAll("(\n)+", "\n").replaceAll("(\r)+", "\r").toLowerCase()
+//      println(strEnglish)
+//    })
 
     println(tempFilter.size)
-
-    //    val temp = rdd.map(p =>
-    //      {
-    //        print("id: " + p)
-    //        if (p.streamItem.title != null)
-    //          println("  ----   " + new String(p.streamItem.title.getCleansed(), "UTF-8"))
-    //
-    //        if (p.streamItem.body != null && p.streamItem.body.cleansed != null) {
-    //          val bb = p.streamItem.body.cleansed.array
-    //          if (bb.length > 0) {
-    //            val str = new String(bb, "UTF-8").toLowerCase()
-    //            // val b = pipeline.run(str)
-    //            //println(str)
-    //            str
-    //          } else
-    //            " "
-    //        } else
-    //          " "
-    //      })
-    //      .filter(_.contains("roosevelt"))
-    //    println(temp.count)
 
     //    val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray()
     //    println("StreamItem list size is: " + list.size)
@@ -261,45 +231,26 @@ object EmbededFaucet extends Logging {
 
   }
 
-  /**
-   * Returns streams in a specific hour range of a specific date
-   */
-  def getStreams(date: String, hour0: Int, hour1: Int): Unit = {
-    (hour0 to hour1)
-      .map(h => getStreams(date, h))
-  }
-
-  /**
-   * Returns all the streams for all the hours of a day
-   */
-  def getStreams(date: String): Unit = {
-    getStreams(date, 0, 23)
-  }
-
-  def getStreamsOffline(date: String, hour: Int, fileName: String) {
-    val data = grabGPG(null, fileName);
-    processData(date, hour, fileName, data);
+  def getStreamsOffline(day: String, hour: Int, fileName: String) {
+    val data = grabGPG(day, hour, fileName);
+    processData(day, hour, fileName, data);
   }
 
   /**
    * Test the operation of the Faucet class
    */
   def main(args: Array[String]) = {
-    //val z3 = getStreams("2011-10-08", 5)
-    //getStreams("2011-10-08-5", "social.7e67c3f4fdee17f0c07751b075e3f649.xz.gpg")
-    // getStreams(null, null)
-    // val z3 = getStreams("2011-10-08")
-    //getStreamsOffline("2011-10-07", 14, "/home/morteza/zproject/trec-kba/social.3a51732f846b630e98c9f02e1fd0c8d4.xz.gpg")
-    val fileList = DirList.getFileList("/media/sdd/s3.amazonaws.com/").toList
+    val fileList = DirList.getFileList(DIRECTORY).toList
     println("total file count on disk sdd is: " + fileList.size)
 
-    val sc = new SparkContext("local[128]", "gatordsr", "$YOUR_SPARK_HOME",
-      List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
- 
-    val rdd = sc.parallelize(fileList.take(5), 32)
-    println("total file count on disk sdd is: " + rdd.count)
+    //    val sc = new SparkContext("local[128]", "gatordsr", "$YOUR_SPARK_HOME",
+    //      List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
 
-    val tempFilter = rdd.map(p => {
+    //    val rdd = sc.parallelize(fileList.take(5), 32)
+    //  println("total file count on disk sdd is: " + rdd.count)
+    println("total file count on disk sdd is: " + fileList.size)
+
+    val tempFilter = fileList.map(p => {
       val temp = p.asInstanceOf[String]
       val pattern = """.*language/([^/]+)-(.+)/(.+)""".r
 
@@ -307,39 +258,27 @@ object EmbededFaucet extends Logging {
       val day = dayHourFileList.apply(0).group(1)
       val hour = new Integer(dayHourFileList.apply(0).group(2))
       val fileName = dayHourFileList.apply(0).group(3)
-      // getStreamsOffline(day, new Integer(hour), p.asInstanceOf[String])
-      val data = grabGPG(null, fileName)
+      val data = grabGPG(day, hour, temp)
+      val tempArr = data.toByteArray()     
       getStreams(day, hour, fileName, data)
     }).flatMap(x => x).filter(p => {
       var res = false
-      println("filter--")
-println("1"+p.streamItem.body)
-if(p.streamItem.body != null)
-println("2"+p.streamItem.body.cleansed)
-      if (p.streamItem.body != null && p.streamItem.body.cleansed != null) {
-        val bb = p.streamItem.body.cleansed.array
-        if (bb.length > 0) {
-          val str = new String(bb, "UTF-8")
-	  println(str)
-          val strEnglish = str.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ").replaceAll("\\s+", " ")
+      println("filter--")      
+      if (p.streamItem.body != null){
+        val document = p.streamItem.body.getClean_visible()
+      if (document != null) {
+          val strEnglish = document.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ").replaceAll("\\s+", " ")
             .replaceAll("(\r\n)+", "\r\n").replaceAll("(\n)+", "\n").replaceAll("(\r)+", "\r").toLowerCase()
           res = strEnglish.contains("the")
-        } else
-          res = false
       } else
         res = false
-        res
+      }
+      res
     })
 
-    println("total file count on disk sdd after filter is: " + tempFilter.count)
+    //println("total file count on disk sdd after filter is: " + tempFilter.count)
+    println("total file count on disk sdd after filter is: " + tempFilter.size)
     tempFilter.foreach(p => {
-      //      println("==================================nokte\n" +
-      //        "============================\n============================\n")
-      //      val str = new String(p.streamItem.body.cleansed.array(), "UTF-8")
-      //      val strEnglish = str.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ").replaceAll("\\s+", " ")
-      //        .replaceAll("(\r\n)+", "\r\n").replaceAll("(\n)+", "\n").replaceAll("(\r)+", "\r").toLowerCase()
-      //      println(strEnglish)
-
       logInfo(p.toString())
     })
 

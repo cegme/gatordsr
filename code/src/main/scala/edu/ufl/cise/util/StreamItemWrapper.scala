@@ -1,13 +1,13 @@
 package edu.ufl.cise.util
 
-import kba.StreamItem
+import streamcorpus.StreamItem
 
-class StreamItemWrapper(val date: String, val hour: Int, val fileName: String, val index: Int, val streamItem: StreamItem) extends Serializable {
+class StreamItemWrapper(val day: String, val hour: Int, val fileName: String, val index: Int, val streamItem: StreamItem) extends Serializable {
 
   override def toString = {
-    val str = date + hour + "/" + fileName + "/" + index + " :::: "
-    if (streamItem.title != null)
-      str + (new String(streamItem.title.cleansed.array(), "UTF-8")).substring(0, 30)
+    val str = "day: " + day + "hour: " + hour + "/" + fileName + "/" + index + " :::: "
+    if (streamItem.getBody.clean_html != null)
+      str + streamItem.getBody.getClean_visible.substring(0, 30)
     else
       str
   }
