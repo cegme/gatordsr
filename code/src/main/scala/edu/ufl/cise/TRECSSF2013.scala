@@ -23,7 +23,7 @@ object TRECSSF2013 extends Logging {
       //.take(100)
       .map(si => new String(si.body.cleansed.array, "UTF-8"))
       //.map(_.take(964))
-      .map(pipeline.run(_).toArray())
+      .map(pipeline.run(_).toArray)
       .flatMap(x => x)
       .filter(p =>
         {
@@ -57,8 +57,8 @@ object TRECSSF2013 extends Logging {
 //      filter(s => s.contains("roosevelt"))
 //    println(filtered.count)
     
-      val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray()
-    z1.map(p =>
+      val a = (new ArrayList[Triple] { new Triple("", "", "") }).toArray
+    /*z1.map{p =>
       {
         logInfo("Current doc: %s".format(p.doc_id))
         if (p.body != null && p.body.cleansed != null) {
@@ -72,7 +72,7 @@ object TRECSSF2013 extends Logging {
           }
         } else
           a
-      }).flatMap(x => x)
+      }}.flatMap(x => x)
       .filter(p =>
         {
           val t = p.asInstanceOf[Triple]
@@ -84,7 +84,7 @@ object TRECSSF2013 extends Logging {
           //p.slot.toLowerCase.equalsIgnoreCase(query.slotName.toLowerCase)
         })
       .foreach(t => logInfo("Answer: %s".format(t.toString)))
-
+*/
   }
 
    //      .

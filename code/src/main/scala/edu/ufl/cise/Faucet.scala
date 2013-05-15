@@ -110,12 +110,12 @@ trait Faucet extends Logging {
     } catch {
       case e:java.lang.OutOfMemoryError => logError("OOM Error: %s".format(e.getStackTrace.mkString("\n"))); None
       case e:TTransportException => e.getType match { 
-        case TTransportException.END_OF_FILE => logInfo("mkstream Finished."); None
+        case TTransportException.END_OF_FILE => logDebug("mkstream Finished."); None
         case TTransportException.ALREADY_OPEN => logError("mkstream already opened."); None
         case TTransportException.NOT_OPEN => logError("mkstream not open."); None
         case TTransportException.TIMED_OUT => logError("mkstream timed out."); None
         case TTransportException.UNKNOWN => logError("mkstream unknown."); None
-        case e => logError("Error: %s".format(e.toString)); None
+        case e => logError("Error in mkStreamItem: %s".format(e.toString)); None
       }
       case e: Exception => logDebug("Error in mkStreamItem"); None
     }
@@ -179,12 +179,12 @@ object StreamFaucet extends Faucet with Logging {
     val protocol = new TBinaryProtocol(transport)
 
     // Stop streaming after the first None. TODO why? what could happen? end of file?
-    val it = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => false; case _ => true })
+    val it = Iterator.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
+      .takeWhile(_ match { case None => transport.close; false; case _ => true })
       .map { _.get }
-      .toIterator
+      //.toIterator
 
-    transport.close()
+    //transport.close() // Moved into the iteratorr
     it
   }
 

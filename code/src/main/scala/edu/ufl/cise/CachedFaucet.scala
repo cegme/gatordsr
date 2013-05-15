@@ -264,7 +264,7 @@ class CachedFaucet(
     assert(transport.isOpen)
 
    Iterator.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => transport.close; xzGPG.reset; logInfo("-"); false; case _ => true })
+      .takeWhile(_ match { case None => transport.close; xzGPG.reset; false; case _ => true })
       .map { _.get }
       //.toArray
 
