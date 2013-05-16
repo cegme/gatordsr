@@ -73,27 +73,27 @@ trait Faucet extends Logging {
     baos //return 
   }
 
-  def grabGPGCompressed(date: String, fileName: String): ByteArrayOutputStream = {
-    logInfo("Fetching, decrypting with grabGPGCompressed(%s,%s)".format(date, fileName))
-
-    val watch = new Stopwatch
-    watch.start
-    
-    val baos = new ByteArrayOutputStream//(100 * 1024 * 1024)
-    // Use the linux file system to download, decrypt and decompress a file
-    (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
-      "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
-      "gpg --no-permission-warning --trust-model always --output - --decrypt -" #> //decrypt it, pipe it
-      baos) ! ProcessLogger(line => ()) // ! Executes the previous commands, 
-    //Silence the linux stdout, stderr
-    
-
-    baos.flush
-    watch.stop
-    logInfo("grabGPGCompressed(%s,%s) in %s ms".format(date, fileName, watch.elapsed(TimeUnit.MILLISECONDS)))
-
-    baos //return 
-  }
+//  def grabGPGCompressed(date: String, fileName: String): ByteArrayOutputStream = {
+//    logInfo("Fetching, decrypting with grabGPGCompressed(%s,%s)".format(date, fileName))
+//
+//    val watch = new Stopwatch
+//    watch.start
+//    
+//    val baos = new ByteArrayOutputStream//(100 * 1024 * 1024)
+//    // Use the linux file system to download, decrypt and decompress a file
+//    (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
+//      "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
+//      "gpg --no-permission-warning --trust-model always --output - --decrypt -" #> //decrypt it, pipe it
+//      baos) ! ProcessLogger(line => ()) // ! Executes the previous commands, 
+//    //Silence the linux stdout, stderr
+//    
+//
+//    baos.flush
+//    watch.stop
+//    logInfo("grabGPGCompressed(%s,%s) in %s ms".format(date, fileName, watch.elapsed(TimeUnit.MILLISECONDS)))
+//
+//    baos //return 
+//  }
 
 
 
