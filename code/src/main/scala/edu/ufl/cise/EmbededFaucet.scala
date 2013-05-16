@@ -20,7 +20,7 @@ object EmbededFaucet extends Logging {
   //val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
   val DIRECTORY = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
   val FILTER = "2012-01-0"
-    val query = "president"
+    val query = "the"
 
   val numberFormatter = new DecimalFormat("00")
 
@@ -78,9 +78,15 @@ object EmbededFaucet extends Logging {
   }
 
   def main(args: Array[String]) = {
+    
+    collection.parallel.ForkJoinTasks.defaultForkJoinPool.setParallelism(2)
+    
+    
     val fileList = DirList.getFileList(DIRECTORY, FILTER).toList.par
     println("total file count on disk sdd is: " + fileList.size)
 
+    
+    
     val siCount = new AtomicInteger(0)
     val siFilteredCount = new AtomicInteger(0)
 
@@ -106,11 +112,12 @@ object EmbededFaucet extends Logging {
           if (document != null) {
             val strEnglish = document.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ").replaceAll("\\s+", " ")
               .replaceAll("(\r\n)+", "\r\n").replaceAll("(\n)+", "\n").replaceAll("(\r)+", "\r").toLowerCase()
-            res = strEnglish.contains("oosevelt")
+            res = strEnglish.contains(query)
           } else
             res = false
         }
         if (res == true){
+          println("Found")
           println(p)
           siFilteredCount.incrementAndGet()
         }
