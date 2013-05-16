@@ -17,10 +17,10 @@ import scala.collection.parallel.immutable.ParSeq
 
 object EmbededFaucet extends Logging {
 
-  val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
-  //val DIRECTORY = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
-  val FILTER = "2011-10-05"
-    val query = "one"
+ // val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+  val DIRECTORY = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+  val FILTER = ""
+    val query = "president"
 
   val numberFormatter = new DecimalFormat("00")
 
@@ -79,7 +79,7 @@ object EmbededFaucet extends Logging {
 
   def main(args: Array[String]) = {
     
-    collection.parallel.ForkJoinTasks.defaultForkJoinPool.setParallelism(2)
+    collection.parallel.ForkJoinTasks.defaultForkJoinPool.setParallelism(32)
     
     
     val fileList = DirList.getFileList(DIRECTORY, FILTER).toList.par
@@ -117,7 +117,7 @@ object EmbededFaucet extends Logging {
             res = false
         }
         if (res == true){
-          println("Found")
+         // println("Found")
           val str = p.toString
           println(str)
           siFilteredCount.incrementAndGet()

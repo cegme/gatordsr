@@ -21,13 +21,12 @@ object SimpleJob extends Logging {
     sr.addFromDate("2011-10-07")
     sr.addFromHour(14)
     sr.addToDate("2011-10-07")
-    sr.addToHour(14)
-    val z = new CachedFaucet(sr)
+    sr.addToHour(15)
+    val z = new CachedFaucet(SparkIntegrator.sc,sr)
 
     lazy val z1 = z.iterator.reduce(_ union _) // Combine RDDS
 
-    val filtered = z1.map(si => new String(si.body.cleansed.array(), 
-                                            "UTF-8").toLowerCase())
+    val filtered = z1.map(si => si.body.getClean_visible().toLowerCase())
                     .filter(s => s.contains("roosevelt"))
 
     filtered.foreach(s => logInfo("%s\n\n\n\n".format(s)))
@@ -47,7 +46,7 @@ object SimpleJob extends Logging {
     sr.addToDate("2011-10-08")
     val sc = new SparkContext("local[64]", "gatordsr", "$YOUR_SPARK_HOME",
       List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-    val z = new CachedFaucet( sr)
+    val z = new CachedFaucet(SparkIntegrator.sc, sr)
     //val z = new CachedFaucet(SparkIntegrator.sc, sr)
 
     logInfo("About to start the iterator")
@@ -62,16 +61,16 @@ object SimpleJob extends Logging {
       .foreach{rdd =>
         //logInfo("RDD size: %d".format(rdd.count))
         val tuples = rdd.withFilter{ si => si.body != null &&
-                    si.body.cleansed != null && 
-                    si.body.cleansed.array.length > 0 //&&
+                    si.body.getClean_visible() != null && 
+                    si.body.getClean_visible().length() > 0 //&&
                     //new String(si.body.cleansed.array, "UTF-8").toLowerCase.indexOf(query.entity) > 0
                     //si.body.cleansed.array.toArray.indexOfSlice(query.entity.getBytes) > 0
         }
-        .withFilter( si => new String(si.body.cleansed.array, "UTF-8").toLowerCase.contains(query.entity))
+        .withFilter( si => si.body.getClean_visible().toLowerCase.contains(query.entity))
         .flatMap{ si => 
-          logInfo("File %s size: %d".format(si.doc_id, si.body.cleansed.array.length))
+          logInfo("File %s size: %d".format(si.doc_id, si.body.getClean_visible().length))
           siCount += 1
-          val body = new String(si.body.cleansed.array, "UTF-8").toLowerCase
+          val body = si.body.getClean_visible().toLowerCase
           pipe.run(body)
         }
         .foreach(t => logInfo("Tuple: %s".format(t)))
@@ -95,11 +94,12 @@ object SimpleJob extends Logging {
     val pipe = Pipeline.getPipeline(query)
 
     val sr = new StreamRange
-    sr.addFromDate("2011-10-07")
-    //sr.addFromHour(14)
+    sr.addFromDate("2011-10-05")
+    sr.addFromHour(0)
     //sr.addToDate("2011-10-07")
     //sr.addToHour(14)
-    sr.addToDate("2011-10-14")
+    sr.addToDate("2011-10-05")
+    sr.addToHour(0)
     val sc = new SparkContext("local[64]", "gatordsr", "$YOUR_SPARK_HOME",
       List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
     val z = new CachedFaucet(sc, sr)
@@ -121,14 +121,14 @@ object SimpleJob extends Logging {
 
       gpgFile
         .withFilter{_.body != null}
-        .withFilter{_.body.cleansed != null}
-        .withFilter{_.body.cleansed.array != null}
+       // .withFilter{_.body.getClean_visible() != null}
+        .withFilter{_.body.getClean_visible() != null}
         //.withFilter{_.body.cleansed.array.containsSlice("oosevelt")}
-        .withFilter{si => new String(si.body.cleansed.array, "UTF-8").toLowerCase.contains(query.entity)}
+        .withFilter{si => si.body.getClean_visible().toLowerCase.contains(query.entity)}
         .foreach{ si => 
           siCount += 1
           
-          val body = new String(si.body.cleansed.array, "UTF-8").toLowerCase
+          val body = si.body.getClean_visible().toLowerCase
           
           // Run the pipeline code
           //val tuples = pipe.run(body)

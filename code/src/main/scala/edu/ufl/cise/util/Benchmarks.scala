@@ -1,14 +1,11 @@
 package edu.ufl.cise.util
 
 import java.util.concurrent.TimeUnit
-
 import com.google.common.base.Stopwatch
-
 import scala.collection.JavaConversions._
-
 import spark.SparkContext
-
 import edu.ufl.cise.{CachedFaucet, Logging, StreamRange}
+import edu.ufl.cise.SparkIntegrator
 
 object Benchmark extends Logging {
 
@@ -24,7 +21,7 @@ object Benchmark extends Logging {
     sr.addFromHour(14)
     sr.addToDate("2011-10-07")
     sr.addToHour(14)
-    val z = new CachedFaucet(sr) 
+    val z = new CachedFaucet(SparkIntegrator.sc, sr) 
     //z.getKeyList.foreach(x => logInfo("%s/%s".format(x._1,x._2)))
     val stopwatch = new Stopwatch
 
