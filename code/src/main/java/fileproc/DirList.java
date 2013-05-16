@@ -1,7 +1,5 @@
 package fileproc;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,19 +11,7 @@ import java.util.List;
 
 public class DirList {
 
-	
-	public static List<String> getSSHFileList(String dir) {		
-
-		String command = "sshpass -p 'trecGuest' ssh trecGuest@sm321-01.cise.ufl.edu "
-				+ "'ls /media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
-				+ dir + "'";
-
-		List<String> list = FileProcessor.runStringShellCommand(command);
-
-		return list;
-	}
-
-	public static List getFileList(String dir, final String filter) {
+	public static List getFileList(String dir) {
 		final LinkedList<String> list = new LinkedList<String>();
 		try {
 			Path startPath = Paths.get(dir);
@@ -33,17 +19,15 @@ public class DirList {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir,
 						BasicFileAttributes attrs) {
-					// System.out.println("Dir: " + dir.toString());
+					//System.out.println("Dir: " + dir.toString());
 					return FileVisitResult.CONTINUE;
 				}
 
 				@Override
 				public FileVisitResult visitFile(Path file,
 						BasicFileAttributes attrs) {
-					String fileName = file.toString();
-					if (fileName.contains(filter))
-						list.add(fileName);
-					// System.out.println("File: " + file.toString());
+					list.add(file.toString());
+					//System.out.println("File: " + file.toString());
 					return FileVisitResult.CONTINUE;
 				}
 
@@ -56,20 +40,15 @@ public class DirList {
 			e.printStackTrace();
 		}
 		return list;
-
 	}
-
-	// public static List getFileList(String dir) {
-	// return getFileList(dir, "");
-	// }
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//List l = DirList.getFileList("/home/morteza/Downloads", "");
-		List l = DirList.getSSHFileList("2011-11-04-07");
-		for (Object o : l)
+		//DirList dir = new DirList();
+		List l = DirList.getFileList("/home/morteza/Downloads");
+		for (Object o: l)
 			System.out.println(o);
 
 	}
