@@ -1,7 +1,9 @@
 package fileproc;
+<<<<<<< HEAD
+=======
 
+>>>>>>> develop
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,19 +15,11 @@ import java.util.List;
 
 public class DirList {
 
-	
-	public static List<String> getSSHFileList(String dir) {		
-
-		String command = "sshpass -p 'trecGuest' ssh trecGuest@sm321-01.cise.ufl.edu "
-				+ "'ls /media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
-				+ dir + "'";
-
-		List<String> list = FileProcessor.runStringShellCommand(command);
-
-		return list;
-	}
-
+<<<<<<< HEAD
+	public static List getFileList(String dir) {
+=======
 	public static List getFileList(String dir, final String filter) {
+>>>>>>> develop
 		final LinkedList<String> list = new LinkedList<String>();
 		try {
 			Path startPath = Paths.get(dir);
@@ -33,17 +27,26 @@ public class DirList {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir,
 						BasicFileAttributes attrs) {
+<<<<<<< HEAD
+					//System.out.println("Dir: " + dir.toString());
+=======
 					// System.out.println("Dir: " + dir.toString());
+>>>>>>> develop
 					return FileVisitResult.CONTINUE;
 				}
 
 				@Override
 				public FileVisitResult visitFile(Path file,
 						BasicFileAttributes attrs) {
+<<<<<<< HEAD
+					list.add(file.toString());
+					//System.out.println("File: " + file.toString());
+=======
 					String fileName = file.toString();
 					if (fileName.contains(filter))
 						list.add(fileName);
 					// System.out.println("File: " + file.toString());
+>>>>>>> develop
 					return FileVisitResult.CONTINUE;
 				}
 
@@ -56,20 +59,31 @@ public class DirList {
 			e.printStackTrace();
 		}
 		return list;
+<<<<<<< HEAD
+	}
+
+=======
 
 	}
 
-	// public static List getFileList(String dir) {
-	// return getFileList(dir, "");
-	// }
+//	public static List getFileList(String dir) {
+//		return getFileList(dir, "");
+//	}
 
+>>>>>>> develop
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//List l = DirList.getFileList("/home/morteza/Downloads", "");
-		List l = DirList.getSSHFileList("2011-11-04-07");
+<<<<<<< HEAD
+		//DirList dir = new DirList();
+		List l = DirList.getFileList("/home/morteza/Downloads");
+		for (Object o: l)
+=======
+		// DirList dir = new DirList();
+		List l = DirList.getFileList("/home/morteza/Downloads", "");
 		for (Object o : l)
+>>>>>>> develop
 			System.out.println(o);
 
 	}

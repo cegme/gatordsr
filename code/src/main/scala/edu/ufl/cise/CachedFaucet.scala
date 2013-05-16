@@ -1,40 +1,23 @@
 package edu.ufl.cise
 
-import java.io.ByteArrayInputStream
-import java.util.zip.GZIPOutputStream
-import java.util.zip.GZIPInputStream
-import java.io.FileInputStream
-
-import org.apache.thrift.protocol.TBinaryProtocol
-import org.apache.thrift.transport.TIOStreamTransport
-import org.apache.thrift.transport.TFileTransport
-import org.apache.thrift.transport.TStandardFile
-import org.apache.thrift.protocol.TCompactProtocol
-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
+import scala.collection.JavaConversions._
+import scala.collection.generic.IdleSignalling
+import scala.collection.generic.Signalling
+import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.WeakHashMap
+import scala.collection.parallel
+import scala.collection.parallel.SeqSplitter
+import scala.sys.process.stringToProcess
 
 import com.google.common.hash.BloomFilter
 import com.google.common.hash.Funnels
 
-import kba.StreamItem
-
-import spark.SparkContext
-import spark.RDD
-import spark.storage.StorageLevel
-import spark.SparkContext._
-
-import scala.sys.process.stringToProcess
-import scala.sys.process.ProcessLogger
-import scala.collection.mutable.WeakHashMap
-import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.ArrayBuffer
-import scala.collection.JavaConversions._
-import scala.collection.parallel
-import scala.collection.parallel.SeqSplitter
-import scala.collection.generic.Signalling
-import scala.collection.generic.IdleSignalling
-
-
 import edu.ufl.cise.util.URLLineReader
+import fileproc.RemoteGPGRetrieval
+import streamcorpus.StreamItem
+import spark.RDD
+import spark.SparkContext
+import spark.SparkContext._
 
 
 class CachedFaucet(
@@ -140,7 +123,7 @@ class CachedFaucet(
     def seq = {
       iterator
       .toSeq
-      .asInstanceOf[scala.collection.immutable.Seq[spark.RDD[kba.StreamItem]]]
+      .asInstanceOf[scala.collection.immutable.Seq[spark.RDD[streamcorpus.StreamItem]]]
     }
 
     def splitter = new ParFileSplitter(docs, 0, docs.size)
@@ -206,7 +189,7 @@ class CachedFaucet(
     def seq = {
       iterator
       .toSeq
-      .asInstanceOf[scala.collection.immutable.Seq[Iterator[kba.StreamItem]]]
+      .asInstanceOf[scala.collection.immutable.Seq[Iterator[streamcorpus.StreamItem]]]
     }
 
     def splitter = new ParFileSplitter(docs, 0, docs.size)
@@ -253,24 +236,28 @@ class CachedFaucet(
   /**
     * This fetches a particular file and turns it into an Array.
     */
+//  def getStreamCompressed(date:String, fileName:String): Iterator[StreamItem] = {
+//    logInfo("getStreamCompressed")
+//    val xzGPG = grabGPGCompressed(date, fileName)
+//    val is = new ByteArrayInputStream(xzGPG.toByteArray)
+//    val bais = new XZCompressorInputStream(is)
+//    val transport = new TIOStreamTransport(bais)
+//    transport.open
+//    val protocol = new TBinaryProtocol(transport)
+//    assert(transport.isOpen)
+//
+//   Iterator.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
+//      .takeWhile(_ match { case None => transport.close; xzGPG.reset; false; case _ => true })
+//      .map { _.get }
+//      //.toArray
+//
+//    // If we keep ths reset/close here it cause the items not to be read
+//    //xzGPG.reset // Stop a leak
+//    //transport.close
+//  }
+  
   def getStreamCompressed(date:String, fileName:String): Iterator[StreamItem] = {
-    logInfo("getStreamCompressed")
-    val xzGPG = grabGPGCompressed(date, fileName)
-    val is = new ByteArrayInputStream(xzGPG.toByteArray)
-    val bais = new XZCompressorInputStream(is)
-    val transport = new TIOStreamTransport(bais)
-    transport.open
-    val protocol = new TBinaryProtocol(transport)
-    assert(transport.isOpen)
-
-   Iterator.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => transport.close; xzGPG.reset; false; case _ => true })
-      .map { _.get }
-      //.toArray
-
-    // If we keep ths reset/close here it cause the items not to be read
-    //xzGPG.reset // Stop a leak
-    //transport.close
+     RemoteGPGRetrieval.getStreams(date, fileName).toIterator
   }
 
 
@@ -322,8 +309,8 @@ object CachedFaucet extends Faucet with Logging {
     val sr = new StreamRange
     sr.addFromDate("2012-05-01")
     sr.addFromHour(0)
-    //sr.addToDate("2012-05-01")
-    //sr.addToHour(0)
+    sr.addToDate("2012-05-02")
+    sr.addToHour(0)
     val z = new CachedFaucet(sc, sr)
 
     val it = z.iterator

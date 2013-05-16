@@ -1,33 +1,31 @@
 package fileproc;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
-
-import streamcorpus.StreamItem;
 
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import edu.ufl.cise.util.StreamItemWrapper;
+import streamcorpus.StreamItem;
 
 public class RemoteGPGRetrieval {
 
 	public static void main(String[] args) {
-		String fileName = "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-11-03-05/WEBLOG-89-15957f5baef21e2cda6dca887b96e23e-e3bb3adf7504546644d4bc2d62108064.sc.xz.gpg";
-		getStreams(fileName);
+		String fileName = "WEBLOG-89-15957f5baef21e2cda6dca887b96e23e-e3bb3adf7504546644d4bc2d62108064.sc.xz.gpg";
+		getStreams("2012-11-03-05", fileName);
 	}
 
-	public static List getStreams(String fileName) {
-		
-		String command = "sshpass -p 'trecGuest' ssh trecGuest@sm321-01.cise.ufl.edu 'cat "
+	public static List<StreamItem> getStreams(String date, String fileName) {
+
+		String command = "sshpass -p 'trecGuest' ssh trecGuest@sm321-01.cise.ufl.edu 'cat /media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+				+ date
+				+ "/"
 				+ fileName
 				+ "' | gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt - | xz --decompress";
-		String[] cmd = { "/bin/sh", "-c", command };
-		InputStream is = FileProcessor.runShellCommand(command);
+
+		InputStream is = FileProcessor.runBinaryShellCommand(command);
 		TIOStreamTransport transport = new TIOStreamTransport(is);
 		try {
 			transport.open();
@@ -36,7 +34,7 @@ public class RemoteGPGRetrieval {
 		}
 		TBinaryProtocol protocol = new TBinaryProtocol(transport);
 
-		LinkedList list = new LinkedList();
+		LinkedList<StreamItem> list = new LinkedList<StreamItem>();
 
 		int index = 0;
 		boolean exception = false;
@@ -51,11 +49,12 @@ public class RemoteGPGRetrieval {
 				}
 			} catch (Exception e) {
 				exception = true;
+				System.err.println(e);
 			}
 			list.add(si);
 			index = index + 1;
 		}
 		transport.close();
-		 return list;
+		return list;
 	}
 }
