@@ -2,6 +2,7 @@ package edu.ufl.cise.util
 
 import streamcorpus.StreamItem
 import edu.ufl.cise.EmbededFaucet
+import scala.collection.mutable.StringBuilder
 
 class StreamItemWrapper(val day: String, val hour: Int, val fileName: String, val index: Int, val streamItem: StreamItem) extends Serializable {
 
@@ -11,25 +12,28 @@ class StreamItemWrapper(val day: String, val hour: Int, val fileName: String, va
   }
 
   override def toString = {
-    var str = getDirectoryName(day, hour) + "/" + fileName + "[" + index + "]"
-    //    if (streamItem.getBody != null && streamItem.getBody.getClean_visible() != null)
-    //      str + ":" + streamItem.getBody.getClean_visible.substring(0, 30)
-    //    else
+    var str = new StringBuilder(getDirectoryName(day, hour) + "/" + fileName + "[" + index + "]||")
+    if (streamItem.getBody != null && streamItem.getBody.getClean_visible() != null) {
 
-    val doc = streamItem.getBody.getClean_visible()
-    var i = -1
-    var initIndex = 0
-    var endIndex = doc.length()
-    while ((i = doc.indexOf(EmbededFaucet.query, i + 1)) != -1) {
-      initIndex = i - 30
-      if (initIndex < 0)
-        initIndex = 0
-      endIndex = i + EmbededFaucet.query.length
-      if (endIndex > doc.length())
-        endIndex = doc.length() - 1
-      str = str + doc.substring(initIndex, endIndex)
+      val doc = streamItem.getBody.getClean_visible()
+      val query = EmbededFaucet.query
+     // println(query)
+     // println(doc)
+      var i = -1
+      var initIndex = 0
+      var endIndex = query.length()
+
+      while ((i = doc.indexOf(query, i + 1)) != -1) {
+        initIndex = i - 30
+        if (initIndex < 0)
+          initIndex = 0
+        endIndex = i + query.length + 30
+        if (endIndex > doc.length())
+          endIndex = doc.length() - 1
+        str = str.append(doc.substring(initIndex, endIndex)).append( "||")
+      }
     }
-    str
+    str.toString
   }
 }
 

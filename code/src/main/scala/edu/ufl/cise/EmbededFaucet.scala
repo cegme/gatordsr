@@ -17,10 +17,10 @@ import scala.collection.parallel.immutable.ParSeq
 
 object EmbededFaucet extends Logging {
 
-  //val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
-  val DIRECTORY = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
-  val FILTER = "2012-01-0"
-    val query = "the"
+  val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+  //val DIRECTORY = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+  val FILTER = "2011-10-05"
+    val query = "one"
 
   val numberFormatter = new DecimalFormat("00")
 
@@ -118,7 +118,8 @@ object EmbededFaucet extends Logging {
         }
         if (res == true){
           println("Found")
-          println(p)
+          val str = p.toString
+          println(str)
           siFilteredCount.incrementAndGet()
         }
       })
