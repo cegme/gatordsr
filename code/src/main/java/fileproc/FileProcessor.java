@@ -1,3 +1,5 @@
+package fileproc;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +12,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.IOUtils;
 
 public class FileProcessor {
 
@@ -214,31 +218,36 @@ public class FileProcessor {
 		}
 	}
 
-	private void runShellCommand(String command) {
+	public static InputStream runShellCommand(String command) {
 		String line;
 		String[] cmd = { "/bin/sh", "-c", command };
 		System.out.println(command);
-		Process process;
+		Process process = null;
 		try {
 			process = Runtime.getRuntime().exec(cmd);
 
 			// System.out.println(process.exitValue());
-			BufferedReader stdOut = new BufferedReader(new InputStreamReader(
-					process.getInputStream()));
-			BufferedReader stdErr = new BufferedReader(new InputStreamReader(
-					process.getErrorStream()));
-			while ((line = stdOut.readLine()) != null) {
-				System.out.println(line);
-			}
-			System.out.println("");
-			while ((line = stdErr.readLine()) != null) {
-				System.out.println(line);
-			}
-			process.destroy();
+			// BufferedReader stdOut = new BufferedReader(new InputStreamReader(
+			// process.getInputStream()));
+			// BufferedReader stdErr = new BufferedReader(new InputStreamReader(
+			// process.getErrorStream()));
+
+			// return IOUtils.toByteArray(process.getInputStream());
+			return process.getInputStream();
+			// while ((line = stdOut.readLine()) != null) {
+			// System.out.println(line);
+			// }
+			// System.out.println("");
+			// while ((line = stdErr.readLine()) != null) {
+			// System.out.println(line);
+			// }
+			// process.destroy();
 		} catch (IOException e) {
 			System.err.println(command);
 			e.printStackTrace();
 		}
+		return null;
+		// return process.getInputStream();
 	}
 
 	private void printFileSize(String gpgFileURL) throws Exception {
