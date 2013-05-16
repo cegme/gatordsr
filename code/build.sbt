@@ -45,3 +45,10 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 libraryDependencies += "org.tukaani" % "xz" % "1.2"
 
 libraryDependencies += "org.apache.commons" % "commons-compress" % "1.5"
+
+libraryDependencies += "org.apache.opennlp" % "opennlp-tools" % "1.5.3"
+
+libraryDependencies += "org.apache.opennlp" % "opennlp-uima" % "1.5.3"
+
+libraryDependencies += "org.apache.opennlp" % "opennlp-maxent" % "3.0.3"
+

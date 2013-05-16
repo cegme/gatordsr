@@ -13,7 +13,6 @@ import java.util.zip.GZIPOutputStream
 import java.io.PipedOutputStream
 import java.io.PipedInputStream
 
-
 import scala.sys.process.stringToProcess
 import scala.sys.process.ProcessLogger
 import scala.util.matching.Regex.Match
@@ -33,6 +32,10 @@ import spark.SparkContext
 import spark.RDD
 import spark.storage.StorageLevel
 import spark.SparkContext._
+
+import java.util.concurrent.TimeUnit
+import scala.collection.JavaConversions._
+import com.google.common.base.Stopwatch
 
 
 trait Faucet extends Logging {
@@ -71,18 +74,24 @@ trait Faucet extends Logging {
   }
 
   def grabGPGCompressed(date: String, fileName: String): ByteArrayOutputStream = {
-    logInfo("Fetching, decrypting with GrabGPG(%s,%s)".format(date, fileName))
+    logInfo("Fetching, decrypting with grabGPGCompressed(%s,%s)".format(date, fileName))
 
-    // TODO can I not decompress and do with the GZIPOutputStream class?
-    val baos = new ByteArrayOutputStream(100 * 1024 * 1024)
+    val watch = new Stopwatch
+    watch.start
+    
+    val baos = new ByteArrayOutputStream//(100 * 1024 * 1024)
     // Use the linux file system to download, decrypt and decompress a file
     (("curl -s http://neo.cise.ufl.edu/trec-kba/aws-publicdatasets/trec/kba/" +
       "kba-stream-corpus-2012/%s/%s").format(date, fileName) #| //get the file, pipe it
       "gpg --no-permission-warning --trust-model always --output - --decrypt -" #> //decrypt it, pipe it
       baos) ! ProcessLogger(line => ()) // ! Executes the previous commands, 
     //Silence the linux stdout, stderr
+    
 
     baos.flush
+    watch.stop
+    logInfo("grabGPGCompressed(%s,%s) in %s ms".format(date, fileName, watch.elapsed(TimeUnit.MILLISECONDS)))
+
     baos //return 
   }
 
@@ -100,14 +109,14 @@ trait Faucet extends Logging {
       s.read(protocol)
       successful = true
     } catch {
-      case e:java.lang.OutOfMemoryError => logError("OOM Error: %s".format(e.getStackTrace.toList.toString)); None
+      case e:java.lang.OutOfMemoryError => logError("OOM Error: %s".format(e.getStackTrace.mkString("\n"))); None
       case e:TTransportException => e.getType match { 
-        case TTransportException.END_OF_FILE => logInfo("mkstream Finished."); None
+        case TTransportException.END_OF_FILE => logDebug("mkstream Finished."); None
         case TTransportException.ALREADY_OPEN => logError("mkstream already opened."); None
         case TTransportException.NOT_OPEN => logError("mkstream not open."); None
         case TTransportException.TIMED_OUT => logError("mkstream timed out."); None
         case TTransportException.UNKNOWN => logError("mkstream unknown."); None
-        case e => logError("Error: %s".format(e.toString)); None
+        case e => logError("Error in mkStreamItem: %s".format(e.toString)); None
       }
       case e: Exception => logDebug("Error in mkStreamItem"); None
     }
@@ -171,12 +180,12 @@ object StreamFaucet extends Faucet with Logging {
     val protocol = new TBinaryProtocol(transport)
 
     // Stop streaming after the first None. TODO why? what could happen? end of file?
-    val it = Stream.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
-      .takeWhile(_ match { case None => false; case _ => true })
+    val it = Iterator.continually(mkStreamItem(protocol)) //TODO adds items one bye one to the stream
+      .takeWhile(_ match { case None => transport.close; false; case _ => true })
       .map { _.get }
-      .toIterator
+      //.toIterator
 
-    transport.close()
+    //transport.close() // Moved into the iteratorr
     it
   }
 

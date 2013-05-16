@@ -24,7 +24,7 @@ object RelationChecker extends Logging {
 
   private val wikiFileName = "reverb_clueweb_relations-1.1.txt.gz"
   private val WIKIRELATIONS = 2*1220394
-  private val wikiRelationBF = BloomFilter.create(Funnels.stringFunnel, WIKIRELATIONS, .0001)
+  private val wikiRelationBF = BloomFilter.create(Funnels.stringFunnel, WIKIRELATIONS, .01)
 
   private lazy val isFilterLoaded:Boolean = {
     logInfo("Retrieving the relation file %s ...".format(wikiFileName))
