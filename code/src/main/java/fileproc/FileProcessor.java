@@ -8,12 +8,12 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.IOUtils;
 
 public class FileProcessor {
 
@@ -212,13 +212,58 @@ public class FileProcessor {
 					// + linkStr.substring(0, linkStr.length() - 4);
 
 					String command = commandWget;
-					runShellCommand(command);
+					runBinaryShellCommand(command);
 				}
 			}
 		}
 	}
 
-	public static InputStream runShellCommand(String command) {
+	/**
+	 * run shell command with string output
+	 * 
+	 * @param command
+	 * @return
+	 */
+	public static List<String> runStringShellCommand(String command) {
+		LinkedList<String> list = new LinkedList<String>();
+		String line;
+		String[] cmd = { "/bin/sh", "-c", command };
+		System.out.println(command);
+		Process process = null;
+		try {
+			process = Runtime.getRuntime().exec(cmd);
+
+			// System.out.println(process.exitValue());
+			BufferedReader stdOut = new BufferedReader(new InputStreamReader(
+					process.getInputStream()));
+			// BufferedReader stdErr = new BufferedReader(new InputStreamReader(
+			// process.getErrorStream()));
+
+			// return IOUtils.toByteArray(process.getInputStream());
+			// return process.getInputStream();
+			while ((line = stdOut.readLine()) != null) {
+				list.add(line);
+			}
+			// System.out.println("");
+			// while ((line = stdErr.readLine()) != null) {
+			// System.out.println(line);
+			// }
+			 process.destroy();
+		} catch (IOException e) {
+			System.err.println(command);
+			e.printStackTrace();
+		}
+		return list;
+
+	}
+
+	/**
+	 * run shell command with binary data output
+	 * 
+	 * @param command
+	 * @return
+	 */
+	public static InputStream runBinaryShellCommand(String command) {
 		String line;
 		String[] cmd = { "/bin/sh", "-c", command };
 		System.out.println(command);
