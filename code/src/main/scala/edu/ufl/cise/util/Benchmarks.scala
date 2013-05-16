@@ -24,7 +24,7 @@ object Benchmark extends Logging {
     sr.addFromHour(14)
     sr.addToDate("2011-10-07")
     sr.addToHour(14)
-    val z = new CachedFaucet(sc, sr) 
+    val z = new CachedFaucet(sr) 
     //z.getKeyList.foreach(x => logInfo("%s/%s".format(x._1,x._2)))
     val stopwatch = new Stopwatch
 

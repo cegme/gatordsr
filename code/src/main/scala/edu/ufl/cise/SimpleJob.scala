@@ -22,7 +22,7 @@ object SimpleJob extends Logging {
     sr.addFromHour(14)
     sr.addToDate("2011-10-07")
     sr.addToHour(14)
-    val z = new CachedFaucet(SparkIntegrator.sc, sr)
+    val z = new CachedFaucet(sr)
 
     lazy val z1 = z.iterator.reduce(_ union _) // Combine RDDS
 
@@ -47,7 +47,7 @@ object SimpleJob extends Logging {
     sr.addToDate("2011-10-08")
     val sc = new SparkContext("local[64]", "gatordsr", "$YOUR_SPARK_HOME",
       List("target/scala-2.9.2/gatordsr_2.9.2-0.01.jar"))
-    val z = new CachedFaucet(sc, sr)
+    val z = new CachedFaucet( sr)
     //val z = new CachedFaucet(SparkIntegrator.sc, sr)
 
     logInfo("About to start the iterator")

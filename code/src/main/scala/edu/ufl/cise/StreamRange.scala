@@ -74,10 +74,13 @@ class StreamRange extends Logging {
       if (settingsMap contains TOHOUR) {
         logInfo("Getting a range with a from hour and a to hour.")
         assert(settingsMap contains TODATE)
-        StreamRange.getFiles(settingsMap(FROMDATE), 
+        logInfo("ok")
+       val a= StreamRange.getFiles(settingsMap(FROMDATE), 
                 settingsMap(FROMHOUR).toInt,
                 settingsMap(TODATE), 
                 settingsMap(TOHOUR).toInt)
+                logInfo("Files Obtained.")
+                a
       }
       else {
         logInfo("Getting a range with a from hour and we just choose a to hour of 24.")
