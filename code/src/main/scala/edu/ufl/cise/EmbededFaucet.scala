@@ -19,7 +19,9 @@ import fileproc.DirList
 
 object EmbededFaucet extends Logging {
 
-  val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+  //val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+  val DIRECTORY = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+    val FILTER = "2012-01-0"
 
   val numberFormatter = new DecimalFormat("00")
 
@@ -77,7 +79,7 @@ object EmbededFaucet extends Logging {
   }
 
   def main(args: Array[String]) = {
-    val fileList = DirList.getFileList(DIRECTORY).toList
+    val fileList = DirList.getFileList(DIRECTORY, FILTER).toList.par
     println("total file count on disk sdd is: " + fileList.size)
 
     val siCount = new AtomicInteger(0)
@@ -90,8 +92,8 @@ object EmbededFaucet extends Logging {
       val day = dayHourFileList.apply(0).group(1)
       val hour = new Integer(dayHourFileList.apply(0).group(2))
       val fileName = dayHourFileList.apply(0).group(3)
-      //  val data = grabGPGLocal(day, hour, temp)
-      val data = grabGPGSSH("/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-11-03-05/WEBLOG-89-15957f5baef21e2cda6dca887b96e23e-e3bb3adf7504546644d4bc2d62108064.sc.xz.gpg")
+        val data = grabGPGLocal(day, hour, temp)
+     // val data = grabGPGSSH("/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-11-03-05/WEBLOG-89-15957f5baef21e2cda6dca887b96e23e-e3bb3adf7504546644d4bc2d62108064.sc.xz.gpg")
       val tempArr = data.toByteArray()
       val sis = getStreams(day, hour, fileName, data)
       siCount.addAndGet(sis.size)
@@ -104,7 +106,7 @@ object EmbededFaucet extends Logging {
         if (document != null) {
           val strEnglish = document.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ").replaceAll("\\s+", " ")
             .replaceAll("(\r\n)+", "\r\n").replaceAll("(\n)+", "\n").replaceAll("(\r)+", "\r").toLowerCase()
-          res = strEnglish.contains("the")
+          res = strEnglish.contains("oosevelt")
         } else
           res = false
       }
