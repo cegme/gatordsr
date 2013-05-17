@@ -1,20 +1,16 @@
-package edu.ufl.cise
+package edu.ufl.cise.pipeline
 
 import java.util.ArrayList
 import opennlp.tools.chunker.ChunkerME
 import opennlp.tools.chunker.ChunkerModel
-import java.io.FileInputStream
 import opennlp.tools.postag.POSTaggerME
 import opennlp.tools.postag.POSModel
 import opennlp.tools.tokenize.TokenizerME
 import opennlp.tools.tokenize.TokenizerModel
 import scala.util.parsing.json.JSON
 import scala.io.Source
-import java.io.File
-import fileproc.RemoteGPGRetrieval
-import streamcorpus.StreamItem
-import streamcorpus.Sentence
-import java.util.LinkedList
+import edu.ufl.cise.Logging
+import edu.ufl.cise.Triple
 
 object Pattern extends Logging {
   
@@ -26,9 +22,13 @@ object Pattern extends Logging {
   val tagger = new POSTaggerME(new POSModel(this.getClass().getClassLoader().getResourceAsStream("en-pos-maxent.bin")))
   val chunker = new ChunkerME(new ChunkerModel(this.getClass().getClassLoader().getResourceAsStream("en-chunker.bin")))
 
+  // TODO: a middle-level representation
+  // TODO: one pattern per slot, a method to construct patterns
+  
   
   
   def main(args: Array[String]){
+    getIndices("hello kitty", Array[String]("hello", "kitty"))
    // println(new Slot("per", "affiliate").names)
     // println(
     // println(new Pattern("xx", "yy").extractFirstNP("Abraham Lincoln is the 16th president of United States"))//)
@@ -122,6 +122,12 @@ object Pattern extends Logging {
     //println(topSequences)
   }
 
+  // after pattern matching with the result show the indices of the begin and end of the mathced substring
+  def getIndices(p:String, sent:Array[String])
+  {
+    println(p.indexOf(sent(1)))
+    println(p.lastIndexOf(sent(1)))
+  }
 
 }
 
