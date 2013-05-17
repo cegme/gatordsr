@@ -13,6 +13,8 @@ import spark.SparkContext
 import spark.SparkContext._
 import spark.streaming.StreamingContext
 
+import edu.ufl.cise.pipeline._
+
 object SimpleJob extends Logging {
   
   def testStringFilter(word:String = "roosevelt") {
