@@ -295,7 +295,7 @@ public class FileProcessor {
 		// return process.getInputStream();
 	}
 
-	private void printFileSize(String gpgFileURL) throws Exception {
+	public static int getFileSize(String gpgFileURL) throws Exception {
 		URL url = new URL(gpgFileURL);
 		URLConnection conn = url.openConnection();
 		int size = conn.getContentLength();
@@ -304,6 +304,7 @@ public class FileProcessor {
 		else
 			System.out.println(gpgFileURL + " Size: " + size);
 		conn.getInputStream().close();
+		return size;
 	}
 
 	public static void main(String[] args) {
