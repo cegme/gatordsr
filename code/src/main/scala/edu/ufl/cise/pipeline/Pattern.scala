@@ -180,25 +180,3 @@ class Pattern(entity:String,id:Int, slot:String, sid:Int){
   }
   
 }
-
-class Entity(entity_type:String, group:String, topic_id:String){
-
-  val names = new ArrayList[String] // the list of alias names for Entity
-  
-  //TODO: initialize the names from wikipedia or twitter information from file
-  
-  def add(name:String) = names.add(name) // add one more alias name for the entity
-  
-}
-
-class Slot(entity_type:String, slot:String){
-
-  val names = new ArrayList[String] // the list of alias names for Slot, extracted from the WordNet
-  
-  // initialize names from the ontology file
-  Source.fromFile("resources/ontology/" + entity_type.toLowerCase() + "_" + slot.toLowerCase() + ".txt")
-  .getLines().foreach(name => names.add(name))
-  
-  def add(name:String) = names.add(name) // add one more alias name for the slot
-  
-}
