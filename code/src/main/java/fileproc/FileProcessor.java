@@ -49,6 +49,39 @@ public class FileProcessor {
 		return usableSpace - size > 0;
 	}
 
+	public static String fileSizeToStr(long bytesLong) {
+		int BINARY_KILO = 1024;
+		double bytes = bytesLong;
+		double kilobytes = (bytes / BINARY_KILO);
+		double megabytes = (kilobytes / BINARY_KILO);
+		double gigabytes = (megabytes / BINARY_KILO);
+		double terabytes = (gigabytes / BINARY_KILO);
+		double petabytes = (terabytes / BINARY_KILO);
+		double exabytes = (petabytes / BINARY_KILO);
+		double zettabytes = (exabytes / BINARY_KILO);
+		double yottabytes = (zettabytes / BINARY_KILO);
+
+		if (yottabytes > 1)
+			return yottabytes + "YB";
+		else if (zettabytes > 1)
+			return zettabytes + "ZB";
+		else if (exabytes > 1)
+			return exabytes + "EB";
+		else if (petabytes > 1)
+			return petabytes + "PB";
+		else if (terabytes > 1)
+			return terabytes + "TB";
+		else if (gigabytes > 1)
+			return gigabytes + "GB";
+		else if (megabytes > 1)
+			return megabytes + "MB";
+		else if (kilobytes > 1)
+			return kilobytes + "KB";
+		else if (bytes > 1)
+			return bytes + "B";
+		return null;
+	}
+
 	private void Execute() {
 
 		try {
@@ -248,7 +281,7 @@ public class FileProcessor {
 			// while ((line = stdErr.readLine()) != null) {
 			// System.out.println(line);
 			// }
-			 process.destroy();
+			process.destroy();
 		} catch (IOException e) {
 			System.err.println(command);
 			e.printStackTrace();
