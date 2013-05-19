@@ -28,10 +28,8 @@ import edu.ufl.cise.util.StreamItemWrapper;
  */
 public class CorpusBatchProcessor {
 
-	// final String DIRECTORY =
-	//
-	// "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	final String	DIRECTORY				= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	final String	DIRECTORY				= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	//final String	DIRECTORY				= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	final String	FILTER					= "";
 	final String	query						= "book";
 	AtomicLong		fileCount				= new AtomicLong(0);
@@ -168,7 +166,7 @@ public class CorpusBatchProcessor {
 		executor.shutdown();
 		while (!executor.isTerminated()) {
 			try {
-				query.wait(500);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
