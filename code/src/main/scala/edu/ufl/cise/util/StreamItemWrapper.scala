@@ -12,7 +12,7 @@ class StreamItemWrapper(val day: String, val hour: Int, val fileName: String, va
   }
 
   override def toString = {
-    var str = getDirectoryName(day, hour) + "/" + fileName + "[" + index + "]||"
+    var str = getDirectoryName(day, hour) + "/" + fileName + "[" + index + "]"
 
     //   var str = new StringBuilder(getDirectoryName(day, hour) + "/" + fileName + "[" + index + "]||")
     //    if (streamItem.getBody != null && streamItem.getBody.getClean_visible() != null) {
