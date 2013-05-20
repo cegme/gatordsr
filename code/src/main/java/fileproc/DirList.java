@@ -1,7 +1,6 @@
 package fileproc;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +24,7 @@ public class DirList {
 		return list;
 	}
 
-	public static List getFileList(String dir, final String filter) {
+	public static List<String> getFileList(String dir, final String filter) {
 		final LinkedList<String> list = new LinkedList<String>();
 		try {
 			Path startPath = Paths.get(dir);
