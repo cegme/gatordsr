@@ -50,7 +50,7 @@ object EmbededFaucet extends Logging {
     baos
   }
 
-  def getStreams(date: String, hour: Int, fileName: String, data: ByteArrayOutputStream): ParSeq[StreamItemWrapper] = {
+  def getStreams(date: String, hour: Int, fileName: String, data: ByteArrayOutputStream): ParSeq[edu.ufl.cise.util.StreamItemWrapper] = {
     val bais = new ByteArrayInputStream(data.toByteArray())
     val transport = new TIOStreamTransport(bais)
     transport.open()
