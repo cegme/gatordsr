@@ -5,22 +5,25 @@ import java.io.ByteArrayOutputStream
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.concurrent.atomic.AtomicInteger
+
 import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.parallel.immutable.ParSeq
 import scala.sys.process.stringToProcess
+
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
 import org.apache.thrift.transport.TTransportException
+
 import edu.ufl.cise.util.StreamItemWrapper
-import streamcorpus.StreamItem
 import fileproc.DirList
-import scala.collection.parallel.immutable.ParSeq
+import streamcorpus.StreamItem
 
 object EmbededFaucet extends Logging {
 
- // val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
+  // val DIRECTORY = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
   val DIRECTORY = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
   val FILTER = ""
-    val query = "president"
+  val query = "president"
 
   val numberFormatter = new DecimalFormat("00")
 
@@ -47,7 +50,7 @@ object EmbededFaucet extends Logging {
     baos
   }
 
-  def getStreams(date: String, hour: Int, fileName: String, data: ByteArrayOutputStream): ParSeq[StreamItemWrapper] = {
+  def getStreams(date: String, hour: Int, fileName: String, data: ByteArrayOutputStream): ParSeq[edu.ufl.cise.util.StreamItemWrapper] = {
     val bais = new ByteArrayInputStream(data.toByteArray())
     val transport = new TIOStreamTransport(bais)
     transport.open()
@@ -78,15 +81,12 @@ object EmbededFaucet extends Logging {
   }
 
   def main(args: Array[String]) = {
-    
+
     collection.parallel.ForkJoinTasks.defaultForkJoinPool.setParallelism(32)
-    
-    
+
     val fileList = DirList.getFileList(DIRECTORY, FILTER).toList.par
     println("total file count on disk sdd is: " + fileList.size)
 
-    
-    
     val siCount = new AtomicInteger(0)
     val siFilteredCount = new AtomicInteger(0)
 
@@ -116,8 +116,8 @@ object EmbededFaucet extends Logging {
           } else
             res = false
         }
-        if (res == true){
-         // println("Found")
+        if (res == true) {
+          // println("Found")
           val str = p.toString
           println(str)
           siFilteredCount.incrementAndGet()
@@ -126,7 +126,7 @@ object EmbededFaucet extends Logging {
     })
 
     println("total file count on disk" + DIRECTORY + " before filter is: " + siCount.get())
-     println("total file count on disk " + DIRECTORY + "after filter is: " + siFilteredCount.get())
+    println("total file count on disk " + DIRECTORY + "after filter is: " + siFilteredCount.get())
     //    tempFilter.foreach(p => {
     //      logInfo(p.toString())
     //    })
