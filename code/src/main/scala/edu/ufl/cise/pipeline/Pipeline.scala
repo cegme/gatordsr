@@ -1,6 +1,5 @@
 package edu.ufl.cise.pipeline
 
-import Pipeline._
 import edu.stanford.nlp.pipeline.StanfordCoreNLP
 import edu.ufl.cise.util.RelationChecker
 import java.util.Properties
@@ -56,6 +55,7 @@ object Pipeline extends Logging {
 
 }
 
+import Pipeline._
 class Pipeline(query: SSFQuery) extends Logging with Serializable {
 
   // use to store the extracted relations

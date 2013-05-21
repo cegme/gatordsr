@@ -11,6 +11,12 @@ import scala.util.parsing.json.JSON
 import scala.io.Source
 import edu.ufl.cise.Logging
 import edu.ufl.cise.Triple
+import java.net.URL
+import java.net.URLConnection
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.DataInputStream
+import java.io.ObjectInputStream
 
 object Pattern extends Logging {
   
@@ -28,7 +34,8 @@ object Pattern extends Logging {
   
   
   def main(args: Array[String]){
-    getIndices("hello kitty", Array[String]("hello", "kitty"))
+    extractWiki
+    //getIndices("hello kitty", Array[String]("hello", "kitty"))
    // println(new Slot("per", "affiliate").names)
     // println(
     // println(new Pattern("xx", "yy").extractFirstNP("Abraham Lincoln is the 16th president of United States"))//)
@@ -81,7 +88,22 @@ object Pattern extends Logging {
      entity_list.add(new Entity(entity.get("entity_type").toString, 
          entity.get("group").toString, entity.get("target_id").toString))
    })
+   
+   // call extractWiki
   }
+   
+  def extractWiki(){
+    // TODO: use media wiki api to extract alias name information for entities
+    // TODO: store all these inforamtion into one json file
+   
+    val url = "http://en.wikipedia.org/w/api.php?format=json&action=query&prop=revisions&titles=Benjamin_Bronfman&rvprop=timestamp|user|comment|content&rvend=20130201000000"
+    val json = JSON.parseFull(Source.fromURL(new URL(url)).mkString)
+    //JSON.
+    println(json)
+    
+    // TODO: find name information and store into json files
+   
+  } 
   
   // test a single string using a single pattern
   def test(){
@@ -122,12 +144,6 @@ object Pattern extends Logging {
     //println(topSequences)
   }
 
-  // after pattern matching with the result show the indices of the begin and end of the mathced substring
-  def getIndices(p:String, sent:Array[String])
-  {
-    println(p.indexOf(sent(1)))
-    println(p.lastIndexOf(sent(1)))
-  }
 
 }
 
