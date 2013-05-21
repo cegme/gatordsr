@@ -7,10 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -23,7 +20,18 @@ import streamcorpus.StreamItem;
  * check http://sourceforge.net/projects/faststringutil/ structured graph
  * learning sgml icml, online lda, stremaing
  * 
- * Time: get file size decrypt
+ * Some issues: <br>
+ * 
+ * memory usage is ok, not much io<br>
+ * Time: <br>
+ * get file size offline from a script <br>
+ * <br>
+ * decrypt nonblocking<br>
+ * // TODO filnamewrapper class to do file name splitting efficiently
+ * stribnuilder
+ * 
+ * single machine single thread profiling
+ * 
  * 
  * 
  * @author morteza
@@ -38,7 +46,6 @@ public class CorpusBatchProcessor {
 	long														fileCount				= 0;
 	AtomicLong											siCount					= new AtomicLong(0);
 	AtomicLong											siFilteredCount	= new AtomicLong(0);
-	AtomicLong											processedSize		= new AtomicLong(0);
 	public static final DateFormat	format					= new SimpleDateFormat("yyyy-MM-dd-HH");
 	public static final DateFormat	logTimeFormat		= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -49,13 +56,10 @@ public class CorpusBatchProcessor {
 		return FileProcessor.runBinaryShellCommand(command);
 	}
 
-	private static List<SIWrapper> getStreams(String day, int hour, String fileName, InputStream is)
-			throws Exception {
+	private void getStreams(String day, int hour, String fileName, InputStream is) throws Exception {
 		TIOStreamTransport transport = new TIOStreamTransport(is);
 		transport.open();
 		TBinaryProtocol protocol = new TBinaryProtocol(transport);
-
-		List<SIWrapper> list = new LinkedList<SIWrapper>();
 
 		int index = 0;
 		boolean exception = false;
@@ -64,7 +68,9 @@ public class CorpusBatchProcessor {
 				StreamItem si = new StreamItem();
 				if (protocol.getTransport().isOpen())
 					si.read(protocol);
-				list.add(new SIWrapper(day, hour, fileName, index, si));
+				siCount.incrementAndGet();
+				SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
+				process(siw);
 				index = index + 1;
 			} catch (TTransportException e) {
 				processException(e);
@@ -72,7 +78,6 @@ public class CorpusBatchProcessor {
 			}
 		}
 		transport.close();
-		return list;
 	}
 
 	private static void processException(TTransportException e) {
@@ -108,7 +113,6 @@ public class CorpusBatchProcessor {
 				res = false;
 		}
 		if (res == true) {
-			// System.out.println(siw);
 			siFilteredCount.incrementAndGet();
 		}
 	}
@@ -138,42 +142,34 @@ public class CorpusBatchProcessor {
 			threadCount = 31;
 		}
 
-		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+		// ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		while (!(c.getTime().compareTo(cEnd.getTime()) > 0)) {
-			try {// WHATEVER HAPPENS DON'T TERMINATE!
+			try {
 				final String date = format.format(c.getTime());
-				List<String> fileList = DirList.getFileList(DIRECTORY + date, FILTER);
-				// System.gc();// one gc per directory
+				final List<String> fileList = DirList.getFileList(DIRECTORY + date, FILTER);
 				for (final String fileStr : fileList) {
 					fileCount++;
 					final int hour = c.get(Calendar.HOUR);
 					final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
 
-					// TODO filnamewrapper class to do file name splitting
-					// efficiently stribnuilder
-					Runnable worker = new Thread(fileCount + " " + date + "/" + fileName) {
-						public void run() {
+					// Runnable worker = new Thread(fileCount + " " + date + "/" +
+					// fileName) {
+					// public void run() {
+					try {
+						InputStream is = grabGPGLocal(date, fileName, fileStr);
+						getStreams(date, hour, fileName, is);
+						is.close();
 
-							try {
-								InputStream is = grabGPGLocal(date, fileName, fileStr);
-								List<SIWrapper> list = getStreams(date, hour, fileName, is);
-								is.close();
-								siCount.addAndGet(list.size());
-								for (SIWrapper siw : list) {
-									process(siw);
-								}
+						report(logTimeFormat);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					//
+					// };
+					// };
+					// executor.execute(worker);
+					//
 
-								long size = FileProcessor.getLocalFileSize(fileStr);
-								System.out.print(FileProcessor.fileSizeToStr(size));
-								processedSize.addAndGet(size);
-								report(logTimeFormat);
-
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						};
-					};
-					executor.execute(worker);
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -181,23 +177,22 @@ public class CorpusBatchProcessor {
 			c.add(Calendar.HOUR, 1);
 		}
 
-		executor.shutdown();
-		while (!executor.isTerminated()) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		// executor.shutdown();
+		// while (!executor.isTerminated()) {
+		// try {
+		// Thread.sleep(500);
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// }
 
 		report(logTimeFormat);
 		System.out.println("Finished all threads");
 	}
 
 	private void report(DateFormat df) {
-		System.out.println(df.format(new Date()) + " Total " + fileCount + " Files "
-				+ FileProcessor.fileSizeToStr(processedSize.get()) + " SIs: " + siCount.get() + " +SIs:"
-				+ siFilteredCount);
+		System.out.println(df.format(new Date()) + " Total " + fileCount + " Files " + " SIs: "
+				+ siCount.get() + " +SIs:" + siFilteredCount);
 	}
 
 	/**
@@ -206,6 +201,8 @@ public class CorpusBatchProcessor {
 	public static void main(String[] args) throws ParseException {
 		CorpusBatchProcessor cps = new CorpusBatchProcessor();
 		cps.process();
+		String s = new String();
+		s.intern();
 	}
 
 }
