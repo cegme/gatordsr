@@ -1,4 +1,4 @@
-package fileproc;
+package edu.ufl.cise;
 
 import java.io.File;
 import java.io.InputStream;
@@ -23,13 +23,7 @@ import streamcorpus.StreamItem;
  * check http://sourceforge.net/projects/faststringutil/ structured graph
  * learning sgml icml, online lda, stremaing
  * 
- * memory usage is ok, not much io<br>
- * Time: <br>
- * get file size offline from a script <br>
- * decrypt <br>
- * move from sbt to java<br>
- * single machine single thread profiling
- * 
+ * Time: get file size decrypt
  * 
  * 
  * @author morteza
@@ -44,7 +38,7 @@ public class CorpusBatchProcessor {
 	long														fileCount				= 0;
 	AtomicLong											siCount					= new AtomicLong(0);
 	AtomicLong											siFilteredCount	= new AtomicLong(0);
-	// AtomicLong processedSize = new AtomicLong(0);
+	AtomicLong											processedSize		= new AtomicLong(0);
 	public static final DateFormat	format					= new SimpleDateFormat("yyyy-MM-dd-HH");
 	public static final DateFormat	logTimeFormat		= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -117,7 +111,6 @@ public class CorpusBatchProcessor {
 			// System.out.println(siw);
 			siFilteredCount.incrementAndGet();
 		}
-		
 	}
 
 	/**
@@ -144,13 +137,12 @@ public class CorpusBatchProcessor {
 			cEnd.setTime(format.parse("2013-02-13-23"));
 			threadCount = 31;
 		}
-		
 
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		while (!(c.getTime().compareTo(cEnd.getTime()) > 0)) {
 			try {// WHATEVER HAPPENS DON'T TERMINATE!
 				final String date = format.format(c.getTime());
-				final List<String> fileList = DirList.getFileList(DIRECTORY + date, FILTER);
+				List<String> fileList = DirList.getFileList(DIRECTORY + date, FILTER);
 				// System.gc();// one gc per directory
 				for (final String fileStr : fileList) {
 					fileCount++;
@@ -161,6 +153,7 @@ public class CorpusBatchProcessor {
 					// efficiently stribnuilder
 					Runnable worker = new Thread(fileCount + " " + date + "/" + fileName) {
 						public void run() {
+
 							try {
 								InputStream is = grabGPGLocal(date, fileName, fileStr);
 								List<SIWrapper> list = getStreams(date, hour, fileName, is);
@@ -172,7 +165,7 @@ public class CorpusBatchProcessor {
 
 								long size = FileProcessor.getLocalFileSize(fileStr);
 								System.out.print(FileProcessor.fileSizeToStr(size));
-								// processedSize.addAndGet(size);
+								processedSize.addAndGet(size);
 								report(logTimeFormat);
 
 							} catch (Exception e) {
@@ -181,7 +174,6 @@ public class CorpusBatchProcessor {
 						};
 					};
 					executor.execute(worker);
-					
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -204,8 +196,8 @@ public class CorpusBatchProcessor {
 
 	private void report(DateFormat df) {
 		System.out.println(df.format(new Date()) + " Total " + fileCount + " Files "
-		// + FileProcessor.fileSizeToStr(processedSize.get())
-				+ " SIs: " + siCount.get() + " +SIs:" + siFilteredCount);
+				+ FileProcessor.fileSizeToStr(processedSize.get()) + " SIs: " + siCount.get() + " +SIs:"
+				+ siFilteredCount);
 	}
 
 	/**
@@ -214,8 +206,6 @@ public class CorpusBatchProcessor {
 	public static void main(String[] args) throws ParseException {
 		CorpusBatchProcessor cps = new CorpusBatchProcessor();
 		cps.process();
-		String s= new String ();
-		s.intern();
 	}
 
 }
