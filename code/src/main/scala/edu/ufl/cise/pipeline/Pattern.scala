@@ -1,16 +1,16 @@
-package edu.ufl.cise
+package edu.ufl.cise.pipeline
 
 import java.util.ArrayList
 import opennlp.tools.chunker.ChunkerME
 import opennlp.tools.chunker.ChunkerModel
-import java.io.FileInputStream
 import opennlp.tools.postag.POSTaggerME
 import opennlp.tools.postag.POSModel
 import opennlp.tools.tokenize.TokenizerME
 import opennlp.tools.tokenize.TokenizerModel
 import scala.util.parsing.json.JSON
 import scala.io.Source
-import java.io.File
+import edu.ufl.cise.Logging
+import edu.ufl.cise.Triple
 
 object Pattern extends Logging {
   
@@ -22,14 +22,43 @@ object Pattern extends Logging {
   val tagger = new POSTaggerME(new POSModel(this.getClass().getClassLoader().getResourceAsStream("en-pos-maxent.bin")))
   val chunker = new ChunkerME(new ChunkerModel(this.getClass().getClassLoader().getResourceAsStream("en-chunker.bin")))
 
+  // TODO: a middle-level representation
+  // TODO: one pattern per slot, a method to construct patterns
+  
   
   
   def main(args: Array[String]){
+    getIndices("hello kitty", Array[String]("hello", "kitty"))
    // println(new Slot("per", "affiliate").names)
     // println(
     // println(new Pattern("xx", "yy").extractFirstNP("Abraham Lincoln is the 16th president of United States"))//)
-     new Pattern("xx", "yy").matches("xxabyyaaccddxxyyzz")
+    // new Pattern("xx", "yy").matches("xxabyyaaccddxxyyzz")
 	 // test()
+/*    val fileName = "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-11-03-05/WEBLOG-89-15957f5baef21e2cda6dca887b96e23e-e3bb3adf7504546644d4bc2d62108064.sc.xz.gpg";
+    val list = RemoteGPGRetrieval.getStreams(fileName)
+    println(list.size())
+//    val si = list.get(0).asInstanceOf[StreamItem]
+//    si.body.sentences.get("lingpipe").toArray().foreach(sentence => {
+//      //println(sentence.asInstanceOf[Sentence].toString())
+//      //println(sentence)
+//      //val tokens = sentence.asInstanceOf[Sentence].tokens
+//      //val labels = sentence.asInstanceOf[Sentence].labels
+//      //println(labels)
+//    })
+    
+    list.asInstanceOf[LinkedList[StreamItem]].toArray.foreach(si => {
+      println(si.asInstanceOf[StreamItem].source)
+      // source attribute
+      si.asInstanceOf[StreamItem].body.sentences.get("lingpipe").toArray().foreach(sentence => {
+      //println(sentence.asInstanceOf[Sentence].toString())
+      //println(sentence)
+      val tokens = sentence.asInstanceOf[Sentence].tokens
+      val labels = sentence.asInstanceOf[Sentence].labels
+      println(tokens.size + " " + labels.size())
+    })
+    })*/
+    
+
   }
   
   // initialize entity_list, slot_list, pattern_list
@@ -93,6 +122,12 @@ object Pattern extends Logging {
     //println(topSequences)
   }
 
+  // after pattern matching with the result show the indices of the begin and end of the mathced substring
+  def getIndices(p:String, sent:Array[String])
+  {
+    println(p.indexOf(sent(1)))
+    println(p.lastIndexOf(sent(1)))
+  }
 
 }
 
@@ -138,36 +173,10 @@ class Pattern(entity:String,id:Int, slot:String, sid:Int){
     println(tag.toList)
     println(begin)
     println(end)
-    // from array of string to a subarray
-    //val result:Array[String] = new Array[String](end - begin)
-   //sent.copyToArray(result, begin, end - begin)
+    // from array oto subarray
     val result = sent.slice(begin, end)
-    // result.mkString(" ");
     return result.mkString(" ")
     
-    // return sent.toString()
   }
-  
-}
-
-class Entity(entity_type:String, group:String, topic_id:String){
-
-  val names = new ArrayList[String] // the list of alias names for Entity
-  
-  //TODO: initialize the names from wikipedia or twitter information from file
-  
-  def add(name:String) = names.add(name) // add one more alias name for the entity
-  
-}
-
-class Slot(entity_type:String, slot:String){
-
-  val names = new ArrayList[String] // the list of alias names for Slot, extracted from the WordNet
-  
-  // initialize names from the ontology file
-  Source.fromFile("resources/ontology/" + entity_type.toLowerCase() + "_" + slot.toLowerCase() + ".txt")
-  .getLines().foreach(name => names.add(name))
-  
-  def add(name:String) = names.add(name) // add one more alias name for the slot
   
 }

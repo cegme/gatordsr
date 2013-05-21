@@ -1,11 +1,8 @@
-package edu.ufl.cise
+package edu.ufl.cise.pipeline
 
 import Pipeline._
 import edu.stanford.nlp.pipeline.StanfordCoreNLP
 import edu.ufl.cise.util.RelationChecker
-import java.util.ArrayList
-import edu.stanford.nlp.pipeline.ParserAnnotator
-import edu.stanford.nlp.pipeline.DeterministicCorefAnnotator
 import java.util.Properties
 import edu.stanford.nlp.pipeline.Annotation
 import edu.stanford.nlp.util.CoreMap
@@ -14,12 +11,12 @@ import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation
-import spark.SparkContext
-import com.google.common.base.Stopwatch
-import java.util.concurrent.TimeUnit
-import java.util.Date
-
 import scala.collection.JavaConversions._
+import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation
+import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation
+import edu.ufl.cise.Logging
+import edu.ufl.cise.SSFQuery
+import edu.ufl.cise.Triple
 
 
 object Pipeline extends Logging {

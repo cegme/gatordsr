@@ -4,6 +4,7 @@ import edu.mit.jwi.item.POS
 import edu.ufl.cise.util.WordnetUtil
 import edu.ufl.cise.util.OntologySynonymGenerator
 import java.util.ArrayList
+import edu.ufl.cise.pipeline._
 
 object TRECSSF2013 extends Logging {
 
