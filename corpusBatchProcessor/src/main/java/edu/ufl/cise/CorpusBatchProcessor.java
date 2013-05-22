@@ -50,7 +50,7 @@ public class CorpusBatchProcessor {
 	String													DIR_LOCAL				= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	final String										FILTER					= "";
 	final String										query						= "president";
-	long														fileCount				= 0;
+	AtomicLong											fileCount				= new AtomicLong(0);
 	AtomicLong											siCount					= new AtomicLong(0);
 	AtomicLong											siFilteredCount	= new AtomicLong(0);
 	public static final DateFormat	format					= new SimpleDateFormat("yyyy-MM-dd-HH");
@@ -80,8 +80,8 @@ public class CorpusBatchProcessor {
 
 				processTokens(si);
 
-//				 SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
-//				 process(siw);
+				// SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
+				// process(siw);
 
 				si.clear();
 				index = index + 1;
@@ -103,13 +103,13 @@ public class CorpusBatchProcessor {
 			for (Sentence s : listSentence) {
 				List<Token> listToken = s.tokens;
 				for (Token t : listToken) {
-					System.out.println(si.getBody().getClean_visible());
-					if (si.getBody().getClean_visible().toLowerCase().contains(query))
-						System.out.println(t.getLemma());
-					if (t.getLemma() != null) {
-						
+					// System.out.println(si.getBody().getClean_visible());
+					// if (si.getBody().getClean_visible().toLowerCase().contains(query))
+					// System.out.println(t.getLemma());
+					if (t.getToken() != null) {
+
 						// t.setLemma(t.getLemma().toLowerCase());
-						if (t.getLemma().toLowerCase().contains(query))
+						if (t.getToken().toLowerCase().contains(query))
 							siFilteredCount.incrementAndGet();
 					}
 				}
@@ -153,7 +153,8 @@ public class CorpusBatchProcessor {
 		}
 		if (res == true) {
 			siFilteredCount.incrementAndGet();
-			System.out.println(siw.getIndex() + "[~]" + siw.getStreamItem().getBody().getClean_visible());
+			// System.out.println(siw.getIndex() + "[~]" +
+			// siw.getStreamItem().getBody().getClean_visible());
 		}
 	}
 
@@ -179,41 +180,40 @@ public class CorpusBatchProcessor {
 		} else {
 			System.out.println("Server run.");
 			cEnd.setTime(format.parse("2013-02-13-23"));
-			threadCount = 33;
+			threadCount = 128;
 		}
 
-		 ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		while (!(c.getTime().compareTo(cEnd.getTime()) > 0)) {
 			try {
 				final String date = format.format(c.getTime());
 
 				final List<String> fileList = DirList.getFileList(DIRECTORY + date, FILTER);
-				for (final String fileStr : fileList) {
-					fileCount++;
+				for (final String fileStr : fileList) {					
 					final int hour = c.get(Calendar.HOUR_OF_DAY);
 					final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
 
 					//
-					 Runnable worker = new Thread(fileCount + " " + date + "/" +
-					 fileName) {
-					 public void run() {
-					//
+					Runnable worker = new Thread(fileCount + " " + date + "/" + fileName) {
+						public void run() {
+							//
 
-					try {
-						InputStream is = grabGPGLocal(date, fileName, fileStr);
-						getStreams(date, hour, fileName, is);
-						is.close();
+							try {
+								InputStream is = grabGPGLocal(date, fileName, fileStr);
+								getStreams(date, hour, fileName, is);
+								is.close();
 
-						report(logTimeFormat, date + "/" + fileName);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+								fileCount.incrementAndGet();
+								report(logTimeFormat, date + "/" + fileName);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 
-					//
-					//
-					 };
-					 };
-					 executor.execute(worker);
+							//
+							//
+						};
+					};
+					executor.execute(worker);
 					//
 					//
 
@@ -225,14 +225,14 @@ public class CorpusBatchProcessor {
 		}
 
 		//
-		 executor.shutdown();
-		 while (!executor.isTerminated()) {
-		 try {
-		 Thread.sleep(500);
-		 } catch (InterruptedException e) {
-		 e.printStackTrace();
-		 }
-		 }
+		executor.shutdown();
+		while (!executor.isTerminated()) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		//
 
 		report(logTimeFormat, "Finished all threads");
@@ -240,7 +240,7 @@ public class CorpusBatchProcessor {
 
 	private void report(DateFormat df, String message) {
 		System.out.println(df.format(new Date()) + " Total " + fileCount + " Files " + " SIs: "
-				+ siCount.get() + " +SIs:" + siFilteredCount + " " + message);
+				+ siCount.get() + " +SIs: " + siFilteredCount + " " + message);
 	}
 
 	/**
