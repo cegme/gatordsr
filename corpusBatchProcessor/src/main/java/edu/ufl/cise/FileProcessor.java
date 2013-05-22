@@ -12,7 +12,7 @@ import java.util.List;
 
 public class FileProcessor {
 
-	public static String fileSizeToStr(long bytesLong) {
+	public static String fileSizeToStr(long bytesLong, String unit) {
 		int BINARY_KILO = 1024;
 		long bytes = bytesLong;
 		long kilobytes = Math.round(bytes / BINARY_KILO);
@@ -24,25 +24,35 @@ public class FileProcessor {
 		long zettabytes = Math.round(exabytes / BINARY_KILO);
 		long yottabytes = Math.round(zettabytes / BINARY_KILO);
 
-		if (yottabytes > 1)
+		if (unit != null && (unit.equalsIgnoreCase("YB")) || (unit == null && yottabytes >= 1))
 			return yottabytes + "YB";
-		else if (zettabytes > 1)
+		else if (unit != null && (unit.equalsIgnoreCase("ZB")) || (unit == null && zettabytes > 1))
 			return zettabytes + "ZB";
-		else if (exabytes > 1)
+		else if (unit != null && (unit.equalsIgnoreCase("EB")) || (unit == null && exabytes > 1))
 			return exabytes + "EB";
-		else if (petabytes > 1)
+		else if (unit != null && (unit.equalsIgnoreCase("PB")) || (unit == null && petabytes > 1))
 			return petabytes + "PB";
-		else if (terabytes > 1)
+		else if (unit != null && (unit.equalsIgnoreCase("TB")) || (unit == null && terabytes > 1))
 			return terabytes + "TB";
-		else if (gigabytes > 1)
+		else if (unit != null && (unit.equalsIgnoreCase("GB")) || (unit == null && gigabytes > 1))
 			return gigabytes + "GB";
-		else if (megabytes > 1)
+		else if (unit != null && (unit.equalsIgnoreCase("MB")) || (unit == null && megabytes > 1))
 			return megabytes + "MB";
-		else if (kilobytes > 1)
+		else if (unit != null && (unit.equalsIgnoreCase("KB")) || (unit == null && kilobytes > 1))
 			return kilobytes + "KB";
-		else if (bytes > 1)
+		else if (unit != null && (unit.equalsIgnoreCase("B")) || (unit == null && bytes > 1))
 			return bytes + "B";
 		return null;
+	}
+
+	public static String humanReadableByteCount(long bytes) {
+		boolean si = false;
+		int unit = si ? 1000 : 1024;
+		if (bytes < unit)
+			return bytes + " B";
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "si" : "");
+		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 
 	// private boolean isAlreadyDownloaded(String localDir, String file, String
