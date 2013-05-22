@@ -2,7 +2,7 @@ package edu.ufl.cise.pipeline
 
 import java.util.ArrayList
 
-class Sentence {
+class SSentence {
   //TODO: the middle-level representation of a sentence 
   val token_list = new ArrayList[String]()
   val pos_list = new ArrayList[String]()
