@@ -78,10 +78,10 @@ public class CorpusBatchProcessor {
 				siCount.incrementAndGet();
 				si.getBody().unsetRaw();
 
-				processTokens(si);
+			//	processTokens(si);
 
-				// SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
-				// process(siw);
+				 SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
+				 process(siw);
 
 				si.clear();
 				index = index + 1;
@@ -109,8 +109,10 @@ public class CorpusBatchProcessor {
 					if (t.getToken() != null) {
 
 						// t.setLemma(t.getLemma().toLowerCase());
-						if (t.getToken().toLowerCase().contains(query))
+						if (t.getToken().toLowerCase().contains(query)){
 							siFilteredCount.incrementAndGet();
+							return;
+						}
 					}
 				}
 			}
@@ -180,7 +182,7 @@ public class CorpusBatchProcessor {
 		} else {
 			System.out.println("Server run.");
 			cEnd.setTime(format.parse("2013-02-13-23"));
-			threadCount = 128;
+			threadCount = 31;
 		}
 
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
