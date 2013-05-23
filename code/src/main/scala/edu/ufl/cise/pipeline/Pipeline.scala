@@ -81,7 +81,7 @@ class Pipeline(query: SSFQuery) extends Logging with Serializable {
       case pattern(p, q) => {
         val triple = new Triple (entity, slot, extractFirstNP(q)); 
         KBAOutput.add(triple);
-        println(triple); 
+        //println(triple); 
         triple}
       case _ => null
     }
