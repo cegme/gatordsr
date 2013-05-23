@@ -10,13 +10,19 @@ object KBAOutput {
 
   val rows = new ArrayList[Row]() // the list of the rows
 	
-
+  val pw = new PrintWriter(new File("resources/test/result.txt"))
+  
+  
   // add one row into the row list
 
   def add(triple:Triple){
-	rows.add(new Row(triple))
-	row_num = rows.size()
-	}
+	//rows.add(new Row(triple))
+	//row_num = rows.size()
+    //println("in KBAOutput: " + triple)
+    //println(new Row(triple).toString)
+    pw.println(new Row(triple).toString)
+    pw.flush()
+  }
 	
   // write the rows into one file
   def writeToFile(filename:String)
@@ -30,7 +36,7 @@ object KBAOutput {
   def main(args:Array[String]){
 	add(new Triple("aa", "bb", "cc"))
 	add(new Triple("dd", "ee", "ff"))
-	writeToFile("temp.txt")
+	//writeToFile("temp.txt")
   }
 	
 }
