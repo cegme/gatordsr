@@ -7,14 +7,21 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransportException;
 
+import streamcorpus.Sentence;
 import streamcorpus.StreamItem;
+import streamcorpus.Token;
 
 /**
  * check http://sourceforge.net/projects/faststringutil/ structured graph
@@ -24,13 +31,13 @@ import streamcorpus.StreamItem;
  * 
  * memory usage is ok, not much io<br>
  * Time: <br>
- * get file size offline from a script <br>
- * <br>
  * decrypt nonblocking<br>
- * // TODO filnamewrapper class to do file name splitting efficiently
- * stribnuilder
+ * split streamitem body and add it via softrefernce. in O(1) do comparison via
+ * cache. ORRRR use the tokens they already provide
  * 
  * single machine single thread profiling
+ * 
+ * separate file path from file name by interning
  * 
  * 
  * 
@@ -43,14 +50,14 @@ public class CorpusBatchProcessor {
 	String													DIR_LOCAL				= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	final String										FILTER					= "";
 	final String										query						= "president";
-	long														fileCount				= 0;
+	AtomicLong											fileCount				= new AtomicLong(0);
 	AtomicLong											siCount					= new AtomicLong(0);
 	AtomicLong											siFilteredCount	= new AtomicLong(0);
 	public static final DateFormat	format					= new SimpleDateFormat("yyyy-MM-dd-HH");
 	public static final DateFormat	logTimeFormat		= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private static InputStream grabGPGLocal(String date, String fileName, String fileStr) {
-		System.out.println(date + "/" + fileName);
+		// System.out.println(date + "/" + fileName);
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
 				+ fileStr + " | xz --decompress";
 		return FileProcessor.runBinaryShellCommand(command);
@@ -69,8 +76,14 @@ public class CorpusBatchProcessor {
 				if (protocol.getTransport().isOpen())
 					si.read(protocol);
 				siCount.incrementAndGet();
-				SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
-				process(siw);
+				si.getBody().unsetRaw();
+
+			//	processTokens(si);
+
+				 SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
+				 process(siw);
+
+				si.clear();
 				index = index + 1;
 			} catch (TTransportException e) {
 				processException(e);
@@ -78,6 +91,32 @@ public class CorpusBatchProcessor {
 			}
 		}
 		transport.close();
+	}
+
+	private void processTokens(StreamItem si) {
+		Map<String, List<Sentence>> sentencesMap = si.getBody().getSentences();
+		Set<String> sentenceSetKeys = sentencesMap.keySet();
+		for (Iterator iterator = sentenceSetKeys.iterator(); iterator.hasNext();) {
+			String sentenceKey = (String) iterator.next();
+
+			List<Sentence> listSentence = sentencesMap.get(sentenceKey);
+			for (Sentence s : listSentence) {
+				List<Token> listToken = s.tokens;
+				for (Token t : listToken) {
+					// System.out.println(si.getBody().getClean_visible());
+					// if (si.getBody().getClean_visible().toLowerCase().contains(query))
+					// System.out.println(t.getLemma());
+					if (t.getToken() != null) {
+
+						// t.setLemma(t.getLemma().toLowerCase());
+						if (t.getToken().toLowerCase().contains(query)){
+							siFilteredCount.incrementAndGet();
+							return;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private static void processException(TTransportException e) {
@@ -105,15 +144,19 @@ public class CorpusBatchProcessor {
 		if (siw.getStreamItem().getBody() != null) {
 			String document = siw.getStreamItem().getBody().getClean_visible();
 			if (document != null) {
-				String strEnglish = document.toLowerCase().replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
-						.replaceAll("\\s+", " ").replaceAll("(\r\n)+", "\r\n").replaceAll("(\n)+", "\n")
-						.replaceAll("(\r)+", "\r").toLowerCase();
+				String strEnglish = document.toLowerCase();
+				// .replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
+				// .replaceAll("\\s+", " ").replaceAll("(\r\n)+",
+				// "\r\n").replaceAll("(\n)+", "\n")
+				// .replaceAll("(\r)+", "\r").toLowerCase();
 				res = strEnglish.contains(query);
 			} else
 				res = false;
 		}
 		if (res == true) {
 			siFilteredCount.incrementAndGet();
+			// System.out.println(siw.getIndex() + "[~]" +
+			// siw.getStreamItem().getBody().getClean_visible());
 		}
 	}
 
@@ -142,32 +185,38 @@ public class CorpusBatchProcessor {
 			threadCount = 31;
 		}
 
-		// ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		while (!(c.getTime().compareTo(cEnd.getTime()) > 0)) {
 			try {
 				final String date = format.format(c.getTime());
+
 				final List<String> fileList = DirList.getFileList(DIRECTORY + date, FILTER);
-				for (final String fileStr : fileList) {
-					fileCount++;
-					final int hour = c.get(Calendar.HOUR);
+				for (final String fileStr : fileList) {					
+					final int hour = c.get(Calendar.HOUR_OF_DAY);
 					final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
 
-					// Runnable worker = new Thread(fileCount + " " + date + "/" +
-					// fileName) {
-					// public void run() {
-					try {
-						InputStream is = grabGPGLocal(date, fileName, fileStr);
-						getStreams(date, hour, fileName, is);
-						is.close();
-
-						report(logTimeFormat);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
 					//
-					// };
-					// };
-					// executor.execute(worker);
+					Runnable worker = new Thread(fileCount + " " + date + "/" + fileName) {
+						public void run() {
+							//
+
+							try {
+								InputStream is = grabGPGLocal(date, fileName, fileStr);
+								getStreams(date, hour, fileName, is);
+								is.close();
+
+								fileCount.incrementAndGet();
+								report(logTimeFormat, date + "/" + fileName);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							//
+							//
+						};
+					};
+					executor.execute(worker);
+					//
 					//
 
 				}
@@ -177,22 +226,23 @@ public class CorpusBatchProcessor {
 			c.add(Calendar.HOUR, 1);
 		}
 
-		// executor.shutdown();
-		// while (!executor.isTerminated()) {
-		// try {
-		// Thread.sleep(500);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// }
+		//
+		executor.shutdown();
+		while (!executor.isTerminated()) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		//
 
-		report(logTimeFormat);
-		System.out.println("Finished all threads");
+		report(logTimeFormat, "Finished all threads");
 	}
 
-	private void report(DateFormat df) {
+	private void report(DateFormat df, String message) {
 		System.out.println(df.format(new Date()) + " Total " + fileCount + " Files " + " SIs: "
-				+ siCount.get() + " +SIs:" + siFilteredCount);
+				+ siCount.get() + " +SIs: " + siFilteredCount + " " + message);
 	}
 
 	/**
@@ -201,8 +251,8 @@ public class CorpusBatchProcessor {
 	public static void main(String[] args) throws ParseException {
 		CorpusBatchProcessor cps = new CorpusBatchProcessor();
 		cps.process();
-		String s = new String();
-		s.intern();
+		// String s = new String();
+		// s.intern();
 	}
 
 }
