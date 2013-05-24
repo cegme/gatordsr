@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Pattern;
 
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
@@ -139,6 +140,7 @@ public class CorpusBatchProcessor {
 		}
 	}
 
+	final Pattern pattern = Pattern.compile(query);
 	private void process(SIWrapper siw) {
 		boolean res = false;
 		if (siw.getStreamItem().getBody() != null) {
@@ -149,7 +151,10 @@ public class CorpusBatchProcessor {
 				// .replaceAll("\\s+", " ").replaceAll("(\r\n)+",
 				// "\r\n").replaceAll("(\n)+", "\n")
 				// .replaceAll("(\r)+", "\r").toLowerCase();
-				res = strEnglish.contains(query);
+			
+				//res = strEnglish.contains(query);
+				
+				res = pattern.matcher(strEnglish).find();
 			} else
 				res = false;
 		}
