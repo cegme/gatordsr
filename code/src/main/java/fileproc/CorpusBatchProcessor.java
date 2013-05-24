@@ -44,7 +44,7 @@ public class CorpusBatchProcessor {
 	long														fileCount				= 0;
 	AtomicLong											siCount					= new AtomicLong(0);
 	AtomicLong											siFilteredCount	= new AtomicLong(0);
-	// AtomicLong processedSize = new AtomicLong(0);
+	AtomicLong processedSize = new AtomicLong(0);
 	public static final DateFormat	format					= new SimpleDateFormat("yyyy-MM-dd-HH");
 	public static final DateFormat	logTimeFormat		= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -172,7 +172,7 @@ public class CorpusBatchProcessor {
 
 								long size = FileProcessor.getLocalFileSize(fileStr);
 								System.out.print(FileProcessor.fileSizeToStr(size));
-								// processedSize.addAndGet(size);
+								 processedSize.addAndGet(size);
 								report(logTimeFormat);
 
 							} catch (Exception e) {
@@ -204,7 +204,9 @@ public class CorpusBatchProcessor {
 
 	private void report(DateFormat df) {
 		System.out.println(df.format(new Date()) + " Total " + fileCount + " Files "
-		// + FileProcessor.fileSizeToStr(processedSize.get())
+		+ //FileProcessor.fileSizeToStr(
+				processedSize.get()
+				//)
 				+ " SIs: " + siCount.get() + " +SIs:" + siFilteredCount);
 	}
 
