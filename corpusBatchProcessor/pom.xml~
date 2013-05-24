@@ -8,73 +8,40 @@
   <name>corpusBatchProcessor</name>
   <url>http://maven.apache.org</url>
   <build>
- 
         <plugins>
- 
-            <plugin>
- 
-                <artifactId>maven-jar-plugin</artifactId>
- 
-                <configuration>
- 
-                    <archive>
- 
-                        <manifest>
- 
-                            <mainClass>edu.ufl.cise.CorpusBatchProcessor
- 
-                            </mainClass>
- 
-                        </manifest>
- 
+            <plugin> 
+                <artifactId>maven-jar-plugin</artifactId> 
+                <configuration> 
+                    <archive> 
+                        <manifest> 
+                            <mainClass>edu.ufl.cise.CorpusBatchProcessor</mainClass> 
+                        </manifest> 
+                    </archive> 
+                </configuration> 
+            </plugin> 
+            <plugin> 
+                <artifactId>maven-assembly-plugin</artifactId> 
+                <configuration> 
+                    <descriptorRefs> 
+                        <descriptorRef>jar-with-dependencies</descriptorRef> 
+                    </descriptorRefs> 
+   		    <archive> 
+                        <manifest> 
+                             <mainClass>edu.ufl.cise.CorpusBatchProcessor</mainClass> 
+                        </manifest> 
                     </archive>
- 
-                </configuration>
- 
-            </plugin>
- 
-            <plugin>
- 
-                <artifactId>maven-assembly-plugin</artifactId>
- 
-                <configuration>
- 
-                    <descriptorRefs>
- 
-                        <descriptorRef>jar-with-dependencies
- 
-                        </descriptorRef>
- 
-                    </descriptorRefs>
- 
-                </configuration>
- 
-                <executions>
- 
-                    <execution>
- 
-                        <id>make-my-jar-with-dependencies</id>
- 
-                        <phase>package</phase>
- 
-                        <goals>
- 
-                            <goal>single</goal>
- 
-                        </goals>
- 
-                    </execution>
- 
-                </executions>
- 
-            </plugin>
- 
-
- 
-        </plugins>
- 
-
- 
+                </configuration> 
+                <executions> 
+                    <execution> 
+                        <id>make-my-jar-with-dependencies</id> 
+                        <phase>package</phase> 
+                        <goals> 
+                            <goal>single</goal> 
+                        </goals> 
+                    </execution> 
+                </executions> 
+            </plugin> 
+        </plugins> 
     </build>
   <dependencies>
     <dependency>
@@ -88,6 +55,12 @@
     <artifactId>libthrift</artifactId>
     <version>0.9.0</version>
     <scope>compile</scope>
-  </dependency>
+</dependency>
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>1.7.5</version>
+</dependency>
+            
   </dependencies>
 </project>
