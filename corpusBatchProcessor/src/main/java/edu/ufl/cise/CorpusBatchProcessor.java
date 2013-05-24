@@ -174,7 +174,8 @@ public class CorpusBatchProcessor {
 		int threadCount;
 
 		Calendar c = Calendar.getInstance();
-		c.setTime(format.parse("2011-10-05-00"));
+	//	c.setTime(format.parse("2011-10-05-00"));
+		c.setTime(format.parse("2012-08-18-01"));
 		Calendar cEnd = Calendar.getInstance();
 
 		File f = new File(DIR_LOCAL);
@@ -186,7 +187,8 @@ public class CorpusBatchProcessor {
 			threadCount = 2;
 		} else {
 			System.out.println("Server run.");
-			cEnd.setTime(format.parse("2013-02-13-23"));
+			//cEnd.setTime(format.parse("2013-02-13-23"));
+			cEnd.setTime(format.parse("2012-08-18-01"));
 			threadCount = 31;
 		}
 
