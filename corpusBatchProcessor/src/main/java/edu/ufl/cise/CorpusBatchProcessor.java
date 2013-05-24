@@ -82,7 +82,7 @@ public class CorpusBatchProcessor {
 			//	processTokens(si);
 
 				 SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
-				 process(siw);
+			//	 process(siw);
 
 				si.clear();
 				index = index + 1;
@@ -152,9 +152,9 @@ public class CorpusBatchProcessor {
 				// "\r\n").replaceAll("(\n)+", "\n")
 				// .replaceAll("(\r)+", "\r").toLowerCase();
 			
-				//res = strEnglish.contains(query);
+				res = strEnglish.contains(query);
 				
-				res = pattern.matcher(strEnglish).find();
+				//res = pattern.matcher(strEnglish).find();
 			} else
 				res = false;
 		}
@@ -174,7 +174,8 @@ public class CorpusBatchProcessor {
 		int threadCount;
 
 		Calendar c = Calendar.getInstance();
-		c.setTime(format.parse("2011-10-05-00"));
+	//	c.setTime(format.parse("2011-10-05-00"));
+		c.setTime(format.parse("2012-08-18-01"));
 		Calendar cEnd = Calendar.getInstance();
 
 		File f = new File(DIR_LOCAL);
@@ -186,11 +187,12 @@ public class CorpusBatchProcessor {
 			threadCount = 2;
 		} else {
 			System.out.println("Server run.");
-			cEnd.setTime(format.parse("2013-02-13-23"));
+			//cEnd.setTime(format.parse("2013-02-13-23"));
+			cEnd.setTime(format.parse("2012-08-18-01"));
 			threadCount = 31;
 		}
 
-		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+//		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		while (!(c.getTime().compareTo(cEnd.getTime()) > 0)) {
 			try {
 				final String date = format.format(c.getTime());
@@ -201,8 +203,8 @@ public class CorpusBatchProcessor {
 					final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
 
 					//
-					Runnable worker = new Thread(fileCount + " " + date + "/" + fileName) {
-						public void run() {
+//					Runnable worker = new Thread(fileCount + " " + date + "/" + fileName) {
+//						public void run() {
 							//
 
 							try {
@@ -218,9 +220,9 @@ public class CorpusBatchProcessor {
 
 							//
 							//
-						};
-					};
-					executor.execute(worker);
+//						};
+//					};
+//					executor.execute(worker);
 					//
 					//
 
@@ -232,14 +234,14 @@ public class CorpusBatchProcessor {
 		}
 
 		//
-		executor.shutdown();
-		while (!executor.isTerminated()) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+//		executor.shutdown();
+//		while (!executor.isTerminated()) {
+//			try {
+//				Thread.sleep(500);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 		//
 
 		report(logTimeFormat, "Finished all threads");
