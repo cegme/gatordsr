@@ -2,6 +2,7 @@ package edu.ufl.cise.pipeline
 
 import java.lang._
 import java.util.ArrayList
+import scala.collection.JavaConversions._
 
 class Pattern(eid : Int, sid : Int, pattern : String, dir : Integer){
   var entity : String = null
@@ -12,9 +13,10 @@ class Pattern(eid : Int, sid : Int, pattern : String, dir : Integer){
 
 class Entity(val entity_type: String, val group: String, val topic_id: String) {
 
-  def this(entity_type: String, group: String, topic_id: String, human_readable: String) = {
+  def this(entity_type: String, group: String, topic_id: String, alias: List[String]) = {
     this(entity_type, group, topic_id)
-    add(human_readable)
+    val list =  alias.toList
+   names.addAll(list)
   }
 
   val names = new ArrayList[String] // the list of alias names for Entity
