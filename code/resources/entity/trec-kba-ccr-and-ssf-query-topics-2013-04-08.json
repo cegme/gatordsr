@@ -563,463 +563,463 @@
             "entity_type": "PER", 
             "group": "french", 
             "target_id": "http://en.wikipedia.org/wiki/Ana%C3%AFs_Croze",
-            "alias": [""]
+            "alias": ["Anaïs Croze", "Anais Croze"]
         }, 
         {
             "entity_type": "PER", 
             "group": "french", 
             "target_id": "http://en.wikipedia.org/wiki/Gwena%C3%ABlle_Aubry",
-            "alias": [""]
+            "alias": ["Gwenaëlle Aubry", "Gwenaelle Aubry"]
         }, 
         {
             "entity_type": "PER", 
             "group": "french", 
             "target_id": "http://en.wikipedia.org/wiki/Nicolas_Sch%C3%B6ffer",
-            "alias": [""]
+            "alias": ["Nicolas Schöffer", "Nicolas Schoffer"]
         }, 
         {
             "entity_type": "PER", 
             "group": "french", 
             "target_id": "http://en.wikipedia.org/wiki/Th%C3%A9o_Mercier",
-            "alias": [""]
+            "alias": ["Théo Mercier", "Theo Mercier"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hep", 
             "target_id": "http://en.wikipedia.org/wiki/Chiara_Nappi",
-            "alias": [""]
+            "alias": ["Chiara Nappi"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hep", 
             "target_id": "http://en.wikipedia.org/wiki/Eva_Silverstein",
-            "alias": [""]
+            "alias": ["Eva Silverstein"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hep", 
             "target_id": "http://en.wikipedia.org/wiki/Matt_Witten",
-            "alias": [""]
+            "alias": ["Matt Witten"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hep", 
             "target_id": "http://en.wikipedia.org/wiki/Shamit_Kachru",
-            "alias": [""]
+            "alias": ["Shamit Kachru"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Angelo_Savoldi",
-            "alias": [""]
+            "alias": ["Angelo Savoldi"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Bernard_Kenny",
-            "alias": [""]
+            "alias": ["Bernard Kenny"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Bob_Bert",
-            "alias": [""]
+            "alias": ["Bob Bert"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Carl_Chang_(tennis)",
-            "alias": [""]
+            "alias": ["Carl Chang tennis", "Carl Chang"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Carla_Katz",
-            "alias": [""]
+            "alias": ["Carla Katz"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Derrick_Alston",
-            "alias": [""]
+            "alias": ["Derrick Alston"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Frank_Winters",
-            "alias": [""]
+            "alias": ["Frank Winters"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Henry_Gutierrez",
-            "alias": [""]
+            "alias": ["Henry Gutierrez"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Jack_Lazorko",
-            "alias": [""]
+            "alias": ["Jack Lazorko"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Jeff_Tamarkin",
-            "alias": [""]
+            "alias": ["Jeff Tamarkin"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Joanne_Borgella",
-            "alias": [""]
+            "alias": ["Joanne Borgella"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Ken_Freedman",
-            "alias": [""]
+            "alias": ["Ken Freedman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Klaus_Grutzka",
-            "alias": [""]
+            "alias": ["Klaus Grutzka"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Mark_SaFranko",
-            "alias": [""]
+            "alias": ["Mark SaFranko"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Maurice_Fitzgibbons",
-            "alias": [""]
+            "alias": ["Maurice Fitzgibbons"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Pat_Dapuzzo",
-            "alias": [""]
+            "alias": ["Pat Dapuzzo"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Ruben_J._Ramos",
-            "alias": [""]
+            "alias": ["Ruben J. Ramos", "Ruben J Ramos", "Ruben Ramos"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Tilo_Rivas",
-            "alias": [""]
+            "alias": ["Tilo Rivas"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/William_H._Miller_(writer)",
-            "alias": [""]
+            "alias": ["William H. Miller writer", "William H. Miller", "William H Miller", "William Miller"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Aharon_Barak",
-            "alias": [""]
+            "alias": ["Aharon Barak"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Alex_Kapranos",
-            "alias": [""]
+            "alias": ["Alex Kapranos"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Alexander_McCall_Smith",
-            "alias": [""]
+            "alias": ["Alexander McCall Smith"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Annie_Laurie_Gaylor",
-            "alias": [""]
+            "alias": ["Annie Laurie Gaylor"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Bill_Coen",
-            "alias": [""]
+            "alias": ["Bill Coen"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Boris_Berezovsky_(businessman)",
-            "alias": [""]
+            "alias": ["Boris Berezovsky businessman", "Boris Berezovsky"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Boris_Berezovsky_(pianist)",
-            "alias": [""]
+            "alias": ["Boris Berezovsky pianist", "Boris Berezovsky"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Charlie_Savage",
-            "alias": [""]
+            "alias": ["Charlie Savage"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Darren_Rowse",
-            "alias": [""]
+            "alias": ["Darren Rowse"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Douglas_Carswell",
-            "alias": [""]
+            "alias": ["Douglas Carswell"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Frederick_M._Lawrence",
-            "alias": [""]
+            "alias": ["Frederick M. Lawrence", "Fredrick M Lawrence", "Fredrick Lawrence"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Ikuhisa_Minowa",
-            "alias": [""]
+            "alias": ["Ikuhisa Minowa"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/James_McCartney",
-            "alias": [""]
+            "alias": ["James McCartney"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Jim_Steyer",
-            "alias": [""]
+            "alias": ["Jim Steyer"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Lisa_Bloom",
-            "alias": [""]
+            "alias": ["Lisa Bloom"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Lovebug_Starski",
-            "alias": [""]
+            "alias": ["Lovebug Starski"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Mario_Garnero",
-            "alias": [""]
+            "alias": ["Mario Garnero"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Masaru_Emoto",
-            "alias": [""]
+            "alias": ["Masaru Emoto"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Nassim_Nicholas_Taleb",
-            "alias": [""]
+            "alias": ["Nassim Nicholas Taleb"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Rodrigo_Pimentel",
-            "alias": [""]
+            "alias": ["Rodrigo Pimentel"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Roustam_Tariko",
-            "alias": [""]
+            "alias": ["Roustam Tariko"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Ruth_Rendell",
-            "alias": [""]
+            "alias": ["Ruth Rendell"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Satoshi_Ishii",
-            "alias": [""]
+            "alias": ["Satoshi Ishii"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Vladimir_Potanin",
-            "alias": [""]
+            "alias": ["Vladimir Potanin"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/William_Cohen",
-            "alias": [""]
+            "alias": ["William Cohen"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/William_D._Cohan",
-            "alias": [""]
+            "alias": ["William D. Cohan", "William D Cohan", "William Cohan"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/William_H._Gates,_Sr",
-            "alias": [""]
+            "alias": ["William H. Gates, Sr", "William H. Gates", "William H Gates", "William Gates", "Bill Gates"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Buddy_MacKay",
-            "alias": [""]
+            "alias": ["Buddy MacKay"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Chuck_Pankow",
-            "alias": [""]
+            "alias": ["Chuck Pankow"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Haven_Denney",
-            "alias": [""]
+            "alias": ["Haven Denney"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Jeremy_McKinnon",
-            "alias": [""]
+            "alias": ["Jeremy McKinnon"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Joey_Mantia",
-            "alias": [""]
+            "alias": ["Joey Mantia"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Judd_Davis",
-            "alias": [""]
+            "alias": ["Judd Davis"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Lorenzo_Williams_(basketball)",
-            "alias": [""]
+            "alias": ["Lorenzo Williams basketball", "Lorenzo Williams"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Randy_Ewers",
-            "alias": [""]
+            "alias": ["Randy Ewers"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Reid_Nichols",
-            "alias": [""]
+            "alias": ["Reid Nichols"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Scot_Brantley",
-            "alias": [""]
+            "alias": ["Scot Brantley"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Sean_Hampton",
-            "alias": [""]
+            "alias": ["Sean Hampton"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Travis_Mays",
-            "alias": [""]
+            "alias": ["Travis Mays"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/BartowMcDonald",
-            "alias": [""]
+            "alias": ["BartowMcDonald", "Bartow McDonald"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/KentGuinn4Mayor",
-            "alias": [""]
+            "alias": ["KentGuinn4Mayor", "Kent Guinn 4 Mayor", "Ken Guinn"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/bobplaisted",
-            "alias": [""]
+            "alias": ["bobplaisted", "bob plaisted"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/redmondmusic",
-            "alias": [""]
+            "alias": ["redmondmusic", "redmond music"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/sandrafriend",
-            "alias": [""]
+            "alias": ["sandrafriend", "sandra friend"]
         }, 
         {
             "entity_type": "PER", 
             "group": "screenwriters", 
             "target_id": "http://en.wikipedia.org/wiki/Joshua_Zetumer",
-            "alias": [""]
+            "alias": ["Joshua Zetumer"]
         }, 
         {
             "entity_type": "PER", 
             "group": "screenwriters", 
             "target_id": "https://twitter.com/MissMarcel",
-            "alias": [""]
+            "alias": ["MissMarcel", "Miss Marcel"]
         }, 
         {
             "entity_type": "PER", 
             "group": "turing", 
             "target_id": "http://en.wikipedia.org/wiki/Barbara_Liskov",
-            "alias": [""]
+            "alias": ["Barbara Liskov"]
         }, 
         {
             "entity_type": "PER", 
             "group": "turing", 
             "target_id": "http://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3",
-            "alias": [""]
+            "alias": ["Fernando J. Corbató", "Fernando J Corbató", "Fernando Corbató", "Fernando Corbato"]
         }, 
         {
             "entity_type": "PER", 
             "group": "turing", 
             "target_id": "http://en.wikipedia.org/wiki/Juris_Hartmanis",
-            "alias": [""]
+            "alias": ["Juris Hartmanis"]
         }, 
         {
             "entity_type": "PER", 
             "group": "turing", 
             "target_id": "http://en.wikipedia.org/wiki/Shafi_Goldwasser",
-            "alias": [""]
+            "alias": ["Shafi Goldwasser"]
         }
     ], 
     "topic_set_id": "kba-2013-ccr-and-ssf"
