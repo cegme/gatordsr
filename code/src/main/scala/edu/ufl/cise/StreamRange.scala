@@ -3,13 +3,10 @@ package edu.ufl.cise
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.LinkedList
 
-import edu.ufl.cise.util.URLLineReader
-import fileproc.DirList
 
 /**
  * StreamRange class is used to create a builder that specifies a
