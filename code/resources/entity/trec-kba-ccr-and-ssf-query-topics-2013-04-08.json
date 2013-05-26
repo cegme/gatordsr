@@ -1,6 +1,12 @@
 {
     "$schema": "http://trec-kba.org/schemas/v1.1/filter-topics.json", 
     "targets": [
+    {
+         "entity_type": "FAC",                                                                                                                                                                               
+               "group": "danville",                                                                                                                                                                                
+             "target_id": "http://testEntity",                                                                                                                                    
+               "alias": ["Obama", "Barak Obama"]         
+    },
         {
             "entity_type": "FAC", 
             "group": "danville", 
