@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransportException;
@@ -85,12 +86,14 @@ public class CorpusBatchProcessor {
 	private static InputStream grabGPGLocal(String date, String fileName, String fileStr) {
 		// System.out.println(date + "/" + fileName);
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
-				+ fileStr + " | xz --decompress";
+				+ fileStr;
+				//+ fileStr + " | xz --decompress";
 		return FileProcessor.runBinaryShellCommand(command);
 	}
 
 	private void getStreams(String day, int hour, String fileName, InputStream is) throws Exception {
-		TIOStreamTransport transport = new TIOStreamTransport(is);
+    XZCompressorInputStream bais = new XZCompressorInputStream(is);
+		TIOStreamTransport transport = new TIOStreamTransport(bais);
 		transport.open();
 		TBinaryProtocol protocol = new TBinaryProtocol(transport);
 
