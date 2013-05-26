@@ -24,7 +24,7 @@ object Preprocessor {
     entities.foreach( target => {
       val entity : Map[String,Any] = target.asInstanceOf[Map[String, Any]]
       entity_list.add(new Entity(entity.get("entity_type").toString, 
-        entity.get("group").toString, entity.get("target_id").toString))
+        entity.get("group").toString, entity.get("target_id").toString, entity.get("target_id").toString))
     })
     // call extractWiki
   }

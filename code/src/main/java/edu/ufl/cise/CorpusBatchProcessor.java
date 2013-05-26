@@ -20,7 +20,9 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransportException;
 
+import edu.ufl.cise.pipeline.Entity;
 import edu.ufl.cise.pipeline.Pipeline;
+import edu.ufl.cise.pipeline.Preprocessor;
 
 import streamcorpus.Sentence;
 import streamcorpus.StreamItem;
@@ -141,7 +143,7 @@ public class CorpusBatchProcessor {
 	}
 
 	private void process(SIWrapper siw) {
-		boolean res = false;
+
 		if (siw.getStreamItem().getBody() != null) {
 			String document = siw.getStreamItem().getBody().getClean_visible();
 			if (document != null) {
@@ -151,16 +153,20 @@ public class CorpusBatchProcessor {
 				// "\r\n").replaceAll("(\n)+", "\n")
 				// .replaceAll("(\r)+", "\r").toLowerCase();
 
-				// res = strEnglish.contains(query);
+				boolean printedFileName = false;
+				for (Entity entity : Preprocessor.entity_list()) {
+					if (strEnglish.contains(entity.topic_id())) { // TODO change to actual
+																												// readbale format.
+						if (!printedFileName)
+							System.out.print(siw.fileName + "/" + siw.hour + "/" + siw.getIndex() + ": ");
+						System.out.print(entity.topic_id() + "\t");
+						siFilteredCount.incrementAndGet();
+					}
+				}
 
-				res = pattern.matcher(strEnglish).find();
-			} else
-				res = false;
-		}
-		if (res == true) {
-			siFilteredCount.incrementAndGet();
-			// System.out.println(siw.getIndex() + "[~]" +
-			// siw.getStreamItem().getBody().getClean_visible());
+				// res = strEnglish.contains(query);
+				// res = pattern.matcher(strEnglish).find();
+			}
 		}
 	}
 
