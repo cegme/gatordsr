@@ -191,7 +191,7 @@ class Pipeline(patterns:ArrayList[String], queries:ArrayList[SSFQuery], dirs:Arr
     Pipeline.num.incrementAndGet
     // for each sentence, match the pattern
     // TODO: get the sentence string
-    si.body.sentences.get("lingpipe").toArray(Array[Sentence]()).foreach(sentence => {
+    si.body.sentences.get("lingpipe").toArray(Array[streamcorpus.Sentence]()).foreach(sentence => {
       //println(sentence.getTokens().toArray().mkString(" "))
       val tokens = sentence.getTokens().toArray(Array[Token]())
       matches(transform(tokens))

@@ -1,23 +1,19 @@
 package edu.ufl.cise
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.generic.IdleSignalling
 import scala.collection.generic.Signalling
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.WeakHashMap
 import scala.collection.parallel
 import scala.collection.parallel.SeqSplitter
-import scala.sys.process.stringToProcess
 
 import com.google.common.hash.BloomFilter
 import com.google.common.hash.Funnels
 
-import edu.ufl.cise.util.URLLineReader
-import fileproc.RemoteGPGRetrieval
-import streamcorpus.StreamItem
 import spark.RDD
 import spark.SparkContext
-import spark.SparkContext._
+import streamcorpus.StreamItem
 
 
 class CachedFaucet(

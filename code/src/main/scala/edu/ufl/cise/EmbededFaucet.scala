@@ -15,7 +15,6 @@ import org.apache.thrift.transport.TIOStreamTransport
 import org.apache.thrift.transport.TTransportException
 
 import edu.ufl.cise.util.StreamItemWrapper
-import fileproc.DirList
 import streamcorpus.StreamItem
 
 object EmbededFaucet extends Logging {
