@@ -23,8 +23,10 @@ object Preprocessor {
     val entities : List[Any] = map.get("targets").get.asInstanceOf[List[Any]]
     entities.foreach( target => {
       val entity : Map[String,Any] = target.asInstanceOf[Map[String, Any]]
+      val alias = entity.get("alias").get.asInstanceOf[List[String]]
+      
       entity_list.add(new Entity(entity.get("entity_type").toString, 
-        entity.get("group").toString, entity.get("target_id").toString, entity.get("target_id").toString))
+        entity.get("group").toString, entity.get("target_id").toString, alias))
     })
     // call extractWiki
   }
@@ -69,7 +71,7 @@ object Preprocessor {
   }
   
   def main(args:Array[String]){
-    // initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json")
+     initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json")
     // initSlot("affiliate")
   }
   
