@@ -63,8 +63,8 @@ public class CorpusBatchProcessor {
 	final int												indexOfThisProcess;
 	final int												totalNumProcesses;
 
-	Pipeline												pipe						= Pipeline.getPipeline(new SSFQuery("Obama",
-																											"president of"));
+	Pipeline												pipe						= Pipeline.getPipeline(Pipeline.patterns(),
+																											Pipeline.queries(), Pipeline.dirs());
 	final Pattern										pattern					= Pattern.compile(query);
 
 	/**
