@@ -1,4 +1,4 @@
-package fileproc;
+package edu.ufl.cise;
 
 import streamcorpus.StreamItem;
 
