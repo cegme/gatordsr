@@ -4,6 +4,8 @@ version := "0.01"
 
 scalaVersion := "2.9.2"
 
+seq(com.github.retronym.SbtOneJar.oneJarSettings: _*)
+
 scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 //scalacOptions += "memoryMaximumSize=9G"
