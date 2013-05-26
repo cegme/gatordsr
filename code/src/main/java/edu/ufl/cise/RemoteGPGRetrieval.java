@@ -1,4 +1,4 @@
-package fileproc;
+package edu.ufl.cise;
 
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -13,8 +13,8 @@ import streamcorpus.StreamItem;
 public class RemoteGPGRetrieval {
 
 	public static void main(String[] args) {
-		String fileName = "WEBLOG-89-15957f5baef21e2cda6dca887b96e23e-e3bb3adf7504546644d4bc2d62108064.sc.xz.gpg";
-		getStreams("2012-11-03-05", fileName);
+		String fileName = "social-458-b51e990263a58e94a88d22a8be8502d1-d71caa2571e6e6aa16da0cdae2a4dfc7.sc.xz.gpg";
+		getStreams("2011-11-03-05", fileName);
 	}
 
 	public static List<StreamItem> getStreams(String date, String fileName) {
@@ -23,7 +23,8 @@ public class RemoteGPGRetrieval {
 				+ date
 				+ "/"
 				+ fileName
-				+ "' | gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt - | xz --decompress";
+				+ "' | gpg  --no-permission-warning --trust-model always --output - --decrypt - | xz --decompress";
+		System.out.println(command);
 
 		InputStream is = FileProcessor.runBinaryShellCommand(command);
 		TIOStreamTransport transport = new TIOStreamTransport(is);
@@ -45,7 +46,7 @@ public class RemoteGPGRetrieval {
 				if (si.getBody() != null
 						&& si.getBody().getClean_visible() != null) {
 					System.out.println(si.getBody().getClean_visible()
-							.substring(0, 100));
+							.substring(0, 5));
 				}
 			} catch (Exception e) {
 				exception = true;

@@ -58,10 +58,29 @@ public class CorpusBatchProcessor {
 	AtomicLong											siFilteredCount	= new AtomicLong(0);
 	public static final DateFormat	format					= new SimpleDateFormat("yyyy-MM-dd-HH");
 	public static final DateFormat	logTimeFormat		= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	final int												indexOfThisProcess;
+	final int												totalNumProcesses;
 
-	Pipeline pipe = Pipeline.getPipeline(new SSFQuery("Obama", "president of"));
-	
-	
+	Pipeline												pipe						= Pipeline.getPipeline(new SSFQuery("Obama",
+																											"president of"));
+	final Pattern										pattern					= Pattern.compile(query);
+
+	/**
+	 * gets the index of thus process and total # of processes that this process
+	 * is a member of to avoid duplicate process of corpus files.
+	 * 
+	 */
+	public CorpusBatchProcessor(int indexOfThisProcess, int totalNumProcesses) {
+		this.indexOfThisProcess = indexOfThisProcess;
+		this.totalNumProcesses = totalNumProcesses;
+
+	}
+
+	public CorpusBatchProcessor() {
+		indexOfThisProcess = -1;
+		this.totalNumProcesses = -1;
+	}
+
 	private static InputStream grabGPGLocal(String date, String fileName, String fileStr) {
 		// System.out.println(date + "/" + fileName);
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
@@ -83,51 +102,25 @@ public class CorpusBatchProcessor {
 					si.read(protocol);
 				siCount.incrementAndGet();
 				si.getBody().unsetRaw();
-				
-			//	processTokens(si);
-               // pipeline runs on the stream item
-				pipe.run(si);
-				
-				 //SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
-				 //process(siw);
+
+				// processTokens(si);
+				// pipeline runs on the stream item
+				// pipe.run(si);
+
+				SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
+				process(siw);
 
 				si.clear();
 				index = index + 1;
 			} catch (TTransportException e) {
-				processException(e);
+				tTransportExceptionPrintString(e);
 				exception = true;
 			}
 		}
 		transport.close();
 	}
 
-	private void processTokens(StreamItem si) {
-		Map<String, List<Sentence>> sentencesMap = si.getBody().getSentences();
-		Set<String> sentenceSetKeys = sentencesMap.keySet();
-		for (Iterator iterator = sentenceSetKeys.iterator(); iterator.hasNext();) {
-			String sentenceKey = (String) iterator.next();
-
-			List<Sentence> listSentence = sentencesMap.get(sentenceKey);
-			for (Sentence s : listSentence) {
-				List<Token> listToken = s.tokens;
-				for (Token t : listToken) {
-					// System.out.println(si.getBody().getClean_visible());
-					// if (si.getBody().getClean_visible().toLowerCase().contains(query))
-					// System.out.println(t.getLemma());
-					if (t.getToken() != null) {
-
-						// t.setLemma(t.getLemma().toLowerCase());
-						if (t.getToken().toLowerCase().contains(query)){
-							siFilteredCount.incrementAndGet();
-							return;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private static void processException(TTransportException e) {
+	private static void tTransportExceptionPrintString(TTransportException e) {
 		switch (e.getType()) {
 		case TTransportException.ALREADY_OPEN:
 			System.err.println("Error reading StreamItem: ALREADY_OPEN");
@@ -147,7 +140,6 @@ public class CorpusBatchProcessor {
 		}
 	}
 
-	final Pattern pattern = Pattern.compile(query);
 	private void process(SIWrapper siw) {
 		boolean res = false;
 		if (siw.getStreamItem().getBody() != null) {
@@ -158,9 +150,9 @@ public class CorpusBatchProcessor {
 				// .replaceAll("\\s+", " ").replaceAll("(\r\n)+",
 				// "\r\n").replaceAll("(\n)+", "\n")
 				// .replaceAll("(\r)+", "\r").toLowerCase();
-			
-				//res = strEnglish.contains(query);
-				
+
+				// res = strEnglish.contains(query);
+
 				res = pattern.matcher(strEnglish).find();
 			} else
 				res = false;
@@ -172,16 +164,42 @@ public class CorpusBatchProcessor {
 		}
 	}
 
+	private void process(StreamItem si) {
+		Map<String, List<Sentence>> sentencesMap = si.getBody().getSentences();
+		Set<String> sentenceSetKeys = sentencesMap.keySet();
+		for (Iterator iterator = sentenceSetKeys.iterator(); iterator.hasNext();) {
+			String sentenceKey = (String) iterator.next();
+
+			List<Sentence> listSentence = sentencesMap.get(sentenceKey);
+			for (Sentence s : listSentence) {
+				List<Token> listToken = s.tokens;
+				for (Token t : listToken) {
+					// System.out.println(si.getBody().getClean_visible());
+					// if (si.getBody().getClean_visible().toLowerCase().contains(query))
+					// System.out.println(t.getLemma());
+					if (t.getToken() != null) {
+
+						// t.setLemma(t.getLemma().toLowerCase());
+						if (t.getToken().toLowerCase().contains(query)) {
+							siFilteredCount.incrementAndGet();
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * 
 	 * @throws ParseException
 	 */
 	private void process() throws ParseException {
 
-		int threadCount;
+		// int threadCount;
 
 		Calendar c = Calendar.getInstance();
-		c.setTime(format.parse("2011-10-05-00"));
+		c.setTime(format.parse("2012-08-18-01"));
 		Calendar cEnd = Calendar.getInstance();
 
 		File f = new File(DIR_LOCAL);
@@ -190,44 +208,45 @@ public class CorpusBatchProcessor {
 		if (localRun) {
 			System.out.println("Local run.");
 			cEnd.setTime(format.parse("2011-10-07-14"));
-			threadCount = 2;
+			// threadCount = 2;
 		} else {
 			System.out.println("Server run.");
-			cEnd.setTime(format.parse("2013-02-13-23"));
-			threadCount = 31;
+			cEnd.setTime(format.parse("2012-08-18-01"));
+			// threadCount = 31;
 		}
 
-		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+		// ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		while (!(c.getTime().compareTo(cEnd.getTime()) > 0)) {
 			try {
 				final String date = format.format(c.getTime());
 
 				final List<String> fileList = DirList.getFileList(DIRECTORY + date, FILTER);
-				for (final String fileStr : fileList) {					
+				for (final String fileStr : fileList) {
 					final int hour = c.get(Calendar.HOUR_OF_DAY);
 					final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
 
 					//
-					Runnable worker = new Thread(fileCount + " " + date + "/" + fileName) {
-						public void run() {
-							//
+					// Runnable worker = new Thread(fileCount + " " + date + "/" +
+					// fileName) {
+					// public void run() {
+					//
 
-							try {
-								InputStream is = grabGPGLocal(date, fileName, fileStr);
-								getStreams(date, hour, fileName, is);
-								is.close();
+					try {
+						InputStream is = grabGPGLocal(date, fileName, fileStr);
+						getStreams(date, hour, fileName, is);
+						is.close();
 
-								fileCount.incrementAndGet();
-								report(logTimeFormat, date + "/" + fileName);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+						fileCount.incrementAndGet();
+						report(logTimeFormat, date + "/" + fileName);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 
-							//
-							//
-						};
-					};
-					executor.execute(worker);
+					//
+					//
+					// };
+					// };
+					// executor.execute(worker);
 					//
 					//
 
@@ -235,18 +254,22 @@ public class CorpusBatchProcessor {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			c.add(Calendar.HOUR, 1);
+			if (totalNumProcesses == -1)
+				c.add(Calendar.HOUR, 1);
+			else
+				c.add(Calendar.HOUR, totalNumProcesses);
+
 		}
 
 		//
-		executor.shutdown();
-		while (!executor.isTerminated()) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		// executor.shutdown();
+		// while (!executor.isTerminated()) {
+		// try {
+		// Thread.sleep(500);
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// }
 		//
 
 		report(logTimeFormat, "Finished all threads");
@@ -261,10 +284,22 @@ public class CorpusBatchProcessor {
 	 * @param args
 	 */
 	public static void main(String[] args) throws ParseException {
-		CorpusBatchProcessor cps = new CorpusBatchProcessor();
-		cps.process();
+		if (args.length == 0) {
+			CorpusBatchProcessor cps = new CorpusBatchProcessor();
+			cps.process();
+		} else if (args.length == 2) {
+			CorpusBatchProcessor cps = new CorpusBatchProcessor(Integer.parseInt(args[0]),
+					Integer.parseInt(args[0]));
+			cps.process();
+		} else {
+			System.err
+					.println("Usage: CorpusBatchProcessor indexOfThisProcess totalNumProcesses   OR just   CorpusBatchProcessor");
+			System.err
+					.println("Where totalNumProcesses is an integer  the total # of processes of CorpusBatchProcessor that run on corpus."
+							+ " indexOfThisProcess is an integer that identifies the index of this process in the total # of CorpusBatchProcessor that are running on the corpus at the same time to avoid duplicate process of corpus sections.");
+		}
+
 		// String s = new String();
 		// s.intern();
 	}
-
 }
