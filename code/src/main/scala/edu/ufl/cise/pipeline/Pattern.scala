@@ -1,24 +1,32 @@
 package edu.ufl.cise.pipeline
 
-import edu.ufl.cise.Triple
+import java.lang._
+import java.util.ArrayList
+
+class Pattern(eid : Int, sid : Int, pattern : String, dir : Integer){
+  var entity : String = null
+  var slot : String = null
+}
 
 
-class Pattern(entity:String,id:Int, slot:String, sid:Int){
-  var relation:Triple = null // generate the corresponding result relation triple
-  val regex = ("(?!"+ entity + ")" + entity + "[a-zA-Z0-9 ]*" + slot + "([a-zA-Z0-9 ]*)").r
-  //println(regex)
-  
-  def this(entity:String, slot:String) = this(entity,-1, slot, -1)
-  
-  def matches(s:String):Boolean = {
-    // TODO: return whether the target string matches the pattern
-	// TODO: generate corresponding triple result for this matched pattern
-    // regex.findFirstIn(s).
-    s match {
-      case regex => println("matches")
-    }
-    println(regex.findAllIn(s).matchData.foreach(m=> println(m.group(1))))
-    return !regex.findAllIn(s).isEmpty
+
+class Entity(val entity_type: String, val group: String, val topic_id: String) {
+
+  def this(entity_type: String, group: String, topic_id: String, human_readable: String) = {
+    this(entity_type, group, topic_id)
+    add(human_readable)
   }
-     
+
+  val names = new ArrayList[String] // the list of alias names for Entity
+
+  def add(name: String) = names.add(name) // add one more alias name for the entity
+
+}
+
+class Slot(entity_type : String, slot:String){
+
+  val names = new ArrayList[String] // the list of alias names for Slot, extracted from the WordNet
+  
+  def add(name:String) = names.add(name) // add one more alias name for the slot
+  
 }

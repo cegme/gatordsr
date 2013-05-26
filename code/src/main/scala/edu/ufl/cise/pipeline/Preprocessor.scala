@@ -55,14 +55,14 @@ object Preprocessor {
     val pa = new Slot("PER", "Affiliate")
     pa.names.toArray().foreach(s => {
       bm.names.toArray().foreach(e => {
-        pattern_list.add(new Pattern(e.asInstanceOf[String], s.asInstanceOf[String]))
+        //pattern_list.add(new Pattern(e.asInstanceOf[String], s.asInstanceOf[String]))
       })
     })
     // extract some wikipedia file
     val s = Source.fromFile("resources/test/bm.txt").mkString
     // for each pattern in the pattern list, match for some string
     pattern_list.toArray().foreach(p => {
-      if(p.asInstanceOf[Pattern].matches(s)) println("match")
+      //if(p.asInstanceOf[Pattern].matches(s)) println("match")
     })
     // TODO: how to efficiently match all that many patterns
     // Solution: one pattern for each list

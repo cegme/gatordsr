@@ -75,7 +75,6 @@ public class CorpusBatchProcessor {
 	public CorpusBatchProcessor(int indexOfThisProcess, int totalNumProcesses) {
 		this.indexOfThisProcess = indexOfThisProcess;
 		this.totalNumProcesses = totalNumProcesses;
-
 	}
 
 	public CorpusBatchProcessor() {

@@ -4,852 +4,1022 @@
         {
             "entity_type": "FAC", 
             "group": "danville", 
-            "target_id": "http://en.wikipedia.org/wiki/Stuart_Powell_Field"
+            "target_id": "http://en.wikipedia.org/wiki/Stuart_Powell_Field",
+            "alias": ["Stuart Powell Field"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "danville", 
-            "target_id": "https://twitter.com/CorbinSpeedway"
+            "target_id": "https://twitter.com/CorbinSpeedway",
+            "alias": ["CorbinSpeedway", "Corbin Speedway"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "deeplearning", 
-            "target_id": "http://en.wikipedia.org/wiki/IDSIA"
+            "target_id": "http://en.wikipedia.org/wiki/IDSIA",
+            "alias": ["IDSIA"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Corn_Belt_Power_Cooperative"
+            "target_id": "http://en.wikipedia.org/wiki/Corn_Belt_Power_Cooperative",
+            "alias": ["Corn Belt Power Cooperative"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Fargo-Moorhead_Symphony_Orchestra"
+            "target_id": "http://en.wikipedia.org/wiki/Fargo-Moorhead_Symphony_Orchestra",
+            "alias": ["Fargo-Moorhead Symphony Orchestra"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Fargo_Air_Museum"
+            "target_id": "http://en.wikipedia.org/wiki/Fargo_Air_Museum",
+            "alias": ["Fargo Air Museum"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Hjemkomst_Center"
+            "target_id": "http://en.wikipedia.org/wiki/Hjemkomst_Center",
+            "alias": ["Hjemkomst Center"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/John_D._Odegard_School_of_Aerospace_Sciences"
+            "target_id": "http://en.wikipedia.org/wiki/John_D._Odegard_School_of_Aerospace_Sciences",
+            "alias": ["John D. Odegard School of Aerospace Sciences"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Red_River_Zoo"
+            "target_id": "http://en.wikipedia.org/wiki/Red_River_Zoo",
+            "alias": ["Red River Zoo"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Star_Lite_Motel"
+            "target_id": "http://en.wikipedia.org/wiki/Star_Lite_Motel",
+            "alias": ["Star Lite Motel"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Elysian_Charter_School"
+            "target_id": "http://en.wikipedia.org/wiki/Elysian_Charter_School",
+            "alias": ["Elysian Charter School"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Stevens_Cooperative_School"
+            "target_id": "http://en.wikipedia.org/wiki/Stevens_Cooperative_School",
+            "alias": ["Stevens Cooperative School"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Weehawken_Cove"
+            "target_id": "http://en.wikipedia.org/wiki/Weehawken_Cove",
+            "alias": ["Weehawken Cove"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Copper_Basin_Railway"
+            "target_id": "http://en.wikipedia.org/wiki/Copper_Basin_Railway",
+            "alias": ["Cooper Basin Railway"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Hayden_Smelter"
+            "target_id": "http://en.wikipedia.org/wiki/Hayden_Smelter",
+            "alias": ["Hayden Smelter"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Lewis_and_Clark_Landing"
+            "target_id": "http://en.wikipedia.org/wiki/Lewis_and_Clark_Landing",
+            "alias": ["Lewis and Clark Landing"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Toquepala_mine"
+            "target_id": "http://en.wikipedia.org/wiki/Toquepala_mine",
+            "alias": ["Toquepala mine"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Appleton_Museum_of_Art"
+            "target_id": "http://en.wikipedia.org/wiki/Appleton_Museum_of_Art",
+            "alias": ["Appelton Museum of Art"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Don_Garlits_Museum_of_Drag_Racing"
+            "target_id": "http://en.wikipedia.org/wiki/Don_Garlits_Museum_of_Drag_Racing",
+            "alias": ["Don Garlits Museum of Drag Racing"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Eighth_Street_Elementary_School"
+            "target_id": "http://en.wikipedia.org/wiki/Eighth_Street_Elementary_School",
+            "alias": ["Eighth Street Elementary School"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Lake_Weir_High_School"
+            "target_id": "http://en.wikipedia.org/wiki/Lake_Weir_High_School",
+            "alias": ["Lake Weir High School"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Marion_Technical_Institute"
+            "target_id": "http://en.wikipedia.org/wiki/Marion_Technical_Institute",
+            "alias": ["Marion Technical Institute"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Osceola_Middle_School"
+            "target_id": "http://en.wikipedia.org/wiki/Osceola_Middle_School",
+            "alias": ["Osceola Middle School"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/The_Ritz_Apartment_(Ocala,_Florida)"
+            "target_id": "http://en.wikipedia.org/wiki/The_Ritz_Apartment_(Ocala,_Florida)",
+            "alias": ["The Ritz Apartment Ocala, Florida", "The Ritz Apartment" ]
         }, 
         {
             "entity_type": "ORG", 
             "group": "danville", 
-            "target_id": "http://en.wikipedia.org/wiki/Great_American_Brass_Band_Festival"
+            "target_id": "http://en.wikipedia.org/wiki/Great_American_Brass_Band_Festival",
+            "alias": ["Great American Brass Band Festival"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Innovis_Health"
+            "target_id": "http://en.wikipedia.org/wiki/Innovis_Health",
+            "alias": ["Innovis Health"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Hoboken_Reporter"
+            "target_id": "http://en.wikipedia.org/wiki/Hoboken_Reporter",
+            "alias": ["Hoboken Reporter"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Hoboken_Volunteer_Ambulance_Corps"
+            "target_id": "http://en.wikipedia.org/wiki/Hoboken_Volunteer_Ambulance_Corps",
+            "alias": ["Hoboken Volunteer Ambulance Corps"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Basic_Element_(company)"
+            "target_id": "http://en.wikipedia.org/wiki/Basic_Element_(company)",
+            "alias": ["Basic Element company", "Basic Element co", "Basic Element"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Basic_Element_(music_group)"
+            "target_id": "http://en.wikipedia.org/wiki/Basic_Element_(music_group)",
+            "alias": ["Basic Element music groups", "Basic Element music", "Basic Element"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Agroindustrial_Pomalca"
+            "target_id": "http://en.wikipedia.org/wiki/Agroindustrial_Pomalca",
+            "alias": ["Agroindustrial Pomalca"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Atacocha"
+            "target_id": "http://en.wikipedia.org/wiki/Atacocha",
+            "alias": ["Atacocha"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Austral_Group"
+            "target_id": "http://en.wikipedia.org/wiki/Austral_Group",
+            "alias": ["Austral Group"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Cementos_Lima"
+            "target_id": "http://en.wikipedia.org/wiki/Cementos_Lima",
+            "alias": ["Cementos Lima"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Dunkelvolk"
+            "target_id": "http://en.wikipedia.org/wiki/Dunkelvolk",
+            "alias": ["Dunkelvolk"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Gran%C3%A3_y_Montero"
+            "target_id": "http://en.wikipedia.org/wiki/Gran%C3%A3_y_Montero",
+            "alias": ["Granã y Montero", "Grana y Montero"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Intergroup_Financial_Services"
+            "target_id": "http://en.wikipedia.org/wiki/Intergroup_Financial_Services",
+            "alias": ["Intergroup Financial Services"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Luz_del_Sur"
+            "target_id": "http://en.wikipedia.org/wiki/Luz_del_Sur",
+            "alias": ["Luz del Sur"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/SIMSA"
+            "target_id": "http://en.wikipedia.org/wiki/SIMSA",
+            "alias": ["SIMSA"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "mining", 
-            "target_id": "http://en.wikipedia.org/wiki/Scotiabank_Per%C3%BA"
+            "target_id": "http://en.wikipedia.org/wiki/Scotiabank_Per%C3%BA",
+            "alias": ["Scotiabank Perú", "Scotiabank Peru"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "startups", 
-            "target_id": "https://twitter.com/BlossomCoffee"
+            "target_id": "https://twitter.com/BlossomCoffee",
+            "alias": ["BlossomCoffee", "Blossom Coffee"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "startups", 
-            "target_id": "https://twitter.com/FrankandOak"
+            "target_id": "https://twitter.com/FrankandOak",
+            "alias": ["FrankandOak", "Frank and Oak"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "startups", 
-            "target_id": "https://twitter.com/GandBcoffee"
+            "target_id": "https://twitter.com/GandBcoffee",
+            "alias": ["GandBcoffee"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "startups", 
-            "target_id": "https://twitter.com/WCoffeeResearch"
+            "target_id": "https://twitter.com/WCoffeeResearch",
+            "alias": ["WCoffeeResearch", "W Coffee Research"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "startups", 
-            "target_id": "https://twitter.com/evvnt"
+            "target_id": "https://twitter.com/evvnt",
+            "alias": ["evvnt"]
         }, 
         {
             "entity_type": "PER", 
             "group": "bronfman", 
-            "target_id": "http://en.wikipedia.org/wiki/Benjamin_Bronfman"
+            "target_id": "http://en.wikipedia.org/wiki/Benjamin_Bronfman",
+            "alias": ["Benjamin Bronfman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "bronfman", 
-            "target_id": "http://en.wikipedia.org/wiki/Charles_Bronfman"
+            "target_id": "http://en.wikipedia.org/wiki/Charles_Bronfman",
+            "alias": ["Charles Bronfman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "bronfman", 
-            "target_id": "http://en.wikipedia.org/wiki/Clare_Bronfman"
+            "target_id": "http://en.wikipedia.org/wiki/Clare_Bronfman",
+            "alias": ["Clare Bronfman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "bronfman", 
-            "target_id": "http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr."
+            "target_id": "http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.",
+            "alias": ["Edgar Bronfman, Jr.", "Edgar Bronfman, Jr", "Edgar Bronfman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "bronfman", 
-            "target_id": "http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr."
+            "target_id": "http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.",
+            "alias": ["Edgar Bronfman, Sr.", "Edgar Bronfman, Sr", "Edgar Bronfman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "bronfman", 
-            "target_id": "http://en.wikipedia.org/wiki/Phyllis_Lambert"
+            "target_id": "http://en.wikipedia.org/wiki/Phyllis_Lambert",
+            "alias": ["Phyllis Lambert"]
         }, 
         {
             "entity_type": "PER", 
             "group": "bronfman", 
-            "target_id": "http://en.wikipedia.org/wiki/Sara_Bronfman"
+            "target_id": "http://en.wikipedia.org/wiki/Sara_Bronfman",
+            "alias": ["Sara Bronfman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "commedians", 
-            "target_id": "http://en.wikipedia.org/wiki/DeAnne_Smith"
+            "target_id": "http://en.wikipedia.org/wiki/DeAnne_Smith",
+            "alias": ["DeAnne Smith"]
         }, 
         {
             "entity_type": "PER", 
             "group": "commedians", 
-            "target_id": "https://twitter.com/RonFunches"
+            "target_id": "https://twitter.com/RonFunches",
+            "alias": ["RonFunches", "Ron Funches"]
         }, 
         {
             "entity_type": "PER", 
             "group": "commedians", 
-            "target_id": "https://twitter.com/roryscovel"
+            "target_id": "https://twitter.com/roryscovel",
+            "alias": ["roryscovel", "rory scovel"]
         }, 
         {
             "entity_type": "PER", 
             "group": "danville", 
-            "target_id": "https://twitter.com/AlexJoHamilton"
+            "target_id": "https://twitter.com/AlexJoHamilton",
+            "alias": ["Alex Jo Hamilton", "AlexJoHamilton"]
         }, 
         {
             "entity_type": "PER", 
             "group": "danville", 
-            "target_id": "https://twitter.com/BobStovall"
+            "target_id": "https://twitter.com/BobStovall",
+            "alias": ["BobStovall", "Bob Stovall"]
         }, 
         {
             "entity_type": "PER", 
             "group": "danville", 
-            "target_id": "https://twitter.com/RobCaud"
+            "target_id": "https://twitter.com/RobCaud",
+            "alias": ["RobCaud", "Rob Caud"]
         }, 
         {
             "entity_type": "PER", 
             "group": "danville", 
-            "target_id": "https://twitter.com/danvillekyengr"
+            "target_id": "https://twitter.com/danvillekyengr",
+            "alias": ["danvillekyengr", "danville engineering", "danville ky engineering"]
         }, 
         {
             "entity_type": "PER", 
             "group": "danville", 
-            "target_id": "https://twitter.com/tonyg203"
+            "target_id": "https://twitter.com/tonyg203",
+            "alias": ["tonyg203", "Tony Gray"]
         }, 
         {
             "entity_type": "PER", 
             "group": "danville", 
-            "target_id": "https://twitter.com/urbren00"
+            "target_id": "https://twitter.com/urbren00",
+            "alias": ["urbren00", "Brent Faulkner"]
         }, 
         {
             "entity_type": "PER", 
             "group": "deeplearning", 
-            "target_id": "http://en.wikipedia.org/wiki/Geoffrey_E._Hinton"
+            "target_id": "http://en.wikipedia.org/wiki/Geoffrey_E._Hinton",
+            "alias": ["Geoffrey E. Hinton", "Geoffrey Hinton", "Geoffrey E Hinton"]
         }, 
         {
             "entity_type": "PER", 
             "group": "deeplearning", 
-            "target_id": "http://en.wikipedia.org/wiki/L%C3%A9on_Bottou"
+            "target_id": "http://en.wikipedia.org/wiki/L%C3%A9on_Bottou",
+            "alias": ["Léon Bottou", "Leon Bottou"]
         }, 
         {
             "entity_type": "PER", 
             "group": "deeplearning", 
-            "target_id": "http://en.wikipedia.org/wiki/Yann_LeCun"
+            "target_id": "http://en.wikipedia.org/wiki/Yann_LeCun",
+            "alias": ["Yann LeCun"]
         }, 
         {
             "entity_type": "PER", 
             "group": "deeplearning", 
-            "target_id": "http://en.wikipedia.org/wiki/Zoubin_Ghahramani"
+            "target_id": "http://en.wikipedia.org/wiki/Zoubin_Ghahramani",
+            "alias": ["Zoubin Ghahramani"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Blair_Thoreson"
+            "target_id": "http://en.wikipedia.org/wiki/Blair_Thoreson",
+            "alias": ["Blair Thoer"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Brenda_Weiler"
+            "target_id": "http://en.wikipedia.org/wiki/Brenda_Weiler",
+            "alias": ["Brenda Weiler"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Carey_McWilliams_(marksman)"
+            "target_id": "http://en.wikipedia.org/wiki/Carey_McWilliams_(marksman)",
+            "alias": ["Carey McWilliams", "Carey McWilliams marksman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Clark_Blaise"
+            "target_id": "http://en.wikipedia.org/wiki/Clark_Blaise",
+            "alias": ["Clark Blaise"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Daniel_J._Crothers"
+            "target_id": "http://en.wikipedia.org/wiki/Daniel_J._Crothers",
+            "alias": ["Daniel J. Crothers", "Daniel J Crothers", "Daniel Crothers"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Danny_Irmen"
+            "target_id": "http://en.wikipedia.org/wiki/Danny_Irmen",
+            "alias": ["Danny Irmen"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/David_B._Danbom"
+            "target_id": "http://en.wikipedia.org/wiki/David_B._Danbom",
+            "alias": ["David B. Danbom", "David B Danbom", "David Danbom"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Drew_Wrigley"
+            "target_id": "http://en.wikipedia.org/wiki/Drew_Wrigley",
+            "alias": ["Drew Wrigley"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Ed_Bok_Lee"
+            "target_id": "http://en.wikipedia.org/wiki/Ed_Bok_Lee",
+            "alias": ["Ed Bok Lee"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Fargo_Moorhead_Derby_Girls"
+            "target_id": "http://en.wikipedia.org/wiki/Fargo_Moorhead_Derby_Girls",
+            "alias": ["Fargo Moorhead Derby Girls"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/George_Sinner"
+            "target_id": "http://en.wikipedia.org/wiki/George_Sinner",
+            "alias": ["George Sinner"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Gretchen_Hoffman"
+            "target_id": "http://en.wikipedia.org/wiki/Gretchen_Hoffman",
+            "alias": ["Gretchen Hoffman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Jamie_Parsley"
+            "target_id": "http://en.wikipedia.org/wiki/Jamie_Parsley",
+            "alias": ["Jamie Parsley"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Jasper_Schneider"
+            "target_id": "http://en.wikipedia.org/wiki/Jasper_Schneider",
+            "alias": ["Jasper Schneider"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Jeff_Severson"
+            "target_id": "http://en.wikipedia.org/wiki/Jeff_Severson",
+            "alias": ["Jeff Severson"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Jennifer_Baumgardner"
+            "target_id": "http://en.wikipedia.org/wiki/Jennifer_Baumgardner",
+            "alias": ["Jennifer Baumgardner"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Jim_Poolman"
+            "target_id": "http://en.wikipedia.org/wiki/Jim_Poolman",
+            "alias": ["Jim Poolman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/John_H._Lang"
+            "target_id": "http://en.wikipedia.org/wiki/John_H._Lang",
+            "alias": ["John H. Lang", "John H Lang", "John Lang"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Joshua_Boschee"
+            "target_id": "http://en.wikipedia.org/wiki/Joshua_Boschee",
+            "alias": ["Joshua Boschee"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Ken_Fowler"
+            "target_id": "http://en.wikipedia.org/wiki/Ken_Fowler",
+            "alias": ["Ken Fowler"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Keri_Hehn"
+            "target_id": "http://en.wikipedia.org/wiki/Keri_Hehn",
+            "alias": ["Keri Hehn"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Olaus_Murie"
+            "target_id": "http://en.wikipedia.org/wiki/Olaus_Murie",
+            "alias": ["Olaus Murie"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Paul_Johnsgard"
+            "target_id": "http://en.wikipedia.org/wiki/Paul_Johnsgard",
+            "alias": ["Paul Johnsgard"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Paul_Marquart"
+            "target_id": "http://en.wikipedia.org/wiki/Paul_Marquart",
+            "alias": ["Paul Marquart"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Richard_Edlund"
+            "target_id": "http://en.wikipedia.org/wiki/Richard_Edlund",
+            "alias": ["Richard Edlund"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Richard_W._Goldberg"
+            "target_id": "http://en.wikipedia.org/wiki/Richard_W._Goldberg",
+            "alias": ["Richard W. Goldberg", "Richard W Goldberg", "Richard Goldberg"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/Susan_Krieg"
+            "target_id": "http://en.wikipedia.org/wiki/Susan_Krieg",
+            "alias": ["Susan Krieg"]
         }, 
         {
             "entity_type": "PER", 
             "group": "fargo", 
-            "target_id": "http://en.wikipedia.org/wiki/William_P._Gerberding"
+            "target_id": "http://en.wikipedia.org/wiki/William_P._Gerberding",
+            "alias": ["William P. Gerberding", "William P Gerberding", "William Gerberding"]
         }, 
         {
             "entity_type": "PER", 
             "group": "french", 
-            "target_id": "http://en.wikipedia.org/wiki/Ana%C3%AFs_Croze"
+            "target_id": "http://en.wikipedia.org/wiki/Ana%C3%AFs_Croze",
+            "alias": ["Anaïs Croze", "Anais Croze"]
         }, 
         {
             "entity_type": "PER", 
             "group": "french", 
-            "target_id": "http://en.wikipedia.org/wiki/Gwena%C3%ABlle_Aubry"
+            "target_id": "http://en.wikipedia.org/wiki/Gwena%C3%ABlle_Aubry",
+            "alias": ["Gwenaëlle Aubry", "Gwenaelle Aubry"]
         }, 
         {
             "entity_type": "PER", 
             "group": "french", 
-            "target_id": "http://en.wikipedia.org/wiki/Nicolas_Sch%C3%B6ffer"
+            "target_id": "http://en.wikipedia.org/wiki/Nicolas_Sch%C3%B6ffer",
+            "alias": ["Nicolas Schöffer", "Nicolas Schoffer"]
         }, 
         {
             "entity_type": "PER", 
             "group": "french", 
-            "target_id": "http://en.wikipedia.org/wiki/Th%C3%A9o_Mercier"
+            "target_id": "http://en.wikipedia.org/wiki/Th%C3%A9o_Mercier",
+            "alias": ["Théo Mercier", "Theo Mercier"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hep", 
-            "target_id": "http://en.wikipedia.org/wiki/Chiara_Nappi"
+            "target_id": "http://en.wikipedia.org/wiki/Chiara_Nappi",
+            "alias": ["Chiara Nappi"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hep", 
-            "target_id": "http://en.wikipedia.org/wiki/Eva_Silverstein"
+            "target_id": "http://en.wikipedia.org/wiki/Eva_Silverstein",
+            "alias": ["Eva Silverstein"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hep", 
-            "target_id": "http://en.wikipedia.org/wiki/Matt_Witten"
+            "target_id": "http://en.wikipedia.org/wiki/Matt_Witten",
+            "alias": ["Matt Witten"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hep", 
-            "target_id": "http://en.wikipedia.org/wiki/Shamit_Kachru"
+            "target_id": "http://en.wikipedia.org/wiki/Shamit_Kachru",
+            "alias": ["Shamit Kachru"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Angelo_Savoldi"
+            "target_id": "http://en.wikipedia.org/wiki/Angelo_Savoldi",
+            "alias": ["Angelo Savoldi"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Bernard_Kenny"
+            "target_id": "http://en.wikipedia.org/wiki/Bernard_Kenny",
+            "alias": ["Bernard Kenny"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Bob_Bert"
+            "target_id": "http://en.wikipedia.org/wiki/Bob_Bert",
+            "alias": ["Bob Bert"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Carl_Chang_(tennis)"
+            "target_id": "http://en.wikipedia.org/wiki/Carl_Chang_(tennis)",
+            "alias": ["Carl Chang tennis", "Carl Chang"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Carla_Katz"
+            "target_id": "http://en.wikipedia.org/wiki/Carla_Katz",
+            "alias": ["Carla Katz"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Derrick_Alston"
+            "target_id": "http://en.wikipedia.org/wiki/Derrick_Alston",
+            "alias": ["Derrick Alston"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Frank_Winters"
+            "target_id": "http://en.wikipedia.org/wiki/Frank_Winters",
+            "alias": ["Frank Winters"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Henry_Gutierrez"
+            "target_id": "http://en.wikipedia.org/wiki/Henry_Gutierrez",
+            "alias": ["Henry Gutierrez"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Jack_Lazorko"
+            "target_id": "http://en.wikipedia.org/wiki/Jack_Lazorko",
+            "alias": ["Jack Lazorko"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Jeff_Tamarkin"
+            "target_id": "http://en.wikipedia.org/wiki/Jeff_Tamarkin",
+            "alias": ["Jeff Tamarkin"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Joanne_Borgella"
+            "target_id": "http://en.wikipedia.org/wiki/Joanne_Borgella",
+            "alias": ["Joanne Borgella"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Ken_Freedman"
+            "target_id": "http://en.wikipedia.org/wiki/Ken_Freedman",
+            "alias": ["Ken Freedman"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Klaus_Grutzka"
+            "target_id": "http://en.wikipedia.org/wiki/Klaus_Grutzka",
+            "alias": ["Klaus Grutzka"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Mark_SaFranko"
+            "target_id": "http://en.wikipedia.org/wiki/Mark_SaFranko",
+            "alias": ["Mark SaFranko"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Maurice_Fitzgibbons"
+            "target_id": "http://en.wikipedia.org/wiki/Maurice_Fitzgibbons",
+            "alias": ["Maurice Fitzgibbons"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Pat_Dapuzzo"
+            "target_id": "http://en.wikipedia.org/wiki/Pat_Dapuzzo",
+            "alias": ["Pat Dapuzzo"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Ruben_J._Ramos"
+            "target_id": "http://en.wikipedia.org/wiki/Ruben_J._Ramos",
+            "alias": ["Ruben J. Ramos", "Ruben J Ramos", "Ruben Ramos"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/Tilo_Rivas"
+            "target_id": "http://en.wikipedia.org/wiki/Tilo_Rivas",
+            "alias": ["Tilo Rivas"]
         }, 
         {
             "entity_type": "PER", 
             "group": "hoboken", 
-            "target_id": "http://en.wikipedia.org/wiki/William_H._Miller_(writer)"
+            "target_id": "http://en.wikipedia.org/wiki/William_H._Miller_(writer)",
+            "alias": ["William H. Miller writer", "William H. Miller", "William H Miller", "William Miller"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Aharon_Barak"
+            "target_id": "http://en.wikipedia.org/wiki/Aharon_Barak",
+            "alias": ["Aharon Barak"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Alex_Kapranos"
+            "target_id": "http://en.wikipedia.org/wiki/Alex_Kapranos",
+            "alias": ["Alex Kapranos"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Alexander_McCall_Smith"
+            "target_id": "http://en.wikipedia.org/wiki/Alexander_McCall_Smith",
+            "alias": ["Alexander McCall Smith"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Annie_Laurie_Gaylor"
+            "target_id": "http://en.wikipedia.org/wiki/Annie_Laurie_Gaylor",
+            "alias": ["Annie Laurie Gaylor"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Bill_Coen"
+            "target_id": "http://en.wikipedia.org/wiki/Bill_Coen",
+            "alias": ["Bill Coen"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Boris_Berezovsky_(businessman)"
+            "target_id": "http://en.wikipedia.org/wiki/Boris_Berezovsky_(businessman)",
+            "alias": ["Boris Berezovsky businessman", "Boris Berezovsky"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Boris_Berezovsky_(pianist)"
+            "target_id": "http://en.wikipedia.org/wiki/Boris_Berezovsky_(pianist)",
+            "alias": ["Boris Berezovsky pianist", "Boris Berezovsky"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Charlie_Savage"
+            "target_id": "http://en.wikipedia.org/wiki/Charlie_Savage",
+            "alias": ["Charlie Savage"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Darren_Rowse"
+            "target_id": "http://en.wikipedia.org/wiki/Darren_Rowse",
+            "alias": ["Darren Rowse"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Douglas_Carswell"
+            "target_id": "http://en.wikipedia.org/wiki/Douglas_Carswell",
+            "alias": ["Douglas Carswell"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Frederick_M._Lawrence"
+            "target_id": "http://en.wikipedia.org/wiki/Frederick_M._Lawrence",
+            "alias": ["Frederick M. Lawrence", "Fredrick M Lawrence", "Fredrick Lawrence"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Ikuhisa_Minowa"
+            "target_id": "http://en.wikipedia.org/wiki/Ikuhisa_Minowa",
+            "alias": ["Ikuhisa Minowa"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/James_McCartney"
+            "target_id": "http://en.wikipedia.org/wiki/James_McCartney",
+            "alias": ["James McCartney"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Jim_Steyer"
+            "target_id": "http://en.wikipedia.org/wiki/Jim_Steyer",
+            "alias": ["Jim Steyer"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Lisa_Bloom"
+            "target_id": "http://en.wikipedia.org/wiki/Lisa_Bloom",
+            "alias": ["Lisa Bloom"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Lovebug_Starski"
+            "target_id": "http://en.wikipedia.org/wiki/Lovebug_Starski",
+            "alias": ["Lovebug Starski"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Mario_Garnero"
+            "target_id": "http://en.wikipedia.org/wiki/Mario_Garnero",
+            "alias": ["Mario Garnero"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Masaru_Emoto"
+            "target_id": "http://en.wikipedia.org/wiki/Masaru_Emoto",
+            "alias": ["Masaru Emoto"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Nassim_Nicholas_Taleb"
+            "target_id": "http://en.wikipedia.org/wiki/Nassim_Nicholas_Taleb",
+            "alias": ["Nassim Nicholas Taleb"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Rodrigo_Pimentel"
+            "target_id": "http://en.wikipedia.org/wiki/Rodrigo_Pimentel",
+            "alias": ["Rodrigo Pimentel"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Roustam_Tariko"
+            "target_id": "http://en.wikipedia.org/wiki/Roustam_Tariko",
+            "alias": ["Roustam Tariko"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Ruth_Rendell"
+            "target_id": "http://en.wikipedia.org/wiki/Ruth_Rendell",
+            "alias": ["Ruth Rendell"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Satoshi_Ishii"
+            "target_id": "http://en.wikipedia.org/wiki/Satoshi_Ishii",
+            "alias": ["Satoshi Ishii"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/Vladimir_Potanin"
+            "target_id": "http://en.wikipedia.org/wiki/Vladimir_Potanin",
+            "alias": ["Vladimir Potanin"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/William_Cohen"
+            "target_id": "http://en.wikipedia.org/wiki/William_Cohen",
+            "alias": ["William Cohen"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/William_D._Cohan"
+            "target_id": "http://en.wikipedia.org/wiki/William_D._Cohan",
+            "alias": ["William D. Cohan", "William D Cohan", "William Cohan"]
         }, 
         {
             "entity_type": "PER", 
             "group": "kba2012", 
-            "target_id": "http://en.wikipedia.org/wiki/William_H._Gates,_Sr"
+            "target_id": "http://en.wikipedia.org/wiki/William_H._Gates,_Sr",
+            "alias": ["William H. Gates, Sr", "William H. Gates", "William H Gates", "William Gates", "Bill Gates"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Buddy_MacKay"
+            "target_id": "http://en.wikipedia.org/wiki/Buddy_MacKay",
+            "alias": ["Buddy MacKay"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Chuck_Pankow"
+            "target_id": "http://en.wikipedia.org/wiki/Chuck_Pankow",
+            "alias": ["Chuck Pankow"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Haven_Denney"
+            "target_id": "http://en.wikipedia.org/wiki/Haven_Denney",
+            "alias": ["Haven Denney"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Jeremy_McKinnon"
+            "target_id": "http://en.wikipedia.org/wiki/Jeremy_McKinnon",
+            "alias": ["Jeremy McKinnon"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Joey_Mantia"
+            "target_id": "http://en.wikipedia.org/wiki/Joey_Mantia",
+            "alias": ["Joey Mantia"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Judd_Davis"
+            "target_id": "http://en.wikipedia.org/wiki/Judd_Davis",
+            "alias": ["Judd Davis"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Lorenzo_Williams_(basketball)"
+            "target_id": "http://en.wikipedia.org/wiki/Lorenzo_Williams_(basketball)",
+            "alias": ["Lorenzo Williams basketball", "Lorenzo Williams"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Randy_Ewers"
+            "target_id": "http://en.wikipedia.org/wiki/Randy_Ewers",
+            "alias": ["Randy Ewers"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Reid_Nichols"
+            "target_id": "http://en.wikipedia.org/wiki/Reid_Nichols",
+            "alias": ["Reid Nichols"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Scot_Brantley"
+            "target_id": "http://en.wikipedia.org/wiki/Scot_Brantley",
+            "alias": ["Scot Brantley"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Sean_Hampton"
+            "target_id": "http://en.wikipedia.org/wiki/Sean_Hampton",
+            "alias": ["Sean Hampton"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "http://en.wikipedia.org/wiki/Travis_Mays"
+            "target_id": "http://en.wikipedia.org/wiki/Travis_Mays",
+            "alias": ["Travis Mays"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "https://twitter.com/BartowMcDonald"
+            "target_id": "https://twitter.com/BartowMcDonald",
+            "alias": ["BartowMcDonald", "Bartow McDonald"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "https://twitter.com/KentGuinn4Mayor"
+            "target_id": "https://twitter.com/KentGuinn4Mayor",
+            "alias": ["KentGuinn4Mayor", "Kent Guinn 4 Mayor", "Ken Guinn"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "https://twitter.com/bobplaisted"
+            "target_id": "https://twitter.com/bobplaisted",
+            "alias": ["bobplaisted", "bob plaisted"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "https://twitter.com/redmondmusic"
+            "target_id": "https://twitter.com/redmondmusic",
+            "alias": ["redmondmusic", "redmond music"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
-            "target_id": "https://twitter.com/sandrafriend"
+            "target_id": "https://twitter.com/sandrafriend",
+            "alias": ["sandrafriend", "sandra friend"]
         }, 
         {
             "entity_type": "PER", 
             "group": "screenwriters", 
-            "target_id": "http://en.wikipedia.org/wiki/Joshua_Zetumer"
+            "target_id": "http://en.wikipedia.org/wiki/Joshua_Zetumer",
+            "alias": ["Joshua Zetumer"]
         }, 
         {
             "entity_type": "PER", 
             "group": "screenwriters", 
-            "target_id": "https://twitter.com/MissMarcel"
+            "target_id": "https://twitter.com/MissMarcel",
+            "alias": ["MissMarcel", "Miss Marcel"]
         }, 
         {
             "entity_type": "PER", 
             "group": "turing", 
-            "target_id": "http://en.wikipedia.org/wiki/Barbara_Liskov"
+            "target_id": "http://en.wikipedia.org/wiki/Barbara_Liskov",
+            "alias": ["Barbara Liskov"]
         }, 
         {
             "entity_type": "PER", 
             "group": "turing", 
-            "target_id": "http://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3"
+            "target_id": "http://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3",
+            "alias": ["Fernando J. Corbató", "Fernando J Corbató", "Fernando Corbató", "Fernando Corbato"]
         }, 
         {
             "entity_type": "PER", 
             "group": "turing", 
-            "target_id": "http://en.wikipedia.org/wiki/Juris_Hartmanis"
+            "target_id": "http://en.wikipedia.org/wiki/Juris_Hartmanis",
+            "alias": ["Juris Hartmanis"]
         }, 
         {
             "entity_type": "PER", 
             "group": "turing", 
-            "target_id": "http://en.wikipedia.org/wiki/Shafi_Goldwasser"
+            "target_id": "http://en.wikipedia.org/wiki/Shafi_Goldwasser",
+            "alias": ["Shafi Goldwasser"]
         }
     ], 
     "topic_set_id": "kba-2013-ccr-and-ssf"
