@@ -23,7 +23,9 @@ object Preprocessor {
     val entities : List[Any] = map.get("targets").get.asInstanceOf[List[Any]]
     entities.foreach( target => {
       val entity : Map[String,Any] = target.asInstanceOf[Map[String, Any]]
-      val alias = entity.get("alias").get.asInstanceOf[List[String]]
+      val alias = (entity.get("alias").get.asInstanceOf[List[String]]).map(s => s.toLowerCase())
+      
+     //alias =  alias.map(s => s.toLowerCase())
       
       entity_list.add(new Entity(entity.get("entity_type").toString, 
         entity.get("group").toString, entity.get("target_id").toString, alias))
