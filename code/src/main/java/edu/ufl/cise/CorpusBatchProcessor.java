@@ -154,12 +154,15 @@ public class CorpusBatchProcessor {
 
 				boolean printedFileName = false;
 				for (Entity entity : Preprocessor.entity_list()) {
-					if (strEnglish.contains(entity.topic_id())) { // TODO change to actual
-																												// readbale format.
-						if (!printedFileName)
-							System.out.print(siw.fileName + "/" + siw.hour + "/" + siw.getIndex() + ": ");
-						System.out.print(entity.topic_id() + "\t");
-						siFilteredCount.incrementAndGet();
+					for (String alias : entity.names()) {
+						if (strEnglish.contains(alias)) { // TODO change to
+																													// actual
+																													// readbale format.
+							if (!printedFileName)
+								System.out.print(siw.fileName + "/" + siw.hour + "/" + siw.getIndex() + ": ");
+							System.out.print(entity.topic_id() + "\t");
+							siFilteredCount.incrementAndGet();
+						}
 					}
 				}
 
