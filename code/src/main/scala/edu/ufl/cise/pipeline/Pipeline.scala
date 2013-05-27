@@ -41,23 +41,25 @@ object Pipeline extends Logging {
     dirs.add(dir)
   } 
   // hard-coded patterns
-  val pp0 = """(Benjamin Bronfman|Bronfman)(.*)(interest|of|with|in|son)"""
-  val pp1 = """(John H. Lang|John Lang)(.*)(join|enlist|with|transfer|serve)"""
-  val pf0 = """Stuart Powell Field(.*)(locate|in)""" 
-  val pf1 = """in(.*)Stuart Powell Field""" 
-  val pf2 = """Fargo Air Museum(.*)(locate|in)"""
-  val pf3 = """in.*Fargo Air Museum"""
-  val po0 = ("""(drink|drank|met|meet|in)(.*)(GandB Coffee|G & B|G&B|Glanville & Babinski)""" )
-  val po1 = ("""(drink|drank|met|meet|in)(.*)(Blossom Coffee)""" )
+  val pp0 = """(Benjamin Bronfman|Bronfman)(.*)(interest|of|with|in|son)""".toLowerCase()
+  val pp1 = """(John H. Lang|John Lang)(.*)(join|enlist|with|transfer|serve)""".toLowerCase()
+  val pf0 = """Stuart Powell Field(.*)(locate|in)""".toLowerCase() 
+  val pf1 = """in(.*)Stuart Powell Field""".toLowerCase() 
+  val pf2 = """Fargo Air Museum(.*)(locate|in)""".toLowerCase()
+  val pf3 = """in.*Fargo Air Museum""".toLowerCase()
+  val po0 = ("""(drink|drank|met|meet|in)(.*)(GandB Coffee|G & B|G&B|Glanville & Babinski)""" ).toLowerCase()
+  val po1 = ("""(drink|drank|met|meet|in)(.*)(Blossom Coffee)""" ).toLowerCase()
   
-  println(pp0)
-  println(pp1)
-  println(pf0)
-  println(pf1)
-  println(pf2)
-  println(pf3)
-  println(po0)
-  println(po1)
+  val pc2 = ("""bobstovall(.*)on""")
+  
+  //println(pp0)
+  //println(pp1)
+  //println(pf0)
+  //println(pf1)
+  //println(pf2)
+  //println(pf3)
+  //println(po0)
+  //println(po1)
   
   // add patterns
   addPattern("Benjamin Bronfman", "affiliate", Pipeline.pp0, 1)
@@ -68,6 +70,7 @@ object Pipeline extends Logging {
   addPattern("Fargo Air Museum", "affiliate", Pipeline.pf3, 0)
   addPattern("Glanville & Babinski Coffee", "affiliate", Pipeline.po0, 0)
   addPattern("Blossom Coffee", "affiliate", Pipeline.po1, 0)
+  addPattern("Bob Stovall", "affiliate", Pipeline.pc2, 1)
    
   //logInfo("Pre-coded patterns are loaded")
 
@@ -154,7 +157,8 @@ class Pipeline(patterns:ArrayList[String], queries:ArrayList[SSFQuery], dirs:Arr
           val np = extLeftNP(t(0))
           if (np != null){
             val triple = new Triple (queries.get(i).entity, queries.get(i).slotName, np); 
-            KBAOutput.add(triple); 
+            KBAOutput.add(triple);
+            //println(s)
             //println(triple)
           }
         }
@@ -163,7 +167,8 @@ class Pipeline(patterns:ArrayList[String], queries:ArrayList[SSFQuery], dirs:Arr
             val np = extRightNP(t(1))
             if (np != null){
               val triple = new Triple (queries.get(i).entity, queries.get(i).slotName, np); 
-              KBAOutput.add(triple); 
+              KBAOutput.add(triple);
+              //println(s)
               //println(triple)
             }
           }
@@ -178,7 +183,7 @@ class Pipeline(patterns:ArrayList[String], queries:ArrayList[SSFQuery], dirs:Arr
       sb.append(token.token).append(" ")
     })
     //println(sb)
-    sb.toString()
+    sb.toString().toLowerCase()
   }
   
   // the main logic
