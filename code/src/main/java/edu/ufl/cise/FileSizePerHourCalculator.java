@@ -33,8 +33,7 @@ public class FileSizePerHourCalculator {
 			baseDir = serverBaseDir;
 		Scanner sc = new Scanner(new File(args[0]));
 		DateFormat df = CorpusBatchProcessor.logTimeFormat;
-		Pattern p = Pattern.compile("^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})"
-				+ " Total (\\d+) Files  SIs: (\\d+) \\+SIs: ?(\\d+) (.*)");
+		Pattern p = Pattern.compile(LogReader.FILE_LOG_PATTERN);
 
 		String line;
 		Date dateStart = null;
