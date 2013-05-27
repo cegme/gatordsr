@@ -3,7 +3,6 @@ package edu.ufl.cise;
 import java.io.File;
 import java.io.InputStream;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,17 +16,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import streamcorpus.Sentence;
-import streamcorpus.StreamItem;
-import streamcorpus.Token;
 import edu.ufl.cise.pipeline.Entity;
 import edu.ufl.cise.pipeline.Pipeline;
 import edu.ufl.cise.pipeline.Preprocessor;
+
+import streamcorpus.Sentence;
+import streamcorpus.StreamItem;
+import streamcorpus.Token;
 
 /**
  * check http://sourceforge.net/projects/faststringutil/ structured graph
@@ -57,10 +56,8 @@ public class CorpusBatchProcessor {
 	final String										FILTER						= "";
 	final String										query							= "president";
 	AtomicLong											fileCount					= new AtomicLong(0);
-	AtomicLong											siCount						= new AtomicLong(0);
-	AtomicLong											siFilteredCount		= new AtomicLong(0);
-	AtomicLong											processedSize			= new AtomicLong(0);
-
+	// AtomicLong siCount = new AtomicLong(0);
+	// AtomicLong siFilteredCount = new AtomicLong(0);
 	public static final DateFormat	format						= new SimpleDateFormat("yyyy-MM-dd-HH");
 	public static final DateFormat	logTimeFormat			= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	final int												indexOfThisProcess;
@@ -88,14 +85,22 @@ public class CorpusBatchProcessor {
 	private static InputStream grabGPGLocal(String date, String fileName, String fileStr) {
 		// System.out.println(date + "/" + fileName);
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
+<<<<<<< HEAD
 				+ fileStr;
 		// + fileStr + " | xz --decompress";
+=======
+				+ fileStr + " | xz --decompress";
+>>>>>>> master
 		return FileProcessor.runBinaryShellCommand(command);
 	}
 
 	private void getStreams(String day, int hour, String fileName, InputStream is) throws Exception {
+<<<<<<< HEAD
 		XZCompressorInputStream bais = new XZCompressorInputStream(is);
 		TIOStreamTransport transport = new TIOStreamTransport(bais);
+=======
+		TIOStreamTransport transport = new TIOStreamTransport(is);
+>>>>>>> master
 		transport.open();
 		TBinaryProtocol protocol = new TBinaryProtocol(transport);
 
@@ -106,16 +111,31 @@ public class CorpusBatchProcessor {
 				StreamItem si = new StreamItem();
 				if (protocol.getTransport().isOpen())
 					si.read(protocol);
-				 siCount.incrementAndGet();
+<<<<<<< HEAD
+				// siCount.incrementAndGet();
 				// si.getBody().unsetRaw();
 
+=======
+				siCount.incrementAndGet();
+				//si.getBody().unsetRaw();
+				
+>>>>>>> master
 				// processTokens(si);
+				
+				
 				// pipeline runs on the stream item
+<<<<<<< HEAD
+				
+				pipe.run(si);
 
-				// pipe.run(si);
+				// SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
+				// process(siw);
+=======
+				pipe.run(si);
 
-				SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
-				process(siw);
+				//SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
+				//process(siw);
+>>>>>>> master
 
 				// si.clear();
 				index = index + 1;
@@ -147,14 +167,16 @@ public class CorpusBatchProcessor {
 		}
 	}
 
+<<<<<<< HEAD
 	DecimalFormat	numberFormatter	= new DecimalFormat("00");
 
 	List<Entity>	listEntity;
 
+=======
+>>>>>>> master
 	private void process(SIWrapper siw) {
-		boolean printedFileName = false;
-		if (siw.getStreamItem().getBody() != null) {
 
+<<<<<<< HEAD
 			List<Sentence> listSentence = siw.getStreamItem().getBody().getSentences().get("lingpipe");
 
 			// match all entities
@@ -165,7 +187,7 @@ public class CorpusBatchProcessor {
 					// for all sentences
 					for (int isentence = 0; isentence < listSentence.size() && !matchedEntity; isentence++) {
 						Sentence s = listSentence.get(isentence);
-						// pipe.transform(s.tokens.toArray(Token.class));
+//						pipe.transform(s.tokens.toArray(Token.class));
 						// for all tokens
 						for (int itokens = 0; itokens < s.tokens.size() && !matchedEntity; itokens++) {
 							String token = s.tokens.get(itokens).getToken();
@@ -175,29 +197,43 @@ public class CorpusBatchProcessor {
 								String alias = entity.names().get(ientity);
 								if (token.equals(alias)) {
 									if (!printedFileName) {
-										System.out.print(">" + siw.day + " | " + siw.fileName + " | " + siw.getIndex()
-												+ " | " + siw.getStreamItem().getDoc_id() + " | ");
+										System.out.print(">" + siw.day + "|" + siw.fileName + "|" + siw.getIndex()
+												+ "|" + siw.getStreamItem().getDoc_id() + "\t");
 										printedFileName = true;
 										matchedEntity = true;
-										
 									}
 
-									System.out.print(entity.topic_id() + ", ");
-									siFilteredCount.incrementAndGet();
+									System.out.print(entity.topic_id() + ",");
+									// siFilteredCount.incrementAndGet();
 								}
 							}
 						}
+=======
+		if (siw.getStreamItem().getBody() != null) {
+			String document = siw.getStreamItem().getBody().getClean_visible();
+			if (document != null) {
+				String strEnglish = document.toLowerCase();
+				// .replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
+				// .replaceAll("\\s+", " ").replaceAll("(\r\n)+",
+				// "\r\n").replaceAll("(\n)+", "\n")
+				// .replaceAll("(\r)+", "\r").toLowerCase();
+
+				boolean printedFileName = false;
+				for (Entity entity : Preprocessor.entity_list()) {
+					if (strEnglish.contains(entity.topic_id())) { // TODO change to actual
+																												// readbale format.
+						if (!printedFileName)
+							System.out.print(siw.fileName + "/" + siw.hour + "/" + siw.getIndex() + ": ");
+						System.out.print(entity.topic_id() + "\t");
+						siFilteredCount.incrementAndGet();
+>>>>>>> master
 					}
 				}
-			}
-			if (printedFileName)
-				System.out.println(); // final new line
-		}
 
-		// .replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
-		// .replaceAll("\\s+", " ").replaceAll("(\r\n)+",
-		// "\r\n").replaceAll("(\n)+", "\n")
-		// .replaceAll("(\r)+", "\r").toLowerCase();
+				// res = strEnglish.contains(query);
+				// res = pattern.matcher(strEnglish).find();
+			}
+		}
 	}
 
 	private void process(StreamItem si) {
@@ -232,9 +268,10 @@ public class CorpusBatchProcessor {
 	 */
 	private void process() throws ParseException {
 
-		int threadCount;
+		// int threadCount;
 
 		Calendar c = Calendar.getInstance();
+		c.setTime(format.parse("2012-08-18-01"));
 		Calendar cEnd = Calendar.getInstance();
 
 		File f = new File(CORPUS_DIR_LOCAL);
@@ -242,19 +279,27 @@ public class CorpusBatchProcessor {
 		final String DIRECTORY = (localRun) ? CORPUS_DIR_LOCAL : CORPUS_DIR_SERVER;
 		if (localRun) {
 			System.out.println("Local run.");
+<<<<<<< HEAD
 			// c.setTime(format.parse("2011-10-05-00"));
 			c.setTime(format.parse("2011-10-07-13"));
+=======
+>>>>>>> master
 			cEnd.setTime(format.parse("2011-10-07-14"));
-			threadCount = 2;
+			// threadCount = 2;
 		} else {
 			System.out.println("Server run.");
+<<<<<<< HEAD
 			// c.setTime(format.parse("2011-10-05-00"));
 			c.setTime(format.parse("2012-08-18-01"));
 			cEnd.setTime(format.parse("2012-08-18-01"));
 			threadCount = 32;
+=======
+			cEnd.setTime(format.parse("2012-12-31-01"));
+			// threadCount = 31;
+>>>>>>> master
 		}
 
-		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+		// ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		while (!(c.getTime().compareTo(cEnd.getTime()) > 0)) {
 			try {
 				final String date = format.format(c.getTime());
@@ -276,8 +321,6 @@ public class CorpusBatchProcessor {
 						is.close();
 
 						fileCount.incrementAndGet();
-						long size = FileProcessor.getLocalFileSize(fileStr);
-						processedSize.addAndGet(size);
 						report(logTimeFormat, date + "/" + fileName);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -299,38 +342,46 @@ public class CorpusBatchProcessor {
 				c.add(Calendar.HOUR, 1);
 			else
 				c.add(Calendar.HOUR, totalNumProcesses);
+
 		}
 
 		//
-		executor.shutdown();
-		while (!executor.isTerminated()) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		// executor.shutdown();
+		// while (!executor.isTerminated()) {
+		// try {
+		// Thread.sleep(500);
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// }
 		//
 
 		report(logTimeFormat, "Finished all threads");
 	}
 
 	private void report(DateFormat df, String message) {
-		System.out.println(df.format(new Date()) + " Total " + fileCount + " Files "
-				+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + " SIs: " + siCount.get()
-				+ " +SIs: " + siFilteredCount + " " + message);
+		System.out.println(df.format(new Date()) + " Total " + fileCount
+		// +
+		// " Files " + " SIs: "
+		// + siCount.get() + " +SIs: " + siFilteredCount + " "
+				+ message);
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) throws ParseException {
+<<<<<<< HEAD
 		Preprocessor
 				.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json");
 
 		if (args.length == 0) {
-			CorpusBatchProcessor cps = new CorpusBatchProcessor();
+			CorpusBatchProcessor cps = new CorpusBatchProcessor(0, 2);
 			cps.listEntity = Preprocessor.entity_list();
+=======
+		if (args.length == 0) {
+			CorpusBatchProcessor cps = new CorpusBatchProcessor();
+>>>>>>> master
 			cps.process();
 		} else if (args.length == 2) {
 			CorpusBatchProcessor cps = new CorpusBatchProcessor(Integer.parseInt(args[0]),
