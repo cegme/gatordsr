@@ -3,31 +3,58 @@ package edu.ufl.cise.pipeline
 import edu.ufl.cise.RemoteGPGRetrieval
 import java.io.PrintWriter
 import scala.io.Source
+import scala.util.parsing.json.JSON
 
 object SimpleJob extends App{
-  val pipe = Pipeline.getPipeline(Pipeline.patterns, Pipeline.queries, Pipeline.dirs)
-  readFile("resources/test/entities.psv")
-/*  val pw1 = new PrintWriter("resources/test/file1.txt")
-  val pw2 = new PrintWriter("resources/test/file2.txt")
-  2011-10-13-15 | social-300-e99d3abf7c96d7c44a09b0fc304d73b7-272b08fb7cfc5c0e99dcd0486d5cdbcc.sc.xz.gpg | 98 | a751c9e5da7d8a597902814a2afcfc67 | https://twitter.com/BobStovall
-  val file1 = "social-292-bba11a194150414d9f683164d0dd05ee-1c8a01976ae9fd0b448605d9902fb0f7.sc.xz.gpg";
-  val list1 = RemoteGPGRetrieval.getStreams("2011-10-08-15", file1);
+  //readFile("resources/test/entities.psv")
+  writeJSON
   
-  pw1.write(list1.get(154).body.clean_visible)
-  //pw1.write(list1.get(154).body.raw.toString())
-  pw1.close()
-  
-  val file2 = "social-246-89d6eaabc52882cb12b944fbb13e490d-b41540fec629ce7af67cde6c948012c5.sc.xz.gpg";
-  val list2 = RemoteGPGRetrieval.getStreams("2011-10-09-12", file2);
-  
-  pw2.write(list2.get(205).body.clean_visible)
-  //pw2.write(list2.get(205).body.raw.toString)
-  pw2.close()
-  */
-  
+  // write a json to a file
+  def writeJSON()
+  {
+    val json = JSON.parseFull("""{
+    "FAC": [
+        {"group": "danville"},
+    	{"group": "deeplearning"},
+        {"group": "fargo"},
+        {"group": "hoboken"},
+        {"group": "mining"},
+        {"group": "ocala"}  
+      ],
+    "ORG": [
+        {"group": "danville"},
+        {"group": "fargo"},
+        {"group": "hoboken"},
+        {"group": "kba2012"},
+        {"group": "mining"},
+        {"group": "startups"}
+      ],
+    "PER": [
+        {"group": "bronfman"},
+        {"group": "commedians"},
+        {"group": "danville"},
+        {"group": "deeplearning"},
+        {"group": "fargo"},
+        {"group": "french"},
+        {"group": "hep"},
+        {"group": "hoboken"},
+        {"group": "kba2012"},
+        {"group": "ocala"},
+        {"group": "screenwriters"},
+        {"group": "turing"}
+      ]                                                                                                                                  
+}
+""")
+    println(json.isEmpty)
+    val map: Map[String, Any] = json.get.asInstanceOf[Map[String, Any]]
+    val pers: List[Any] = map.get("PER").get.asInstanceOf[List[Any]]
+    pers.foreach(p => {println(p)})
+    
+  }
   
   def readFile(filename: String){
     //val pw = new PrintWriter("resources/test/file2.txt")
+    val pipe = Pipeline.getPipeline(Pipeline.patterns, Pipeline.queries, Pipeline.dirs)
     var i = 0
     Source.fromFile(filename).getLines.foreach(line => {
       val array = line.split("\\|") 

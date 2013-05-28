@@ -1,0 +1,32 @@
+{
+    "FAC": [
+        {"group": "danville"},
+    	{"group": "deeplearning"},
+        {"group": "fargo"},
+        {"group": "hoboken"},
+        {"group": "mining"},
+        {"group": "ocala"}  
+      ],
+    "ORG": [
+        {"group": "danville"},
+        {"group": "fargo"},
+        {"group": "hoboken"},
+        {"group": "kba2012"},
+        {"group": "mining"},
+        {"group": "startups"}
+      ],
+    "PER": [
+        {"group": "bronfman"},
+        {"group": "commedians"},
+        {"group": "danville"},
+        {"group": "deeplearning"},
+        {"group": "fargo"},
+        {"group": "french"},
+        {"group": "hep"},
+        {"group": "hoboken"},
+        {"group": "kba2012"},
+        {"group": "ocala"},
+        {"group": "screenwriters"},
+        {"group": "turing"}
+      ]                                                                                                                                  
+}
