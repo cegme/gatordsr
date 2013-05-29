@@ -105,9 +105,8 @@ int main(int argc, char **argv) {
 
     // Read and process all stream items
     StreamItem stream_item;
-    int cnt=0;
-    int matches=0;
-    int written=0;
+    int si_total=0;
+    int si_match=0;
 
     while (true) {
         try {
@@ -134,45 +133,38 @@ int main(int argc, char **argv) {
                 actual_text_source = "raw";
                 if (content.empty()) {
                     // If all applicable text sources are empty, we have a problem and exit with an error
-                    cerr << cnt << " Error, doc id: " << stream_item.doc_id << " was empty." << endl;
+                    cerr << si_total << " Error, doc id: " << stream_item.doc_id << " was empty." << endl;
                     exit(-1);
                 }
 
               // Check for an entity match
               struct HasEntity {
-                std::string* s;
-                HasEntity(std::string* _s): s(_s){}
-                bool operator()(struct found_entity v) const {
-                  return v.alias.find(*s) != std::string::npos;
+                const std::string s;
+                HasEntity(std::string _s): s(_s){}
+                bool operator()(const struct found_entity &v) const {
+                  return v.alias.find(s) != std::string::npos;
                 }
               };
-              if(std::any_of(aliases.begin(), aliases.end(), HasEntity(&content))) {
+              struct HasEntity has_entity(content);
+              if(std::any_of(aliases.cbegin(), aliases.cend(), has_entity)) {
+              //if(std::any_of(aliases.begin(), aliases.end(), HasEntity(content))) {
                 // Found an entity, print which one
                 std::clog << "Found an entity in stream item: " << stream_item.doc_id;
-
+                ++si_match;
+                // TODO Add a call to a function that prints out the file matched entity relations
               }
             }
           
-            // TODO Needs fixed.  Removed code here. 
-            // nb_matches = search content and return number of matches
-            int nb_matches = 0;
-
-            // Count total number of matches
-            matches += nb_matches;;
 
 
             // Increment count of stream items processed
-            cnt++;
+            si_total++;
         }
         catch (TTransportException e) {
             // Vital to flush the buffered output or you will lose the last one
             transportOutput->flush();
-            clog << "Total stream items processed: " << cnt << endl;
-            clog << "Total matches : " << matches << endl;
-            clog << "Total stream items written         : " << written << endl;
-            if (negate) {
-                    clog << " (Note, stream items written were non-matching ones)" << endl;
-            }
+            clog << "Total stream items processed: " << si_total << endl;
+            clog << "Total matches : " << si_match << endl;
             break;
         }
     }
