@@ -881,7 +881,7 @@
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/William_H._Gates,_Sr",
-            "alias": ["William H. Gates, Sr", "William H. Gates", "William H Gates", "William Gates", "Bill Gates"]
+            "alias": ["William H. Gates, Sr", "William H. Gates", "William H Gates", "William Gates"]
         }, 
         {
             "entity_type": "PER", 

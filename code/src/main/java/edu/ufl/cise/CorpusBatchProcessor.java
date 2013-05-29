@@ -10,13 +10,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
@@ -56,43 +55,58 @@ import edu.ufl.cise.pipeline.Preprocessor;
  */
 public class CorpusBatchProcessor {
 
-	public final static String			CORPUS_DIR_SERVER	= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public final static String			CORPUS_DIR_LOCAL	= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public final static String			LOG_DIR_SERVER		= "/media/sde/runs/";
-	public final static String			LOG_DIR_LOCAL			= "/home/morteza/trec/runs/";
-	final String										FILTER						= "";
-	final String										query							= "president";
-	AtomicLong											fileCount					= new AtomicLong(0);
-	AtomicLong											siCount						= new AtomicLong(0);
-	AtomicLong											siFilteredCount		= new AtomicLong(0);
-	AtomicLong											processedSize			= new AtomicLong(0);
+	public final static String				CORPUS_DIR_SERVER	= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_LOCAL	= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				LOG_DIR_SERVER		= "/media/sde/runs/";
+	public final static String				LOG_DIR_LOCAL			= "/home/morteza/trec/runs/";
+	public final static String				LOG_DIR_LOCAL_OLD	= "/home/morteza/trec/runs.old/";
+	final String											FILTER						= "";
+	final String											query							= "president";
+	AtomicLong												fileCount					= new AtomicLong(0);
+	AtomicLong												siCount						= new AtomicLong(0);
+	AtomicLong												siFilteredCount		= new AtomicLong(0);
+	AtomicLong												processedSize			= new AtomicLong(0);
 
-	public static final DateFormat	format						= new SimpleDateFormat("yyyy-MM-dd-HH");
-	public static final DateFormat	logTimeFormat			= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	final int												indexOfThisProcess;
-	final int												totalNumProcesses;
+	public static final DateFormat		format						= new SimpleDateFormat("yyyy-MM-dd-HH");
+	public static final DateFormat		logTimeFormat			= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	final int													indexOfThisProcess;
+	final int													totalNumProcesses;
 
-	Pipeline												pipe							= Pipeline.getPipeline(Pipeline.patterns(),
-																												Pipeline.queries(), Pipeline.dirs());
-	final Pattern										pattern						= Pattern.compile(query);
+	Pipeline													pipe							= Pipeline.getPipeline(Pipeline.patterns(),
+																													Pipeline.queries(), Pipeline.dirs());
+	final Pattern											pattern						= Pattern.compile(query);
 
-	DecimalFormat										numberFormatter		= new DecimalFormat("00");
+	DecimalFormat											numberFormatter		= new DecimalFormat("00");
 
-	List<Entity>										listEntity;
+	List<Entity>											listEntity;
+
+	boolean														localRun;
+
+	final Hashtable<String, Boolean>	alreadyProcessedGPGFileHashTable;
 
 	/**
 	 * gets the index of thus process and total # of processes that this process
 	 * is a member of to avoid duplicate process of corpus files.
 	 * 
+	 * @throws FileNotFoundException
+	 * 
 	 */
-	public CorpusBatchProcessor(int indexOfThisProcess, int totalNumProcesses) {
+	public CorpusBatchProcessor(int indexOfThisProcess, int totalNumProcesses)
+			throws FileNotFoundException {
 		this.indexOfThisProcess = indexOfThisProcess;
 		this.totalNumProcesses = totalNumProcesses;
+		alreadyProcessedGPGFileHashTable = LogReader.getPreLoggedFileList();
 	}
 
-	public CorpusBatchProcessor() {
+	public CorpusBatchProcessor() throws FileNotFoundException {
 		indexOfThisProcess = -1;
 		this.totalNumProcesses = -1;
+		alreadyProcessedGPGFileHashTable = LogReader.getPreLoggedFileList();
+
+		File f = new File(CORPUS_DIR_LOCAL);
+
+		localRun = f.exists();
+
 	}
 
 	/**
@@ -120,7 +134,8 @@ public class CorpusBatchProcessor {
 	 * @param is
 	 * @throws Exception
 	 */
-	private void getStreams(PrintWriter pw, String day, int hour, String fileName, InputStream is) throws Exception {
+	private void getStreams(PrintWriter pw, String day, int hour, String fileName, InputStream is)
+			throws Exception {
 		XZCompressorInputStream bais = new XZCompressorInputStream(is);
 		TIOStreamTransport transport = new TIOStreamTransport(bais);
 		transport.open();
@@ -195,9 +210,13 @@ public class CorpusBatchProcessor {
 			// initiing all sentences.
 			List<String> listStr = new LinkedList<String>();
 			for (Sentence sentence : listSentence) {
-				String sentenceStr = pipe.transform(sentence.tokens.toArray(new Token[sentence.tokens
-						.size()]));
-				listStr.add(sentenceStr.toLowerCase());
+				StringBuilder sentenceStr = new StringBuilder();
+				for (Token t : sentence.getTokens()) {
+					if (t.entity_type != null)
+						sentenceStr.append(t.token.toLowerCase() + " ");
+				}
+				pipe.transform(sentence.tokens.toArray(new Token[sentence.tokens.size()]));
+				listStr.add(sentenceStr.toString());
 			}
 
 			// match all entities
@@ -214,7 +233,7 @@ public class CorpusBatchProcessor {
 							if (!printedFileName) {
 								pw.print(">" + siw.day + " | " + siw.fileName + " | " + siw.getIndex() + " | "
 										+ siw.getStreamItem().getDoc_id() + " || ");
-								
+
 								printedFileName = true;
 							}
 							matchedEntity = true;
@@ -236,6 +255,10 @@ public class CorpusBatchProcessor {
 		// "\r\n").replaceAll("(\n)+", "\n")
 		// .replaceAll("(\r)+", "\r").toLowerCase();
 		pw.flush();
+	}
+
+	private boolean isAlreadyProcessed(String fileName) {
+		return alreadyProcessedGPGFileHashTable.containsKey(fileName);
 	}
 
 	/**
@@ -274,90 +297,91 @@ public class CorpusBatchProcessor {
 	 * 
 	 * @throws ParseException
 	 */
-//	private void process() throws ParseException {
-//
-//		int threadCount;
-//
-//		Calendar c = Calendar.getInstance();
-//		Calendar cEnd = Calendar.getInstance();
-//
-//		File f = new File(CORPUS_DIR_LOCAL);
-//		boolean localRun = f.exists();
-//		final String DIRECTORY = (localRun) ? CORPUS_DIR_LOCAL : CORPUS_DIR_SERVER;
-//		if (localRun) {
-//			System.out.println("Local run.");
-//			// c.setTime(format.parse("2011-10-05-00"));
-//			c.setTime(format.parse("2011-10-07-13"));
-//			cEnd.setTime(format.parse("2011-10-07-14"));
-//			threadCount = 2;
-//		} else {
-//			System.out.println("Server run.");
-//			// c.setTime(format.parse("2011-10-05-00"));
-//			c.setTime(format.parse("2012-08-18-01"));
-//			cEnd.setTime(format.parse("2012-08-18-01"));
-//			threadCount = 32;
-//		}
-//
-//		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
-//		while (!(c.getTime().compareTo(cEnd.getTime()) > 0)) {
-//			try {
-//				final String date = format.format(c.getTime());
-//
-//				final List<String> fileList = DirList.getFileList(DIRECTORY + date, FILTER);
-//				for (final String fileStr : fileList) {
-//					final int hour = c.get(Calendar.HOUR_OF_DAY);
-//					final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
-//
-//					//
-//					// Runnable worker = new Thread(fileCount + " " + date + "/" +
-//					// fileName) {
-//					// public void run() {
-//					//
-//
-//					try {
-//						InputStream is = grabGPGLocal(date, fileName, fileStr);
-//						getStreams(date, hour, fileName, is);
-//						is.close();
-//
-//						fileCount.incrementAndGet();
-//						long size = FileProcessor.getLocalFileSize(fileStr);
-//						processedSize.addAndGet(size);
-//						report(logTimeFormat, date + "/" + fileName);
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//
-//					//
-//					//
-//					// };
-//					// };
-//					// executor.execute(worker);
-//					//
-//					//
-//
-//				}
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//			}
-//			if (totalNumProcesses == -1)
-//				c.add(Calendar.HOUR, 1);
-//			else
-//				c.add(Calendar.HOUR, totalNumProcesses);
-//		}
-//
-//		//
-//		executor.shutdown();
-//		while (!executor.isTerminated()) {
-//			try {
-//				Thread.sleep(500);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		//
-//
-//		report(logTimeFormat, "Finished all threads");
-//	}
+	// private void process() throws ParseException {
+	//
+	// int threadCount;
+	//
+	// Calendar c = Calendar.getInstance();
+	// Calendar cEnd = Calendar.getInstance();
+	//
+	// File f = new File(CORPUS_DIR_LOCAL);
+	// boolean localRun = f.exists();
+	// final String DIRECTORY = (localRun) ? CORPUS_DIR_LOCAL : CORPUS_DIR_SERVER;
+	// if (localRun) {
+	// System.out.println("Local run.");
+	// // c.setTime(format.parse("2011-10-05-00"));
+	// c.setTime(format.parse("2011-10-07-13"));
+	// cEnd.setTime(format.parse("2011-10-07-14"));
+	// threadCount = 2;
+	// } else {
+	// System.out.println("Server run.");
+	// // c.setTime(format.parse("2011-10-05-00"));
+	// c.setTime(format.parse("2012-08-18-01"));
+	// cEnd.setTime(format.parse("2012-08-18-01"));
+	// threadCount = 32;
+	// }
+	//
+	// ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+	// while (!(c.getTime().compareTo(cEnd.getTime()) > 0)) {
+	// try {
+	// final String date = format.format(c.getTime());
+	//
+	// final List<String> fileList = DirList.getFileList(DIRECTORY + date,
+	// FILTER);
+	// for (final String fileStr : fileList) {
+	// final int hour = c.get(Calendar.HOUR_OF_DAY);
+	// final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
+	//
+	// //
+	// // Runnable worker = new Thread(fileCount + " " + date + "/" +
+	// // fileName) {
+	// // public void run() {
+	// //
+	//
+	// try {
+	// InputStream is = grabGPGLocal(date, fileName, fileStr);
+	// getStreams(date, hour, fileName, is);
+	// is.close();
+	//
+	// fileCount.incrementAndGet();
+	// long size = FileProcessor.getLocalFileSize(fileStr);
+	// processedSize.addAndGet(size);
+	// report(logTimeFormat, date + "/" + fileName);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// //
+	// //
+	// // };
+	// // };
+	// // executor.execute(worker);
+	// //
+	// //
+	//
+	// }
+	// } catch (Exception e1) {
+	// e1.printStackTrace();
+	// }
+	// if (totalNumProcesses == -1)
+	// c.add(Calendar.HOUR, 1);
+	// else
+	// c.add(Calendar.HOUR, totalNumProcesses);
+	// }
+	//
+	// //
+	// executor.shutdown();
+	// while (!executor.isTerminated()) {
+	// try {
+	// Thread.sleep(500);
+	// } catch (InterruptedException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// //
+	//
+	// report(logTimeFormat, "Finished all threads");
+	// }
 
 	/**
 	 * Process in multithreaded fashion.
@@ -366,20 +390,17 @@ public class CorpusBatchProcessor {
 	 */
 	private void processMultiThreads() throws ParseException {
 		System.out.println("processMultiThreads");
-		
 
 		final Calendar cStart = Calendar.getInstance();
 		final Calendar cEnd = Calendar.getInstance();
 
-		File f = new File(CORPUS_DIR_LOCAL);
-		boolean localRun = f.exists();
-		final int threadCount = (localRun) ? 2 : 31;
+		final int threadCount = (localRun) ? 1 : 64;
 		final String CORPUS_DIRECTORY = (localRun) ? CORPUS_DIR_LOCAL : CORPUS_DIR_SERVER;
 		final String LOG_DIRECTORY = (localRun) ? LOG_DIR_LOCAL : LOG_DIR_SERVER;
 		if (localRun) {
 			System.out.println("Local run.");
-			// c.setTime(format.parse("2011-10-05-00"));
-			cStart.setTime(format.parse("2011-10-07-13"));
+			cStart.setTime(format.parse("2011-10-05-00"));
+			// cStart.setTime(format.parse("2011-10-07-13"));
 			cEnd.setTime(format.parse("2011-10-07-14"));
 		} else {
 			System.out.println("Server run.");
@@ -413,29 +434,34 @@ public class CorpusBatchProcessor {
 								for (final String fileStr : fileList) {
 									final int hour = cTemp.get(Calendar.HOUR_OF_DAY);
 									final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
-									try {
-										InputStream is = grabGPGLocal(date, fileName, fileStr);
-										getStreams(pw, date, hour, fileName, is);
-										is.close();
+									if (isAlreadyProcessed(date + "/" + fileName)) {
+										alreadyProcessedGPGFileHashTable.remove(date + "/" +fileName);
+									} else {
+										try {
+											InputStream is = grabGPGLocal(date, fileName, fileStr);
+											getStreams(pw, date, hour, fileName, is);
+											is.close();
 
-										fileCount.incrementAndGet();
-										long size = FileProcessor.getLocalFileSize(fileStr);
-										processedSize.addAndGet(size);
-										// report(logTimeFormat, "Thread(" + threadIndex + ")" +
-										// date
-										// + "/" + fileName);
-										pw.println(logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
-												+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + " SIs: "
-												+ siCount.get() + " +SIs: " + siFilteredCount + " " + "Thread("
-												+ threadIndex + ")" + date + "/" + fileName);
-										pw.flush();
-									} catch (Exception e) {
-										e.printStackTrace();
+											fileCount.incrementAndGet();
+											long size = FileProcessor.getLocalFileSize(fileStr);
+											processedSize.addAndGet(size);
+											// report(logTimeFormat, "Thread(" + threadIndex + ")" +
+											// date
+											// + "/" + fileName);
+											pw.println(logTimeFormat.format(new Date()) + " Total " + fileCount
+													+ " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB")
+													+ " SIs: " + siCount.get() + " +SIs: " + siFilteredCount + " "
+													+ "Thread(" + threadIndex + ")" + date + "/" + fileName);
+											pw.flush();
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
 									}
 								}
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
+
 							cTemp.add(Calendar.HOUR, threadCount);
 							// System.out.println(threadIndex + ": " +
 							// format.format(cTemp.getTime()) + " "
@@ -447,8 +473,8 @@ public class CorpusBatchProcessor {
 					}
 
 					finishedThreadTracker.incrementAndGet();
-					if(pw != null)
-					pw.close();
+					if (pw != null)
+						pw.close();
 				}
 			};
 			worker.start();
@@ -481,7 +507,8 @@ public class CorpusBatchProcessor {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws Exception {
+
 		Preprocessor
 				.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json");
 
@@ -491,10 +518,11 @@ public class CorpusBatchProcessor {
 			// cps.process();
 			cps.processMultiThreads();
 		} else if (args.length == 2) {
-//			CorpusBatchProcessor cps = new CorpusBatchProcessor(Integer.parseInt(args[0]),
-//					Integer.parseInt(args[0]));
-//			cps.listEntity = Preprocessor.entity_list();
-//			cps.process();
+			// CorpusBatchProcessor cps = new
+			// CorpusBatchProcessor(Integer.parseInt(args[0]),
+			// Integer.parseInt(args[0]));
+			// cps.listEntity = Preprocessor.entity_list();
+			// cps.process();
 		} else {
 			System.err
 					.println("Usage: CorpusBatchProcessor indexOfThisProcess totalNumProcesses   OR just   CorpusBatchProcessor");
