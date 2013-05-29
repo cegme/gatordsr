@@ -25,4 +25,6 @@ entity_match.o: entity_match.cpp
 
 clean:
 	rm -f *.o
+	rm -f main
+
 

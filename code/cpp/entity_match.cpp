@@ -11,6 +11,9 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
 #include <fstream>
+#include <vector>
+#include <algorithm>
+#include <locale>
 
 #include "streamcorpus_types.h"
 #include "streamcorpus_constants.h"
@@ -40,8 +43,9 @@ using namespace streamcorpus;
 
 int main(int argc, char **argv) {
 
-    clog << "Starting program" <<endl;
+    //clog << "Starting program" <<endl;
     
+    locale loc;
     string text_source("clean_visible");
 
     bool negate(false);
@@ -50,8 +54,8 @@ int main(int argc, char **argv) {
     po::options_description desc("Allowed options");
     desc.add_options()
     ("help,h", "help message")
-    ("text_source,t", po::value<string>(&text_source), "text source in stream item")
-    ("negate,n", po::value<bool>(&negate)->implicit_value(true), "negate sense of match")
+    //("text_source,t", po::value<string>(&text_source), "text source in stream item")
+    //("negate,n", po::value<bool>(&negate)->implicit_value(true), "negate sense of match")
     ;
 
     // Parse command line options
@@ -59,12 +63,13 @@ int main(int argc, char **argv) {
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
 
-    if (vm.count("help")) {
+    /*if (vm.count("help")) {
         cout << desc << "\n";
         return 1;
-    }
+    }*/
 
     // Read in the entity JSON file
+    std::vector<found_entity> aliases = get_aliases();
     
 
     // Create annotator object
@@ -111,27 +116,41 @@ int main(int argc, char **argv) {
 
             string content;
             string actual_text_source = text_source;
-            clog << "Reading stream item content from : " << text_source << endl;
+            //clog << "Reading stream item content from : " << text_source << endl;
             if (text_source == "clean_visible") {
-                content = stream_item.body.clean_visible;
+                content = tolower(stream_item.body.clean_visible, loc);
             } else if (text_source == "clean_html") {
-                content = stream_item.body.clean_html;
+                content = tolower(stream_item.body.clean_html, loc);
             } else if (text_source == "raw") {
-                content = stream_item.body.raw;
+                content = tolower(stream_item.body.raw, loc);
             } else {
                 cerr << "Bad text_source :" << text_source <<endl;
                 exit(-1);
             }
 
-            if (content.size() <= 0) {
+            if (content.empty()) {
                 // Fall back to raw if desired text_source has no content.
-                content = stream_item.body.raw;
+                content = tolower(stream_item.body.raw, loc);
                 actual_text_source = "raw";
-                if (content.size() <= 0) {
+                if (content.empty()) {
                     // If all applicable text sources are empty, we have a problem and exit with an error
                     cerr << cnt << " Error, doc id: " << stream_item.doc_id << " was empty." << endl;
                     exit(-1);
                 }
+
+              // Check for an entity match
+              struct HasEntity {
+                std::string* s;
+                HasEntity(std::string* _s): s(_s){}
+                bool operator()(struct found_entity v) const {
+                  return v.alias.find(*s) != std::string::npos;
+                }
+              };
+              if(std::any_of(aliases.begin(), aliases.end(), HasEntity(&content))) {
+                // Found an entity, print which one
+                std::clog << "Found an entity in stream item: " << stream_item.doc_id;
+
+              }
             }
           
             // TODO Needs fixed.  Removed code here. 

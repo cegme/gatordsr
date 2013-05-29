@@ -1,0 +1,241 @@
+http://testEntity|danville|FAC|Obama
+http://testEntity|danville|FAC|Barak Obama
+http://en.wikipedia.org/wiki/Stuart_Powell_Field|danville|FAC|Stuart Powell Field
+https://twitter.com/CorbinSpeedway|danville|FAC|CorbinSpeedway
+https://twitter.com/CorbinSpeedway|danville|FAC|Corbin Speedway
+http://en.wikipedia.org/wiki/IDSIA|deeplearning|FAC|IDSIA
+http://en.wikipedia.org/wiki/Corn_Belt_Power_Cooperative|fargo|FAC|Corn Belt Power Cooperative
+http://en.wikipedia.org/wiki/Fargo-Moorhead_Symphony_Orchestra|fargo|FAC|Fargo-Moorhead Symphony Orchestra
+http://en.wikipedia.org/wiki/Fargo_Air_Museum|fargo|FAC|Fargo Air Museum
+http://en.wikipedia.org/wiki/Hjemkomst_Center|fargo|FAC|Hjemkomst Center
+http://en.wikipedia.org/wiki/John_D._Odegard_School_of_Aerospace_Sciences|fargo|FAC|John D. Odegard School of Aerospace Sciences
+http://en.wikipedia.org/wiki/Red_River_Zoo|fargo|FAC|Red River Zoo
+http://en.wikipedia.org/wiki/Star_Lite_Motel|fargo|FAC|Star Lite Motel
+http://en.wikipedia.org/wiki/Elysian_Charter_School|hoboken|FAC|Elysian Charter School
+http://en.wikipedia.org/wiki/Stevens_Cooperative_School|hoboken|FAC|Stevens Cooperative School
+http://en.wikipedia.org/wiki/Weehawken_Cove|hoboken|FAC|Weehawken Cove
+http://en.wikipedia.org/wiki/Copper_Basin_Railway|mining|FAC|Cooper Basin Railway
+http://en.wikipedia.org/wiki/Hayden_Smelter|mining|FAC|Hayden Smelter
+http://en.wikipedia.org/wiki/Lewis_and_Clark_Landing|mining|FAC|Lewis and Clark Landing
+http://en.wikipedia.org/wiki/Toquepala_mine|mining|FAC|Toquepala mine
+http://en.wikipedia.org/wiki/Appleton_Museum_of_Art|ocala|FAC|Appelton Museum of Art
+http://en.wikipedia.org/wiki/Don_Garlits_Museum_of_Drag_Racing|ocala|FAC|Don Garlits Museum of Drag Racing
+http://en.wikipedia.org/wiki/Eighth_Street_Elementary_School|ocala|FAC|Eighth Street Elementary School
+http://en.wikipedia.org/wiki/Lake_Weir_High_School|ocala|FAC|Lake Weir High School
+http://en.wikipedia.org/wiki/Marion_Technical_Institute|ocala|FAC|Marion Technical Institute
+http://en.wikipedia.org/wiki/Osceola_Middle_School|ocala|FAC|Osceola Middle School
+http://en.wikipedia.org/wiki/The_Ritz_Apartment_(Ocala,_Florida)|ocala|FAC|The Ritz Apartment Ocala, Florida
+http://en.wikipedia.org/wiki/The_Ritz_Apartment_(Ocala,_Florida)|ocala|FAC|The Ritz Apartment
+http://en.wikipedia.org/wiki/Great_American_Brass_Band_Festival|danville|ORG|Great American Brass Band Festival
+http://en.wikipedia.org/wiki/Innovis_Health|fargo|ORG|Innovis Health
+http://en.wikipedia.org/wiki/Hoboken_Reporter|hoboken|ORG|Hoboken Reporter
+http://en.wikipedia.org/wiki/Hoboken_Volunteer_Ambulance_Corps|hoboken|ORG|Hoboken Volunteer Ambulance Corps
+http://en.wikipedia.org/wiki/Basic_Element_(company)|kba2012|ORG|Basic Element company
+http://en.wikipedia.org/wiki/Basic_Element_(company)|kba2012|ORG|Basic Element co
+http://en.wikipedia.org/wiki/Basic_Element_(company)|kba2012|ORG|Basic Element
+http://en.wikipedia.org/wiki/Basic_Element_(music_group)|kba2012|ORG|Basic Element music groups
+http://en.wikipedia.org/wiki/Basic_Element_(music_group)|kba2012|ORG|Basic Element music
+http://en.wikipedia.org/wiki/Basic_Element_(music_group)|kba2012|ORG|Basic Element
+http://en.wikipedia.org/wiki/Agroindustrial_Pomalca|mining|ORG|Agroindustrial Pomalca
+http://en.wikipedia.org/wiki/Atacocha|mining|ORG|Atacocha
+http://en.wikipedia.org/wiki/Austral_Group|mining|ORG|Austral Group
+http://en.wikipedia.org/wiki/Cementos_Lima|mining|ORG|Cementos Lima
+http://en.wikipedia.org/wiki/Dunkelvolk|mining|ORG|Dunkelvolk
+http://en.wikipedia.org/wiki/Gran%C3%A3_y_Montero|mining|ORG|Granã y Montero
+http://en.wikipedia.org/wiki/Gran%C3%A3_y_Montero|mining|ORG|Grana y Montero
+http://en.wikipedia.org/wiki/Intergroup_Financial_Services|mining|ORG|Intergroup Financial Services
+http://en.wikipedia.org/wiki/Luz_del_Sur|mining|ORG|Luz del Sur
+http://en.wikipedia.org/wiki/SIMSA|mining|ORG|SIMSA
+http://en.wikipedia.org/wiki/Scotiabank_Per%C3%BA|mining|ORG|Scotiabank Perú
+http://en.wikipedia.org/wiki/Scotiabank_Per%C3%BA|mining|ORG|Scotiabank Peru
+https://twitter.com/BlossomCoffee|startups|ORG|BlossomCoffee
+https://twitter.com/BlossomCoffee|startups|ORG|Blossom Coffee
+https://twitter.com/FrankandOak|startups|ORG|FrankandOak
+https://twitter.com/FrankandOak|startups|ORG|Frank and Oak
+https://twitter.com/GandBcoffee|startups|ORG|GandBcoffee
+https://twitter.com/WCoffeeResearch|startups|ORG|WCoffeeResearch
+https://twitter.com/WCoffeeResearch|startups|ORG|W Coffee Research
+https://twitter.com/evvnt|startups|ORG|evvnt
+http://en.wikipedia.org/wiki/Benjamin_Bronfman|bronfman|PER|Benjamin Bronfman
+http://en.wikipedia.org/wiki/Charles_Bronfman|bronfman|PER|Charles Bronfman
+http://en.wikipedia.org/wiki/Clare_Bronfman|bronfman|PER|Clare Bronfman
+http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.|bronfman|PER|Edgar Bronfman, Jr.
+http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.|bronfman|PER|Edgar Bronfman, Jr
+http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.|bronfman|PER|Edgar Bronfman
+http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.|bronfman|PER|Edgar Bronfman, Sr.
+http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.|bronfman|PER|Edgar Bronfman, Sr
+http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.|bronfman|PER|Edgar Bronfman
+http://en.wikipedia.org/wiki/Phyllis_Lambert|bronfman|PER|Phyllis Lambert
+http://en.wikipedia.org/wiki/Sara_Bronfman|bronfman|PER|Sara Bronfman
+http://en.wikipedia.org/wiki/DeAnne_Smith|commedians|PER|DeAnne Smith
+https://twitter.com/RonFunches|commedians|PER|RonFunches
+https://twitter.com/RonFunches|commedians|PER|Ron Funches
+https://twitter.com/roryscovel|commedians|PER|roryscovel
+https://twitter.com/roryscovel|commedians|PER|rory scovel
+https://twitter.com/AlexJoHamilton|danville|PER|Alex Jo Hamilton
+https://twitter.com/AlexJoHamilton|danville|PER|AlexJoHamilton
+https://twitter.com/BobStovall|danville|PER|BobStovall
+https://twitter.com/BobStovall|danville|PER|Bob Stovall
+https://twitter.com/RobCaud|danville|PER|RobCaud
+https://twitter.com/RobCaud|danville|PER|Rob Caud
+https://twitter.com/danvillekyengr|danville|PER|danvillekyengr
+https://twitter.com/danvillekyengr|danville|PER|danville engineering
+https://twitter.com/danvillekyengr|danville|PER|danville ky engineering
+https://twitter.com/tonyg203|danville|PER|tonyg203
+https://twitter.com/tonyg203|danville|PER|Tony Gray
+https://twitter.com/urbren00|danville|PER|urbren00
+https://twitter.com/urbren00|danville|PER|Brent Faulkner
+http://en.wikipedia.org/wiki/Geoffrey_E._Hinton|deeplearning|PER|Geoffrey E. Hinton
+http://en.wikipedia.org/wiki/Geoffrey_E._Hinton|deeplearning|PER|Geoffrey Hinton
+http://en.wikipedia.org/wiki/Geoffrey_E._Hinton|deeplearning|PER|Geoffrey E Hinton
+http://en.wikipedia.org/wiki/L%C3%A9on_Bottou|deeplearning|PER|Léon Bottou
+http://en.wikipedia.org/wiki/L%C3%A9on_Bottou|deeplearning|PER|Leon Bottou
+http://en.wikipedia.org/wiki/Yann_LeCun|deeplearning|PER|Yann LeCun
+http://en.wikipedia.org/wiki/Zoubin_Ghahramani|deeplearning|PER|Zoubin Ghahramani
+http://en.wikipedia.org/wiki/Blair_Thoreson|fargo|PER|Blair Thoer
+http://en.wikipedia.org/wiki/Brenda_Weiler|fargo|PER|Brenda Weiler
+http://en.wikipedia.org/wiki/Carey_McWilliams_(marksman)|fargo|PER|Carey McWilliams
+http://en.wikipedia.org/wiki/Carey_McWilliams_(marksman)|fargo|PER|Carey McWilliams marksman
+http://en.wikipedia.org/wiki/Clark_Blaise|fargo|PER|Clark Blaise
+http://en.wikipedia.org/wiki/Daniel_J._Crothers|fargo|PER|Daniel J. Crothers
+http://en.wikipedia.org/wiki/Daniel_J._Crothers|fargo|PER|Daniel J Crothers
+http://en.wikipedia.org/wiki/Daniel_J._Crothers|fargo|PER|Daniel Crothers
+http://en.wikipedia.org/wiki/Danny_Irmen|fargo|PER|Danny Irmen
+http://en.wikipedia.org/wiki/David_B._Danbom|fargo|PER|David B. Danbom
+http://en.wikipedia.org/wiki/David_B._Danbom|fargo|PER|David B Danbom
+http://en.wikipedia.org/wiki/David_B._Danbom|fargo|PER|David Danbom
+http://en.wikipedia.org/wiki/Drew_Wrigley|fargo|PER|Drew Wrigley
+http://en.wikipedia.org/wiki/Ed_Bok_Lee|fargo|PER|Ed Bok Lee
+http://en.wikipedia.org/wiki/Fargo_Moorhead_Derby_Girls|fargo|PER|Fargo Moorhead Derby Girls
+http://en.wikipedia.org/wiki/George_Sinner|fargo|PER|George Sinner
+http://en.wikipedia.org/wiki/Gretchen_Hoffman|fargo|PER|Gretchen Hoffman
+http://en.wikipedia.org/wiki/Jamie_Parsley|fargo|PER|Jamie Parsley
+http://en.wikipedia.org/wiki/Jasper_Schneider|fargo|PER|Jasper Schneider
+http://en.wikipedia.org/wiki/Jeff_Severson|fargo|PER|Jeff Severson
+http://en.wikipedia.org/wiki/Jennifer_Baumgardner|fargo|PER|Jennifer Baumgardner
+http://en.wikipedia.org/wiki/Jim_Poolman|fargo|PER|Jim Poolman
+http://en.wikipedia.org/wiki/John_H._Lang|fargo|PER|John H. Lang
+http://en.wikipedia.org/wiki/John_H._Lang|fargo|PER|John H Lang
+http://en.wikipedia.org/wiki/John_H._Lang|fargo|PER|John Lang
+http://en.wikipedia.org/wiki/Joshua_Boschee|fargo|PER|Joshua Boschee
+http://en.wikipedia.org/wiki/Ken_Fowler|fargo|PER|Ken Fowler
+http://en.wikipedia.org/wiki/Keri_Hehn|fargo|PER|Keri Hehn
+http://en.wikipedia.org/wiki/Olaus_Murie|fargo|PER|Olaus Murie
+http://en.wikipedia.org/wiki/Paul_Johnsgard|fargo|PER|Paul Johnsgard
+http://en.wikipedia.org/wiki/Paul_Marquart|fargo|PER|Paul Marquart
+http://en.wikipedia.org/wiki/Richard_Edlund|fargo|PER|Richard Edlund
+http://en.wikipedia.org/wiki/Richard_W._Goldberg|fargo|PER|Richard W. Goldberg
+http://en.wikipedia.org/wiki/Richard_W._Goldberg|fargo|PER|Richard W Goldberg
+http://en.wikipedia.org/wiki/Richard_W._Goldberg|fargo|PER|Richard Goldberg
+http://en.wikipedia.org/wiki/Susan_Krieg|fargo|PER|Susan Krieg
+http://en.wikipedia.org/wiki/William_P._Gerberding|fargo|PER|William P. Gerberding
+http://en.wikipedia.org/wiki/William_P._Gerberding|fargo|PER|William P Gerberding
+http://en.wikipedia.org/wiki/William_P._Gerberding|fargo|PER|William Gerberding
+http://en.wikipedia.org/wiki/Ana%C3%AFs_Croze|french|PER|Anaïs Croze
+http://en.wikipedia.org/wiki/Ana%C3%AFs_Croze|french|PER|Anais Croze
+http://en.wikipedia.org/wiki/Gwena%C3%ABlle_Aubry|french|PER|Gwenaëlle Aubry
+http://en.wikipedia.org/wiki/Gwena%C3%ABlle_Aubry|french|PER|Gwenaelle Aubry
+http://en.wikipedia.org/wiki/Nicolas_Sch%C3%B6ffer|french|PER|Nicolas Schöffer
+http://en.wikipedia.org/wiki/Nicolas_Sch%C3%B6ffer|french|PER|Nicolas Schoffer
+http://en.wikipedia.org/wiki/Th%C3%A9o_Mercier|french|PER|Théo Mercier
+http://en.wikipedia.org/wiki/Th%C3%A9o_Mercier|french|PER|Theo Mercier
+http://en.wikipedia.org/wiki/Chiara_Nappi|hep|PER|Chiara Nappi
+http://en.wikipedia.org/wiki/Eva_Silverstein|hep|PER|Eva Silverstein
+http://en.wikipedia.org/wiki/Matt_Witten|hep|PER|Matt Witten
+http://en.wikipedia.org/wiki/Shamit_Kachru|hep|PER|Shamit Kachru
+http://en.wikipedia.org/wiki/Angelo_Savoldi|hoboken|PER|Angelo Savoldi
+http://en.wikipedia.org/wiki/Bernard_Kenny|hoboken|PER|Bernard Kenny
+http://en.wikipedia.org/wiki/Bob_Bert|hoboken|PER|Bob Bert
+http://en.wikipedia.org/wiki/Carl_Chang_(tennis)|hoboken|PER|Carl Chang tennis
+http://en.wikipedia.org/wiki/Carl_Chang_(tennis)|hoboken|PER|Carl Chang
+http://en.wikipedia.org/wiki/Carla_Katz|hoboken|PER|Carla Katz
+http://en.wikipedia.org/wiki/Derrick_Alston|hoboken|PER|Derrick Alston
+http://en.wikipedia.org/wiki/Frank_Winters|hoboken|PER|Frank Winters
+http://en.wikipedia.org/wiki/Henry_Gutierrez|hoboken|PER|Henry Gutierrez
+http://en.wikipedia.org/wiki/Jack_Lazorko|hoboken|PER|Jack Lazorko
+http://en.wikipedia.org/wiki/Jeff_Tamarkin|hoboken|PER|Jeff Tamarkin
+http://en.wikipedia.org/wiki/Joanne_Borgella|hoboken|PER|Joanne Borgella
+http://en.wikipedia.org/wiki/Ken_Freedman|hoboken|PER|Ken Freedman
+http://en.wikipedia.org/wiki/Klaus_Grutzka|hoboken|PER|Klaus Grutzka
+http://en.wikipedia.org/wiki/Mark_SaFranko|hoboken|PER|Mark SaFranko
+http://en.wikipedia.org/wiki/Maurice_Fitzgibbons|hoboken|PER|Maurice Fitzgibbons
+http://en.wikipedia.org/wiki/Pat_Dapuzzo|hoboken|PER|Pat Dapuzzo
+http://en.wikipedia.org/wiki/Ruben_J._Ramos|hoboken|PER|Ruben J. Ramos
+http://en.wikipedia.org/wiki/Ruben_J._Ramos|hoboken|PER|Ruben J Ramos
+http://en.wikipedia.org/wiki/Ruben_J._Ramos|hoboken|PER|Ruben Ramos
+http://en.wikipedia.org/wiki/Tilo_Rivas|hoboken|PER|Tilo Rivas
+http://en.wikipedia.org/wiki/William_H._Miller_(writer)|hoboken|PER|William H. Miller writer
+http://en.wikipedia.org/wiki/William_H._Miller_(writer)|hoboken|PER|William H. Miller
+http://en.wikipedia.org/wiki/William_H._Miller_(writer)|hoboken|PER|William H Miller
+http://en.wikipedia.org/wiki/William_H._Miller_(writer)|hoboken|PER|William Miller
+http://en.wikipedia.org/wiki/Aharon_Barak|kba2012|PER|Aharon Barak
+http://en.wikipedia.org/wiki/Alex_Kapranos|kba2012|PER|Alex Kapranos
+http://en.wikipedia.org/wiki/Alexander_McCall_Smith|kba2012|PER|Alexander McCall Smith
+http://en.wikipedia.org/wiki/Annie_Laurie_Gaylor|kba2012|PER|Annie Laurie Gaylor
+http://en.wikipedia.org/wiki/Bill_Coen|kba2012|PER|Bill Coen
+http://en.wikipedia.org/wiki/Boris_Berezovsky_(businessman)|kba2012|PER|Boris Berezovsky businessman
+http://en.wikipedia.org/wiki/Boris_Berezovsky_(businessman)|kba2012|PER|Boris Berezovsky
+http://en.wikipedia.org/wiki/Boris_Berezovsky_(pianist)|kba2012|PER|Boris Berezovsky pianist
+http://en.wikipedia.org/wiki/Boris_Berezovsky_(pianist)|kba2012|PER|Boris Berezovsky
+http://en.wikipedia.org/wiki/Charlie_Savage|kba2012|PER|Charlie Savage
+http://en.wikipedia.org/wiki/Darren_Rowse|kba2012|PER|Darren Rowse
+http://en.wikipedia.org/wiki/Douglas_Carswell|kba2012|PER|Douglas Carswell
+http://en.wikipedia.org/wiki/Frederick_M._Lawrence|kba2012|PER|Frederick M. Lawrence
+http://en.wikipedia.org/wiki/Frederick_M._Lawrence|kba2012|PER|Fredrick M Lawrence
+http://en.wikipedia.org/wiki/Frederick_M._Lawrence|kba2012|PER|Fredrick Lawrence
+http://en.wikipedia.org/wiki/Ikuhisa_Minowa|kba2012|PER|Ikuhisa Minowa
+http://en.wikipedia.org/wiki/James_McCartney|kba2012|PER|James McCartney
+http://en.wikipedia.org/wiki/Jim_Steyer|kba2012|PER|Jim Steyer
+http://en.wikipedia.org/wiki/Lisa_Bloom|kba2012|PER|Lisa Bloom
+http://en.wikipedia.org/wiki/Lovebug_Starski|kba2012|PER|Lovebug Starski
+http://en.wikipedia.org/wiki/Mario_Garnero|kba2012|PER|Mario Garnero
+http://en.wikipedia.org/wiki/Masaru_Emoto|kba2012|PER|Masaru Emoto
+http://en.wikipedia.org/wiki/Nassim_Nicholas_Taleb|kba2012|PER|Nassim Nicholas Taleb
+http://en.wikipedia.org/wiki/Rodrigo_Pimentel|kba2012|PER|Rodrigo Pimentel
+http://en.wikipedia.org/wiki/Roustam_Tariko|kba2012|PER|Roustam Tariko
+http://en.wikipedia.org/wiki/Ruth_Rendell|kba2012|PER|Ruth Rendell
+http://en.wikipedia.org/wiki/Satoshi_Ishii|kba2012|PER|Satoshi Ishii
+http://en.wikipedia.org/wiki/Vladimir_Potanin|kba2012|PER|Vladimir Potanin
+http://en.wikipedia.org/wiki/William_Cohen|kba2012|PER|William Cohen
+http://en.wikipedia.org/wiki/William_D._Cohan|kba2012|PER|William D. Cohan
+http://en.wikipedia.org/wiki/William_D._Cohan|kba2012|PER|William D Cohan
+http://en.wikipedia.org/wiki/William_D._Cohan|kba2012|PER|William Cohan
+http://en.wikipedia.org/wiki/William_H._Gates,_Sr|kba2012|PER|William H. Gates, Sr
+http://en.wikipedia.org/wiki/William_H._Gates,_Sr|kba2012|PER|William H. Gates
+http://en.wikipedia.org/wiki/William_H._Gates,_Sr|kba2012|PER|William H Gates
+http://en.wikipedia.org/wiki/William_H._Gates,_Sr|kba2012|PER|William Gates
+http://en.wikipedia.org/wiki/William_H._Gates,_Sr|kba2012|PER|Bill Gates
+http://en.wikipedia.org/wiki/Buddy_MacKay|ocala|PER|Buddy MacKay
+http://en.wikipedia.org/wiki/Chuck_Pankow|ocala|PER|Chuck Pankow
+http://en.wikipedia.org/wiki/Haven_Denney|ocala|PER|Haven Denney
+http://en.wikipedia.org/wiki/Jeremy_McKinnon|ocala|PER|Jeremy McKinnon
+http://en.wikipedia.org/wiki/Joey_Mantia|ocala|PER|Joey Mantia
+http://en.wikipedia.org/wiki/Judd_Davis|ocala|PER|Judd Davis
+http://en.wikipedia.org/wiki/Lorenzo_Williams_(basketball)|ocala|PER|Lorenzo Williams basketball
+http://en.wikipedia.org/wiki/Lorenzo_Williams_(basketball)|ocala|PER|Lorenzo Williams
+http://en.wikipedia.org/wiki/Randy_Ewers|ocala|PER|Randy Ewers
+http://en.wikipedia.org/wiki/Reid_Nichols|ocala|PER|Reid Nichols
+http://en.wikipedia.org/wiki/Scot_Brantley|ocala|PER|Scot Brantley
+http://en.wikipedia.org/wiki/Sean_Hampton|ocala|PER|Sean Hampton
+http://en.wikipedia.org/wiki/Travis_Mays|ocala|PER|Travis Mays
+https://twitter.com/BartowMcDonald|ocala|PER|BartowMcDonald
+https://twitter.com/BartowMcDonald|ocala|PER|Bartow McDonald
+https://twitter.com/KentGuinn4Mayor|ocala|PER|KentGuinn4Mayor
+https://twitter.com/KentGuinn4Mayor|ocala|PER|Kent Guinn 4 Mayor
+https://twitter.com/KentGuinn4Mayor|ocala|PER|Ken Guinn
+https://twitter.com/bobplaisted|ocala|PER|bobplaisted
+https://twitter.com/bobplaisted|ocala|PER|bob plaisted
+https://twitter.com/redmondmusic|ocala|PER|redmondmusic
+https://twitter.com/redmondmusic|ocala|PER|redmond music
+https://twitter.com/sandrafriend|ocala|PER|sandrafriend
+https://twitter.com/sandrafriend|ocala|PER|sandra friend
+http://en.wikipedia.org/wiki/Joshua_Zetumer|screenwriters|PER|Joshua Zetumer
+https://twitter.com/MissMarcel|screenwriters|PER|MissMarcel
+https://twitter.com/MissMarcel|screenwriters|PER|Miss Marcel
+http://en.wikipedia.org/wiki/Barbara_Liskov|turing|PER|Barbara Liskov
+http://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3|turing|PER|Fernando J. Corbató
+http://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3|turing|PER|Fernando J Corbató
+http://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3|turing|PER|Fernando Corbató
+http://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3|turing|PER|Fernando Corbato
+http://en.wikipedia.org/wiki/Juris_Hartmanis|turing|PER|Juris Hartmanis
+http://en.wikipedia.org/wiki/Shafi_Goldwasser|turing|PER|Shafi Goldwasser
