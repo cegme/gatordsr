@@ -17,6 +17,7 @@ import edu.ufl.cise.KBAOutput
 import java.util.LinkedList
 import edu.ufl.cise.RemoteGPGRetrieval
 import streamcorpus.Token
+import java.io.PrintWriter
 
 
 object Pipeline extends Logging {
@@ -28,6 +29,11 @@ object Pipeline extends Logging {
   val tagger = new POSTaggerME(new POSModel(this.getClass().getClassLoader().getResourceAsStream("en-pos-maxent.bin")))
   val chunker = new ChunkerME(new ChunkerModel(this.getClass().getClassLoader().getResourceAsStream("en-chunker.bin")))
   logInfo("OpenNLP tokenizer, pos tagger, chunker are loaded")
+  
+  
+  //val entity_list = new ArrayList[Entity]
+  //Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
+  //logInfo("Pipeline entity list has been initialized")
   
   // store all queries and patterns in some file
   // could use more fancy data structure, for example, Pattern class
@@ -49,17 +55,7 @@ object Pipeline extends Logging {
   val pf3 = """in.*Fargo Air Museum""".toLowerCase()
   val po0 = ("""(drink|drank|met|meet|in)(.*)(GandB Coffee|G & B|G&B|Glanville & Babinski)""" ).toLowerCase()
   val po1 = ("""(drink|drank|met|meet|in)(.*)(Blossom Coffee)""" ).toLowerCase()
-  
   val pc2 = ("""bobstovall(.*)on""")
-  
-  //println(pp0)
-  //println(pp1)
-  //println(pf0)
-  //println(pf1)
-  //println(pf2)
-  //println(pf3)
-  //println(po0)
-  //println(po1)
   
   // add patterns
   addPattern("Benjamin Bronfman", "affiliate", Pipeline.pp0, 1)
@@ -76,6 +72,7 @@ object Pipeline extends Logging {
 
   // get a Pipeline object for specific text and query
   def getPipeline(patterns:ArrayList[String], queries:ArrayList[SSFQuery], dirs:ArrayList[java.lang.Integer]): Pipeline = new Pipeline(patterns, queries, dirs)
+  
   
   def main(args: Array[String]) {
     val pipe0 = getPipeline(patterns, queries, dirs)
