@@ -30,6 +30,9 @@ object Pipeline extends Logging {
   val chunker = new ChunkerME(new ChunkerModel(this.getClass().getClassLoader().getResourceAsStream("en-chunker.bin")))
   logInfo("OpenNLP tokenizer, pos tagger, chunker are loaded")
   
+  // two filters 
+  // from stream items to sentences
+  // from sentences to entities
   
   //val entity_list = new ArrayList[Entity]
   //Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
