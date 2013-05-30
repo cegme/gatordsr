@@ -5,6 +5,7 @@ import json
 
 from django.utils.encoding import smart_str
 
+# Run this from the gatordsr/code/python/ folder
 ENTITYJSONFILE = "../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json"
 
 def print_entity_list():
