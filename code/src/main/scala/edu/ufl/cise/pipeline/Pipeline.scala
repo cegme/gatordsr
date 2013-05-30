@@ -174,7 +174,7 @@ class Pipeline(patterns:ArrayList[String], queries:ArrayList[SSFQuery], dirs:Arr
     }
   }
   
-  def transform(tokens:Array[Token]):String = {
+ def transform(tokens:Array[Token]):String = {
     var sb = new java.lang.StringBuilder
     tokens.foreach(token => {
       sb.append(token.token).append(" ")

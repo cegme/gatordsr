@@ -24,25 +24,29 @@ public class FileProcessor {
 		long zettabytes = Math.round(exabytes / BINARY_KILO);
 		long yottabytes = Math.round(zettabytes / BINARY_KILO);
 
-		if (unit != null && (unit.equalsIgnoreCase("YB")) || (unit == null && yottabytes >= 1))
-			return yottabytes + "YB";
-		else if (unit != null && (unit.equalsIgnoreCase("ZB")) || (unit == null && zettabytes > 1))
-			return zettabytes + "ZB";
-		else if (unit != null && (unit.equalsIgnoreCase("EB")) || (unit == null && exabytes > 1))
-			return exabytes + "EB";
-		else if (unit != null && (unit.equalsIgnoreCase("PB")) || (unit == null && petabytes > 1))
-			return petabytes + "PB";
-		else if (unit != null && (unit.equalsIgnoreCase("TB")) || (unit == null && terabytes > 1))
-			return terabytes + "TB";
-		else if (unit != null && (unit.equalsIgnoreCase("GB")) || (unit == null && gigabytes > 1))
-			return gigabytes + "GB";
-		else if (unit != null && (unit.equalsIgnoreCase("MB")) || (unit == null && megabytes > 1))
-			return megabytes + "MB";
-		else if (unit != null && (unit.equalsIgnoreCase("KB")) || (unit == null && kilobytes > 1))
-			return kilobytes + "KB";
-		else if (unit != null && (unit.equalsIgnoreCase("B")) || (unit == null && bytes > 1))
-			return bytes + "B";
-		return null;
+		String res = "";
+
+		if ((unit != null && (unit.equalsIgnoreCase("YB"))) || (unit == null && yottabytes >= 1))
+			res += yottabytes + "YB";
+		else if ((unit != null && (unit.equalsIgnoreCase("ZB"))) || (unit == null && zettabytes >= 1))
+			res += zettabytes + "ZB";
+		else if ((unit != null && (unit.equalsIgnoreCase("EB"))) || (unit == null && exabytes >= 1))
+			res += exabytes + "EB";
+		else if ((unit != null && (unit.equalsIgnoreCase("PB"))) || (unit == null && petabytes >= 1))
+			res += petabytes + "PB";
+		else if ((unit != null && (unit.equalsIgnoreCase("TB"))) || (unit == null && terabytes >= 1))
+			res += terabytes + "TB";
+		else if ((unit != null && (unit.equalsIgnoreCase("GB"))) || (unit == null && gigabytes >= 1))
+			res += gigabytes + "GB";
+		else if ((unit != null && (unit.equalsIgnoreCase("MB"))) || (unit == null && megabytes >= 1))
+			res += megabytes + "MB";
+		else if ((unit != null && (unit.equalsIgnoreCase("KB"))) || (unit == null && kilobytes >= 1))
+			res += kilobytes + "KB";
+		else if ((unit != null && (unit.equalsIgnoreCase("B"))) || (unit == null && bytes >= 1))
+			res += bytes + "B";
+		if (res.length() == 0)
+			res += 0 + "B";
+		return res;
 	}
 
 	public static String humanReadableByteCount(long bytes) {
@@ -158,6 +162,6 @@ public class FileProcessor {
 
 	public static void main(String[] args) {
 		System.out.println(Long.MAX_VALUE);
-		System.out.println(fileSizeToStr(1168949 , null));
+		System.out.println(fileSizeToStr(1168949, null));
 	}
 }
