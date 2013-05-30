@@ -41,9 +41,19 @@ namespace po = boost::program_options;
 
 using namespace streamcorpus;
 
+
+
+
+//------------------------------------
+
 int main(int argc, char **argv) {
 
     //clog << "Starting program" <<endl;
+    //clog << "File name: " << argv[1] << endl;
+    string gpg_file;
+    if (argc > 1) {
+      gpg_file = argv[1];
+    }
     
     locale loc;
     string text_source("clean_visible");
@@ -54,6 +64,7 @@ int main(int argc, char **argv) {
     po::options_description desc("Allowed options");
     desc.add_options()
     ("help,h", "help message")
+    ("gpgfile,f", "gpgfile")
     //("text_source,t", po::value<string>(&text_source), "text source in stream item")
     //("negate,n", po::value<bool>(&negate)->implicit_value(true), "negate sense of match")
     ;
@@ -69,8 +80,7 @@ int main(int argc, char **argv) {
     }*/
 
     // Read in the entity JSON file
-    std::vector<found_entity> aliases = get_aliases();
-    
+    std::vector<found_entity> aliases(get_aliases());
 
     // Create annotator object
     Annotator annotator;
@@ -97,11 +107,7 @@ int main(int argc, char **argv) {
     boost::shared_ptr<TBufferedTransport> transportInput(new TBufferedTransport(innerTransportInput));
     boost::shared_ptr<TBinaryProtocol> protocolInput(new TBinaryProtocol(transportInput));
     transportInput->open();
-
-    // output 
-    boost::shared_ptr<TFDTransport> transportOutput(new TFDTransport(output_fd));
-    boost::shared_ptr<TBinaryProtocol> protocolOutput(new TBinaryProtocol(transportOutput));
-    transportOutput->open();
+    //clog << "isOpen : " << transportInput->isOpen() << endl;
 
     // Read and process all stream items
     StreamItem stream_item;
@@ -117,11 +123,11 @@ int main(int argc, char **argv) {
             string actual_text_source = text_source;
             //clog << "Reading stream item content from : " << text_source << endl;
             if (text_source == "clean_visible") {
-                content = tolower(stream_item.body.clean_visible, loc);
+                content = stream_item.body.clean_visible;
             } else if (text_source == "clean_html") {
-                content = tolower(stream_item.body.clean_html, loc);
+                content = stream_item.body.clean_html;
             } else if (text_source == "raw") {
-                content = tolower(stream_item.body.raw, loc);
+                content = stream_item.body.raw;
             } else {
                 cerr << "Bad text_source :" << text_source <<endl;
                 exit(-1);
@@ -129,7 +135,9 @@ int main(int argc, char **argv) {
 
             if (content.empty()) {
                 // Fall back to raw if desired text_source has no content.
-                content = tolower(stream_item.body.raw, loc);
+                content = stream_item.body.raw;
+                boost::algorithm::to_lower(content);
+
                 actual_text_source = "raw";
                 if (content.empty()) {
                     // If all applicable text sources are empty, we have a problem and exit with an error
@@ -138,20 +146,18 @@ int main(int argc, char **argv) {
                 }
 
               // Check for an entity match
-              struct HasEntity {
-                const std::string s;
-                HasEntity(std::string _s): s(_s){}
-                bool operator()(const struct found_entity &v) const {
-                  return v.alias.find(s) != std::string::npos;
-                }
-              };
+              
               struct HasEntity has_entity(content);
-              if(std::any_of(aliases.cbegin(), aliases.cend(), has_entity)) {
+
+              if(streamcorpus::any_of(aliases.begin(), aliases.end(), has_entity)) {
+              //if(streamcorpus::any_ofs(aliases.cbegin(), aliases.cend(), HasEntity(content))) {
               //if(std::any_of(aliases.begin(), aliases.end(), HasEntity(content))) {
+                
                 // Found an entity, print which one
-                std::clog << "Found an entity in stream item: " << stream_item.doc_id;
+                //std::clog << "Found an entity in stream item: " << stream_item.doc_id;
                 ++si_match;
                 // TODO Add a call to a function that prints out the file matched entity relations
+                //
               }
             }
           
@@ -162,9 +168,10 @@ int main(int argc, char **argv) {
         }
         catch (TTransportException e) {
             // Vital to flush the buffered output or you will lose the last one
-            transportOutput->flush();
-            clog << "Total stream items processed: " << si_total << endl;
-            clog << "Total matches : " << si_match << endl;
+            if (si_match > 0) {
+              //clog << "si processed: " << si_total <<  ", matches :" << si_match << endl;
+              clog << "[" << si_match << "]|" << gpg_file << endl;
+            }
             break;
         }
     }
