@@ -1,5 +1,5 @@
 #CC = clang++ -std=c++0x
-CC = g++ -w -O7 -Wno-deprecated -std=c++0x
+CC = g++ -w -O7 -Wno-deprecated -std=c++0x -march=native
 #CC = g++ -g -std=gnu++0x 
 
 #tag = -i
