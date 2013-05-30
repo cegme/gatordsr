@@ -3,7 +3,6 @@ package edu.ufl.cise;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -31,8 +30,8 @@ public class LogReader {
 
 	static Boolean	TRUE	= new Boolean(true);
 
-	public static Hashtable<String, Boolean> getPreLoggedFileList() throws FileNotFoundException {
-		List<String> oldLogs = DirList.getFileList(CorpusBatchProcessor.LOG_DIR_LOCAL_OLD, null);
+	public static Hashtable<String, Boolean> getPreLoggedFileList(String dir) throws FileNotFoundException {
+		List<String> oldLogs = DirList.getFileList(dir, null);
 		Hashtable<String, Boolean> preLoggedFileList = new Hashtable<String, Boolean>();
 		for (String s : oldLogs) {
 			Scanner sc = new Scanner(new File(s));
@@ -63,7 +62,7 @@ public class LogReader {
 
 		System.out.println(getFileName(lineFileLog));
 
-		Hashtable<String, Boolean> hash = getPreLoggedFileList();
+		Hashtable<String, Boolean> hash = getPreLoggedFileList(CorpusBatchProcessor.LOG_DIR_LOCAL_OLD);
 		System.out.println(hash);
 
 		// if (lineEntity.length() > 0 && lineEntity.charAt(0) == '>') {

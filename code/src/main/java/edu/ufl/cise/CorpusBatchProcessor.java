@@ -55,32 +55,34 @@ import edu.ufl.cise.pipeline.Preprocessor;
  */
 public class CorpusBatchProcessor {
 
-	public final static String				CORPUS_DIR_SERVER	= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public final static String				CORPUS_DIR_LOCAL	= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public final static String				LOG_DIR_SERVER		= "/media/sde/runs/";
-	public final static String				LOG_DIR_LOCAL			= "/home/morteza/trec/runs/";
-	public final static String				LOG_DIR_LOCAL_OLD	= "/home/morteza/trec/runs.old/";
-	final String											FILTER						= "";
-	final String											query							= "president";
-	AtomicLong												fileCount					= new AtomicLong(0);
-	AtomicLong												siCount						= new AtomicLong(0);
-	AtomicLong												siFilteredCount		= new AtomicLong(0);
-	AtomicLong												processedSize			= new AtomicLong(0);
+	public final static String				CORPUS_DIR_SERVER		= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_LOCAL		= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				LOG_DIR_SERVER			= "/media/sde/runs/";
+	public final static String				LOG_DIR_SERVER_OLD	= "/media/sde/runs.old/";
+	public final static String				LOG_DIR_LOCAL				= "/home/morteza/trec/runs/";
+	public final static String				LOG_DIR_LOCAL_OLD		= "/home/morteza/trec/runs.old/";
+	final String											FILTER							= "";
+	final String											query								= "president";
+	AtomicLong												fileCount						= new AtomicLong(0);
+	AtomicLong												siCount							= new AtomicLong(0);
+	AtomicLong												siFilteredCount			= new AtomicLong(0);
+	AtomicLong												processedSize				= new AtomicLong(0);
 
-	public static final DateFormat		format						= new SimpleDateFormat("yyyy-MM-dd-HH");
-	public static final DateFormat		logTimeFormat			= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static final DateFormat		format							= new SimpleDateFormat("yyyy-MM-dd-HH");
+	public static final DateFormat		logTimeFormat				= new SimpleDateFormat(
+																														"yyyy-MM-dd HH:mm:ss");
 	final int													indexOfThisProcess;
 	final int													totalNumProcesses;
 
-	Pipeline													pipe							= Pipeline.getPipeline(Pipeline.patterns(),
-																													Pipeline.queries(), Pipeline.dirs());
-	final Pattern											pattern						= Pattern.compile(query);
+	Pipeline													pipe								= Pipeline.getPipeline(Pipeline.patterns(),
+																														Pipeline.queries(), Pipeline.dirs());
+	final Pattern											pattern							= Pattern.compile(query);
 
-	DecimalFormat											numberFormatter		= new DecimalFormat("00");
+	DecimalFormat											numberFormatter			= new DecimalFormat("00");
 
 	List<Entity>											listEntity;
 
-	boolean														localRun;
+	final boolean											localRun;
 
 	final Hashtable<String, Boolean>	alreadyProcessedGPGFileHashTable;
 
@@ -95,17 +97,19 @@ public class CorpusBatchProcessor {
 			throws FileNotFoundException {
 		this.indexOfThisProcess = indexOfThisProcess;
 		this.totalNumProcesses = totalNumProcesses;
-		alreadyProcessedGPGFileHashTable = LogReader.getPreLoggedFileList();
+		File f = new File(CORPUS_DIR_LOCAL);
+		localRun = f.exists();
+		alreadyProcessedGPGFileHashTable = localRun ? LogReader.getPreLoggedFileList(LOG_DIR_LOCAL_OLD)
+				: LogReader.getPreLoggedFileList(LOG_DIR_SERVER_OLD);
 	}
 
 	public CorpusBatchProcessor() throws FileNotFoundException {
 		indexOfThisProcess = -1;
 		this.totalNumProcesses = -1;
-		alreadyProcessedGPGFileHashTable = LogReader.getPreLoggedFileList();
-
 		File f = new File(CORPUS_DIR_LOCAL);
-
 		localRun = f.exists();
+		alreadyProcessedGPGFileHashTable = localRun ? LogReader.getPreLoggedFileList(LOG_DIR_LOCAL_OLD)
+				: LogReader.getPreLoggedFileList(LOG_DIR_SERVER_OLD);
 
 	}
 
@@ -122,6 +126,7 @@ public class CorpusBatchProcessor {
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
 				+ fileStr;
 		// + fileStr + " | xz --decompress";
+		// System.out.println(command);
 		return FileProcessor.runBinaryShellCommand(command);
 	}
 
@@ -156,6 +161,7 @@ public class CorpusBatchProcessor {
 
 				// pipe.run(si);
 
+				// System.out.println(day + "|" + hour+ "|" + fileName+ "|" + index);
 				SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
 				process(pw, siw);
 
@@ -206,48 +212,53 @@ public class CorpusBatchProcessor {
 
 			List<Sentence> listSentence = siw.getStreamItem().getBody().getSentences().get("lingpipe");
 
-			// /TODO a map from entoty to boolean true false takes less memory than
-			// initiing all sentences.
-			List<String> listStr = new LinkedList<String>();
-			for (Sentence sentence : listSentence) {
-				StringBuilder sentenceStr = new StringBuilder();
-				for (Token t : sentence.getTokens()) {
-					if (t.entity_type != null)
-						sentenceStr.append(t.token.toLowerCase() + " ");
+			if (listSentence == null) {
+				System.out.println("lingpipe = Null: " + siw);
+			} else {
+				// /TODO a map from entoty to boolean true false takes less memory than
+				// initiing all sentences.
+				List<String> listStr = new LinkedList<String>();
+				for (Sentence sentence : listSentence) {
+					StringBuilder sentenceStr = new StringBuilder();
+					for (Token t : sentence.getTokens()) {
+						if (t.entity_type != null)
+							sentenceStr.append(t.token.toLowerCase() + " ");
+					}
+					// / pipe.transform(sentence.tokens.toArray(new
+					// Token[sentence.tokens.size()]));
+					listStr.add(sentenceStr.toString());
 				}
-				pipe.transform(sentence.tokens.toArray(new Token[sentence.tokens.size()]));
-				listStr.add(sentenceStr.toString());
-			}
 
-			// match all entities
-			for (Entity entity : listEntity) {
-				boolean matchedEntity = false;
-				// match all aliases of entity
-				for (int ientity = 0; ientity < entity.names().size(); ientity++) {
-					// for all sentences
-					for (int isentence = 0; isentence < listStr.size() && !matchedEntity; isentence++) {
-						String s = listStr.get(isentence);
+				// match all entities
+				for (Entity entity : listEntity) {
+					boolean matchedEntity = false;
+					// match all aliases of entity
+					for (int ientity = 0; ientity < entity.names().size(); ientity++) {
+						// for all sentences
+						for (int isentence = 0; isentence < listStr.size() && !matchedEntity; isentence++) {
+							String s = listStr.get(isentence);
 
-						String alias = entity.names().get(ientity);
-						if (s.contains(alias)) {
-							if (!printedFileName) {
-								pw.print(">" + siw.day + " | " + siw.fileName + " | " + siw.getIndex() + " | "
-										+ siw.getStreamItem().getDoc_id() + " || ");
+							String alias = entity.names().get(ientity);
+							if (s.contains(alias)) {
+								if (!printedFileName) {
+									pw.print(">" + siw.day + " | " + siw.fileName + " | " + siw.getIndex() + " | "
+											+ siw.getStreamItem().getDoc_id() + " || ");
 
-								printedFileName = true;
+									printedFileName = true;
+								}
+								matchedEntity = true;
+
+								pw.print(entity.topic_id() + ", ");
+								siFilteredCount.incrementAndGet();
 							}
-							matchedEntity = true;
-
-							pw.print(entity.topic_id() + ", ");
-							siFilteredCount.incrementAndGet();
 						}
 					}
 				}
+				// }
+				// }
+				if (printedFileName)
+					pw.println(); // final new line
 			}
-			// }
-			// }
-			if (printedFileName)
-				pw.println(); // final new line
 		}
 
 		// .replaceAll("[^A-Za-z0-9\\p{Punct}]", " ")
@@ -258,7 +269,9 @@ public class CorpusBatchProcessor {
 	}
 
 	private boolean isAlreadyProcessed(String fileName) {
-		return alreadyProcessedGPGFileHashTable.containsKey(fileName);
+		boolean contains = alreadyProcessedGPGFileHashTable.containsKey(fileName);
+
+		return contains;
 	}
 
 	/**
@@ -416,7 +429,7 @@ public class CorpusBatchProcessor {
 			cTemp.setTime(cStart.getTime());
 			cTemp.add(Calendar.HOUR, threadIndex);
 
-			Thread worker = new Thread() {
+			Thread worker = new Thread() {// one thread per hour then add index
 				public void run() {
 
 					PrintWriter pw = null;
@@ -434,8 +447,13 @@ public class CorpusBatchProcessor {
 								for (final String fileStr : fileList) {
 									final int hour = cTemp.get(Calendar.HOUR_OF_DAY);
 									final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
-									if (isAlreadyProcessed(date + "/" + fileName)) {
-										alreadyProcessedGPGFileHashTable.remove(date + "/" +fileName);
+									String dateFile = date + "/" + fileName;
+									if (isAlreadyProcessed(dateFile)) {
+										System.out.println("@ " + dateFile);
+										// Object o =
+										// alreadyProcessedGPGFileHashTable.remove(dateFile);
+										// if(o == null)
+										// throw new Exception("Exception");
 									} else {
 										try {
 											InputStream is = grabGPGLocal(date, fileName, fileStr);
