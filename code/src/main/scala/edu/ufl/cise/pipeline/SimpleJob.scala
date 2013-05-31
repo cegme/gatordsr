@@ -10,22 +10,17 @@ import streamcorpus.StreamItem
 import streamcorpus.Token
 import java.io.FileOutputStream
 import java.io.File
+import java.lang.Integer
 
 object SimpleJob extends Logging{
-  
-  val entity_list = new ArrayList[Entity]
-  Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
-  //println("entity list size" + entity_list.size())
-  lazy val entities = entity_list.toArray(Array[Entity]())
-    
+  // method library
   def main(args:Array[String]){
     readFile("resources/test/entities.psv")
     //readFile("resources/test/total.txt")
     //checkLabels()
-    
   }
   
-  def filter(si:StreamItem)
+  def filter(entities: Array[Entity], si:StreamItem)
   {
     val it = si.body.sentences.get("lingpipe").iterator()
     var index = 0
@@ -58,7 +53,6 @@ object SimpleJob extends Logging{
         })
       }
     }
-    
   }
   
   def getPOS(tokens:Array[Token]):String = {
@@ -66,7 +60,6 @@ object SimpleJob extends Logging{
     tokens.foreach(token => {
         sb.append(token.pos).append(" ")
     })
-    //println(sb)
     sb.toString()
   }
   
@@ -121,25 +114,18 @@ object SimpleJob extends Logging{
   
   
   def checkLabels(){
-    //2011-12-07-17 social-225-6703bd68f42ee7e87997448e2a9f4b44-68bd868673798ab75ccc676f08e0f13e.sc.xz.gpg 96
-    //val filename = "social-225-6703bd68f42ee7e87997448e2a9f4b44-68bd868673798ab75ccc676f08e0f13e.sc.xz.gpg"
-    //val list = RemoteGPGRetrieval.getStreams("2011-12-07-17", filename)
-    //val si = list.get(96)
-/*    val filename = "news-261-b43f91d3b5529ff018ab4a03e3712b6a-f16b7d8deef22d31d07e75a78a8a0a4f.sc.xz.gpg"
-    val list = RemoteGPGRetrieval.getStreams("2011-11-11-15", filename)
-    val si = list.get(57)*/
     val filename = "social-323-570f2bb2235ab6efe34398cae3f68549-0997c67434c786626c475c3d62a31408.sc.xz.gpg"
     val list = RemoteGPGRetrieval.getStreams("2011-12-31-23", filename)
     val si = list.get(0)
     println(si.body.sentences.isEmpty())
     println(si.body.clean_visible)
-/*    si.body.sentences.get("lingpipe").toArray(Array[streamcorpus.Sentence]()).foreach(sentence => {
+    si.body.sentences.get("lingpipe").toArray(Array[streamcorpus.Sentence]()).foreach(sentence => {
     //println(sentence.getTokens().toArray().mkString(" "))
     val tokens = sentence.getTokens().toArray(Array[Token]())
     if(tokens(0).entity_type == null) println("empty")
     println( tokens(0).getToken() + ":" + tokens(0).getEntity_type() + ":" + tokens(0).getEquiv_id() + ":" + tokens(0).getDependency_path() + ":" +  
         tokens(0).getLemma() + ":" +tokens(0).getMention_id()+ ":" + tokens(0).getPos())
-    })*/
+    })
   }
   
   def readFile(filename: String){
@@ -153,19 +139,80 @@ object SimpleJob extends Logging{
       //val list = RemoteGPGRetrieval.getStreams(array(0).split(">")(1), array(1))
       val list = RemoteGPGRetrieval.getStreams(array(0), array(1))
       val si = list.get(Integer.parseInt(array(2)))
-      //if(!si.body.labels.isEmpty()) filter(si)
-      
-      //if(!si.body.labels.isEmpty()) {
-        //pw.println(si.body.labels)
-        //pw.flush()
-        //println(si.body.labels)}
-      
-      filter(si)
-      
+      //filter(si)
       si.clear()
-
       num = num + 1
     })
     //pw.close
+  }
+  
+
+    
+  def filterSentences (n : Integer) = {
+    // read from a file to get all the streamitems, use the filtered entity to filter
+    var num = 1
+    
+    val pw = new PrintWriter("resources/test/ss.txt")
+    
+    val lines = Source.fromFile("resources/test/total.txt").getLines.slice(0, n)
+    
+    lines.foreach(line => {
+      // parse one line to get parameters
+      val array = line.split(" \\| ") 
+      val date_hour = array(0).split(">")(1)
+      val filename = array(1)
+      val si_num = array(2)
+      val topics = line.split("\\|\\| ")(1).split(", ")
+      
+      println(num + " " + date_hour + " " + filename + " " + si_num)
+      
+      //println(topics.mkString(" "))
+      val ens = findEntity(topics)
+      val list = RemoteGPGRetrieval.getStreams(date_hour, filename)
+      val si = list.get(Integer.parseInt(si_num))
+      val ss = si.body.sentences.get("lingpipe")
+      // process all the sentences
+      for(i <- 0 until ss.size()){
+        val s = SimpleJob.transform2(ss.get(i).getTokens().toArray(Array[Token]()))
+        //println(s.toLowerCase())
+        //println(s)
+        ens.foreach(e => {
+          Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
+            //println(name.toLowerCase())
+            if(s.toLowerCase().contains(name.toLowerCase())){
+              // print line to the file, containing date_hour, filename, si_num, sentence i and entity index e
+              //println(s)
+              // println(name)
+              //println(num + " " + date_hour + " " + filename + " " + si_num + " " + i + " " + e + " " + Pipeline.entities(e).topic_id)
+              pw.println(date_hour + " " + filename + " " + si_num + " " + i + " " + e + " " + Pipeline.entities(e).topic_id)
+              pw.flush()
+              // store sentences into files, too
+              
+            }
+          })
+        })
+      }
+      num = num + 1
+      
+    })
+    // improve the performance
+     pw.close()
+    // store the filtered sentences into a file
+  }
+  
+    // find corresponding entities by name
+    def findEntity(topics : Array[String]) = {
+    // get the indexes of the entities contained in one document
+    val ens = new Array[Integer](topics.size)
+    var index = 0
+    topics.foreach(topic => {
+      for (i <-0 until Pipeline.entities.size){
+        if(Pipeline.entities(i).topic_id.toLowerCase().equals(topic.toLowerCase())){
+          ens(index) = i
+          index = index + 1
+        }  
+      }
+    })
+    ens
   }
 }
