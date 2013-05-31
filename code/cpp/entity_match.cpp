@@ -137,30 +137,34 @@ int main(int argc, char **argv) {
                 // Fall back to raw if desired text_source has no content.
                 content = stream_item.body.raw;
                 boost::algorithm::to_lower(content);
-
                 actual_text_source = "raw";
-                if (content.empty()) {
-                    // If all applicable text sources are empty, we have a problem and exit with an error
-                    cerr << si_total << " Error, doc id: " << stream_item.doc_id << " was empty." << endl;
-                    exit(-1);
-                }
+            
 
-              // Check for an entity match
-              
-              struct HasEntity has_entity(content);
-
-              if(streamcorpus::any_of(aliases.begin(), aliases.end(), has_entity)) {
-              //if(streamcorpus::any_ofs(aliases.cbegin(), aliases.cend(), HasEntity(content))) {
-              //if(std::any_of(aliases.begin(), aliases.end(), HasEntity(content))) {
-                
-                // Found an entity, print which one
-                //std::clog << "Found an entity in stream item: " << stream_item.doc_id;
-                ++si_match;
-                // TODO Add a call to a function that prints out the file matched entity relations
-                //
+              if (content.empty()) {
+                  // If all applicable text sources are empty, we have a problem and exit with an error
+                  cerr << si_total << " Error, doc id: " << stream_item.doc_id << " was empty." << endl;
+                  continue;
+                  //exit(-1);
               }
             }
-          
+
+                // Check for an entity match
+                
+                struct HasEntity has_entity(content);
+
+                if(streamcorpus::any_of(aliases.begin(), aliases.end(), has_entity)) {
+                //if(streamcorpus::any_ofs(aliases.cbegin(), aliases.cend(), HasEntity(content))) {
+                //if(std::any_of(aliases.begin(), aliases.end(), HasEntity(content))) {
+                  
+                  // Found an entity, print which one
+                  //std::clog << "Found an entity in stream item: " << stream_item.doc_id;
+                  ++si_match;
+                  break; // Just find the first
+                  // TODO Add a call to a function that prints out the file matched entity relations
+                  //
+                  
+                }
+            
 
 
             // Increment count of stream items processed
@@ -168,13 +172,14 @@ int main(int argc, char **argv) {
         }
         catch (TTransportException e) {
             // Vital to flush the buffered output or you will lose the last one
-            if (si_match > 0) {
-              //clog << "si processed: " << si_total <<  ", matches :" << si_match << endl;
-              clog << "[" << si_match << "]|" << gpg_file << endl;
-            }
+            //string is_good = (si_match>0)?"+":"-";
+            //cout << is_good << gpg_file <<endl;
             break;
         }
     }
+            string is_good = (si_match>0)?"+ |":"- | ";
+            cout << is_good << gpg_file <<endl;
+
     return 0;
 }
 
