@@ -25,9 +25,24 @@ object Preprocessor {
     entities.foreach(target => {
       val entity: Map[String, Any] = target.asInstanceOf[Map[String, Any]]
       val alias = (entity.get("alias").get.asInstanceOf[List[String]]).map(s => s.toLowerCase())
-      //val s:Some[Any] = Some("");
-      //      s.
-      //alias =  alias.map(s => s.toLowerCase())
+      val enType = entity.get("entity_type").asInstanceOf[Some[Any]].get.toString
+      val enGroup = entity.get("group").asInstanceOf[Some[Any]].get.toString
+      val enTargetId = entity.get("target_id").asInstanceOf[Some[Any]].get.toString
+
+      entity_list.add(new Entity(enType, enGroup, enTargetId, alias))
+    })
+    // call extractWiki
+  }
+  
+    def initEntityList(filename: String, entity_list:ArrayList[Entity]) {
+    // ($schema,http://trec-kba.org/schemas/v1.1/filter-topics.json)
+    val json = JSON.parseFull(Source.fromFile(filename).mkString)
+    val map: Map[String, Any] = json.get.asInstanceOf[Map[String, Any]]
+    //println(map.iterator.next)
+    val entities: List[Any] = map.get("targets").get.asInstanceOf[List[Any]]
+    entities.foreach(target => {
+      val entity: Map[String, Any] = target.asInstanceOf[Map[String, Any]]
+      val alias = (entity.get("alias").get.asInstanceOf[List[String]])
       val enType = entity.get("entity_type").asInstanceOf[Some[Any]].get.toString
       val enGroup = entity.get("group").asInstanceOf[Some[Any]].get.toString
       val enTargetId = entity.get("target_id").asInstanceOf[Some[Any]].get.toString
@@ -47,11 +62,8 @@ object Preprocessor {
 
   }
 
-  def initSlot(entity_type: String, slot: String): Slot = {
-    // initialize names from the ontology file
-    val s = new Slot(entity_type, slot)
-    Source.fromFile("resources/ontology/" + entity_type.toLowerCase() + "_" + slot.toLowerCase() + ".txt").getLines().foreach(name => s.add(name))
-    return s
+  def initPatternList(filename : String, pattern_list : ArrayList[Pattern]){
+    // TODO: initialize a pattern list from a file
   }
 
   // test a single string using a single pattern

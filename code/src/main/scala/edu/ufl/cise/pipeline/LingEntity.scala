@@ -5,7 +5,10 @@ import streamcorpus.Sentence
 import streamcorpus.Token
 import java.util.ArrayList
 
-class LingEntity(entity_type : String, mention_id : Float, equiv_id : Integer) {
+class LingEntity(etype : String, mid : Float, eqid : Integer) {
+  val entity_type = etype
+  val mention_id = mid
+  val equiv_id = eqid
   var topic_id : String = null
   var group : String = null
   var sentence_pos = -1
@@ -19,13 +22,14 @@ class LingEntity(entity_type : String, mention_id : Float, equiv_id : Integer) {
 
 class LingSentence( sentence : Sentence){
   val entity_list = new ArrayList[LingEntity]()
-  def extractEntities(){
+  def extractEntities() = {
+    val entity_list = new ArrayList[LingEntity]()
     val tokens = sentence.getTokens().toArray(Array[Token]())
     val flags = new Array[Integer](tokens.size)
     // generate flags for tokens
     for(i <- 0 until tokens.size){
       val token = tokens(i)
-      if(token.entity_type == null) flags(i) = -1
+      if(token.entity_type == null || token.equiv_id == -1) flags(i) = -1
       else
       {
         if ( (i != 0) && token.getEntity_type().equals(tokens(i-1).getEntity_type()) && 
@@ -61,7 +65,7 @@ class LingSentence( sentence : Sentence){
       //println(sb)
       sb.toString()
     }
-    
+    entity_list
   }
   
 }
