@@ -4,9 +4,10 @@ import java.lang._
 import java.util.ArrayList
 import scala.collection.JavaConversions._
 
-class Pattern(eid : Int, sid : Int, pattern : String, dir : Integer){
-  var entity : String = null
-  var slot : String = null
+case class Pattern(entity_type : String, group : String, slot : String, pattern : String, dir : Integer){
+  // TODO: to add more methods
+  var target_type : String = null
+  var target_type2 : String = null
 }
 
 
