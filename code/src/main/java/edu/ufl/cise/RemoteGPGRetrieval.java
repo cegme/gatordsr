@@ -24,7 +24,7 @@ public class RemoteGPGRetrieval {
 				+ "/"
 				+ fileName
 				+ "' | gpg  --no-permission-warning --trust-model always --output - --decrypt - | xz --decompress";
-		System.out.println(command);
+		//System.out.println(command);
 
 		InputStream is = FileProcessor.runBinaryShellCommand(command);
 		TIOStreamTransport transport = new TIOStreamTransport(is);
@@ -45,8 +45,8 @@ public class RemoteGPGRetrieval {
 				si.read(protocol);
 				if (si.getBody() != null
 						&& si.getBody().getClean_visible() != null) {
-					System.out.println(si.getBody().getClean_visible()
-							.substring(0, 5));
+					//System.out.println(si.getBody().getClean_visible()
+					//		.substring(0, 5));
 				}
 			} catch (Exception e) {
 				exception = true;
