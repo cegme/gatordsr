@@ -32,22 +32,11 @@ object Pipeline extends Logging {
     val pw = new PrintWriter("resources/test/ee.txt")
     val lines = Source.fromFile("resources/test/ss.txt").getLines()
     lines.foreach( line => {
-      //println(line)
       val array = line.split(" ")
-      //println(array(0) + " " + array(1) + " " + Integer.parseInt(array(2)) + " " + Integer.parseInt(array(3)))
       val sentence = getSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
-      
       val ls = new LingSentence(sentence)
       val entity_list = ls.extractEntities()
-      //println()
       val tokens = sentence.getTokens().toArray(Array[Token]())
-      //println(SimpleJob.transform(tokens))
-      //println(SimpleJob.getNER(tokens))
-      //println(SimpleJob.getMentionID(tokens))
-      //println(SimpleJob.getEquivID(tokens))
-      //println(entities(Integer.parseInt(array(4))).topic_id)
-      //println(ls.entity_list.toArray(Array[LingEntity]()).mkString("---"))
-      
       val target = entities(Integer.parseInt(array(4)))
       var index = 0
       pw.print(target.entity_type + "-" + target.group + "---")
@@ -65,18 +54,41 @@ object Pipeline extends Logging {
       pw.flush()
     })
     pw.close()
+  } 
+  
+  def annnotate = {
+    val lines = Source.fromFile("resources/test/ss.txt").getLines()
+    lines.foreach( line => {
+      // parse parameters
+      val array = line.split(" ")
+      // get that sentence
+      val sentence = getSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
+      // get the list of lingpipe entities
+      val entity_list = new LingSentence(sentence).extractEntities()
+      // get the token array
+      val tokens = sentence.getTokens().toArray(Array[Token]())
+      val target = entities(Integer.parseInt(array(4)))
+      val index = getCorresEntity(target, entity_list, array(5))
+      if (index != -1){
+        // start to try to 
+      }
+      
+      // find the corresponding lingpipe entity with the kba entity 
+    })
   }
-   
   
-
+  def getCorresEntity(target: Entity, entity_list: ArrayList[LingEntity], name : String) = {
+      var index = -1
+      for(i <- 0 until entity_list.size()){
+        val entity = entity_list.get(i)
+        if (entity.entity_type.equals(target.entity_type) && entity.content.contains(name)){
+          index = i
+        }
+      }
+    index
+  }
   
-  def generateSamples(){
-    // TODO: use the entity type and the name to match the entity
-    // TODO: with the matched entity, generate samples with the KBAOutput information 
-    // so that after annotate we can have proper results
-    // TODO: change the KBAOutput
-    // the group the entity_type and other things
-  }  
+  
   
   def findSlot(entity : LingEntity, tokens : Array[Token]){
     // val pattern = new Pattern("", "", "", "", 1)
@@ -86,16 +98,24 @@ object Pipeline extends Logging {
     //TODO: for each pattern, match according to directions and 
   }
   
-  def patternMatch(pattern : Pattern, entity : LingEntity, tokens : Array[Token]){
+  def patternMatch(pattern : Pattern, entity : LingEntity, index : Integer, tokens : Array[Token], entities : ArrayList[LingEntity]){
     // match pattern
     val size = tokens.size
     
     if (pattern.dir == 0){ // match left
-      val s = tokens.slice(0, entity.begin)
+      val s = SimpleJob.transform(tokens.slice(0, entity.begin))
       // TODO: take care of the null string
       if (pattern.target_type2 == null){ // normal patterns
           if (s.contains(pattern.pattern)){ // find the match
           // create a slot using KBAOutput Information
+          val array = s.split(pattern.pattern)
+          val m = array(0).split(" ").size
+          val index = entities.indexOf(entity)
+          val po = findLeftEntity(pattern.entity_type, entities, m, index)
+          if (po != -1){
+            // TODO: create a result
+          }
+          
         }
         
       }
@@ -106,23 +126,76 @@ object Pipeline extends Logging {
       }
     }
     
-    else { // match right
-      
-      val s = tokens.slice(entity.end + 1, size) // the string to be matched
-      
+    else { // match right     
+      val s = SimpleJob.transform(tokens.slice(entity.end + 1, size)) // the string to be matched      
       if (pattern.target_type2 == null){ // normal patterns
         if (s.contains(pattern.pattern)){ // find the match
           // create a slot using KBAOutput Information
+          val m = s.split(pattern.pattern)(1).split(" ").size
+          val p = entity.end + m
+          val po = findRightEntity(pattern.entity_type, entities, p, index)
+          if (po != -1){
+            // TODO: create a row result
+          }
         }
         
       }
       else{ // contact_meet_place_time for PER
         if (s.contains(pattern.pattern)){ // find the match
           // create a slot using KBAOutput Information
+          
         }
       }
     }
     
+  }
+  
+  def findRightEntity(entity_type : String, entity_list : ArrayList[LingEntity], start : Integer, index : Integer): Integer = {
+    var exist = false
+    for (i <- index + 1 until entity_list.size()){
+      if (entity_list.get(i).begin > start && entity_list.get(i).entity_type.equals(entity_type)){
+        exist = true
+        return 	i
+      }
+    }
+    -1
+  }
+  
+  def findRightEntity2(entity_type1 : String, entity_type2: String, entity_list : ArrayList[LingEntity], start : Integer, index : Integer): ArrayList[Integer] = {
+    var exist = false
+    val array = new ArrayList[Integer]
+    for (i <- index + 1 until entity_list.size()){
+      if (entity_list.get(i).begin > start && (entity_list.get(i).entity_type.equals(entity_type1) ||
+          entity_list.get(i).entity_type.equals(entity_type2))){
+        exist = true
+        array.add(i)
+      }
+    }
+    array
+  }
+  
+  def findLeftEntity(entity_type : String, entity_list : ArrayList[LingEntity], end : Integer, index : Integer): Integer = {
+    var exist = false
+    for (i <- index -1 to 0 by -1){
+      if (entity_list.get(i).end < end && entity_list.get(i).entity_type.equals(entity_type)){
+        exist = true
+        return 	i
+      }
+    }
+    -1
+  }
+  
+  def findLeftEntity2(entity_type1 : String, entity_type2: String, entity_list : ArrayList[LingEntity], end : Integer, index : Integer): ArrayList[Integer] = {
+    var exist = false
+    val array = new ArrayList[Integer]
+    for (i <- index -1 to 0 by -1){
+      if (entity_list.get(i).end < end && (entity_list.get(i).entity_type.equals(entity_type1) ||
+          entity_list.get(i).entity_type.equals(entity_type2))){
+        exist = true
+        array.add(i)
+      }
+    }
+    array
   }
   
     // get the specified stream item
