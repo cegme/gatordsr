@@ -133,7 +133,7 @@ public class FileProcessor {
 			// }
 			// process.destroy();
 		} catch (IOException e) {
-			System.err.println(command);
+			System.err.println("Exception " + command);
 			e.printStackTrace();
 		}
 		return null;
