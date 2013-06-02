@@ -55,36 +55,42 @@ import edu.ufl.cise.pipeline.Preprocessor;
  */
 public class CorpusBatchProcessor {
 
-	public final static String				CORPUS_DIR_SERVER		= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public final static String				CORPUS_DIR_LOCAL		= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public final static String				LOG_DIR_SERVER			= "/media/sde/runs/";
-	public final static String				LOG_DIR_SERVER_OLD	= "/media/sde/runs.old/";
-	public final static String				LOG_DIR_LOCAL				= "/home/morteza/trec/runs/";
-	public final static String				LOG_DIR_LOCAL_OLD		= "/home/morteza/trec/runs.old/";
-	final String											FILTER							= "";
-	final String											query								= "president";
-	AtomicLong												fileCount						= new AtomicLong(0);
-	AtomicLong												siCount							= new AtomicLong(0);
-	AtomicLong												siFilteredCount			= new AtomicLong(0);
-	AtomicLong												processedSize				= new AtomicLong(0);
+	public final static String				CORPUS_DIR_SERVER					= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_LOCAL					= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				LOG_DIR_SERVER						= "/media/sde/runs/";
+	public final static String				LOG_DIR_SERVER_OLD				= "/media/sde/";
+	public final static String				LOG_DIR_LOCAL							= "/home/morteza/trec/runs/";
+	public final static String				LOG_DIR_LOCAL_OLD					= "/home/morteza/trec/backup/";
+	public final static String				LOG_DIR_LOCAL_TO_PROCESS	= "/home/morteza/trec/toProcess/";
+	public final static String				LOG_DIR_SERVER_TO_PROCESS	= "/media/sde/toProcess/";
+	final String											FILTER										= "";
+	final String											query											= "president";
+	AtomicLong												fileCount									= new AtomicLong(0);
+	AtomicLong												siCount										= new AtomicLong(0);
+	AtomicLong												siFilteredCount						= new AtomicLong(0);
+	AtomicLong												processedSize							= new AtomicLong(0);
 
-	public static final DateFormat		format							= new SimpleDateFormat("yyyy-MM-dd-HH");
-	public static final DateFormat		logTimeFormat				= new SimpleDateFormat(
-																														"yyyy-MM-dd HH:mm:ss");
+	public static final DateFormat		format										= new SimpleDateFormat(
+																																	"yyyy-MM-dd-HH");
+	public static final DateFormat		logTimeFormat							= new SimpleDateFormat(
+																																	"yyyy-MM-dd HH:mm:ss");
 	final int													indexOfThisProcess;
 	final int													totalNumProcesses;
 
-	Pipeline													pipe								= Pipeline.getPipeline(Pipeline.patterns(),
-																														Pipeline.queries(), Pipeline.dirs());
-	final Pattern											pattern							= Pattern.compile(query);
+	Pipeline													pipe											= Pipeline.getPipeline(
+																																	Pipeline.patterns(),
+																																	Pipeline.queries(),
+																																	Pipeline.dirs());
+	final Pattern											pattern										= Pattern.compile(query);
 
-	DecimalFormat											numberFormatter			= new DecimalFormat("00");
+	DecimalFormat											numberFormatter						= new DecimalFormat("00");
 
 	List<Entity>											listEntity;
 
 	final boolean											localRun;
 
 	final Hashtable<String, Boolean>	alreadyProcessedGPGFileHashTable;
+	final Hashtable<String, Boolean>	toBeProcessedGPGFileHashTable;
 
 	/**
 	 * gets the index of thus process and total # of processes that this process
@@ -101,6 +107,9 @@ public class CorpusBatchProcessor {
 		localRun = f.exists();
 		alreadyProcessedGPGFileHashTable = localRun ? LogReader.getPreLoggedFileList(LOG_DIR_LOCAL_OLD)
 				: LogReader.getPreLoggedFileList(LOG_DIR_SERVER_OLD);
+		toBeProcessedGPGFileHashTable = localRun ? LogReader
+				.getPreLoggedFileList(LOG_DIR_LOCAL_TO_PROCESS) : LogReader
+				.getPreLoggedFileList(LOG_DIR_SERVER_TO_PROCESS);
 	}
 
 	public CorpusBatchProcessor() throws FileNotFoundException {
@@ -110,6 +119,9 @@ public class CorpusBatchProcessor {
 		localRun = f.exists();
 		alreadyProcessedGPGFileHashTable = localRun ? LogReader.getPreLoggedFileList(LOG_DIR_LOCAL_OLD)
 				: LogReader.getPreLoggedFileList(LOG_DIR_SERVER_OLD);
+		toBeProcessedGPGFileHashTable = localRun ? LogReader
+				.getToProcessFileList(LOG_DIR_LOCAL_TO_PROCESS) : LogReader
+				.getToProcessFileList(LOG_DIR_SERVER_TO_PROCESS);
 
 	}
 
@@ -270,7 +282,11 @@ public class CorpusBatchProcessor {
 
 	private boolean isAlreadyProcessed(String fileName) {
 		boolean contains = alreadyProcessedGPGFileHashTable.containsKey(fileName);
+		return contains;
+	}
 
+	private boolean isToBeProcessed(String fileName) {
+		boolean contains = toBeProcessedGPGFileHashTable.containsKey(fileName);
 		return contains;
 	}
 
@@ -454,7 +470,7 @@ public class CorpusBatchProcessor {
 										// alreadyProcessedGPGFileHashTable.remove(dateFile);
 										// if(o == null)
 										// throw new Exception("Exception");
-									} else {
+									} else if (isToBeProcessed(fileStr)) {
 										try {
 											InputStream is = grabGPGLocal(date, fileName, fileStr);
 											getStreams(pw, date, hour, fileName, is);

@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -16,6 +18,7 @@ import java.util.regex.Pattern;
 public class S3CorpusDownloader {
 
 	int						threadCount			= 32;
+	static String	localDirLaptop = "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language";
 	static String	localDirSDD			= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	static String	localDirSDE			= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	static String	localDirPrefix	= "s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
@@ -80,6 +83,27 @@ public class S3CorpusDownloader {
 		int i = 0;
 		boolean finished = false;
 		String line;
+		Boolean TRUE = new Boolean(true);
+
+		final Hashtable<String, Boolean> alreadyDownloadedTable = new Hashtable<String, Boolean>();
+		{
+			List<String> alreadyDownloaded = null;
+			alreadyDownloaded = DirList.getFileList(localDirSDD, null);
+			for (String s : alreadyDownloaded) {
+				alreadyDownloadedTable.put(s.substring(localDirSDD.length()), TRUE);
+			}
+			alreadyDownloaded = DirList.getFileList(localDirSDE, null);
+			for (String s : alreadyDownloaded) {
+				alreadyDownloadedTable.put(s.substring(localDirSDE.length()), TRUE);
+			}
+			alreadyDownloaded = null;
+			alreadyDownloaded = DirList.getFileList(localDirLaptop, null);
+			for (String s : alreadyDownloaded) {
+				alreadyDownloadedTable.put(s.substring(localDirLaptop.length()), TRUE);
+			}
+			alreadyDownloaded = null;
+		}
+
 		while (!finished) {
 			Pattern p = Pattern.compile("a href=\"([^\"]+)\"");
 
@@ -99,14 +123,16 @@ public class S3CorpusDownloader {
 
 						Runnable worker = new Thread(i++ + " " + linkStr) {
 							public void run() {
-								int size;
+								// int size;
 								try {
-									size = getDirSize(dir);
+									// size = getDirSize(dir);
+									//
+									//
+									// if (isStorableInSDD(size))
+									// downloadDir(localDirSDD, dir);
+									// else
 
-									if (isStorableInSDD(size))
-										downloadDir(localDirSDD, dir);
-									else
-										downloadDir(localDirSDE, dir);
+									downloadDir(localDirSDE, dir, alreadyDownloadedTable);
 
 								} catch (Exception e) {
 									e.printStackTrace();
@@ -169,7 +195,8 @@ public class S3CorpusDownloader {
 		return size;
 	}
 
-	void downloadDir(String localDir, String dir) throws Exception {
+	void downloadDir(String localDir, String dir, Hashtable<String, Boolean> alreadyDownloadedTable)
+			throws Exception {
 		String line;
 
 		InputStream is;
@@ -184,23 +211,27 @@ public class S3CorpusDownloader {
 				String linkStr = m.group(1);
 				if (linkStr.contains("gpg")) {
 
-					// System.out.println(linkStr);
-					String gpgFileURL = AWS_URL + dir + "/" + linkStr;
+					String fileToFind =  "/" + dir + "/" + linkStr;
+					if (!alreadyDownloadedTable.containsKey(fileToFind)) {
 
-					// printFileSize(gpgFileURL);
+						// System.out.println(linkStr);
+						String gpgFileURL = AWS_URL + dir + "/" + linkStr;
 
-					String commandWget = "wget -nc -q -P " + localDir + dir + "/ " + gpgFileURL;
+						// printFileSize(gpgFileURL);
 
-					// String commandDecrypytHDFS = "wget -O - "
-					// + gpgStr
-					// +
-					// " |   gpg --no-permission-warning --trust-model always  "
-					// + " | hdfs dfs "
-					// + localDir + dir + "/"
-					// + linkStr.substring(0, linkStr.length() - 4);
+						String commandWget = "wget -nc -q -P " + localDir + dir + "/ " + gpgFileURL;
 
-					String command = commandWget;
-					FileProcessor.runBinaryShellCommand(command);
+						// String commandDecrypytHDFS = "wget -O - "
+						// + gpgStr
+						// +
+						// " |   gpg --no-permission-warning --trust-model always  "
+						// + " | hdfs dfs "
+						// + localDir + dir + "/"
+						// + linkStr.substring(0, linkStr.length() - 4);
+
+						String command = commandWget;
+						FileProcessor.runBinaryShellCommand(command);
+					}
 				}
 			}
 		}
