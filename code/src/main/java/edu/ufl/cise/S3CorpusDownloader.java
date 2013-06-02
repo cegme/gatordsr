@@ -230,7 +230,10 @@ public class S3CorpusDownloader {
 						// + linkStr.substring(0, linkStr.length() - 4);
 
 						String command = commandWget;
+						System.out.println(command);
 						FileProcessor.runBinaryShellCommand(command);
+					} else {
+						System.out.println("Already Downloaded "  + fileToFind);
 					}
 				}
 			}
