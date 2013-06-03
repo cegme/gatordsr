@@ -468,6 +468,7 @@ public class CorpusBatchProcessor {
 										// if(o == null)
 										// throw new Exception("Exception");
 									} else if (isToBeProcessed(fileStr)) {
+                                        System.out.println("# " + fileStr);
 										try {
 											InputStream is = grabGPGLocal(date, fileName, fileStr);
 											getStreams(pw, date, hour, fileName, is);

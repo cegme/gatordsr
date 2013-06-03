@@ -65,8 +65,10 @@ public class LogReader {
 				String line = sc.nextLine();
 				String filePath = LogReader.getToProcessFileName(line);
 				// System.out.println(filePath);
-				if (filePath != null)
+				if (filePath != null){
+                    System.out.println("% " + filePath);
 					toProcessFileList.put(filePath, TRUE);
+                }
 			}
 		}
 		return toProcessFileList;
