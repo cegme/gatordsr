@@ -1,4 +1,4 @@
-package edu.ufl.cise;
+package test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +10,10 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import edu.ufl.cise.CorpusBatchProcessor;
+import edu.ufl.cise.FileProcessor;
+import edu.ufl.cise.LogReader;
 
 public class FileSizePerHourCalculator {
 
