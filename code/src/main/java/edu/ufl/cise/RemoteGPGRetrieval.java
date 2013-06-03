@@ -22,7 +22,10 @@ public class RemoteGPGRetrieval {
 		// getSSHStreams("2011-11-03-05", fileName);
 
 		try {
-			getLocalStreams(fileName);
+		List<StreamItem> l = 	getLocalStreams("/home/morteza/Downloads/social-222-fc6ce593d5a66a74da58358cfd87c9e1-5aa3991c8ea528a275238355aabc9d8c.sc.xz.gpg");
+		for(StreamItem si: l){
+			System.out.println(si.doc_id);
+		}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -31,6 +34,7 @@ public class RemoteGPGRetrieval {
 	public static List<StreamItem> getLocalStreams(String fileStr) throws IOException {
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
 				+ fileStr;
+		System.out.println(command);
 		InputStream is = FileProcessor.runBinaryShellCommand(command);
 		XZCompressorInputStream bais = new XZCompressorInputStream(is);
 		TIOStreamTransport transport = new TIOStreamTransport(bais);
