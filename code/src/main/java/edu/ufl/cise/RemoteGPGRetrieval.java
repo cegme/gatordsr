@@ -87,7 +87,7 @@ public class RemoteGPGRetrieval {
 		}
 	}
 
-	public static List<StreamItem> getSSHStreams(String date, String fileName) {
+	public static List<StreamItem> getStreams(String date, String fileName) {
 
 		String command = "sshpass -p 'trecGuest' ssh trecGuest@sm321-01.cise.ufl.edu 'cat /media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
 				+ date
