@@ -29,7 +29,6 @@ import streamcorpus.Sentence;
 import streamcorpus.StreamItem;
 import streamcorpus.Token;
 import edu.ufl.cise.pipeline.Entity;
-import edu.ufl.cise.pipeline.Pipeline;
 import edu.ufl.cise.pipeline.Preprocessor;
 
 /**
@@ -55,7 +54,8 @@ import edu.ufl.cise.pipeline.Preprocessor;
  */
 public class CorpusBatchProcessor {
 
-	public final static String				CORPUS_DIR_SERVER					= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_SERVER					= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	// "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	public final static String				CORPUS_DIR_LOCAL					= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	public final static String				LOG_DIR_SERVER						= "/media/sde/runs/";
 	public final static String				LOG_DIR_SERVER_OLD				= "/media/sde/backupFinal/";
@@ -77,7 +77,6 @@ public class CorpusBatchProcessor {
 	final int													indexOfThisProcess;
 	final int													totalNumProcesses;
 
-	
 	final Pattern											pattern										= Pattern.compile(query);
 
 	DecimalFormat											numberFormatter						= new DecimalFormat("00");
@@ -130,7 +129,7 @@ public class CorpusBatchProcessor {
 	 * @param fileStr
 	 * @return
 	 */
-	private static InputStream grabGPGLocal(String date, String fileName, String fileStr) {
+	private static InputStream grabGPGLocal(String fileStr) {
 		// System.out.println(date + "/" + fileName);
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
 				+ fileStr;
@@ -177,36 +176,11 @@ public class CorpusBatchProcessor {
 				// si.clear();
 				index = index + 1;
 			} catch (TTransportException e) {
-				tTransportExceptionPrintString(e);
+				RemoteGPGRetrieval.tTransportExceptionPrintString(e);
 				exception = true;
 			}
 		}
 		transport.close();
-	}
-
-	/**
-	 * Get the appropirate cause of exception string for TTransportException
-	 * 
-	 * @param e
-	 */
-	private static void tTransportExceptionPrintString(TTransportException e) {
-		switch (e.getType()) {
-		case TTransportException.ALREADY_OPEN:
-			System.err.println("Error reading StreamItem: ALREADY_OPEN");
-			break;
-		case TTransportException.END_OF_FILE:
-			// System.err.println("Error reading StreamItem: END_OF_FILE");
-			break;
-		case TTransportException.NOT_OPEN:
-			System.err.println("Error reading StreamItem: NOT_OPEN");
-			break;
-		case TTransportException.TIMED_OUT:
-			System.err.println("Error reading StreamItem: TIMED_OUT");
-			break;
-		case TTransportException.UNKNOWN:
-			System.err.println("Error reading StreamItem: UNKNOWN");
-			break;
-		}
 	}
 
 	/**
@@ -468,9 +442,9 @@ public class CorpusBatchProcessor {
 										// if(o == null)
 										// throw new Exception("Exception");
 									} else if (isToBeProcessed(fileStr)) {
-                                        System.out.println("# " + fileStr);
+										System.out.println("# " + fileStr);
 										try {
-											InputStream is = grabGPGLocal(date, fileName, fileStr);
+											InputStream is = grabGPGLocal(fileStr);
 											getStreams(pw, date, hour, fileName, is);
 											is.close();
 

@@ -65,10 +65,10 @@ public class LogReader {
 				String line = sc.nextLine();
 				String filePath = LogReader.getToProcessFileName(line);
 				// System.out.println(filePath);
-				if (filePath != null){
-                    System.out.println("% " + filePath);
+				if (filePath != null) {
+					System.out.println("% " + filePath);
 					toProcessFileList.put(filePath, TRUE);
-                }
+				}
 			}
 		}
 		return toProcessFileList;
@@ -96,7 +96,7 @@ public class LogReader {
 		String lineToProcess = "+ |/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/"
 				+ "kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-02-04-18/"
 				+ "social-290-a5b943086422bd475f72a4507836b581-25627e7a7754d4d426b0f415bb1a43f8.sc.xz.gpg";
-		
+
 		System.out.println(getToProcessFileName(lineToProcess));
 
 		// if (lineEntity.length() > 0 && lineEntity.charAt(0) == '>') {
