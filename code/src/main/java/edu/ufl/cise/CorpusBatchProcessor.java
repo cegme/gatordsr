@@ -58,7 +58,7 @@ public class CorpusBatchProcessor {
 	public final static String				CORPUS_DIR_SERVER					= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	public final static String				CORPUS_DIR_LOCAL					= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	public final static String				LOG_DIR_SERVER						= "/media/sde/runs/";
-	public final static String				LOG_DIR_SERVER_OLD				= "/media/sde/";
+	public final static String				LOG_DIR_SERVER_OLD				= "/media/sde/backupFinal/";
 	public final static String				LOG_DIR_LOCAL							= "/home/morteza/trec/runs/";
 	public final static String				LOG_DIR_LOCAL_OLD					= "/home/morteza/trec/backup/";
 	public final static String				LOG_DIR_LOCAL_TO_PROCESS	= "/home/morteza/trec/toProcess/";
@@ -105,8 +105,8 @@ public class CorpusBatchProcessor {
 		alreadyProcessedGPGFileHashTable = localRun ? LogReader.getPreLoggedFileList(LOG_DIR_LOCAL_OLD)
 				: LogReader.getPreLoggedFileList(LOG_DIR_SERVER_OLD);
 		toBeProcessedGPGFileHashTable = localRun ? LogReader
-				.getPreLoggedFileList(LOG_DIR_LOCAL_TO_PROCESS) : LogReader
-				.getPreLoggedFileList(LOG_DIR_SERVER_TO_PROCESS);
+				.getToProcessFileList(LOG_DIR_LOCAL_TO_PROCESS) : LogReader
+				.getToProcessFileList(LOG_DIR_SERVER_TO_PROCESS);
 	}
 
 	public CorpusBatchProcessor() throws FileNotFoundException {
