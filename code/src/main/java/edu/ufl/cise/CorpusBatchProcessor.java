@@ -29,7 +29,6 @@ import streamcorpus.Sentence;
 import streamcorpus.StreamItem;
 import streamcorpus.Token;
 import edu.ufl.cise.pipeline.Entity;
-import edu.ufl.cise.pipeline.Pipeline;
 import edu.ufl.cise.pipeline.Preprocessor;
 
 /**
@@ -55,10 +54,11 @@ import edu.ufl.cise.pipeline.Preprocessor;
  */
 public class CorpusBatchProcessor {
 
-	public final static String				CORPUS_DIR_SERVER					= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_SERVER_SDE			= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_SERVER_SDD			= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	public final static String				CORPUS_DIR_LOCAL					= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	public final static String				LOG_DIR_SERVER						= "/media/sde/runs/";
-	public final static String				LOG_DIR_SERVER_OLD				= "/media/sde/";
+	public final static String				LOG_DIR_SERVER_OLD				= "/media/sde/backupFinal/";
 	public final static String				LOG_DIR_LOCAL							= "/home/morteza/trec/runs/";
 	public final static String				LOG_DIR_LOCAL_OLD					= "/home/morteza/trec/backup/";
 	public final static String				LOG_DIR_LOCAL_TO_PROCESS	= "/home/morteza/trec/toProcess/";
@@ -77,7 +77,6 @@ public class CorpusBatchProcessor {
 	final int													indexOfThisProcess;
 	final int													totalNumProcesses;
 
-	
 	final Pattern											pattern										= Pattern.compile(query);
 
 	DecimalFormat											numberFormatter						= new DecimalFormat("00");
@@ -105,8 +104,8 @@ public class CorpusBatchProcessor {
 		alreadyProcessedGPGFileHashTable = localRun ? LogReader.getPreLoggedFileList(LOG_DIR_LOCAL_OLD)
 				: LogReader.getPreLoggedFileList(LOG_DIR_SERVER_OLD);
 		toBeProcessedGPGFileHashTable = localRun ? LogReader
-				.getPreLoggedFileList(LOG_DIR_LOCAL_TO_PROCESS) : LogReader
-				.getPreLoggedFileList(LOG_DIR_SERVER_TO_PROCESS);
+				.getToProcessFileList(LOG_DIR_LOCAL_TO_PROCESS) : LogReader
+				.getToProcessFileList(LOG_DIR_SERVER_TO_PROCESS);
 	}
 
 	public CorpusBatchProcessor() throws FileNotFoundException {
@@ -130,7 +129,7 @@ public class CorpusBatchProcessor {
 	 * @param fileStr
 	 * @return
 	 */
-	private static InputStream grabGPGLocal(String date, String fileName, String fileStr) {
+	private static InputStream grabGPGLocal(String fileStr) {
 		// System.out.println(date + "/" + fileName);
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
 				+ fileStr;
@@ -177,36 +176,11 @@ public class CorpusBatchProcessor {
 				// si.clear();
 				index = index + 1;
 			} catch (TTransportException e) {
-				tTransportExceptionPrintString(e);
+				RemoteGPGRetrieval.tTransportExceptionPrintString(e);
 				exception = true;
 			}
 		}
 		transport.close();
-	}
-
-	/**
-	 * Get the appropirate cause of exception string for TTransportException
-	 * 
-	 * @param e
-	 */
-	private static void tTransportExceptionPrintString(TTransportException e) {
-		switch (e.getType()) {
-		case TTransportException.ALREADY_OPEN:
-			System.err.println("Error reading StreamItem: ALREADY_OPEN");
-			break;
-		case TTransportException.END_OF_FILE:
-			// System.err.println("Error reading StreamItem: END_OF_FILE");
-			break;
-		case TTransportException.NOT_OPEN:
-			System.err.println("Error reading StreamItem: NOT_OPEN");
-			break;
-		case TTransportException.TIMED_OUT:
-			System.err.println("Error reading StreamItem: TIMED_OUT");
-			break;
-		case TTransportException.UNKNOWN:
-			System.err.println("Error reading StreamItem: UNKNOWN");
-			break;
-		}
 	}
 
 	/**
@@ -421,7 +395,8 @@ public class CorpusBatchProcessor {
 		final Calendar cEnd = Calendar.getInstance();
 
 		final int threadCount = (localRun) ? 1 : 64;
-		final String CORPUS_DIRECTORY = (localRun) ? CORPUS_DIR_LOCAL : CORPUS_DIR_SERVER;
+		// final String CORPUS_DIRECTORY = (localRun) ? CORPUS_DIR_LOCAL :
+		// CORPUS_DIR_SERVER;
 		final String LOG_DIRECTORY = (localRun) ? LOG_DIR_LOCAL : LOG_DIR_SERVER;
 		if (localRun) {
 			System.out.println("Local run.");
@@ -432,7 +407,7 @@ public class CorpusBatchProcessor {
 			System.out.println("Server run.");
 			cStart.setTime(format.parse("2011-10-05-00"));
 			// cStart.setTime(format.parse("2012-08-18-01"));
-			cEnd.setTime(format.parse("2012-08-18-01"));
+			cEnd.setTime(format.parse("2013-02-13-23"));
 		}
 
 		final AtomicInteger finishedThreadTracker = new AtomicInteger(0);
@@ -456,7 +431,24 @@ public class CorpusBatchProcessor {
 							try {
 								final String date = format.format(cTemp.getTime());
 
-								final List<String> fileList = DirList.getFileList(CORPUS_DIRECTORY + date, FILTER);
+								File testDirectorySDD = new File(CORPUS_DIR_SERVER_SDD + date);
+								File testDirectorySDE = new File(CORPUS_DIR_SERVER_SDE + date);
+
+								List<String> tempFileList = null;
+								if (testDirectorySDD.exists())
+									tempFileList = DirList.getFileList(CORPUS_DIR_SERVER_SDD + date, FILTER);
+								else if (testDirectorySDE.exists())
+									tempFileList = DirList.getFileList(CORPUS_DIR_SERVER_SDE + date, FILTER);
+								else
+									tempFileList = DirList.getFileList(CORPUS_DIR_LOCAL + date, FILTER);
+
+								if (tempFileList == null)
+									throw new RuntimeException("Corpus not found");
+
+								final List<String> fileList = tempFileList;
+
+								// final List<String> fileList =
+								// DirList.getFileList(CORPUS_DIRECTORY + date, FILTER);
 								for (final String fileStr : fileList) {
 									final int hour = cTemp.get(Calendar.HOUR_OF_DAY);
 									final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
@@ -468,8 +460,9 @@ public class CorpusBatchProcessor {
 										// if(o == null)
 										// throw new Exception("Exception");
 									} else if (isToBeProcessed(fileStr)) {
+										System.out.println("# " + fileStr);
 										try {
-											InputStream is = grabGPGLocal(date, fileName, fileStr);
+											InputStream is = grabGPGLocal(fileStr);
 											getStreams(pw, date, hour, fileName, is);
 											is.close();
 
