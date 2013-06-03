@@ -1,9 +1,12 @@
 package edu.ufl.cise;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransportException;
@@ -12,19 +15,86 @@ import streamcorpus.StreamItem;
 
 public class RemoteGPGRetrieval {
 
+	
+	
 	public static void main(String[] args) {
 		String fileName = "social-458-b51e990263a58e94a88d22a8be8502d1-d71caa2571e6e6aa16da0cdae2a4dfc7.sc.xz.gpg";
-		getStreams("2011-11-03-05", fileName);
+		// getSSHStreams("2011-11-03-05", fileName);
+
+		try {
+			getLocalStreams(fileName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public static List<StreamItem> getStreams(String date, String fileName) {
+	public static List<StreamItem> getLocalStreams(String fileStr) throws IOException {
+		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
+				+ fileStr;
+		InputStream is = FileProcessor.runBinaryShellCommand(command);
+		XZCompressorInputStream bais = new XZCompressorInputStream(is);
+		TIOStreamTransport transport = new TIOStreamTransport(bais);
+
+		List<StreamItem> list = new LinkedList<StreamItem>();
+
+		boolean exception = false;
+		while (!exception) {
+			try {
+				transport.open();
+				TBinaryProtocol protocol = new TBinaryProtocol(transport);
+
+				int index = 0;
+
+				StreamItem si = new StreamItem();
+				if (protocol.getTransport().isOpen())
+					si.read(protocol);
+				list.add(si);
+				// SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
+				index = index + 1;
+			} catch (TTransportException e) {
+				tTransportExceptionPrintString(e);
+				exception = true;
+			} catch (TException e) {
+				e.printStackTrace();
+			}
+		}
+		transport.close();
+		return list;
+	}
+
+	/**
+	 * Get the appropirate cause of exception string for TTransportException
+	 * 
+	 * @param e
+	 */
+	public static void tTransportExceptionPrintString(TTransportException e) {
+		switch (e.getType()) {
+		case TTransportException.ALREADY_OPEN:
+			System.err.println("Error reading StreamItem: ALREADY_OPEN");
+			break;
+		case TTransportException.END_OF_FILE:
+			// System.err.println("Error reading StreamItem: END_OF_FILE");
+			break;
+		case TTransportException.NOT_OPEN:
+			System.err.println("Error reading StreamItem: NOT_OPEN");
+			break;
+		case TTransportException.TIMED_OUT:
+			System.err.println("Error reading StreamItem: TIMED_OUT");
+			break;
+		case TTransportException.UNKNOWN:
+			System.err.println("Error reading StreamItem: UNKNOWN");
+			break;
+		}
+	}
+
+	public static List<StreamItem> getSSHStreams(String date, String fileName) {
 
 		String command = "sshpass -p 'trecGuest' ssh trecGuest@sm321-01.cise.ufl.edu 'cat /media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
 				+ date
 				+ "/"
 				+ fileName
 				+ "' | gpg  --no-permission-warning --trust-model always --output - --decrypt - | xz --decompress";
-		//System.out.println(command);
+		// System.out.println(command);
 
 		InputStream is = FileProcessor.runBinaryShellCommand(command);
 		TIOStreamTransport transport = new TIOStreamTransport(is);
@@ -43,10 +113,9 @@ public class RemoteGPGRetrieval {
 			StreamItem si = new StreamItem();
 			try {
 				si.read(protocol);
-				if (si.getBody() != null
-						&& si.getBody().getClean_visible() != null) {
-					//System.out.println(si.getBody().getClean_visible()
-					//		.substring(0, 5));
+				if (si.getBody() != null && si.getBody().getClean_visible() != null) {
+					// System.out.println(si.getBody().getClean_visible()
+					// .substring(0, 5));
 				}
 			} catch (Exception e) {
 				exception = true;
