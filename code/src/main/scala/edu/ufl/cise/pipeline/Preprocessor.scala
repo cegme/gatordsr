@@ -67,6 +67,7 @@ object Preprocessor {
     val lines = Source.fromFile(filename).getLines()
     lines.foreach(line => {
       val array = line.split(", ")
+      //println(array.size)
       pattern_list.add(new Pattern(array(0), array(1), array(2), array(3), array(4)))
     })
   }

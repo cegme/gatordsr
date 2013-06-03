@@ -154,7 +154,7 @@ object SimpleJob extends Logging{
     
     val pw = new PrintWriter("resources/test/ss.txt")
     
-    val lines = Source.fromFile("resources/test/total.txt").getLines.slice(0, n)
+    val lines = Source.fromFile("resources/entity/totalEntityList.txt").getLines.slice(0, n)
     
     lines.foreach(line => {
       // parse one line to get parameters

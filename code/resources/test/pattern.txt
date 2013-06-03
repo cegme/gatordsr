@@ -1,0 +1,14 @@
+PER, FounderOf, founder of, right, FAC
+PER, FounderOf, founded by, left, FAC
+PER, FounderOf, started, right, FAC
+PER, FounderOf, started by, left, FAC
+PER, FounderOf, cofounded, right, ORG
+PER, FounderOf, co-founded, right, ORG
+PER, FounderOf, organized, right, ORG
+PER, FounderOf, chartered, right, ORG
+PER, FounderOf, instituted, right, ORG
+PER, FounderOf, cofounded, right, ORG
+PER, FounderOf, established, right, FAC
+PER, FounderOf, organized, right, ORG
+PER, FounderOf, began, right, ORG
+PER, FounderOf, opened, right, FAC

@@ -25,11 +25,13 @@ object Pipeline extends Logging {
   lazy val entities = entity_list.toArray(Array[Entity]())
   
   val pattern_list = new ArrayList[Pattern]
-  Preprocessor.initPatternList("", pattern_list)
+  Preprocessor.initPatternList("resources/test/pattern.txt", pattern_list)
   lazy val patterns = pattern_list.toArray(Array[Pattern]())
+  patterns.foreach(pattern => {println(pattern.entity_type + " " + pattern.slot + " " + pattern.pattern + 
+    " " + pattern.direction + " " + pattern.target_type)})
   // store sentence information into the file
-  // SimpleJob.filterSentences(1000)
-  // filterEntities
+  //SimpleJob.filterSentences(100)
+  //filterEntities
  
   // from sentences create entities
   def filterEntities = {
