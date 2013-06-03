@@ -54,8 +54,8 @@ import edu.ufl.cise.pipeline.Preprocessor;
  */
 public class CorpusBatchProcessor {
 
-	public final static String				CORPUS_DIR_SERVER					= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	// "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_SERVER_SDE			= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_SERVER_SDD			= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	public final static String				CORPUS_DIR_LOCAL					= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	public final static String				LOG_DIR_SERVER						= "/media/sde/runs/";
 	public final static String				LOG_DIR_SERVER_OLD				= "/media/sde/backupFinal/";
@@ -395,7 +395,8 @@ public class CorpusBatchProcessor {
 		final Calendar cEnd = Calendar.getInstance();
 
 		final int threadCount = (localRun) ? 1 : 64;
-		final String CORPUS_DIRECTORY = (localRun) ? CORPUS_DIR_LOCAL : CORPUS_DIR_SERVER;
+		// final String CORPUS_DIRECTORY = (localRun) ? CORPUS_DIR_LOCAL :
+		// CORPUS_DIR_SERVER;
 		final String LOG_DIRECTORY = (localRun) ? LOG_DIR_LOCAL : LOG_DIR_SERVER;
 		if (localRun) {
 			System.out.println("Local run.");
@@ -406,7 +407,7 @@ public class CorpusBatchProcessor {
 			System.out.println("Server run.");
 			cStart.setTime(format.parse("2011-10-05-00"));
 			// cStart.setTime(format.parse("2012-08-18-01"));
-			cEnd.setTime(format.parse("2012-08-18-01"));
+			cEnd.setTime(format.parse("2013-02-13-23"));
 		}
 
 		final AtomicInteger finishedThreadTracker = new AtomicInteger(0);
@@ -430,7 +431,24 @@ public class CorpusBatchProcessor {
 							try {
 								final String date = format.format(cTemp.getTime());
 
-								final List<String> fileList = DirList.getFileList(CORPUS_DIRECTORY + date, FILTER);
+								File testDirectorySDD = new File(CORPUS_DIR_SERVER_SDD + date);
+								File testDirectorySDE = new File(CORPUS_DIR_SERVER_SDE + date);
+
+								List<String> tempFileList = null;
+								if (testDirectorySDD.exists())
+									tempFileList = DirList.getFileList(CORPUS_DIR_SERVER_SDD + date, FILTER);
+								else if (testDirectorySDE.exists())
+									tempFileList = DirList.getFileList(CORPUS_DIR_SERVER_SDE + date, FILTER);
+								else
+									tempFileList = DirList.getFileList(CORPUS_DIR_LOCAL + date, FILTER);
+
+								if (tempFileList == null)
+									throw new RuntimeException("Corpus not found");
+
+								final List<String> fileList = tempFileList;
+
+								// final List<String> fileList =
+								// DirList.getFileList(CORPUS_DIRECTORY + date, FILTER);
 								for (final String fileStr : fileList) {
 									final int hour = cTemp.get(Calendar.HOUR_OF_DAY);
 									final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
