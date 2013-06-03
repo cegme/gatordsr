@@ -72,28 +72,6 @@ object Preprocessor {
     })
   }
 
-  // test a single string using a single pattern
-  def test() {
-    // create patterns from the entity and slot
-    val bm = new Entity("PER", "bronfman", "http://en.wikipedia.org/wiki/Benjamin_Bronfman")
-    bm.add("Benjamin Bronfman")
-    bm.add("Bronfman")
-    val pa = new Slot("PER", "Affiliate")
-    pa.names.toArray().foreach(s => {
-      bm.names.toArray().foreach(e => {
-        //pattern_list.add(new Pattern(e.asInstanceOf[String], s.asInstanceOf[String]))
-      })
-    })
-    // extract some wikipedia file
-    val s = Source.fromFile("resources/test/bm.txt").mkString
-    // for each pattern in the pattern list, match for some string
-    pattern_list.toArray().foreach(p => {
-      //if(p.asInstanceOf[Pattern].matches(s)) println("match")
-    })
-    // TODO: how to efficiently match all that many patterns
-    // Solution: one pattern for each list
-  }
-
   def main(args: Array[String]) {
     initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json")
     // initSlot("affiliate")

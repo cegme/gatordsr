@@ -50,7 +50,7 @@ public class RemoteGPGRetrieval {
 				}
 			} catch (Exception e) {
 				exception = true;
-				System.err.println(e);
+				//System.err.println(e);
 			}
 			list.add(si);
 			index = index + 1;
