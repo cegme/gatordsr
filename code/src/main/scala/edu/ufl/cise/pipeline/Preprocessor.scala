@@ -64,6 +64,11 @@ object Preprocessor {
 
   def initPatternList(filename : String, pattern_list : ArrayList[Pattern]){
     // TODO: initialize a pattern list from a file
+    val lines = Source.fromFile(filename).getLines()
+    lines.foreach(line => {
+      val array = line.split(", ")
+      pattern_list.add(new Pattern(array(0), array(1), array(2), array(3), array(4)))
+    })
   }
 
   // test a single string using a single pattern

@@ -4,9 +4,9 @@ import java.lang._
 import java.util.ArrayList
 import scala.collection.JavaConversions._
 
-case class Pattern(entity_type : String, group : String, slot : String, pattern : String, dir : Integer){
+case class Pattern(entity_type : String, slot : String, pattern : String, direction : String, target_type : String){
   // TODO: to add more methods
-  var target_type : String = null
+  val dir : Integer = if (direction.equals("right")) 1 else 2
   var target_type2 : String = null
 }
 
