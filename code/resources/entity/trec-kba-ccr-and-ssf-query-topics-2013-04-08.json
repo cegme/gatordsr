@@ -293,13 +293,13 @@
             "entity_type": "PER", 
             "group": "bronfman", 
             "target_id": "http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.",
-            "alias": ["Edgar Bronfman, Jr.", "Edgar Bronfman, Jr", "Edgar Bronfman"]
+            "alias": ["Edgar Bronfman, Jr.", "Edgar Bronfman, Jr", "Edgar Bronfman", "Efer"]
         }, 
         {
             "entity_type": "PER", 
             "group": "bronfman", 
             "target_id": "http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.",
-            "alias": ["Edgar Bronfman, Sr.", "Edgar Bronfman, Sr", "Edgar Bronfman"]
+            "alias": ["Edgar Bronfman, Sr.", "Edgar Bronfman, Sr", "Edgar Bronfman", "Bronfman"]
         }, 
         {
             "entity_type": "PER", 
