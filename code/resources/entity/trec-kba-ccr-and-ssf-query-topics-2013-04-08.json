@@ -215,7 +215,7 @@
             "entity_type": "ORG", 
             "group": "mining", 
             "target_id": "http://en.wikipedia.org/wiki/Gran%C3%A3_y_Montero",
-            "alias": ["Granã y Montero", "Grana y Montero"]
+            "alias": ["Granã y Montero", "Grana y Montero", "IGBVL"]
         }, 
         {
             "entity_type": "ORG", 
@@ -941,7 +941,7 @@
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Scot_Brantley",
-            "alias": ["Scot Brantley"]
+            "alias": ["Scot Brantley", "Coach Brantley", "Scot Eugene Brantley"]
         }, 
         {
             "entity_type": "PER", 
