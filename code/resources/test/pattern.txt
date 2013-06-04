@@ -12,3 +12,17 @@ PER, FounderOf, established, right, FAC
 PER, FounderOf, organized, right, ORG
 PER, FounderOf, began, right, ORG
 PER, FounderOf, opened, right, FAC
+PER, FounderOf, cofounded, left, ORG
+PER, FounderOf, co-founded, left, ORG
+PER, FounderOf, organized, left, ORG
+PER, FounderOf, chartered, left, ORG
+PER, FounderOf, instituted, left, ORG
+PER, FounderOf, cofounded, left, ORG
+PER, FounderOf, established, left, FAC
+PER, FounderOf, organized, left, ORG
+PER, FounderOf, began, left, ORG
+PER, FounderOf, opened, left, FAC
+PER, Affiliate, and, right, PER
+PER, Affiliate, and, left, PER
+PER, Affiliate, like, right, PER
+PER, Affiliate, like, left, PER
