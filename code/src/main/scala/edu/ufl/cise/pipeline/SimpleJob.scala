@@ -85,8 +85,10 @@ object SimpleJob extends Logging{
       println(num + " " + date_hour + " " + filename + " " + si_num)     
       //println(topics.mkString(" "))
       val ens = findEntity(topics)
-      val list = RemoteGPGRetrieval.getStreams(date_hour, filename)
-      val si = list.get(Integer.parseInt(si_num))
+      //val list = RemoteGPGRetrieval.getStreams(date_hour, filename)
+      //val si = list.get(Integer.parseInt(si_num))
+      val si = getRemoteStreamItem(date_hour, filename, Integer.parseInt(si_num))
+      //val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
       val ss = si.body.sentences.get("lingpipe")
       // process all the sentences
       for(i <- 0 until ss.size()){
@@ -138,7 +140,8 @@ object SimpleJob extends Logging{
     val lines = Source.fromFile("resources/test/ss.txt").getLines()
     lines.foreach( line => {
       val array = line.split(" ")
-      val sentence = getRemoteSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
+      val sentence = getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
+      //val sentence = getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
       val ls = new LingSentence(sentence)
       val entity_list = ls.extractEntities()
       val tokens = sentence.getTokens().toArray(Array[Token]())
@@ -169,10 +172,10 @@ object SimpleJob extends Logging{
     RemoteGPGRetrieval.getStreams(date_hour, filename).get(num).body.sentences.get("lingpipe").get(sid)
   
   def getLocalSentence(date_hour : String, filename : String, num : Integer, sid : Integer) = 
-    RemoteGPGRetrieval.getStreams(date_hour, filename).get(num).body.sentences.get("lingpipe").get(sid)  
+    RemoteGPGRetrieval.getLocalStreams(date_hour, filename).get(num).body.sentences.get("lingpipe").get(sid)  
  
       // get the specified stream item
-  def getLocalStreamItem(date_hour : String, filename : String, num : Integer) = RemoteGPGRetrieval.getStreams(date_hour, filename).get(num)
+  def getLocalStreamItem(date_hour : String, filename : String, num : Integer) = RemoteGPGRetrieval.getLocalStreams(date_hour, filename).get(num)
     
 }
 

@@ -12,8 +12,10 @@ object KBAOutput {
   val rows = new ArrayList[Row]() // the list of the rows
 	
   val pw = new PrintWriter(new File("resources/test/result.txt"))
-  
-  
+  pw.println("#{'team_id', 'system_id', 'doc_id', 'topic_id', 'confidence', 'relevance', 'mention', " +
+  		"'date_hour', 'slot_name', 'equiv_id', 'byte_range'}")
+  pw.flush()
+  		
   // add one row into the row list
 
   def add(doc_id:String, topic_id : String, confidence : Integer, 
@@ -48,7 +50,8 @@ case class Row(doc_id:String, topic_id : String, confidence : Integer,
   val mention = -1 // seventh column: contains mention integer in [0, 1]
  
 	
-  override def toString(): String = team_id + " " + system_id + " " + doc_id + " " + topic_id + " " + confidence + " " + relevance + " " + mention + " " + date_hour + " " + slot_name + " " + equiv_id + " " + byte_range
+  override def toString(): String = team_id + " " + system_id + " " + doc_id + " " + topic_id + " " + confidence + " " + 
+    relevance + " " + mention + " " + date_hour + " " + slot_name + " " + equiv_id + " " + byte_range
 	
 	  
 }
