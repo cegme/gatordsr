@@ -85,9 +85,11 @@ public class StreamItemIO {
 			lines.add(sc.nextLine());
 		}
 
-		final int threadCount = 32;
+		final int threadCount = 15;
 		final AtomicInteger finishedThreadTracker = new AtomicInteger(0);
-		final int count = 5000;// SI per file.
+        final AtomicInteger fileCount = new AtomicInteger(0);
+        final AtomicInteger processedSize = new AtomicInteger(0);
+		final int count = 50;// SI per file.
 
 		for (int k = 0; k < lines.size(); k = k + count) {
 			final List<String> tempList = lines.subList(k, Math.min(k + count, lines.size() - 1));
@@ -108,6 +110,15 @@ public class StreamItemIO {
 						System.out.println(fileName);
 						try {
 							listSI.add(RemoteGPGRetrieval.getLocalStreams(date, fileName).get(index));
+                            // fileCount.incrementAndGet();                                                                                                                                         
+                                long size = FileProcessor.getLocalFileSize(fileStr);                                                                                                                 
+                                             processedSize.addAndGet(size);                       
+                            fileCount.incrementAndGet();
+                            System.out.println();
+        pw.println(logTimeFormat.format(new Date()) + " Total " + fileCount                                                                                                  
+                                                     + " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB")                                                                                         
+                                                     +                                                                                                
+                                                     +  threadIndex + ")" + date + "/" + fileName);    
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
