@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -18,6 +20,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.transport.TIOStreamTransport;
 
 import streamcorpus.StreamItem;
 
@@ -111,7 +115,7 @@ public class StreamItemIO {
 
 						String fileName = sArr[1].trim();
 						int index = Integer.parseInt(sArr[2].trim());
-					//	System.out.println(fileName);
+						// System.out.println(fileName);
 						String fileStr = RemoteGPGRetrieval.SDD_BASE_PATH + date + "/" + fileName;
 						try {
 							listSI.add(RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date,
@@ -123,7 +127,7 @@ public class StreamItemIO {
 							System.out.println();
 							System.out.println(CorpusBatchProcessor.logTimeFormat.format(new Date()) + " Total "
 									+ fileCount + " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB")
-									///+ "Thread("+index + ")"
+									// /+ "Thread("+index + ")"
 									+ date + "/" + fileName);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -174,13 +178,15 @@ public class StreamItemIO {
 		FileInputStream fin = new FileInputStream(filePath);
 		XZCompressorInputStream xzis = new XZCompressorInputStream(fin);
 		ObjectInputStream ois = new ObjectInputStream(xzis);
-		LinkedList<StreamItem> listSI = (LinkedList<StreamItem>) ois.readObject();
+		Object o = ois.readObject();
+		LinkedList<StreamItem> listSI = null;
+		listSI = (LinkedList<StreamItem>) ois.readObject();
 
-		for (StreamItem si : listSI) {
-			String s = si.getDoc_id();
-			System.out.println(s);
-		}
-		fin.close();
+		// for (StreamItem si : listSI) {
+		// String s = si.getDoc_id();
+		// System.out.println(s);
+		// }
+		// fin.close();
 		return listSI;
 	}
 
@@ -192,9 +198,31 @@ public class StreamItemIO {
 		// testObjectIO();
 		String localPath = "/home/morteza/zproject/gatordsr/code/resources/entity/totalEntityList.txt.sorted.2011";
 
-		LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
-		LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2012");
-		LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
+		loadBulkSIs("/home/morteza/trec/totalSIs.o.1.totalEntitiesSIs.txt.sorted.2011");
+
+		// test writing thrift objects.
+
+		// InputStream is = null;
+		// XZCompressorInputStream xzis = new XZCompressorInputStream(is);
+		// TIOStreamTransport transport = new TIOStreamTransport(xzis);
+		//
+		// transport.open();
+		// TBinaryProtocol protocol = new TBinaryProtocol(transport);
+		//
+		// StreamItem si = new StreamItem();
+		// si.read(protocol);
+
+		FileOutputStream fos = new FileOutputStream("");
+		XZCompressorOutputStream xzos = new XZCompressorOutputStream(fos);
+		TIOStreamTransport tiost = new TIOStreamTransport(xzos);
+		TBinaryProtocol tbp = new TBinaryProtocol(tiost);
+
+		StreamItem si = new StreamItem();
+		si.write(tbp);
+
+		// LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
+		// LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2012");
+		// LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
 
 		// SIs.txt.sorted.2012 StopWatch timer = new StopWatch();
 		//

@@ -46,8 +46,8 @@ public class RemoteGPGRetrieval {
 				+ basePath + date + "/" + fileName;
 		System.out.println(command);
 		InputStream is = FileProcessor.runBinaryShellCommand(command);
-		XZCompressorInputStream bais = new XZCompressorInputStream(is);
-		TIOStreamTransport transport = new TIOStreamTransport(bais);
+		XZCompressorInputStream xzis = new XZCompressorInputStream(is);
+		TIOStreamTransport transport = new TIOStreamTransport(xzis);
 
 		List<StreamItem> list = new LinkedList<StreamItem>();
 
