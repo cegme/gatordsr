@@ -14,35 +14,40 @@ import org.apache.thrift.transport.TTransportException;
 import streamcorpus.StreamItem;
 
 public class RemoteGPGRetrieval {
-    
-	public static final String SDD_BASE_PATH = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-    public static final String SDE_BASE_PATH = "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 
-    
-    public static void main(String[] args) {
-        //String fileName = "social-458-b51e990263a58e94a88d22a8be8502d1-d71caa2571e6e6aa16da0cdae2a4dfc7.sc.xz.gpg";
+	public static final String	SDD_BASE_PATH	= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public static final String	SDE_BASE_PATH	= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 
-        // getSSHStreams("2011-11-03-05", fileName);
+	public static void main(String[] args) {
+		// String fileName =
+		// "social-458-b51e990263a58e94a88d22a8be8502d1-d71caa2571e6e6aa16da0cdae2a4dfc7.sc.xz.gpg";
+		// getSSHStreams("2011-11-03-05", fileName);
 
-        try {
-    //    List<StreamItem> l =     getLocalStreams("/home/morteza/Downloads/social-222-fc6ce593d5a66a74da58358cfd87c9e1-5aa3991c8ea528a275238355aabc9d8c.sc.xz.gpg");
-            List<StreamItem> l =     getLocalStreams("2011-10-05-03","arxiv-5-1432f036a5768d8e2f16f56770b2b13b-aae9af08ed49d35c0810f3c8fac1db00.sc.xz.gpg ");
+		try {
+			// List<StreamItem> l =
+			// getLocalStreams("/home/morteza/Downloads/social-222-fc6ce593d5a66a74da58358cfd87c9e1-5aa3991c8ea528a275238355aabc9d8c.sc.xz.gpg");
+			List<StreamItem> l = getLocalStreams("2011-10-05-03",
+					"arxiv-5-1432f036a5768d8e2f16f56770b2b13b-aae9af08ed49d35c0810f3c8fac1db00.sc.xz.gpg ");
+			for (StreamItem si : l) {
+				System.out.println(si.doc_id);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-        for(StreamItem si: l){
-            System.out.println(si.doc_id);
-        }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	public static List<StreamItem> getLocalStreams(String date, String fileName) throws IOException {
+		return getLocalStreams(SDD_BASE_PATH, date, fileName);
+	}
 
-	 public static List<StreamItem> getLocalStreams(String date, String fileName) throws IOException {
-	        String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt " + 
-	        		SDD_BASE_PATH + date + "/"
-	                + fileName;
+	public static List<StreamItem> getLocalStreams(String basePath, String date, String fileName)
+			throws IOException {
+		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
+				+ basePath + date + "/" + fileName;
+		System.out.println(command);
 		InputStream is = FileProcessor.runBinaryShellCommand(command);
-		XZCompressorInputStream bais = new XZCompressorInputStream(is);
-		TIOStreamTransport transport = new TIOStreamTransport(bais);
+		XZCompressorInputStream xzis = new XZCompressorInputStream(is);
+		TIOStreamTransport transport = new TIOStreamTransport(xzis);
 
 		List<StreamItem> list = new LinkedList<StreamItem>();
 
