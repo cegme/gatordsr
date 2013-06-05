@@ -15,6 +15,10 @@ import java.io.PrintWriter
 import org.apache.thrift.protocol.TProtocol
 import streamcorpus.OffsetType
 
+import com.google.common.base.Stopwatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.{MILLISECONDS, NANOSECONDS, SECONDS}
+
 
 object Pipeline extends Logging {
 
@@ -38,31 +42,61 @@ object Pipeline extends Logging {
   
   //logInfo("start to generate results")
   // the main logic, used to generate KBA outputs
-  annotate()
 
   def main(args : Array[String]){
     
+  annotate()
   }
   
   def annotate() = {
     //println("in annotate")
+    val watch = new Stopwatch()//.createUnstarted // Total processing time
+    val t_getSentence = new Stopwatch()//.createUnstarted;
+    var t_getSentence_total = 0L
+
+    val t_extractEntities = new Stopwatch()//.createUnstarted
+    var t_extractEntities_total = 0L
+
+
+    watch.start
     val lines = Source.fromFile("resources/test/ss.txt").getLines() // get an iterator of lines in a file
+    watch.stop
+    logInfo("Time to create the watch Iterator %s sec".format(watch.elapsed(SECONDS)))
+
     //println(lines.getClass())
     var num = 1 // keep account of the sentences processed
+    
+    watch.reset; watch.start
     lines.foreach( line => {
       // parse parameters
       val array = line.split(", ")
+
       // get that sentence via remote gpg retrieval or local gpg retieval
+      t_getSentence.start
       val sentence = SimpleJob.getRemoteSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
+      t_getSentence.stop
+      t_getSentence_total += t_getSentence.elapsed(NANOSECONDS)
+      logDebug("Get sentence time: %sms. Total %ssecs. Avg %sms, num %s".format(t_getSentence.elapsed(MILLISECONDS), NANOSECONDS.toSeconds(t_getSentence_total), NANOSECONDS.toMillis(t_getSentence_total/num), num))
+      t_getSentence.reset
+
       //val sentence = SimpleJob.getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))      
       logInfo("processing: " + num + " " + array(0) + " " + array(1))
+
       // get the token array of that sentence
       val tokens = sentence.getTokens().toArray(Array[Token]())
+
       // get the list of lingpipe entities from the stream corpus sentence
+      t_extractEntities.start
       val entity_list = SimpleJob.extractEntities(sentence)
+      t_extractEntities.stop
+      t_extractEntities_total += t_extractEntities.elapsed(NANOSECONDS)
+      logDebug("ExtractEntities time: %sns. Total %ssecs. Avg %sns, num: %s".format(t_extractEntities.elapsed(NANOSECONDS), NANOSECONDS.toSeconds(t_extractEntities_total), t_extractEntities_total/num, num))
+      t_extractEntities.reset
+
       // find the entity in the KBA entity list that is matched in this sentence
       val target = entities(Integer.parseInt(array(4)))
       val index = getCorresEntity(target, entity_list, array(5))
+
       if (index != -1){// when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
         // start to try to find all the patterns fit for that entity
         val entity = entity_list.get(index)
@@ -73,6 +107,8 @@ object Pipeline extends Logging {
       
 
     })
+    watch.stop
+    logInfo("Total Time: %si secs, Avg: %s".format(watch.elapsed(SECONDS), watch.elapsed(SECONDS)/num))
     
   }
   
