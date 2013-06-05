@@ -41,8 +41,8 @@ public class RemoteGPGRetrieval {
 	        		SDD_BASE_PATH + date + "/"
 	                + fileName;
 		InputStream is = FileProcessor.runBinaryShellCommand(command);
-		XZCompressorInputStream bais = new XZCompressorInputStream(is);
-		TIOStreamTransport transport = new TIOStreamTransport(bais);
+		XZCompressorInputStream xzis = new XZCompressorInputStream(is);
+		TIOStreamTransport transport = new TIOStreamTransport(xzis);
 
 		List<StreamItem> list = new LinkedList<StreamItem>();
 
