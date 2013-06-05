@@ -36,9 +36,9 @@ libraryDependencies += "edu.stanford.nlp.models" % "stanford-corenlp-models" % "
 
 libraryDependencies += "com.google.guava" % "guava" % "14.0.1"
 
-libraryDependencies += "edu.washington.cs.knowitall" % "reverb-core" % "1.4.1"
+libraryDependencies += "edu.washington.cs.knowitall" % "reverb-core" % "1.4.3"
 
-libraryDependencies += "edu.washington.cs.knowitall" % "reverb-models" % "1.4.0"
+//libraryDependencies += "edu.washington.cs.knowitall" % "reverb-models" % "1.4.0"
 
 //libraryDependencies += "org.scalaz" %% "scalaz-core" % "6.0.4"
 
@@ -54,3 +54,7 @@ libraryDependencies += "org.apache.opennlp" % "opennlp-uima" % "1.5.3"
 
 libraryDependencies += "org.apache.opennlp" % "opennlp-maxent" % "3.0.3"
 
+
+libraryDependencies += "edu.washington.cs.knowitall.ollie" % "ollie-core_2.9.2" % "1.0.3"
+
+libraryDependencies += "org.maltparser" % "maltparser" % "1.7"
