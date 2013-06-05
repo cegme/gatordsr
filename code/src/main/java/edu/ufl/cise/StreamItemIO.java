@@ -7,9 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
@@ -76,38 +78,64 @@ public class StreamItemIO {
 		return listSI;
 	}
 
-	private static List<StreamItem> LoadEntityStreamItemsPartitioner(String filePath)
-			throws Exception {
-		List<StreamItem> listSI = new LinkedList<StreamItem>();
+	private static void LoadEntityStreamItemsPartitioner(final String filePath) throws Exception {
 		Scanner sc = new Scanner(new File(filePath));
-
-		int count = 5000;
-		int i = 0;
+		List<String> lines = new LinkedList<String>();
 		while (sc.hasNext()) {
-			String s = sc.nextLine();
-			String[] sArr = s.split("\\|");
-			String date = sArr[0].substring(1).trim();
+			lines.add(sc.nextLine());
+		}
 
-			// if (date.compareTo("2012") < 0) {
-			String fileName = sArr[1].trim();
-			int index = Integer.parseInt(sArr[2].trim());
-			System.out.println(fileName);
-			listSI.add(RemoteGPGRetrieval.getStreams(date, fileName).get(index));
-			i++;
-			// }
-			if (i != 0 && i % count == 0) {
-				FileOutputStream fout = new FileOutputStream(tempFilePath + "." + i / count + "."
-						+ filePath.substring(filePath.lastIndexOf('/') + 1));
-				XZCompressorOutputStream xzos = new XZCompressorOutputStream(fout);
-				ObjectOutputStream oos = new ObjectOutputStream(xzos);
-				oos.writeObject(listSI);
-				oos.close();
-				xzos.close();
-				fout.close();
-				listSI.clear();
+		final int threadCount = 64;
+		final AtomicInteger finishedThreadTracker = new AtomicInteger(0);
+		final int count = 5000;// SI per file.
+
+		for (int k = 0; k < lines.size(); k = k + count) {
+			final List<String> tempList = lines.subList(k, Math.min(k + count, lines.size() - 1));
+
+			final int index = k;
+
+			Thread worker = new Thread() {// one thread per hour then add index
+				public void run() {
+					List<StreamItem> listSI = new LinkedList<StreamItem>();
+					Iterator<String> it = tempList.iterator();
+					while (it.hasNext()) {
+						String s = it.next();
+						String[] sArr = s.split("\\|");
+						String date = sArr[0].substring(1).trim();
+
+						String fileName = sArr[1].trim();
+						int index = Integer.parseInt(sArr[2].trim());
+						System.out.println(fileName);
+						listSI.add(RemoteGPGRetrieval.getStreams(date, fileName).get(index));
+						// listSI.clear();
+					}
+					FileOutputStream fout;
+					try {
+						fout = new FileOutputStream(tempFilePath + "." + index / count + "."
+								+ filePath.substring(filePath.lastIndexOf('/') + 1));
+						XZCompressorOutputStream xzos = new XZCompressorOutputStream(fout);
+						ObjectOutputStream oos = new ObjectOutputStream(xzos);
+						oos.writeObject(listSI);
+						oos.close();
+						xzos.close();
+						fout.close();
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					finishedThreadTracker.incrementAndGet();
+				}
+			};
+			worker.start();
+		}
+		while (finishedThreadTracker.get() < threadCount) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-		return listSI;
+
 	}
 
 	private static LinkedList<StreamItem> loadBulkSIs(String filePath) throws Exception {
