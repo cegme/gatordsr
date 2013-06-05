@@ -77,7 +77,7 @@ object Pipeline extends Logging {
       val sentence = SimpleJob.getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))      
       t_getSentence.stop
       t_getSentence_total += t_getSentence.elapsed(NANOSECONDS)
-      logInfo("Get sentence time: %sms. Total %ssecs. Avg %sms, num %s".format(t_getSentence.elapsed(MILLISECONDS), NANOSECONDS.toSeconds(t_getSentence_total), NANOSECONDS.toMillis(t_getSentence_total/num), num))
+      logInfo("Get sentence time: %sns. Total %ssecs. Avg %sms, num %s".format(t_getSentence.elapsed(NANOSECONDS), NANOSECONDS.toSeconds(t_getSentence_total), NANOSECONDS.toMillis(t_getSentence_total/num), num))
       t_getSentence.reset
 
       logInfo("processing: " + num + " " + array(0) + " " + array(1))

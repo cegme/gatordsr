@@ -14,6 +14,7 @@ import java.lang.Integer
 import streamcorpus.Sentence
 
 import scala.collection.mutable.WeakHashMap
+import scala.ref.WeakReference
 import java.util.LinkedList
 
 
@@ -171,6 +172,7 @@ object SimpleJob extends Logging{
 
   // A cached "last accessed files"
   private val fileCache:WeakHashMap[(String,String), LinkedList[StreamItem]] = new WeakHashMap[(String,String),LinkedList[StreamItem]]()
+  //private val fileCache:HashMap[(String,String), LinkedList[StreamItem]] = new HashMap[(String,String),LinkedList[StreamItem]]()
 
   
   // get the specified stream item
@@ -179,8 +181,10 @@ object SimpleJob extends Logging{
     fileCache.get(date_hour, filename) match { 
       case Some(z) =>  z.get(num) 
       case None => logInfo("Cache Miss (rsi) %s".format((date_hour,filename)))
-        fileCache.put((date_hour,filename), RemoteGPGRetrieval.getStreams(date_hour, filename))
-        getRemoteStreamItem(date_hour, filename, num)
+        val newList = RemoteGPGRetrieval.getStreams(date_hour, filename)
+        //fileCache.clear
+        fileCache.put((date_hour,filename), newList)
+        newList.get(num)
       }
     
   }
@@ -188,12 +192,13 @@ object SimpleJob extends Logging{
   // get the specified sentence
   def getRemoteSentence(date_hour : String, filename : String, num : Integer, sid : Integer):Sentence = {
 
-
     fileCache.get(date_hour, filename) match { 
       case Some(z) =>  z.get(num).body.sentences.get("lingpipe").get(sid)
       case None => logInfo("Cache Miss (rs) %s".format((date_hour,filename)))
-        fileCache.put((date_hour,filename), RemoteGPGRetrieval.getStreams(date_hour, filename))
-        getRemoteSentence(date_hour, filename, num, sid)
+        val newList = RemoteGPGRetrieval.getStreams(date_hour, filename)
+        //fileCache.clear
+        fileCache.put((date_hour,filename), newList)
+        newList.get(num).body.sentences.get("lingpipe").get(sid)
       }
   }
   
@@ -201,8 +206,10 @@ object SimpleJob extends Logging{
     fileCache.get(date_hour, filename) match { 
       case Some(z) =>  z.get(num).body.sentences.get("lingpipe").get(sid)
       case None =>  logInfo("Cache Miss (ls) %s".format((date_hour,filename)))
-        fileCache.put((date_hour,filename), RemoteGPGRetrieval.getLocalStreams(date_hour, filename))
-        getLocalSentence(date_hour, filename, num, sid)
+        val newList = RemoteGPGRetrieval.getLocalStreams(date_hour, filename)
+        //fileCache.clear
+        fileCache.put((date_hour,filename), newList)
+        newList.get(num).body.sentences.get("lingpipe").get(sid)
       }
 
   }
@@ -212,8 +219,10 @@ object SimpleJob extends Logging{
     fileCache.get(date_hour, filename) match { 
       case Some(z) => z.get(num) 
       case None =>  logInfo("Cache Miss (lsi) %s".format((date_hour,filename)))
-        fileCache.put((date_hour,filename), RemoteGPGRetrieval.getLocalStreams(date_hour, filename))
-        getLocalStreamItem(date_hour, filename, num)
+        val newList = RemoteGPGRetrieval.getLocalStreams(date_hour, filename)
+        //fileCache.clear
+        fileCache.put((date_hour,filename), newList)
+        newList.get(num)
       }
   }
  
