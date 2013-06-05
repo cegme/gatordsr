@@ -12,15 +12,18 @@ object KBAOutput {
   val rows = new ArrayList[Row]() // the list of the rows
 	
   val pw = new PrintWriter(new File("resources/test/result.txt"))
-  
-  
+  pw.println("#{'team_id', 'system_id', 'doc_id', 'topic_id', 'confidence', 'relevance', 'mention', " +
+  		"'date_hour', 'slot_name', 'equiv_id', 'byte_range'}")
+  pw.flush()
+  		
   // add one row into the row list
 
   def add(doc_id:String, topic_id : String, confidence : Integer, 
-    date_hour : String, slot_name : String, slot_value : Integer, byte_range : String){
+    date_hour : String, slot_name : String, slot_value : Integer, byte_range : String, comment : String){
     pw.println(new Row(doc_id:String, topic_id : String, confidence : Integer, 
     date_hour : String, slot_name : String, slot_value : Integer, byte_range : String).toString)
     row_num = row_num + 1
+    pw.println(comment)
     pw.flush()
   }
 	
@@ -40,7 +43,7 @@ object KBAOutput {
 }
 
 case class Row(doc_id:String, topic_id : String, confidence : Integer, 
-    date_hour : String, slot_name : String, slot_value : Integer, byte_range : String) {
+    date_hour : String, slot_name : String, equiv_id : Integer, byte_range : String) {
   //this(triple:Triple)
   val team_id = "gatordsr"; // first column: team_id
   val system_id ="gatordsr" // second column: system_id
@@ -48,7 +51,8 @@ case class Row(doc_id:String, topic_id : String, confidence : Integer,
   val mention = -1 // seventh column: contains mention integer in [0, 1]
  
 	
-  override def toString(): String = team_id + " " + system_id + " " + doc_id + " " + topic_id + " " + confidence + " " + relevance + " " + mention + " " + date_hour + " " + slot_name + " " + slot_value + " " + byte_range
+  override def toString(): String = team_id + " " + system_id + " " + doc_id + " " + topic_id + " " + confidence + " " + 
+    relevance + " " + mention + " " + date_hour + " " + slot_name + " " + equiv_id + " " + byte_range
 	
 	  
 }

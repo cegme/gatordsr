@@ -64,28 +64,12 @@ object Preprocessor {
 
   def initPatternList(filename : String, pattern_list : ArrayList[Pattern]){
     // TODO: initialize a pattern list from a file
-  }
-
-  // test a single string using a single pattern
-  def test() {
-    // create patterns from the entity and slot
-    val bm = new Entity("PER", "bronfman", "http://en.wikipedia.org/wiki/Benjamin_Bronfman")
-    bm.add("Benjamin Bronfman")
-    bm.add("Bronfman")
-    val pa = new Slot("PER", "Affiliate")
-    pa.names.toArray().foreach(s => {
-      bm.names.toArray().foreach(e => {
-        //pattern_list.add(new Pattern(e.asInstanceOf[String], s.asInstanceOf[String]))
-      })
+    val lines = Source.fromFile(filename).getLines()
+    lines.foreach(line => {
+      val array = line.split(", ")
+      //println(array.size)
+      pattern_list.add(new Pattern(array(0), array(1), array(2), array(3), array(4)))
     })
-    // extract some wikipedia file
-    val s = Source.fromFile("resources/test/bm.txt").mkString
-    // for each pattern in the pattern list, match for some string
-    pattern_list.toArray().foreach(p => {
-      //if(p.asInstanceOf[Pattern].matches(s)) println("match")
-    })
-    // TODO: how to efficiently match all that many patterns
-    // Solution: one pattern for each list
   }
 
   def main(args: Array[String]) {
