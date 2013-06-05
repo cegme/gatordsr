@@ -85,7 +85,7 @@ public class StreamItemIO {
 			lines.add(sc.nextLine());
 		}
 
-		final int threadCount = 64;
+		final int threadCount = 32;
 		final AtomicInteger finishedThreadTracker = new AtomicInteger(0);
 		final int count = 5000;// SI per file.
 
@@ -165,10 +165,10 @@ public class StreamItemIO {
 		String localPath = "/home/morteza/zproject/gatordsr/code/resources/entity/totalEntityList.txt.sorted.2011";
 
 		LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
-		LoadEntityStreamItemsPartitioner("/home/morteza/zproject/gatordsr/code/resources/entity/totalEntitiesSIs.txt.sorted.2012");
-		LoadEntityStreamItemsPartitioner("/home/morteza/zproject/gatordsr/code/resources/entity/totalEntitiesSIs.txt.sorted.2013");
+		LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2012");
+		LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
 
-		// StopWatch timer = new StopWatch();
+		//SIs.txt.sorted.2012 StopWatch timer = new StopWatch();
 		//
 		// timer.start();
 		// List<StreamItem> listSI = LoadEntityStreamItems(localPath);
