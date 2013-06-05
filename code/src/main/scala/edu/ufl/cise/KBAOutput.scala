@@ -19,10 +19,11 @@ object KBAOutput {
   // add one row into the row list
 
   def add(doc_id:String, topic_id : String, confidence : Integer, 
-    date_hour : String, slot_name : String, slot_value : Integer, byte_range : String){
+    date_hour : String, slot_name : String, slot_value : Integer, byte_range : String, comment : String){
     pw.println(new Row(doc_id:String, topic_id : String, confidence : Integer, 
     date_hour : String, slot_name : String, slot_value : Integer, byte_range : String).toString)
     row_num = row_num + 1
+    pw.println(comment)
     pw.flush()
   }
 	

@@ -21,6 +21,7 @@ object Pipeline extends Logging {
   /** This keeps track of how many times run is called. */
   val num = new java.util.concurrent.atomic.AtomicInteger
   
+  // load entities and patterns from files
   val entity_list = new ArrayList[Entity]
   Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
   lazy val entities = entity_list.toArray(Array[Entity]())
@@ -31,15 +32,12 @@ object Pipeline extends Logging {
 
   logInfo("entities and patterns are loaded")
   
-  // preprocessing
+  // preprocessing, to generate indexes for sentences from indexes for stream items
   // SimpleJob.filterSentences(3000)
   
-  //logInfo("entities and patterns are loaded")
   
-  KBAOutput
-  
-  logInfo("start to generate results")
-  
+  //logInfo("start to generate results")
+  // the main logic, used to generate KBA outputs
   annotate()
 
   def main(args : Array[String]){
@@ -47,79 +45,86 @@ object Pipeline extends Logging {
   }
   
   def annotate() = {
-    val lines = Source.fromFile("resources/test/ss.txt").getLines().slice(1000, 3000)
-    var num = 1
+    //println("in annotate")
+    val lines = Source.fromFile("resources/test/ss.txt").getLines() // get an iterator of lines in a file
+    //println(lines.getClass())
+    var num = 1 // keep account of the sentences processed
     lines.foreach( line => {
       // parse parameters
-      val array = line.split(" ")
-      // get that sentence
+      val array = line.split(", ")
+      // get that sentence via remote gpg retrieval or local gpg retieval
       val sentence = SimpleJob.getRemoteSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
-      //val sentence = SimpleJob.getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
-      // get the list of lingpipe entities
+      //val sentence = SimpleJob.getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))      
       logInfo("processing: " + num + " " + array(0) + " " + array(1))
-      val entity_list = new LingSentence(sentence).extractEntities()
-      // get the token array
+      // get the token array of that sentence
       val tokens = sentence.getTokens().toArray(Array[Token]())
-      //println("the original sentence: " + SimpleJob.transform(tokens))
+      // get the list of lingpipe entities from the stream corpus sentence
+      val entity_list = SimpleJob.extractEntities(sentence)
+      // find the entity in the KBA entity list that is matched in this sentence
       val target = entities(Integer.parseInt(array(4)))
       val index = getCorresEntity(target, entity_list, array(5))
-      //println("find the corresponding entity: " + index)
-      if (index != -1){
+      if (index != -1){// when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
         // start to try to find all the patterns fit for that entity
         val entity = entity_list.get(index)
-        closePatternMatch(entity, index, tokens, entity_list)
+        closePatternMatch(entity, index, tokens, entity_list, array)
       }
       
       num = num + 1
       
-      // find the possible two nearest patterns
-      def closePatternMatch(entity : LingEntity, index : Integer, 
-      tokens : Array[Token], entities : ArrayList[LingEntity]){
-        // the first entity
-        if(index == 0 && index != entities.size() -1){
-          //println("As the first entity")
-          val target = entities.get(index + 1)
-          // match right nearest patterns         
-          getKBAOutput(entity, target, tokens, 1, array)
-        }      
-        // the last entity
-        if(index != 0 && index == entities.size() - 1){
-          //println("As the last entity")
-          val target = entities.get(index - 1)
-          // match right nearest patterns
-          getKBAOutput(entity, target, tokens, 0, array)
-        }
-        // the entity in the middle
-        if(index != 0 && index != entities.size() -1 ){         
-          //println("entity in the middle")
-          val target1 = entities.get(index + 1)
-          // match right nearest patterns
-          getKBAOutput(entity, target1, tokens, 1, array)
-          
-          val target0 = entities.get(index - 1)
-          // match right nearest patterns
-          getKBAOutput(entity, target0, tokens, 0, array)      
-        }        
-      }   
+
     })
     
   }
   
+  // find the possible results by looking at two nearest entities
+  def closePatternMatch(entity : LingEntity, index : Integer, 
+    tokens : Array[Token], entities : ArrayList[LingEntity], array:Array[String]){
+    // the first entity
+    if(index == 0 && index != entities.size() -1){
+    //println("As the first entity")
+    val target = entities.get(index + 1)
+    // match right nearest patterns         
+      getKBAOutput(entity, target, tokens, 1, array)
+    }      
+    // the last entity
+    if(index != 0 && index == entities.size() - 1){
+       //println("As the last entity")
+       val target = entities.get(index - 1)
+       // match right nearest patterns
+       getKBAOutput(entity, target, tokens, 0, array)
+     }
+     // the entity in the middle
+     if(index != 0 && index != entities.size() -1 ){         
+       //println("entity in the middle")
+       val target1 = entities.get(index + 1)
+       // match right nearest patterns
+       getKBAOutput(entity, target1, tokens, 1, array)
+          
+       val target0 = entities.get(index - 1)
+       // match right nearest patterns
+       getKBAOutput(entity, target0, tokens, 0, array)      
+     }        
+   }   
+  
+  // for the entity and the target, judge whether there is a pattern matched, if so, generating results.
   def getKBAOutput(entity:LingEntity, target:LingEntity, tokens : Array[Token], direction : Integer, array: Array[String]){
     if (direction == 0){
+      // find the patterns that fit with the two entities
       val pats = findClosePattern(entity, target, "left")
       //println("patterns: " + pats)
       val s = SimpleJob.transform(tokens.slice(target.end + 1, entity.begin))
-      //println(s + ": to be matched")
+      //println("To be matched: " + s)
       pats.toArray(Array[Pattern]()).foreach(pattern => {
       // match each pattern here
         if (s.toLowerCase().contains(pattern.pattern)){
            // match, create KBA Output
-           KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, entity.equiv_id, getByteRange(target, tokens))
+           val comment = "# " + target.content + " " + s + " " + entity.content + " --- " + SimpleJob.transform(tokens)
+           KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, entity.equiv_id, getByteRange(target, tokens), comment)
         }
       })
     }
     else{
+      // find the patterns that fit with the two entities
 	  val pats = findClosePattern(entity, target, "right")
 	  //println("patterns: " + pats)
 	  val s = SimpleJob.transform(tokens.slice(entity.end + 1, target.begin))
@@ -128,12 +133,14 @@ object Pipeline extends Logging {
       // match each pattern here
 	    if (s.toLowerCase().contains(pattern.pattern)){
 		  // match, create KBA Output
-		  KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, entity.equiv_id, getByteRange(target, tokens))
+	      val comment = "# " + entity.content + " " + s + " " + target.content + " --- " + SimpleJob.transform(tokens)
+		  KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, entity.equiv_id, getByteRange(target, tokens), comment)
         }
      })
     }
   }
   
+  // get the byte range of one LingPipe Entity
   def getByteRange(target : LingEntity, tokens:Array[Token]) : String = {
     val first = tokens(target.begin).getOffsets().get(OffsetType.findByValue(1)).first
     val last = tokens(target.end).getOffsets().get(OffsetType.findByValue(1)).first + 
@@ -141,7 +148,7 @@ object Pipeline extends Logging {
     first + "-" + last
   }
   
-  
+  // find the corresponding patterns for two entities
   def findClosePattern(entity : LingEntity, target : LingEntity, direction : String) = {
     val pats = new ArrayList[Pattern]
     //TODO: find the corresponding patterns that fits the entity
@@ -153,6 +160,7 @@ object Pipeline extends Logging {
     pats
   }
   
+  // get the corresponding entity for the name that is matched in the sentence
   def getCorresEntity(target: Entity, entity_list: ArrayList[LingEntity], name : String) = {
       var index = -1
       for(i <- 0 until entity_list.size()){
