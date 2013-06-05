@@ -19,8 +19,8 @@ import streamcorpus.StreamItem;
 
 public class StreamItemIO {
 
-	private static String	baseDir				= "/media/sde/entitySIs/"; 
-			//"/home/morteza/trec/";
+	private static String	baseDir				= "/media/sde/entitySIs/";
+	// "/home/morteza/trec/";
 	static String					tempFilePath	= baseDir + "totalSIs.o";
 
 	private static void testObjectIO() throws Exception {
