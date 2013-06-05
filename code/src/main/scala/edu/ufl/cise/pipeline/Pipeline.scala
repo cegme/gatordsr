@@ -37,7 +37,7 @@ object Pipeline extends Logging {
   logInfo("entities and patterns are loaded")
   
   // preprocessing, to generate indexes for sentences from indexes for stream items
-  SimpleJob.filterSentences(3000)
+  //SimpleJob.filterSentences(3000) // FIXME SLOOOWWW
   
   
   //logInfo("start to generate results")
@@ -73,13 +73,13 @@ object Pipeline extends Logging {
 
       // get that sentence via remote gpg retrieval or local gpg retieval
       t_getSentence.start
-      val sentence = SimpleJob.getRemoteSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
+      //val sentence = SimpleJob.getRemoteSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
+      val sentence = SimpleJob.getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))      
       t_getSentence.stop
       t_getSentence_total += t_getSentence.elapsed(NANOSECONDS)
-      logDebug("Get sentence time: %sms. Total %ssecs. Avg %sms, num %s".format(t_getSentence.elapsed(MILLISECONDS), NANOSECONDS.toSeconds(t_getSentence_total), NANOSECONDS.toMillis(t_getSentence_total/num), num))
+      logInfo("Get sentence time: %sms. Total %ssecs. Avg %sms, num %s".format(t_getSentence.elapsed(MILLISECONDS), NANOSECONDS.toSeconds(t_getSentence_total), NANOSECONDS.toMillis(t_getSentence_total/num), num))
       t_getSentence.reset
 
-      //val sentence = SimpleJob.getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))      
       logInfo("processing: " + num + " " + array(0) + " " + array(1))
 
       // get the token array of that sentence
@@ -90,7 +90,7 @@ object Pipeline extends Logging {
       val entity_list = SimpleJob.extractEntities(sentence)
       t_extractEntities.stop
       t_extractEntities_total += t_extractEntities.elapsed(NANOSECONDS)
-      logDebug("ExtractEntities time: %sns. Total %ssecs. Avg %sns, num: %s".format(t_extractEntities.elapsed(NANOSECONDS), NANOSECONDS.toSeconds(t_extractEntities_total), t_extractEntities_total/num, num))
+      logInfo("ExtractEntities time: %sns. Total %ssecs. Avg %sns, num: %s".format(t_extractEntities.elapsed(NANOSECONDS), NANOSECONDS.toSeconds(t_extractEntities_total), t_extractEntities_total/num, num))
       t_extractEntities.reset
 
       // find the entity in the KBA entity list that is matched in this sentence
@@ -183,7 +183,7 @@ object Pipeline extends Logging {
               tokens(target.end).getOffsets().get(OffsetType.findByValue(1)).length
     first + "-" + last
   }
-  
+
   // find the corresponding patterns for two entities
   def findClosePattern(entity : LingEntity, target : LingEntity, direction : String) = {
     val pats = new ArrayList[Pattern]

@@ -13,6 +13,10 @@ import java.io.File
 import java.lang.Integer
 import streamcorpus.Sentence
 
+import scala.collection.mutable.WeakHashMap
+import java.util.LinkedList
+
+
 object SimpleJob extends Logging{
   // method library
   def main(args:Array[String]){
@@ -164,18 +168,54 @@ object SimpleJob extends Logging{
     pw.close()
   } 
   
+
+  // A cached "last accessed files"
+  private val fileCache:WeakHashMap[(String,String), LinkedList[StreamItem]] = new WeakHashMap[(String,String),LinkedList[StreamItem]]()
+
   
   // get the specified stream item
-  def getRemoteStreamItem(date_hour : String, filename : String, num : Integer) = RemoteGPGRetrieval.getStreams(date_hour, filename).get(num)
+  def getRemoteStreamItem(date_hour : String, filename : String, num : Integer):StreamItem = {
+
+    fileCache.get(date_hour, filename) match { 
+      case Some(z) =>  z.get(num) 
+      case None => logInfo("Cache Miss (rsi) %s".format((date_hour,filename)))
+        fileCache.put((date_hour,filename), RemoteGPGRetrieval.getStreams(date_hour, filename))
+        getRemoteStreamItem(date_hour, filename, num)
+      }
+    
+  }
+
   // get the specified sentence
-  def getRemoteSentence(date_hour : String, filename : String, num : Integer, sid : Integer) = 
-    RemoteGPGRetrieval.getStreams(date_hour, filename).get(num).body.sentences.get("lingpipe").get(sid)
+  def getRemoteSentence(date_hour : String, filename : String, num : Integer, sid : Integer):Sentence = {
+
+
+    fileCache.get(date_hour, filename) match { 
+      case Some(z) =>  z.get(num).body.sentences.get("lingpipe").get(sid)
+      case None => logInfo("Cache Miss (rs) %s".format((date_hour,filename)))
+        fileCache.put((date_hour,filename), RemoteGPGRetrieval.getStreams(date_hour, filename))
+        getRemoteSentence(date_hour, filename, num, sid)
+      }
+  }
   
-  def getLocalSentence(date_hour : String, filename : String, num : Integer, sid : Integer) = 
-    RemoteGPGRetrieval.getLocalStreams(date_hour, filename).get(num).body.sentences.get("lingpipe").get(sid)  
+  def getLocalSentence(date_hour : String, filename : String, num : Integer, sid : Integer):Sentence = {
+    fileCache.get(date_hour, filename) match { 
+      case Some(z) =>  z.get(num).body.sentences.get("lingpipe").get(sid)
+      case None =>  logInfo("Cache Miss (ls) %s".format((date_hour,filename)))
+        fileCache.put((date_hour,filename), RemoteGPGRetrieval.getLocalStreams(date_hour, filename))
+        getLocalSentence(date_hour, filename, num, sid)
+      }
+
+  }
  
       // get the specified stream item
-  def getLocalStreamItem(date_hour : String, filename : String, num : Integer) = RemoteGPGRetrieval.getLocalStreams(date_hour, filename).get(num)
+  def getLocalStreamItem(date_hour : String, filename : String, num : Integer):StreamItem= {
+    fileCache.get(date_hour, filename) match { 
+      case Some(z) => z.get(num) 
+      case None =>  logInfo("Cache Miss (lsi) %s".format((date_hour,filename)))
+        fileCache.put((date_hour,filename), RemoteGPGRetrieval.getLocalStreams(date_hour, filename))
+        getLocalStreamItem(date_hour, filename, num)
+      }
+  }
  
   def extractEntities(sentence : Sentence) = {
   val entity_list = new ArrayList[LingEntity]()
