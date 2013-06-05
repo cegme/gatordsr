@@ -191,7 +191,7 @@ public class StreamItemIO {
 		final AtomicInteger finishedThreadTracker = new AtomicInteger(0);
 		final AtomicInteger fileCount = new AtomicInteger(0);
 		final AtomicLong processedSize = new AtomicLong(0);
-		final int count = 500;// SI per file.
+		final int count = 250;// SI per file.
 
 		for (int k = 0; k < lines.size(); k = k + count) {
 			final List<String> tempList = lines.subList(k, Math.min(k + count, lines.size() - 1));
@@ -222,10 +222,10 @@ public class StreamItemIO {
 							try {
 								StreamItem si = RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date, fileName)
 										.get(index);
-							//	System.out.println(si.getDoc_id());
+								// System.out.println(si.getDoc_id());
 								si.write(tbp);
-								
-								//tiost.flush();
+
+								// tiost.flush();
 
 								long size = FileProcessor.getLocalFileSize(fileStr);
 								processedSize.addAndGet(size);
@@ -286,13 +286,16 @@ public class StreamItemIO {
 		TBinaryProtocol protocol = new TBinaryProtocol(transport);
 		//
 		transport.open();
-		
+
+		LinkedList<StreamItem> listSI = new LinkedList<StreamItem>();
+
 		boolean exception = false;
 		while (!exception) {
 			try {
 				StreamItem si = new StreamItem();
 				si.read(protocol);
-		//		System.out.println(si.getDoc_id());
+				listSI.add(si);
+				System.out.println(si.getBody().getSentences().get("lingpipe").get(0).getTokens().get(0));
 
 			} catch (TTransportException e) {
 				RemoteGPGRetrieval.tTransportExceptionPrintString(e);
@@ -302,7 +305,7 @@ public class StreamItemIO {
 			}
 		}
 		transport.close();
-		return null;
+		return listSI;
 	}
 
 	/**
@@ -319,7 +322,7 @@ public class StreamItemIO {
 			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2012");
 			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
 		} else {
-		//	LoadEntityStreamItemsPartitionerThrift("//home/morteza/trec/totalEntitiesSIs.txt.sorted.2011");
+			// LoadEntityStreamItemsPartitionerThrift("//home/morteza/trec/totalEntitiesSIs.txt.sorted.2011");
 			loadBulkSIsThrift(baseDir + "totalSIs.o.0.totalEntitiesSIs.txt.sorted.2011");
 		}
 
