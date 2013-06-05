@@ -105,7 +105,7 @@ object SimpleJob extends Logging{
               // println(name)
               //println(num + " " + date_hour + " " + filename + " " + si_num + " " + i + " " + e + " " + Pipeline.entities(e).topic_id)
               pw.println(date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
-                  si.doc_id  + ", " +  Pipeline.entities(e).topic_id)
+                  si.stream_id  + ", " +  Pipeline.entities(e).topic_id)
               pw.flush()
               // store sentences into files, too             
             }

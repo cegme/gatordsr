@@ -33,7 +33,7 @@ object Pipeline extends Logging {
   logInfo("entities and patterns are loaded")
   
   // preprocessing, to generate indexes for sentences from indexes for stream items
-  // SimpleJob.filterSentences(3000)
+  SimpleJob.filterSentences(3000)
   
   
   //logInfo("start to generate results")
