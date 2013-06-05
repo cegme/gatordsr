@@ -2,20 +2,22 @@ package edu.ufl.cise;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
-import org.apache.commons.lang.time.StopWatch;
 
 import streamcorpus.StreamItem;
 
@@ -86,10 +88,12 @@ public class StreamItemIO {
 		}
 
 		final int threadCount = 15;
+		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+
 		final AtomicInteger finishedThreadTracker = new AtomicInteger(0);
-        final AtomicInteger fileCount = new AtomicInteger(0);
-        final AtomicInteger processedSize = new AtomicInteger(0);
-		final int count = 50;// SI per file.
+		final AtomicInteger fileCount = new AtomicInteger(0);
+		final AtomicLong processedSize = new AtomicLong(0);
+		final int count = 200;// SI per file.
 
 		for (int k = 0; k < lines.size(); k = k + count) {
 			final List<String> tempList = lines.subList(k, Math.min(k + count, lines.size() - 1));
@@ -107,19 +111,21 @@ public class StreamItemIO {
 
 						String fileName = sArr[1].trim();
 						int index = Integer.parseInt(sArr[2].trim());
-						System.out.println(fileName);
+					//	System.out.println(fileName);
+						String fileStr = RemoteGPGRetrieval.SDD_BASE_PATH + date + "/" + fileName;
 						try {
-							listSI.add(RemoteGPGRetrieval.getLocalStreams(date, fileName).get(index));
-                            // fileCount.incrementAndGet();                                                                                                                                         
-                                long size = FileProcessor.getLocalFileSize(fileStr);                                                                                                                 
-                                             processedSize.addAndGet(size);                       
-                            fileCount.incrementAndGet();
-                            System.out.println();
-        pw.println(logTimeFormat.format(new Date()) + " Total " + fileCount                                                                                                  
-                                                     + " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB")                                                                                         
-                                                     +                                                                                                
-                                                     +  threadIndex + ")" + date + "/" + fileName);    
-						} catch (IOException e) {
+							listSI.add(RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date,
+									fileName).get(index));
+							// fileCount.incrementAndGet();
+							long size = FileProcessor.getLocalFileSize(fileStr);
+							processedSize.addAndGet(size);
+							fileCount.incrementAndGet();
+							System.out.println();
+							System.out.println(CorpusBatchProcessor.logTimeFormat.format(new Date()) + " Total "
+									+ fileCount + " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB")
+									///+ "Thread("+index + ")"
+									+ date + "/" + fileName);
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 						// listSI.clear();
@@ -141,9 +147,20 @@ public class StreamItemIO {
 					finishedThreadTracker.incrementAndGet();
 				}
 			};
-			worker.start();
+			// worker.start();
+			executor.execute(worker);
 		}
-		while (finishedThreadTracker.get() < threadCount) {
+		// while (finishedThreadTracker.get() < threadCount) {
+		// try {
+		// Thread.sleep(500);
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// }
+
+		// //
+		executor.shutdown();
+		while (!executor.isTerminated()) {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
@@ -179,7 +196,7 @@ public class StreamItemIO {
 		LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2012");
 		LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
 
-		//SIs.txt.sorted.2012 StopWatch timer = new StopWatch();
+		// SIs.txt.sorted.2012 StopWatch timer = new StopWatch();
 		//
 		// timer.start();
 		// List<StreamItem> listSI = LoadEntityStreamItems(localPath);
