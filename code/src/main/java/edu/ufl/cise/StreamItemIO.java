@@ -160,9 +160,9 @@ public class StreamItemIO {
 		// testObjectIO();
 		String localPath = "/home/morteza/zproject/gatordsr/code/resources/entity/totalEntityList.txt.sorted.2011";
 
-		LoadEntityStreamItemsPartitioner("/home/morteza/zproject/gatordsr/code/resources/entity/totalEntityList.txt.sorted.2011");
-		LoadEntityStreamItemsPartitioner("/home/morteza/zproject/gatordsr/code/resources/entity/totalEntityList.txt.sorted.2012");
-		LoadEntityStreamItemsPartitioner("/home/morteza/zproject/gatordsr/code/resources/entity/totalEntityList.txt.sorted.2013");
+		LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
+		LoadEntityStreamItemsPartitioner("/home/morteza/zproject/gatordsr/code/resources/entity/totalEntitiesSIs.txt.sorted.2012");
+		LoadEntityStreamItemsPartitioner("/home/morteza/zproject/gatordsr/code/resources/entity/totalEntitiesSIs.txt.sorted.2013");
 
 		// StopWatch timer = new StopWatch();
 		//
