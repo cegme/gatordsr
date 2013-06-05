@@ -18,9 +18,10 @@ import java.util.regex.Pattern;
 public class S3CorpusDownloader {
 
 	int						threadCount			= 32;
-	static String	localDirLaptop	= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language";
+	static String	localDirLaptop	= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	static String	localDirSDD			= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	static String	localDirSDE			= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+    static String   localDirTEST        = "/media/sde/tempStorage/";
 	static String	localDirPrefix	= "s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	String				AWS_URL					= "http://s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 
@@ -93,16 +94,28 @@ public class S3CorpusDownloader {
 			List<String> alreadyDownloaded = null;
 			alreadyDownloaded = DirList.getFileList(localDirSDD, null);
 			for (String s : alreadyDownloaded) {
-				alreadyDownloadedTable.put(s.substring(localDirSDD.length()), TRUE);
+                String tempFileStr = s.substring(localDirSDD.length());
+                //System.out.println(tempFileStr);
+				alreadyDownloadedTable.put(tempFileStr, TRUE);
 			}
 			alreadyDownloaded = DirList.getFileList(localDirSDE, null);
 			for (String s : alreadyDownloaded) {
-				alreadyDownloadedTable.put(s.substring(localDirSDE.length()), TRUE);
+			     String tempFileStr = s.substring(localDirSDE.length());
+                //System.out.println(tempFileStr);
+				alreadyDownloadedTable.put(tempFileStr, TRUE);
+
+                //System.out.println(s);
+               // alreadyDownloadedTable.put(s.substring(localDirSDE.length()), TRUE);
 			}
 			alreadyDownloaded = null;
 			alreadyDownloaded = DirList.getFileList(localDirLaptop, null);
 			for (String s : alreadyDownloaded) {
-				alreadyDownloadedTable.put(s.substring(localDirLaptop.length()), TRUE);
+                 String tempFileStr = s.substring(localDirLaptop.length());
+                //System.out.println(tempFileStr);
+				alreadyDownloadedTable.put(tempFileStr, TRUE);
+
+				//System.out.println(s);
+                //alreadyDownloadedTable.put(s.substring(localDirLaptop.length()), TRUE);
 			}
 			alreadyDownloaded = null;
 		}
@@ -137,7 +150,9 @@ public class S3CorpusDownloader {
 							// downloadDir(localDirSDD, dir);
 							// else
 
-							downloadDir(localDirSDE, dir, alreadyDownloadedTable);
+							//downloadDir(localDirSDE, dir, alreadyDownloadedTable);
+                            downloadDir(localDirTEST, dir, alreadyDownloadedTable);
+
 
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -229,7 +244,7 @@ public class S3CorpusDownloader {
 				String linkStr = m.group(1);
 				if (linkStr.contains("gpg")) {
 
-					String fileToFind = "/" + dir + "/" + linkStr;
+					String fileToFind = dir + "/" + linkStr;
 					if (!alreadyDownloadedTable.containsKey(fileToFind)) {
 
 						// System.out.println(linkStr);
