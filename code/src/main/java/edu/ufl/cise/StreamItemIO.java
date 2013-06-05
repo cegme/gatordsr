@@ -106,7 +106,11 @@ public class StreamItemIO {
 						String fileName = sArr[1].trim();
 						int index = Integer.parseInt(sArr[2].trim());
 						System.out.println(fileName);
-						listSI.add(RemoteGPGRetrieval.getStreams(date, fileName).get(index));
+						try {
+							listSI.add(RemoteGPGRetrieval.getLocalStreams(date, fileName).get(index));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 						// listSI.clear();
 					}
 					FileOutputStream fout;
