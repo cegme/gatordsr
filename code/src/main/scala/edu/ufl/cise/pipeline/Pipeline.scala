@@ -45,8 +45,9 @@ object Pipeline extends Logging {
 
   def main(args : Array[String]){
     
-  //annotate()
-  SimpleJob.filterSentences(3000,args(0))//,args(1)) // FIXME SLOOOWWW
+    //annotate()
+    KBAOutput.outputPrefix = args(1)
+    SimpleJob.filterSentences(3000,args(0))//,args(1)) 
   }
  
   //TODO

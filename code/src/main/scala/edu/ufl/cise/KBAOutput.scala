@@ -13,16 +13,21 @@ object KBAOutput {
 
   val rows = new ArrayList[Row]() // the list of the rows
 	
-  val pw = new PrintWriter(new File("resources/test/result.txt"))
-  pw.println("#{'team_id', 'system_id', 'stream_id', 'topic_id', 'confidence', 'relevance', 'mention', " +
+  var outputPrefix = "resources/test/"
+
+  lazy val pw = {
+    val _pw = new PrintWriter(new File(outputPrefix + "result.txt"))
+    _pw.println("#{'team_id', 'system_id', 'stream_id', 'topic_id', 'confidence', 'relevance', 'mention', " +
   		"'date_hour', 'slot_name', 'equiv_id', 'byte_range'}")
-  pw.flush()
+    _pw.flush()
+    _pw
+  }
   		
   // add one row into the row list
 
   def add(stream_id:String, topic_id : String, confidence : Integer, 
     date_hour : String, slot_name : String, slot_value : Integer, byte_range : String, comment : String){
-    val pw = new PrintWriter(new BufferedWriter(new FileWriter(slot_name, true)));
+    val pw = new PrintWriter(new BufferedWriter(new FileWriter(outputPrefix + slot_name, true)));
     pw.println(new Row(stream_id:String, topic_id : String, confidence : Integer, 
     date_hour : String, slot_name : String, slot_value : Integer, byte_range : String).toString)
     row_num = row_num + 1
