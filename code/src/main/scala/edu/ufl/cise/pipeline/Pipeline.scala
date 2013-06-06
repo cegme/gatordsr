@@ -48,7 +48,12 @@ object Pipeline extends Logging {
   //annotate()
   SimpleJob.filterSentences(3000,args(0)) // FIXME SLOOOWWW
   }
-  
+ 
+  //TODO
+def annotateSI(streamItem: StreamItem)={
+
+}
+
   def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, variable: String) = {
    
      if(s.toLowerCase().contains(name.toLowerCase())){ 
