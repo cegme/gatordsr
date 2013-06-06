@@ -45,43 +45,12 @@ object Pipeline extends Logging {
 
   def main(args : Array[String]){
     
-  annotate()
+  //annotate()
+  SimpleJob.filterSentences(3000) // FIXME SLOOOWWW
   }
   
-  def annotate() = {
-    //println("in annotate")
-    val watch = new Stopwatch()//.createUnstarted // Total processing time
-    val t_getSentence = new Stopwatch()//.createUnstarted;
-    var t_getSentence_total = 0L
-
-    val t_extractEntities = new Stopwatch()//.createUnstarted
-    var t_extractEntities_total = 0L
-
-
-    watch.start
-    val lines = Source.fromFile("resources/test/ss.txt").getLines() // get an iterator of lines in a file
-    watch.stop
-    logInfo("Time to create the watch Iterator %s sec".format(watch.elapsed(SECONDS)))
-
-    //println(lines.getClass())
-    var num = 1 // keep account of the sentences processed
+  def annotate(sentence) = {
     
-    watch.reset; watch.start
-    lines.foreach( line => {
-      // parse parameters
-      val array = line.split(", ")
-
-      // get that sentence via remote gpg retrieval or local gpg retieval
-      t_getSentence.start
-      //val sentence = SimpleJob.getRemoteSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
-      val sentence = SimpleJob.getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))      
-      t_getSentence.stop
-      t_getSentence_total += t_getSentence.elapsed(NANOSECONDS)
-      logInfo("Get sentence time: %sns. Total %ssecs. Avg %sms, num %s".format(t_getSentence.elapsed(NANOSECONDS), NANOSECONDS.toSeconds(t_getSentence_total), NANOSECONDS.toMillis(t_getSentence_total/num), num))
-      t_getSentence.reset
-
-      logInfo("processing: " + num + " " + array(0) + " " + array(1))
-
       // get the token array of that sentence
       val tokens = sentence.getTokens().toArray(Array[Token]())
 
@@ -103,12 +72,6 @@ object Pipeline extends Logging {
         closePatternMatch(entity, index, tokens, entity_list, array)
       }
       
-      num = num + 1
-      
-
-    })
-    watch.stop
-    logInfo("Total Time: %si secs, Avg: %s".format(watch.elapsed(SECONDS), watch.elapsed(SECONDS)/num))
     
   }
   
