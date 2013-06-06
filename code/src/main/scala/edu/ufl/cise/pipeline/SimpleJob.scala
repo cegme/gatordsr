@@ -76,11 +76,11 @@ object SimpleJob extends Logging{
     sb.toString()
   }
   
-  def filterSentences (n : Integer) = {
+  def filterSentences (n : Integer, filePath: String) = {
     // read from a file to get all the streamitems, use the filtered entity to filter
     var num = 1
-    val pw = new PrintWriter("resources/test/ss.txt")   
-    val lines = Source.fromFile("resources/entity/totalEntityList.txt").getLines.slice(0, n)
+  //  val pw = new PrintWriter("resources/test/ss.txt")   
+    val lines = Source.fromFile(filePath).getLines//.take(100)//.slice(0, n)
     lines.foreach(line => {
       // parse one line to get parameters
       val array = line.split(" \\| ") 
@@ -93,7 +93,7 @@ object SimpleJob extends Logging{
       val ens = findEntity(topics)
       //val list = RemoteGPGRetrieval.getStreams(date_hour, filename)
       //val si = list.get(Integer.parseInt(si_num))
-      val si = getRemoteStreamItem(date_hour, filename, Integer.parseInt(si_num))
+      val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
       //val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
       val ss = si.body.sentences.get("lingpipe")
       // process all the sentences
@@ -104,27 +104,29 @@ object SimpleJob extends Logging{
         ens.foreach(e => {
           Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
             //println(name.toLowerCase())
-            if(s.toLowerCase().contains(name.toLowerCase())){
+//            if(s.toLowerCase().contains(name.toLowerCase())){ //take to annotate. morteza
               // print line to the file, containing date_hour, filename, si_num, sentence i and entity index e
               //println(s)
               // println(name)
               //println(num + " " + date_hour + " " + filename + " " + si_num + " " + i + " " + e + " " + Pipeline.entities(e).topic_id)
 
-              annotate(date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
-                  si.stream_id  + ", " +  Pipeline.entities(e).topic_id)
+              val tempStr =  date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
+                  si.stream_id  + ", " +  Pipeline.entities(e).topic_id
+             Pipeline.annotate(ss.get(i),tempStr,  e, name)
+  //         println("Hello! "+i)
 
               //pw.println(date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
                //   si.stream_id  + ", " +  Pipeline.entities(e).topic_id)
               //pw.flush()
               // store sentences into files, too             
-            }
+            //}
           })
         })
       }
       num = num + 1     
     })
     // improve the performance
-     pw.close()
+   //  pw.close()
     // store the filtered sentences into a file
   }
   
