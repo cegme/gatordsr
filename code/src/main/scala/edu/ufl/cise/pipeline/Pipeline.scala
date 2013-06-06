@@ -46,7 +46,7 @@ object Pipeline extends Logging {
   def main(args : Array[String]){
     
   //annotate()
-  SimpleJob.filterSentences(3000,args(0)) // FIXME SLOOOWWW
+  SimpleJob.filterSentences(3000,args(0))//,args(1)) // FIXME SLOOOWWW
   }
  
   //TODO
@@ -56,7 +56,7 @@ def annotateSI(streamItem: StreamItem)={
 
   def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, variable: String) = {
    
-     if(s.toLowerCase().contains(name.toLowerCase())){ 
+     //if(s.toLowerCase().contains(name.toLowerCase())){ 
 
       // get the token array of that sentence
       val tokens = sentence.getTokens().toArray(Array[Token]())
@@ -85,7 +85,7 @@ def annotateSI(streamItem: StreamItem)={
         closePatternMatch(entity, index, tokens, entity_list, array)
       }
       
-    }
+    //}
   }
   
   // find the possible results by looking at two nearest entities

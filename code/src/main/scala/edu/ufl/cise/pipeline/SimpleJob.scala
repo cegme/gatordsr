@@ -75,6 +75,10 @@ object SimpleJob extends Logging{
     //println(sb)
     sb.toString()
   }
+
+  def getStreamItem(filePath: String){
+    
+  }
   
   def filterSentences (n : Integer, filePath: String) = {
     // read from a file to get all the streamitems, use the filtered entity to filter
@@ -104,7 +108,7 @@ object SimpleJob extends Logging{
         ens.foreach(e => {
           Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
             //println(name.toLowerCase())
-//            if(s.toLowerCase().contains(name.toLowerCase())){ //take to annotate. morteza
+            if(s.toLowerCase().contains(name.toLowerCase())){ //take to annotate. morteza
               // print line to the file, containing date_hour, filename, si_num, sentence i and entity index e
               //println(s)
               // println(name)
@@ -113,13 +117,13 @@ object SimpleJob extends Logging{
               val tempStr =  date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
                   si.stream_id  + ", " +  Pipeline.entities(e).topic_id
              Pipeline.annotate(ss.get(i),tempStr,  e, name)
-  //         println("Hello! "+i)
+           println("Hello! "+i)
 
               //pw.println(date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
                //   si.stream_id  + ", " +  Pipeline.entities(e).topic_id)
               //pw.flush()
               // store sentences into files, too             
-            //}
+            }
           })
         })
       }
