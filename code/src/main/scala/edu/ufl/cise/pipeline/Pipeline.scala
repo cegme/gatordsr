@@ -15,6 +15,10 @@ import java.io.PrintWriter
 import org.apache.thrift.protocol.TProtocol
 import streamcorpus.OffsetType
 
+import com.google.common.base.Stopwatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.{MILLISECONDS, NANOSECONDS, SECONDS}
+
 
 object Pipeline extends Logging {
 
@@ -33,47 +37,56 @@ object Pipeline extends Logging {
   logInfo("entities and patterns are loaded")
   
   // preprocessing, to generate indexes for sentences from indexes for stream items
-  // SimpleJob.filterSentences(3000)
+  //SimpleJob.filterSentences(3000) // FIXME SLOOOWWW
   
   
   //logInfo("start to generate results")
   // the main logic, used to generate KBA outputs
-  annotate()
 
   def main(args : Array[String]){
     
+    //annotate()
+    KBAOutput.outputPrefix = args(1)
+    SimpleJob.filterSentences(3000,args(0))//,args(1)) 
   }
-  
-  def annotate() = {
-    //println("in annotate")
-    val lines = Source.fromFile("resources/test/ss.txt").getLines() // get an iterator of lines in a file
-    //println(lines.getClass())
-    var num = 1 // keep account of the sentences processed
-    lines.foreach( line => {
-      // parse parameters
-      val array = line.split(", ")
-      // get that sentence via remote gpg retrieval or local gpg retieval
-      val sentence = SimpleJob.getRemoteSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))
-      //val sentence = SimpleJob.getLocalSentence(array(0), array(1), Integer.parseInt(array(2)), Integer.parseInt(array(3)))      
-      logInfo("processing: " + num + " " + array(0) + " " + array(1))
+ 
+  //TODO
+def annotateSI(streamItem: StreamItem)={
+
+}
+
+  def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, variable: String) = {
+   
+     //if(s.toLowerCase().contains(name.toLowerCase())){ 
+
       // get the token array of that sentence
       val tokens = sentence.getTokens().toArray(Array[Token]())
+
+            val array = sentenceStr.split(", ")
+
       // get the list of lingpipe entities from the stream corpus sentence
+//      t_extractEntities.start
       val entity_list = SimpleJob.extractEntities(sentence)
+  //    t_extractEntities.stop
+   //   t_extractEntities_total += t_extractEntities.elapsed(NANOSECONDS)
+//      logInfo("ExtractEntities time: %sns. Total %ssecs. Avg %sns, num: %s".format(t_extractEntities.elapsed(NANOSECONDS), NANOSECONDS.toSeconds(t_extractEntities_total), t_extractEntities_total/num, num))i
+    //  t_extractEntities.reset
+
       // find the entity in the KBA entity list that is matched in this sentence
-      val target = entities(Integer.parseInt(array(4)))
-      val index = getCorresEntity(target, entity_list, array(5))
+     //val target = entities(Integer.parseInt(array(4)))
+      val target = entities(targetIndex)
+
+     // val index = getCorresEntity(target, entity_list, array(5))
+       val index = getCorresEntity(target, entity_list, variable)
+
+
       if (index != -1){// when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
         // start to try to find all the patterns fit for that entity
         val entity = entity_list.get(index)
         closePatternMatch(entity, index, tokens, entity_list, array)
       }
       
-      num = num + 1
-      
-
-    })
-    
+    //}
   }
   
   // find the possible results by looking at two nearest entities
@@ -147,7 +160,7 @@ object Pipeline extends Logging {
               tokens(target.end).getOffsets().get(OffsetType.findByValue(1)).length
     first + "-" + last
   }
-  
+
   // find the corresponding patterns for two entities
   def findClosePattern(entity : LingEntity, target : LingEntity, direction : String) = {
     val pats = new ArrayList[Pattern]
