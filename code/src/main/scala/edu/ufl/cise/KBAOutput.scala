@@ -4,6 +4,8 @@ import java.util.ArrayList
 import java.io.PrintWriter
 import java.io.File
 import java.lang.Integer
+import java.io.BufferedWriter
+import java.io.FileWriter
 
 object KBAOutput {
 
@@ -20,11 +22,12 @@ object KBAOutput {
 
   def add(stream_id:String, topic_id : String, confidence : Integer, 
     date_hour : String, slot_name : String, slot_value : Integer, byte_range : String, comment : String){
+    val pw = new PrintWriter(new BufferedWriter(new FileWriter(slot_name, true)));
     pw.println(new Row(stream_id:String, topic_id : String, confidence : Integer, 
     date_hour : String, slot_name : String, slot_value : Integer, byte_range : String).toString)
     row_num = row_num + 1
     pw.println(comment)
-    pw.flush()
+    pw.close
   }
 	
   // write the rows into one file
