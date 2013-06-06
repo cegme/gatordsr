@@ -96,16 +96,3 @@ ORG, Affiliate, with, right, PER
 ORG, Affiliate, with, left, PER
 ORG, Affiliate, with, right, FAC
 ORG, Affiliate, with, left, FAC
-ORG, Affiliate, ORG
-FAC, Affiliate, FAC
-FAC, Affiliate, PER
-FAC, Affiliate, ORG
-
-
-PER, Titles, 
-PER, CauseOfDeath,
-PER, AwardsWon,
-PER, Contact_Meet_PlaceTime,
-FAC, Contact_Meet_Entity,
-
-
