@@ -497,7 +497,7 @@
             "entity_type": "PER", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/John_H._Lang",
-            "alias": ["John H. Lang", "John H Lang", "John Lang"]
+            "alias": ["John H. Lang", "John H Lang"]
         }, 
         {
             "entity_type": "PER", 
