@@ -162,7 +162,7 @@ public class RemoteGPGRetrieval {
                 System.out.println(si.getBody().getSentences().get("lingpipe").get(0).getTokens().get(0));
             } catch (TTransportException e) {
                 RemoteGPGRetrieval.tTransportExceptionPrintString(e);
-                e.printStackTrace();
+//                e.printStackTrace();
                 exception = true;
             } catch (TException e) {
                 e.printStackTrace();

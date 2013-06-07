@@ -207,7 +207,7 @@ val line =   entityListLine(eLine)
   def fetchFromStreamItemIndex(fileIndex:String, siIndex:String, year : String): StreamItem = {
     
     //Define these paths somewhere nice
-    val theSIFile = "/media/sde/entitySIs/totalSIs.o.%s.totalEntitiesSIs.txt.sorted.%s"
+    val theSIFile = "/media/sde/entitySIs.backup/totalSIs.o.%s.totalEntitiesSIs.txt.sorted.%s"
 
     siFileCache.get(fileIndex) match {
       case Some(siList) => siList.get(siIndex.toInt)
