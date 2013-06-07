@@ -47,7 +47,7 @@ object Pipeline extends Logging {
     
     //annotate()
     KBAOutput.outputPrefix = args(1)
-    SimpleJob.filterSentences(3000,args(0))//,args(1)) 
+    SimpleJob.filterSentencesCoref(3000,args(0))//,args(1)) 
   }
 
   def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, le: LingEntity) = {
