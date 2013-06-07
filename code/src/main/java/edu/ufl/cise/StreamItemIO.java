@@ -185,13 +185,13 @@ public class StreamItemIO {
 			lines.add(sc.nextLine());
 		}
 
-		final int threadCount = 15;
+		final int threadCount = 30;
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
 		final AtomicInteger finishedThreadTracker = new AtomicInteger(0);
 		final AtomicInteger fileCount = new AtomicInteger(0);
 		final AtomicLong processedSize = new AtomicLong(0);
-		final int count = 20;// SI per file.
+		final int count = 250;// SI per file.
 
 		for (int k = 0; k < lines.size(); k = k + count) {
 			final List<String> tempList = lines.subList(k, Math.min(k + count, lines.size() - 1));
@@ -222,7 +222,10 @@ public class StreamItemIO {
 							try {
 								StreamItem si = RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date, fileName)
 										.get(index);
+								// System.out.println(si.getDoc_id());
 								si.write(tbp);
+
+								// tiost.flush();
 
 								long size = FileProcessor.getLocalFileSize(fileStr);
 								processedSize.addAndGet(size);
@@ -283,12 +286,16 @@ public class StreamItemIO {
 		TBinaryProtocol protocol = new TBinaryProtocol(transport);
 		//
 		transport.open();
+
+		LinkedList<StreamItem> listSI = new LinkedList<StreamItem>();
+
 		boolean exception = false;
 		while (!exception) {
 			try {
 				StreamItem si = new StreamItem();
 				si.read(protocol);
-				System.out.println(si.getDoc_id());
+				listSI.add(si);
+				System.out.println(si.getBody().getSentences().get("lingpipe").get(0).getTokens().get(0));
 
 			} catch (TTransportException e) {
 				RemoteGPGRetrieval.tTransportExceptionPrintString(e);
@@ -298,7 +305,7 @@ public class StreamItemIO {
 			}
 		}
 		transport.close();
-		return null;
+		return listSI;
 	}
 
 	/**
@@ -310,13 +317,14 @@ public class StreamItemIO {
 		String localPath = "/home/morteza/zproject/gatordsr/code/resources/entity/totalEntityList.txt.sorted.2011";
 
 		// loadBulkSIs("/home/morteza/trec/totalSIs.o.1.totalEntitiesSIs.txt.sorted.2011");
-		if(baseDirServerTesterFile.exists()){
-			LoadEntityStreamItemsPartitioner("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
-		}else{
-			loadBulkSIsThrift(baseDir + "totalSIs.o.8.totalEntitiesSIs.txt.sorted.2011");	
+		if (baseDirServerTesterFile.exists()) {
+			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
+			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2012");
+			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
+		} else {
+			// LoadEntityStreamItemsPartitionerThrift("//home/morteza/trec/totalEntitiesSIs.txt.sorted.2011");
+			loadBulkSIsThrift(baseDir + "totalSIs.o.0.totalEntitiesSIs.txt.sorted.2011");
 		}
-			
-		
 
 		// test writing thrift objects.
 

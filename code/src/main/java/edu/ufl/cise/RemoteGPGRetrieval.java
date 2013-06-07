@@ -44,7 +44,7 @@ public class RemoteGPGRetrieval {
 			throws IOException {
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
 				+ basePath + date + "/" + fileName;
-		System.out.println(command);
+//		System.out.println(command);
 		InputStream is = FileProcessor.runBinaryShellCommand(command);
 		XZCompressorInputStream xzis = new XZCompressorInputStream(is);
 		TIOStreamTransport transport = new TIOStreamTransport(xzis);
