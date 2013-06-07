@@ -49,44 +49,20 @@ object Pipeline extends Logging {
     KBAOutput.outputPrefix = args(1)
     SimpleJob.filterSentences(3000,args(0))//,args(1)) 
   }
- 
-  //TODO
-def annotateSI(streamItem: StreamItem)={
 
-}
+  def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, le: LingEntity) = {
+    // get the token array of that sentence
+    val tokens = sentence.getTokens().toArray(Array[Token]())
+    val array = sentenceStr.split(", ")
+    val entity_list = SimpleJob.extractEntities(sentence)
+    val target = entities(targetIndex)
 
-  def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, variable: String) = {
-   
-     //if(s.toLowerCase().contains(name.toLowerCase())){ 
-
-      // get the token array of that sentence
-      val tokens = sentence.getTokens().toArray(Array[Token]())
-
-            val array = sentenceStr.split(", ")
-
-      // get the list of lingpipe entities from the stream corpus sentence
-//      t_extractEntities.start
-      val entity_list = SimpleJob.extractEntities(sentence)
-  //    t_extractEntities.stop
-   //   t_extractEntities_total += t_extractEntities.elapsed(NANOSECONDS)
-//      logInfo("ExtractEntities time: %sns. Total %ssecs. Avg %sns, num: %s".format(t_extractEntities.elapsed(NANOSECONDS), NANOSECONDS.toSeconds(t_extractEntities_total), t_extractEntities_total/num, num))i
-    //  t_extractEntities.reset
-
-      // find the entity in the KBA entity list that is matched in this sentence
-     //val target = entities(Integer.parseInt(array(4)))
-      val target = entities(targetIndex)
-
-     // val index = getCorresEntity(target, entity_list, array(5))
-       val index = getCorresEntity(target, entity_list, variable)
-
-
-      if (index != -1){// when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
+    val index = getCorresEntity(target, entity_list, le)
+    if (index != -1){// when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
         // start to try to find all the patterns fit for that entity
         val entity = entity_list.get(index)
         closePatternMatch(entity, index, tokens, entity_list, array)
       }
-      
-    //}
   }
   
   // find the possible results by looking at two nearest entities
@@ -174,11 +150,11 @@ def annotateSI(streamItem: StreamItem)={
   }
   
   // get the corresponding entity for the name that is matched in the sentence
-  def getCorresEntity(target: Entity, entity_list: ArrayList[LingEntity], name : String) = {
+  def getCorresEntity(target : Entity, entity_list: ArrayList[LingEntity], le : LingEntity) = {
       var index = -1
       for(i <- 0 until entity_list.size()){
         val entity = entity_list.get(i)
-        if (entity.entity_type.equals(target.entity_type) && entity.content.contains(name)){
+        if (entity.equiv_id == le.equiv_id){
           index = i
           entity.topic_id = target.topic_id
           entity.group = target.group
