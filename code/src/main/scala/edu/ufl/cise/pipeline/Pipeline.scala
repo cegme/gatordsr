@@ -45,8 +45,12 @@ object Pipeline extends Logging {
 
   def main(args : Array[String]){
     
+    // args(0) -- input file
+    // args(1) -- output prefix name
+
     //annotate()
-    KBAOutput.outputPrefix = args(1)
+    if(args.size > 2)
+      KBAOutput.outputPrefix = args(1)
     SimpleJob.filterSentencesCoref(3000,args(0))//,args(1)) 
   }
 

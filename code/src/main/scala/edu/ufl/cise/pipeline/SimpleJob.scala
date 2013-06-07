@@ -133,6 +133,40 @@ object SimpleJob extends Logging {
     // store the filtered sentences into a file
   }
 
+  def filterUsingStreamFiles(filePath:String) = {
+    
+    val entityListLine = Source.fromFile(filePath).getLines //.take(100)//.slice(0, n)
+
+    for( eLine <- 0 until entityListLine.size) {
+
+      val fileIndex:String = eLine / 250 + ""
+      val siIndex:String = eLine % 250 + ""
+
+      // fetch the streamItem
+      val si:StreamItem = fetchFromStreamItemIndex(fileIndex, siIndex)
+
+      // TODO copy the other filter  tasks.
+
+    }
+  }
+
+  private val siFileCache: WeakHashMap[String, LinkedList[StreamItem]] = new WeakHashMap[String, LinkedList[StreamItem]]()
+  def fetchFromStreamItemIndex(fileIndex:String, siIndex:String): StreamItem = {
+    
+    //Define these paths somewhere nice
+    val siPath = "/media/sde/entitySIs/"
+    val theSIFile = "totalSIs.o.%s.totalEntitiesSIs.txt.sorted.2011"
+
+    siFileCache.get(fileIndex) match {
+      case Some(siList) => siList.get(siIndex.toInt)
+      case None =>
+        val siList = RemoteGPGRetrieval.readNonEncrypted(theSIFile.format(fileIndex))
+        siFileCache.put(fileIndex, siList)
+        siList.get(siIndex.toInt)
+    }
+  }
+
+
   def filterSentencesCoref(n: Integer, filePath: String) = {
     var num = 1
     val lines = Source.fromFile(filePath).getLines //.take(100)//.slice(0, n)
@@ -162,10 +196,11 @@ object SimpleJob extends Logging {
             Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
               //println(name.toLowerCase())
               if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null && token.entity_type != null) {
-                val le = new LingEntity(token.entity_type.toString(), token.mention_id, token.equiv_id)
-                le.entityIndex = e
-                list.add(le)
-                find = true
+                
+                  val le = new LingEntity(token.entity_type.toString(), token.mention_id, token.equiv_id)
+                  le.entityIndex = e
+                  list.add(le)
+                  find = true
               }
             })
           })
