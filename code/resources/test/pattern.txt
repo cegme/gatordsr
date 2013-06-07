@@ -19,8 +19,6 @@ PER, FounderOf, established, left, ORG
 ORG, FoundedBy, founder, left, PER
 ORG, FoundedBy, founded, right, PER
 ORG, FoundedBy, founded, left, PER
-ORG, FoundedBy, started, right, PER
-ORG, FoundedBy, started, left, PER
 ORG, FoundedBy, cofounded, right, PER
 ORG, FoundedBy, cofounded, left, PER
 ORG, FoundedBy, co-founder, left, PER
@@ -48,8 +46,6 @@ ORG, TopMembers, ceo, left, PER
 ORG, TopMembers, ceo, right, PER
 ORG, TopMembers, cio, left, PER
 ORG, TopMembers, cio, right, PER
-ORG, TopMembers, cto, left, PER
-ORG, TopMembers, cto, right, PER
 ORG, TopMembers, board, left, PER
 ORG, TopMembers, board, right, PER
 ORG, TopMembers, president, left, PER
