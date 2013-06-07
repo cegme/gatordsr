@@ -150,7 +150,7 @@ public class RemoteGPGRetrieval {
         XZCompressorInputStream xzis = new XZCompressorInputStream(is);
         TIOStreamTransport transport = new TIOStreamTransport(xzis);
         TBinaryProtocol protocol = new TBinaryProtocol(transport);
-        //
+        System.err.println("readNonEncrypted: " + fileName);
         transport.open();
         LinkedList<StreamItem> listSI = new LinkedList<StreamItem>();
         boolean exception = false;
@@ -159,9 +159,10 @@ public class RemoteGPGRetrieval {
                 StreamItem si = new StreamItem();
                 si.read(protocol);
                 listSI.add(si);
-                //System.out.println(si.getBody().getSentences().get("lingpipe").get(0).getTokens().get(0));
+                System.out.println(si.getBody().getSentences().get("lingpipe").get(0).getTokens().get(0));
             } catch (TTransportException e) {
                 RemoteGPGRetrieval.tTransportExceptionPrintString(e);
+                e.printStackTrace();
                 exception = true;
             } catch (TException e) {
                 e.printStackTrace();

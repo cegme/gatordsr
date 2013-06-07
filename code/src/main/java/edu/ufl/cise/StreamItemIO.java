@@ -219,11 +219,14 @@ public class StreamItemIO {
 							String fileName = sArr[1].trim();
 							int index = Integer.parseInt(sArr[2].trim());
 							String fileStr = RemoteGPGRetrieval.SDD_BASE_PATH + date + "/" + fileName;
+							String fileStrE = RemoteGPGRetrieval.SDE_BASE_PATH + date + "/" + fileName;
 							try {
-								StreamItem si = RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date, fileName)
-										.get(index);
-								// System.out.println(si.getDoc_id());
-								si.write(tbp);
+                StreamItem si = (new File(fileStr)).exists()?
+                    RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date, fileName).get(index)
+                    :RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDE_BASE_PATH, date, fileName).get(index);
+
+                si.write(tbp);
+
 
 								// tiost.flush();
 
@@ -237,6 +240,9 @@ public class StreamItemIO {
 								e.printStackTrace();
 							}
 						}
+
+            xzos.flush();
+            xzos.finish();
 
 						tiost.close();
 						xzos.close();
