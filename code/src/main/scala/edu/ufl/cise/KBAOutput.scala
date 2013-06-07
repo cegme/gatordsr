@@ -13,7 +13,7 @@ object KBAOutput {
 
   val rows = new ArrayList[Row]() // the list of the rows
 	
-  var outputPrefix = "resources/test/"
+  var outputPrefix = "resources/test/kbaoutput/"
 
   lazy val pw = {
     val _pw = new PrintWriter(new File(outputPrefix + "result.txt"))
