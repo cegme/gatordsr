@@ -161,7 +161,7 @@ object SimpleJob extends Logging {
           ens.foreach(e => {
             Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
               //println(name.toLowerCase())
-              if (sb.toString.toLowerCase().contains(name.toLowerCase())) {
+              if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null) {
                 val le = new LingEntity(token.entity_type.toString(), token.mention_id, token.equiv_id)
                 le.entityIndex = e
                 list.add(le)
