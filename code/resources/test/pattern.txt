@@ -32,6 +32,7 @@ ORG, FoundedBy, instituted, right, PER
 ORG, FoundedBy, instituted, left, PER
 ORG, FoundedBy, established, right, PER
 ORG, FoundedBy, established, left, PER
+PER, EmployeeOf, work for, right, ORG
 PER, EmployeeOf, employee, right, ORG
 PER, EmployeeOf, employer, left, ORG
 PER, EmployeeOf, employ, right, ORG
