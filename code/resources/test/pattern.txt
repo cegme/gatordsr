@@ -74,7 +74,11 @@ FAC, Affiliate, and, right, FAC
 FAC, Affiliate, and, left, FAC
 FAC, Affiliate, with, right, FAC
 FAC, Affiliate, with, left, FAC
+FAC, Affiliate, and, right, ORG
+FAC, Affiliate, and, left, ORG
 ORG, Affiliate, and, right, ORG
 ORG, Affiliate, and, left, ORG
 ORG, Affiliate, with, right, ORG
 ORG, Affiliate, with, left, ORG
+ORG, Affiliate, and, right, FAC
+ORG, Affiliate, and, left, FAC
