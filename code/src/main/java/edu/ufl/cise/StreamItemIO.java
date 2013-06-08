@@ -219,15 +219,19 @@ public class StreamItemIO {
 							String fileName = sArr[1].trim();
 							int index = Integer.parseInt(sArr[2].trim());
 							String fileStr = RemoteGPGRetrieval.SDD_BASE_PATH + date + "/" + fileName;
+							String fileStrE = RemoteGPGRetrieval.SDE_BASE_PATH + date + "/" + fileName;
 							try {
-								StreamItem si = RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date, fileName)
-										.get(index);
-								// System.out.println(si.getDoc_id());
-								si.write(tbp);
+                                boolean fileTest = (new File(fileStr)).exists();
+                StreamItem si = fileTest ?
+                      RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date, fileName).get(index)
+                    : RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDE_BASE_PATH, date, fileName).get(index);
+
+                si.write(tbp);
+
 
 								// tiost.flush();
 
-								long size = FileProcessor.getLocalFileSize(fileStr);
+								long size = fileTest ? FileProcessor.getLocalFileSize(fileStr) :  FileProcessor.getLocalFileSize(fileStrE);
 								processedSize.addAndGet(size);
 								fileCount.incrementAndGet();
 								System.out.println(CorpusBatchProcessor.logTimeFormat.format(new Date()) + " Total " + fileCount
@@ -237,6 +241,9 @@ public class StreamItemIO {
 								e.printStackTrace();
 							}
 						}
+
+            xzos.flush();
+            xzos.finish();
 
 						tiost.close();
 						xzos.close();
@@ -318,9 +325,9 @@ public class StreamItemIO {
 
 		// loadBulkSIs("/home/morteza/trec/totalSIs.o.1.totalEntitiesSIs.txt.sorted.2011");
 		if (baseDirServerTesterFile.exists()) {
-			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
-			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2012");
-			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
+		//	LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
+			LoadEntityStreamItemsPartitionerThrift("resources/entity/totalEntityList.txt.sorted.2012");
+//			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
 		} else {
 			// LoadEntityStreamItemsPartitionerThrift("//home/morteza/trec/totalEntitiesSIs.txt.sorted.2011");
 			loadBulkSIsThrift(baseDir + "totalSIs.o.0.totalEntitiesSIs.txt.sorted.2011");
