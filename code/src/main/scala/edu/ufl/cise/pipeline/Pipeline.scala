@@ -34,6 +34,10 @@ object Pipeline extends Logging {
   Preprocessor.initPatternList("resources/test/pattern.txt", pattern_list)
   lazy val patterns = pattern_list.toArray(Array[Pattern]())
 
+  val stop_list = new ArrayList[String]
+  Preprocessor.initStopList("resources/test/stop_list", stop_list)
+  lazy val stops = stop_list.toArray(Array[String]())
+  
   logInfo("entities and patterns are loaded")
 
   // preprocessing, to generate indexes for sentences from indexes for stream items
