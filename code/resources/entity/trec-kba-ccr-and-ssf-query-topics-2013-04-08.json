@@ -173,7 +173,7 @@
             "entity_type": "ORG", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Basic_Element_(company)",
-            "alias": ["Basic Element company", "Basic Element co", "Basic Element"]
+            "alias": ["Basic Element company", "Basic Element co", "Basic Element Companies"]
         }, 
         {
             "entity_type": "ORG", 
