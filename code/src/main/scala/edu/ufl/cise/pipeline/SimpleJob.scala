@@ -242,25 +242,26 @@ val line =   entityListLine(eLine)
         val sb = new StringBuilder("")
         val list = new LinkedList[LingEntity]()
         var find = false
-        for (j <- 0 until tokens.size() if !find) {
-          val token = tokens.get(j)
-          sb.append(token.token + " ")
-          ens.foreach(e => {
-            Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
-              //println(name.toLowerCase())
-              if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null && token.entity_type != null) {
-                
+        val s = transform(tokens.toArray(Array[Token]()))
+        if (!isStop(s)){
+          for (j <- 0 until tokens.size() if !find) {
+            val token = tokens.get(j)
+            sb.append(token.token + " ")
+            ens.foreach(e => {
+              Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
+                //println(name.toLowerCase())
+                if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null && token.entity_type != null) {
+
                   val le = new LingEntity(token.entity_type.toString(), token.mention_id, token.equiv_id)
                   le.entityIndex = e
                   list.add(le)
                   find = true
-              }
+                }
+              })
             })
-          })
+          }
         }
-
         for (i <- 0 until ss.size()) {
-
           val tokens = ss.get(i).getTokens();
           for (j <- 0 until tokens.size()) {
             for (k <- 0 until list.size()) {
@@ -276,9 +277,21 @@ val line =   entityListLine(eLine)
           }
         }
       }
+      
     })
   }
-
+  
+  def isStop(s : String) : Boolean = {
+    var exist = false
+    Pipeline.stops.foreach(stop => {
+      if (s.toLowerCase().contains(stop.toLowerCase())){
+        exist = true
+        return exist
+      }
+    })
+    exist
+  }
+  
   // find corresponding entities by name
   def findEntity(topics: Array[String]) = {
     // get the indexes of the entities contained in one document
