@@ -179,7 +179,7 @@
             "entity_type": "ORG", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Basic_Element_(music_group)",
-            "alias": ["Basic Element music groups", "Basic Element music", "Basic Element"]
+            "alias": ["Basic Element music groups", "Basic Element music"]
         }, 
         {
             "entity_type": "ORG", 
