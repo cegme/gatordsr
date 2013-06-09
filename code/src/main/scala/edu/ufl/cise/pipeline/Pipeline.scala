@@ -61,7 +61,7 @@ object Pipeline extends Logging {
   // the main logic, used to generate KBA outputs
 
   def main(args : Array[String]){
-    //extractNP("Yao Ming is the Chinese basketball player in Houston Rockets")
+    //extractNP("Yao Ming was the Chinese basketball player in Houston Rockets")
     
     // args(0) -- input file
     // args(1) -- output prefix name
@@ -75,22 +75,25 @@ object Pipeline extends Logging {
       SimpleJob.filterSentencesCoref(3000,args(0))//,args(1)) 
 }
 
-def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, le: LingEntity) = {
-  // get the token array of that sentence
-  val tokens = sentence.getTokens().toArray(Array[Token]())
-  val array = sentenceStr.split(", ")
-  val entity_list = SimpleJob.extractEntities(sentence)
-  val target = entities(targetIndex)
+  def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, le: LingEntity) = {
+    // get the token array of that sentence
+    val tokens = sentence.getTokens().toArray(Array[Token]())
+    val array = sentenceStr.split(", ")
+    val entity_list = SimpleJob.extractEntities(sentence)
+    val target = entities(targetIndex)
 
-  val index = getCorresEntity(target, entity_list, le)
-  if (index != -1){// when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
-    // start to try to find all the patterns fit for that entity
-    val entity = entity_list.get(index)
-    closePatternMatch(entity, index, tokens, entity_list, array)
+    val index = getCorresEntity(target, entity_list, le)
+    if (index != -1) { // when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
+      // start to try to find all the patterns fit for that entity
+      val entity = entity_list.get(index)
+      closePatternMatch(entity, index, tokens, entity_list, array)
+      
+      // pattern matching with NP
+      val s = SimpleJob.transform(tokens)
+      extractNPList(s)
+    }
+   
   }
-  val s = SimpleJob.transform(tokens)
-  extractNPList(s)
-}
 
   // find the possible results by looking at two nearest entities
   def closePatternMatch(entity : LingEntity, index : Integer, 
@@ -189,6 +192,13 @@ def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: 
     }
     index
   }
+  
+  def patternMatchNP(sentence: Sentence, sentenceStr: String, targetIndex: Int, le: LingEntity){
+    //TODO: match the patterns here
+    
+    //TODO: find the matched the NP here and generate the results here
+  }
+  
   
   // extract the NP list in the sentence
   def extractNPList(s : String) = {
