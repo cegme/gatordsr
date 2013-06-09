@@ -14,10 +14,16 @@ import scala.io.Source
 import java.io.PrintWriter
 import org.apache.thrift.protocol.TProtocol
 import streamcorpus.OffsetType
-
 import com.google.common.base.Stopwatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.{MILLISECONDS, NANOSECONDS, SECONDS}
+import opennlp.tools.tokenize.TokenizerME
+import opennlp.tools.tokenize.TokenizerModel
+import java.io.FileInputStream
+import opennlp.tools.postag.POSTaggerME
+import opennlp.tools.postag.POSModel
+import opennlp.tools.chunker.ChunkerME
+import opennlp.tools.chunker.ChunkerModel
 
 
 object Pipeline extends Logging {
@@ -39,7 +45,14 @@ object Pipeline extends Logging {
   lazy val stops = stop_list.toArray(Array[String]())
   
   logInfo("entities and patterns are loaded")
-
+  
+  
+  val tokenizer = new TokenizerME(new TokenizerModel(this.getClass().getClassLoader().getResourceAsStream("en-token.bin")))
+  val tagger = new POSTaggerME(new POSModel(this.getClass().getClassLoader().getResourceAsStream("en-pos-maxent.bin")))
+  val chunker = new ChunkerME(new ChunkerModel(this.getClass().getClassLoader().getResourceAsStream("en-chunker.bin")))
+  
+  logInfo("opennlp tokenizer, pos tagger, chunker are loaded")
+  
   // preprocessing, to generate indexes for sentences from indexes for stream items
   //SimpleJob.filterSentences(3000) // FIXME SLOOOWWW
 
@@ -48,7 +61,8 @@ object Pipeline extends Logging {
   // the main logic, used to generate KBA outputs
 
   def main(args : Array[String]){
-
+    //extractNP("Yao Ming is the Chinese basketball player in Houston Rockets")
+    
     // args(0) -- input file
     // args(1) -- output prefix name
 
@@ -70,11 +84,13 @@ def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: 
 
   val index = getCorresEntity(target, entity_list, le)
   if (index != -1){// when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
-  // start to try to find all the patterns fit for that entity
-  val entity = entity_list.get(index)
-  closePatternMatch(entity, index, tokens, entity_list, array)
-}
+    // start to try to find all the patterns fit for that entity
+    val entity = entity_list.get(index)
+    closePatternMatch(entity, index, tokens, entity_list, array)
   }
+  val s = SimpleJob.transform(tokens)
+  extractNPList(s)
+}
 
   // find the possible results by looking at two nearest entities
   def closePatternMatch(entity : LingEntity, index : Integer, 
@@ -173,7 +189,41 @@ def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: 
     }
     index
   }
-
+  
+  // extract the NP list in the sentence
+  def extractNPList(s : String) = {
+    // using chunking to extract NP from a tail string of the orignal string after the matching point   
+   val tokens: Array[String] = tokenizer.tokenize(s)
+   val pos = tagger.tag(tokens)
+   val tags = chunker.chunk(tokens, pos).toArray
+   
+   val list = new ArrayList[NPEntity]
+   // generate entities 
+   var i = 0
+   while (i < tags.size) {
+      if (tags(i).equals("B-NP")) {
+        val entity = new NPEntity(i)
+        var j = i + 1
+        while (j < tags.size && tags(j).equals("I-NP"))
+          j = j + 1
+        entity.end = j - 1
+        entity.content = tokens.slice(i, j).mkString(" ")
+        list.add(entity)
+        // move i to position j
+        i = j
+      } 
+      else i = i + 1
+    }
+   
+   //list.toArray().foreach(entity => println(entity))
+   
+   list
+ }
+  
+  def PatternWithNP(){
+    
+  }
+  
 }
 
 class Pipeline() extends Logging with Serializable {
