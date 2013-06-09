@@ -19,3 +19,9 @@ class LingEntity(etype : String, mid : Float, eqid : Integer) {
   override def toString = content
   
 }
+
+case class NPEntity(begin : Integer){
+  var end : Integer = -1
+  var content : String = null
+  override def toString = content
+}
