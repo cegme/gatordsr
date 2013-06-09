@@ -212,13 +212,13 @@ object Pipeline extends Logging {
         // TODO: output the result
         val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
         val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
-        KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 2).equiv_id, byte_range, comment)
+        KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
       }
       if (text.matches(causeOfDeath)){
         // TODO: output the result
         val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
         val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
-        KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 2).equiv_id, byte_range, comment)
+        KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
       }
     }
   }
