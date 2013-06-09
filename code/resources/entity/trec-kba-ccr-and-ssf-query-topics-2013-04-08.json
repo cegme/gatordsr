@@ -167,7 +167,7 @@
             "entity_type": "ORG", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Hoboken_Volunteer_Ambulance_Corps",
-            "alias": ["Hoboken Volunteer Ambulance Corps", ]
+            "alias": ["Hoboken Volunteer Ambulance Corps"]
         }, 
         {
             "entity_type": "ORG", 
