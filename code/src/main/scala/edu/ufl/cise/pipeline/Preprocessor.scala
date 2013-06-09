@@ -72,6 +72,13 @@ object Preprocessor {
     })
   }
 
+  def initStopList(filename : String, stop_list : ArrayList[String]){
+    val lines = Source.fromFile(filename).getLines()
+    lines.foreach(line => {
+      stop_list.add(line)
+    })
+  }
+  
   def main(args: Array[String]) {
     initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json")
     // initSlot("affiliate")

@@ -141,4 +141,35 @@ public class RemoteGPGRetrieval {
 		transport.close();
 		return list;
 	}
+
+    /**
+     * Reads non encrypted si files and returns a list of them.
+     */
+    public static List<StreamItem> readNonEncrypted(String fileName) throws IOException, TTransportException {
+        InputStream is = new java.io.FileInputStream(new java.io.File(fileName));
+        XZCompressorInputStream xzis = new XZCompressorInputStream(is);
+        TIOStreamTransport transport = new TIOStreamTransport(xzis);
+        TBinaryProtocol protocol = new TBinaryProtocol(transport);
+        System.err.println("readNonEncrypted: " + fileName);
+        transport.open();
+        LinkedList<StreamItem> listSI = new LinkedList<StreamItem>();
+        boolean exception = false;
+        while (!exception) {
+            try {
+                StreamItem si = new StreamItem();
+                si.read(protocol);
+                listSI.add(si);
+                System.out.println(si.getBody().getSentences().get("lingpipe").get(0).getTokens().get(0));
+            } catch (TTransportException e) {
+                RemoteGPGRetrieval.tTransportExceptionPrintString(e);
+//                e.printStackTrace();
+                exception = true;
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+        }
+        transport.close();
+        return listSI;
+            
+    }
 }

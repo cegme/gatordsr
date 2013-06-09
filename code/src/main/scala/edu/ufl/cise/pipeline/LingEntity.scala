@@ -15,7 +15,7 @@ class LingEntity(etype : String, mid : Float, eqid : Integer) {
   var begin = -1
   var end = -1
   var content : String = null
-  
+  var entityIndex = -1
   override def toString = content
   
 }
