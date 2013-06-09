@@ -137,13 +137,13 @@
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Osceola_Middle_School",
-            "alias": ["Osceola Middle School","Osceola Middle" ]
+            "alias": ["Osceola Middle School", "Osceola Middle"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/The_Ritz_Apartment_(Ocala,_Florida)",
-            "alias": ["The Ritz Apartment Ocala, Florida", "The Ritz Apartment" ]
+            "alias": ["The Ritz Apartment Ocala, Florida", "The Ritz Apartment"]
         }, 
         {
             "entity_type": "ORG", 
@@ -167,7 +167,7 @@
             "entity_type": "ORG", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Hoboken_Volunteer_Ambulance_Corps",
-            "alias": ["Hoboken Volunteer Ambulance Corps", ]
+            "alias": ["Hoboken Volunteer Ambulance Corps"]
         }, 
         {
             "entity_type": "ORG", 
