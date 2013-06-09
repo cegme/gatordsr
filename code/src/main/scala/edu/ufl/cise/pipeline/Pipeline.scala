@@ -32,17 +32,24 @@ object Pipeline extends Logging {
   val num = new java.util.concurrent.atomic.AtomicInteger
 
   // load entities and patterns from files
+  // kba entities
   val entity_list = new ArrayList[Entity]
   Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
   lazy val entities = entity_list.toArray(Array[Entity]())
-
+  
+  // patterns
   val pattern_list = new ArrayList[Pattern]
   Preprocessor.initPatternList("resources/test/pattern.txt", pattern_list)
   lazy val patterns = pattern_list.toArray(Array[Pattern]())
 
+  // stop list of names
   val stop_list = new ArrayList[String]
   Preprocessor.initStopList("resources/test/stop_list", stop_list)
   lazy val stops = stop_list.toArray(Array[String]())
+  
+  // np patterns
+  val titles = "is a | is an | was a | was an | be a | be an"
+  val causeOfDeath = "died of | pass away of "
   
   logInfo("entities and patterns are loaded")
   
@@ -193,8 +200,27 @@ object Pipeline extends Logging {
     index
   }
   
-  def patternMatchNP(sentence: Sentence, sentenceStr: String, targetIndex: Int, le: LingEntity){
-    //TODO: match the patterns here
+  def patternMatchNP(entity : LingEntity, index : Integer, 
+    tokens : Array[Token], entities : ArrayList[LingEntity], array:Array[String]){
+    val s = SimpleJob.transform(tokens.slice(entity.end + 1, tokens.size))
+    // match titles pattern
+    val list = extractNPList(s)
+    if (list.size() > 0){
+      val np = list.get(0)
+      val text = SimpleJob.transform(tokens.slice(entity.end + 1, entity.end + np.begin))
+      if (text.matches(titles)){
+        // TODO: output the result
+      }
+      if (text.matches(causeOfDeath)){
+        // TODO: output the result
+      }
+    }
+    val array0 = s.split(titles)
+    if (array0.size > 1){
+      // get a match here
+    }
+    
+ 
     
     //TODO: find the matched the NP here and generate the results here
   }
@@ -224,15 +250,8 @@ object Pipeline extends Logging {
       } 
       else i = i + 1
     }
-   
-   //list.toArray().foreach(entity => println(entity))
-   
    list
  }
-  
-  def PatternWithNP(){
-    
-  }
   
 }
 
