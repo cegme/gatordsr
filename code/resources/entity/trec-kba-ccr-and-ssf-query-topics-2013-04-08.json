@@ -137,7 +137,7 @@
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Osceola_Middle_School",
-            "alias": ["Osceola Middle School","Osceola Middle" ]
+            "alias": ["Osceola Middle School", "Osceola Middle" ]
         }, 
         {
             "entity_type": "FAC", 
