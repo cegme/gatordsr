@@ -96,8 +96,9 @@ object Pipeline extends Logging {
       closePatternMatch(entity, index, tokens, entity_list, array)
       
       // pattern matching with NP
-      val s = SimpleJob.transform(tokens)
-      extractNPList(s)
+      // val s = SimpleJob.transform(tokens)
+      // extractNPList(s)
+      patternMatchNP(entity, index, tokens, entity_list, array)
     }
    
   }
