@@ -203,23 +203,29 @@ object Pipeline extends Logging {
   
   def patternMatchNP(entity : LingEntity, index : Integer, 
     tokens : Array[Token], entities : ArrayList[LingEntity], array:Array[String]){
+    //println(SimpleJob.transform(tokens))
     val s = SimpleJob.transform(tokens.slice(entity.end + 1, tokens.size))
+    //println(s)
     // match titles pattern
     val list = extractNPList(s)
+    //println(list)
     if (list.size() > 0){
       val np = list.get(0)
       val text = SimpleJob.transform(tokens.slice(entity.end + 1, entity.end + np.begin + 1))
+      //println(text)
       if (text.matches(titles)){
         // TODO: output the result
         val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
         val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
         KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+        //println(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
       }
       if (text.matches(causeOfDeath)){
         // TODO: output the result
         val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
         val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
         KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+        //println(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
       }
     }
   }
