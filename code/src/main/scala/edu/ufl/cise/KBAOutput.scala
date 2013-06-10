@@ -50,7 +50,7 @@ object KBAOutput {
     pw.println(comment)
     pw.close
     pwr.synchronized({
-      pwr.println(row.toString)
+      pwr.write(row.toString + "\n")
       pwr.flush()
       })
   }
