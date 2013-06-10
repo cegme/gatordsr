@@ -49,9 +49,10 @@ object KBAOutput {
     row_num = row_num + 1
     pw.println(comment)
     pw.close
-    pwr.println(row.toString)
-    pwr.flush()
-    
+    pwr.synchronized({
+      pwr.println(row.toString)
+      pwr.flush()
+      })
   }
 	
   // write the rows into one file
