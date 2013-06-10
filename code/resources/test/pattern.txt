@@ -83,3 +83,5 @@ ORG, Affiliate, with, right, ORG
 ORG, Affiliate, with, left, ORG
 ORG, Affiliate, and, right, FAC
 ORG, Affiliate, and, left, FAC
+FAC, Contact_Meet_Entity, at, left, PER
+FAC, Contact_Meet_Entity, in, left, PER
