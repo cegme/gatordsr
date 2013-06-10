@@ -19,9 +19,9 @@ public class RemoteGPGRetrieval {
 	public static final String	SDE_BASE_PATH	= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 
 	public static void main(String[] args) {
-		// String fileName =
-		// "social-458-b51e990263a58e94a88d22a8be8502d1-d71caa2571e6e6aa16da0cdae2a4dfc7.sc.xz.gpg";
-		// getSSHStreams("2011-11-03-05", fileName);
+		 String fileName =
+		 "social-458-b51e990263a58e94a88d22a8be8502d1-d71caa2571e6e6aa16da0cdae2a4dfc7.sc.xz.gpg";
+		 getSSHStreams("2011-11-03-05", fileName);
 
 		try {
 			// List<StreamItem> l =

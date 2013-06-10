@@ -41,7 +41,7 @@
             "entity_type": "FAC", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/Hjemkomst_Center",
-            "alias": ["Hjemkomst Center"]
+            "alias": ["Hjemkomst Center", "Heritage Hjemkomst Interpretive Center"]
         }, 
         {
             "entity_type": "FAC", 
@@ -107,13 +107,13 @@
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Appleton_Museum_of_Art",
-            "alias": ["Appelton Museum of Art"]
+            "alias": ["Appelton Museum of Art", "Appelton Museum"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Don_Garlits_Museum_of_Drag_Racing",
-            "alias": ["Don Garlits Museum of Drag Racing"]
+            "alias": ["Don Garlits Museum of Drag Racing", "Don Garlits Museum"]
         }, 
         {
             "entity_type": "FAC", 
@@ -125,25 +125,25 @@
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Lake_Weir_High_School",
-            "alias": ["Lake Weir High School"]
+            "alias": ["Lake Weir High School", "Lake Weir High"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Marion_Technical_Institute",
-            "alias": ["Marion Technical Institute"]
+            "alias": ["Marion Technical Institute", "Marion Tech"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Osceola_Middle_School",
-            "alias": ["Osceola Middle School"]
+            "alias": ["Osceola Middle School", "Osceola Middle"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/The_Ritz_Apartment_(Ocala,_Florida)",
-            "alias": ["The Ritz Apartment Ocala, Florida", "The Ritz Apartment" ]
+            "alias": ["The Ritz Apartment Ocala, Florida", "The Ritz Apartment"]
         }, 
         {
             "entity_type": "ORG", 
@@ -155,13 +155,13 @@
             "entity_type": "ORG", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/Innovis_Health",
-            "alias": ["Innovis Health"]
+            "alias": ["Innovis Health", "Innovis"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Hoboken_Reporter",
-            "alias": ["Hoboken Reporter"]
+            "alias": ["Hoboken Reporter", "Hoboken Newspaper", "Hoboken paper"]
         }, 
         {
             "entity_type": "ORG", 
@@ -173,13 +173,13 @@
             "entity_type": "ORG", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Basic_Element_(company)",
-            "alias": ["Basic Element company", "Basic Element co", "Basic Element"]
+            "alias": ["Basic Element company", "Basic Element co", "Basic Element Companies"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Basic_Element_(music_group)",
-            "alias": ["Basic Element music groups", "Basic Element music", "Basic Element"]
+            "alias": ["Basic Element music groups", "Basic Element music"]
         }, 
         {
             "entity_type": "ORG", 
@@ -293,7 +293,7 @@
             "entity_type": "PER", 
             "group": "bronfman", 
             "target_id": "http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.",
-            "alias": ["Edgar Bronfman, Jr.", "Edgar Bronfman, Jr", "Edgar Bronfman", "Efer"]
+            "alias": ["Edgar Bronfman, Jr.", "Edgar Bronfman, Jr", "Edgar Bronfman", "Edgar Jr.", "Efer"]
         }, 
         {
             "entity_type": "PER", 
