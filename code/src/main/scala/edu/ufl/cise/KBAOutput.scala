@@ -22,6 +22,7 @@ object KBAOutput {
   		"\"poc_name\": \"TREC KBA Organizers\", \"run_info\": {\"num_entities\": 170, \"num_stream_hours\": 11948}, \"system_id\": \"gatordsr\"}"
   pwr.println(firstLine)
   pwr.flush()
+  pwr.close()
   
   var outputPrefix = "resources/test/kbaoutput/"
 
@@ -49,10 +50,10 @@ object KBAOutput {
     row_num = row_num + 1
     pw.println(comment)
     pw.close
-    pwr.synchronized({
+/*    pwr.synchronized({
       pwr.write(row.toString + "\n")
       pwr.flush()
-      })
+      })*/
   }
 	
   // write the rows into one file
