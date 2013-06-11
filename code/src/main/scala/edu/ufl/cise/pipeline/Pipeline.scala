@@ -52,7 +52,7 @@ object Pipeline extends Logging {
   // np patterns
   val titles = "is | was | be | been"
   val causeOfDeath = "died of | pass away of"
-  val awardsWon = "awarded | honored | award | win | won | prize | place"
+  val awardsWon = "awarded | honored | award | won | prize"
     
     
   logInfo("entities and patterns are loaded")
@@ -176,6 +176,12 @@ object Pipeline extends Logging {
          val comment = "# " + entity.content + " " + s + " " + target.content + " --- " + SimpleJob.transform(tokens)
          KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", target.equiv_id, getByteRange(target, tokens), comment)
       }
+      
+      if (entity.entity_type.equals("PER") && s.toLowerCase().contains("award")){
+        val comment = "# " + entity.content + " " + s + " " + target.content + " --- " + SimpleJob.transform(tokens)
+        KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", target.equiv_id, getByteRange(target, tokens), comment)
+      }
+      
     }
   }
 
