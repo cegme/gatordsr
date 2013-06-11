@@ -24,6 +24,8 @@ import opennlp.tools.postag.POSTaggerME
 import opennlp.tools.postag.POSModel
 import opennlp.tools.chunker.ChunkerME
 import opennlp.tools.chunker.ChunkerModel
+import opennlp.tools.namefind.NameFinderME
+import opennlp.tools.namefind.TokenNameFinderModel
 
 
 object Pipeline extends Logging {
@@ -50,7 +52,7 @@ object Pipeline extends Logging {
   // np patterns
   val titles = "is | was | be | been"
   val causeOfDeath = "died of | pass away of"
-  val awardsWon = "awarded | honored | award"
+  val awardsWon = "awarded | honored | award | win | won | prize | place"
     
     
   logInfo("entities and patterns are loaded")
@@ -59,6 +61,7 @@ object Pipeline extends Logging {
   val tokenizer = new TokenizerME(new TokenizerModel(this.getClass().getClassLoader().getResourceAsStream("en-token.bin")))
   val tagger = new POSTaggerME(new POSModel(this.getClass().getClassLoader().getResourceAsStream("en-pos-maxent.bin")))
   val chunker = new ChunkerME(new ChunkerModel(this.getClass().getClassLoader().getResourceAsStream("en-chunker.bin")))
+  val finder = new NameFinderME(new TokenNameFinderModel(new FileInputStream("resources/en-ner-person.bin")))
   
   logInfo("opennlp tokenizer, pos tagger, chunker are loaded")
   
@@ -180,7 +183,7 @@ object Pipeline extends Logging {
   def getByteRange(target : LingEntity, tokens:Array[Token]) : String = {
     val first = tokens(target.begin).getOffsets().get(OffsetType.findByValue(1)).first
     val last = tokens(target.end).getOffsets().get(OffsetType.findByValue(1)).first + 
-    tokens(target.end).getOffsets().get(OffsetType.findByValue(1)).length
+    tokens(target.end).getOffsets().get(OffsetType.findByValue(1)).length - 1
     first + "-" + last
   }
 
@@ -226,7 +229,7 @@ object Pipeline extends Logging {
       {
         //match titles
         titles.split(" \\| ").foreach(title => {
-          if (text.contains(title)) {
+          if (text.contains(title) && finder.find(tokenizer.tokenize(np.content)).isEmpty) {
             // TODO: output the result
             val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
             val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
@@ -235,7 +238,7 @@ object Pipeline extends Logging {
           }
         })
         
-        if (text.matches(", ") || text.matches(",") || text.matches(" , ") || text.matches(", ")){
+        if ((text.matches(", ") || text.matches(",") || text.matches(" , ") || text.matches(", ")) && finder.find(tokenizer.tokenize(np.content)).isEmpty){
           val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
           //var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size - 1
           val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
@@ -245,7 +248,7 @@ object Pipeline extends Logging {
         
         // match causeOfDeath
         causeOfDeath.split(" \\| ").foreach(cause => {
-          if (text.contains(cause)) {
+          if (text.contains(cause) && finder.find(tokenizer.tokenize(np.content)).isEmpty) {
             // TODO: output the result
             val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
             //var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size - 1
@@ -257,7 +260,7 @@ object Pipeline extends Logging {
         
         // match awardsWon
         awardsWon.split(" \\| ").foreach(award => {
-          if (text.contains(award)) {
+          if (text.contains(award) && finder.find(tokenizer.tokenize(np.content)).isEmpty) {
             val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
             //var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size - 1
             val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
@@ -279,7 +282,7 @@ object Pipeline extends Logging {
       if (entity.entity_type.equals("PER")) {
         // match awardsWon
         awardsWon.split(" \\| ").foreach(award => {
-          if (text.contains(award)) {
+          if (text.contains(award) && finder.find(tokenizer.tokenize(np.content)).isEmpty) {
             val comment = "# " + np.content + " " + text + " " + entity.content + " --- " + SimpleJob.transform(tokens)
             //var end = np.end; if (np.end >= tokens.size) end = tokens.size - 1
             val byte_range = getByteRangeNP(tokens, np.begin, np.end)
@@ -288,7 +291,7 @@ object Pipeline extends Logging {
         })
         
         // match titles
-        if (text.matches(" ")){
+        if (text.matches(" ") && finder.find(tokenizer.tokenize(np.content)).isEmpty){
           val comment = "# " + np.content + " " + text + " " + entity.content + " --- " + SimpleJob.transform(tokens)
           //var end = np.end; if (np.end >= entity.begin) end = entity.begin - 1
           val byte_range = getByteRangeNP(tokens, np.begin, np.end)
@@ -308,7 +311,7 @@ object Pipeline extends Logging {
   def getByteRangeNP(tokens : Array[Token], begin : Integer, end: Integer) = {
     val first = tokens(begin).getOffsets().get(OffsetType.findByValue(1)).first
     val last = tokens(end).getOffsets().get(OffsetType.findByValue(1)).first + 
-    tokens(end).getOffsets().get(OffsetType.findByValue(1)).length
+    tokens(end).getOffsets().get(OffsetType.findByValue(1)).length -1
     first + "-" + last    
   }
 
@@ -347,6 +350,8 @@ object Pipeline extends Logging {
   
   def testNP(s : String) = {
     val tokens = tokenizer.tokenize(s)
+    val ner = finder.find(tokens)
+    println(ner)
     val pos = tagger.tag(tokens)
     val tags = chunker.chunk(tokens, pos).toArray
 
