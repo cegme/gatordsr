@@ -48,9 +48,9 @@ object Pipeline extends Logging {
   lazy val stops = stop_list.toArray(Array[String]())
   
   // np patterns
-  val titles = "is a | is an | was a | was an | be a | be an | a | an | the "
-  val causeOfDeath = "died of | pass away of "
-  val awardsWon = "awarded | honored "
+  val titles = "is | was | be | been"
+  val causeOfDeath = "died of | pass away of"
+  val awardsWon = "awarded | honored | award"
     
     
   logInfo("entities and patterns are loaded")
@@ -70,7 +70,8 @@ object Pipeline extends Logging {
   // the main logic, used to generate KBA outputs
 
   def main(args : Array[String]){
-    //extractNP("Yao Ming was the Chinese basketball player in Houston Rockets")
+    println(testNP("Bronfman was unable to bid higher than Universal"))
+    println(testNP("Corbato was born on July 1, 1926, in Oakland"))
     
     // args(0) -- input file
     // args(1) -- output prefix name
@@ -151,6 +152,7 @@ object Pipeline extends Logging {
             KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, target.equiv_id, getByteRange(target, tokens), comment)
           }
         })
+  
     }
     else{
       // find the patterns that fit with the two entities
@@ -166,6 +168,11 @@ object Pipeline extends Logging {
             KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, target.equiv_id, getByteRange(target, tokens), comment)
           }
         })
+      // generate these results for the DateOfDeath
+      if (entity.entity_type.equals("PER") && target.entity_type.equals("DATE") && entity.end + 1 == target.begin){
+         val comment = "# " + entity.content + " " + s + " " + target.content + " --- " + SimpleJob.transform(tokens)
+         KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", target.equiv_id, getByteRange(target, tokens), comment)
+      }
     }
   }
 
@@ -205,13 +212,10 @@ object Pipeline extends Logging {
   
   def patternMatchNP(entity : LingEntity, index : Integer, 
     tokens : Array[Token], entities : ArrayList[LingEntity], array:Array[String]){
-    //println(SimpleJob.transform(tokens))
-    val s = SimpleJob.transform(tokens.slice(entity.end + 1, tokens.size))
-    //println(s)
-    // match titles pattern
-    val list = extractNPList(s)    
+    // the right noun phrase list
+    val list = extractNPList(tokens.slice(entity.end + 1, tokens.size))    
     // the left noun phrase list
-    val left_list = extractNPList(SimpleJob.transform(tokens.slice(0, entity.begin)))
+    val left_list = extractNPList(tokens.slice(0, entity.begin))
     
     //println(list)
     if (list.size() > 0){
@@ -220,50 +224,84 @@ object Pipeline extends Logging {
       
       if(entity.entity_type.equals("PER"))
       {
-        //println(text)
-        if (text.matches(titles)) {
-          // TODO: output the result
+        //match titles
+        titles.split(" \\| ").foreach(title => {
+          if (text.contains(title)) {
+            // TODO: output the result
+            val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
+            val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+            //println(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+          }
+        })
+        
+        if (text.matches(", ") || text.matches(",") || text.matches(" , ") || text.matches(", ")){
           val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
-          var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size -1
-          val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, end)
+          //var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size - 1
+          val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
           KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
-          //println(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
         }
-        if (text.matches(causeOfDeath)) {
-          // TODO: output the result
-          val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
-          var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size -1
-          val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, end)
-          KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
-          //println(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
-        }
+        
+        
+        // match causeOfDeath
+        causeOfDeath.split(" \\| ").foreach(cause => {
+          if (text.contains(cause)) {
+            // TODO: output the result
+            val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
+            //var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size - 1
+            val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+            //println(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+          }
+        })
+        
+        // match awardsWon
+        awardsWon.split(" \\| ").foreach(award => {
+          if (text.contains(award)) {
+            val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
+            //var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size - 1
+            val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+          }
+        })
 
-        if (text.matches(awardsWon)) {
-          val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
-          var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size -1
-          val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, end)
-          KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
-        }
-
+        // generate samples
         val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
         var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size -1
-        val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, end)
+        val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
         KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Samples", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
       }
      }
 
-  if (left_list.size() > 0) {
-    val np = left_list.get(left_list.size() - 1)
-    val text = SimpleJob.transform(tokens.slice(np.end + 1, entity.begin))
-    if (entity.entity_type.equals("PER")){
-        if (text.matches(awardsWon)) {
+    if (left_list.size() > 0) {
+      val np = left_list.get(left_list.size() - 1)
+      val text = SimpleJob.transform(tokens.slice(np.end + 1, entity.begin))
+      if (entity.entity_type.equals("PER")) {
+        // match awardsWon
+        awardsWon.split(" \\| ").foreach(award => {
+          if (text.contains(award)) {
+            val comment = "# " + np.content + " " + text + " " + entity.content + " --- " + SimpleJob.transform(tokens)
+            //var end = np.end; if (np.end >= tokens.size) end = tokens.size - 1
+            val byte_range = getByteRangeNP(tokens, np.begin, np.end)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", tokens(np.begin).equiv_id, byte_range, comment)
+          }
+        })
+        
+        // match titles
+        if (text.matches(" ")){
           val comment = "# " + np.content + " " + text + " " + entity.content + " --- " + SimpleJob.transform(tokens)
+          //var end = np.end; if (np.end >= entity.begin) end = entity.begin - 1
           val byte_range = getByteRangeNP(tokens, np.begin, np.end)
-          KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+          KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(np.begin).equiv_id, byte_range, comment)
         }
+      }
+      // generate samples
+      val comment = "# " + np.content + " " + text + " " + entity.content + " --- " + SimpleJob.transform(tokens)
+      //var end = np.end; if (np.end >= entity.begin) end = entity.begin - 1
+      //println(np.begin + " " + np.end + " " + tokens.size)
+      val byte_range = getByteRangeNP(tokens, np.begin, np.end)
+      KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Samples", tokens(np.begin).equiv_id, byte_range, comment)
     }
-    
-  }
     
   }
   
@@ -273,22 +311,18 @@ object Pipeline extends Logging {
     tokens(end).getOffsets().get(OffsetType.findByValue(1)).length
     first + "-" + last    
   }
-  
-  def generateSamples(){
-    
-  }
-  
+
   // extract the NP list in the sentence
-  def extractNPList(s : String) = {
+  def extractNPList(ts: Array[Token]) = {
     // using chunking to extract NP from a tail string of the orignal string after the matching point   
-   val tokens: Array[String] = tokenizer.tokenize(s)
-   val pos = tagger.tag(tokens)
-   val tags = chunker.chunk(tokens, pos).toArray
-   
-   val list = new ArrayList[NPEntity]
-   // generate entities 
-   var i = 0
-   while (i < tags.size) {
+    val tokens = getTokens(ts)
+    val pos = tagger.tag(tokens)
+    val tags = chunker.chunk(tokens, pos).toArray
+
+    val list = new ArrayList[NPEntity]
+    // generate entities 
+    var i = 0
+    while (i < tags.size) {
       if (tags(i).equals("B-NP")) {
         val entity = new NPEntity(i)
         var j = i + 1
@@ -299,11 +333,43 @@ object Pipeline extends Logging {
         list.add(entity)
         // move i to position j
         i = j
-      } 
-      else i = i + 1
+      } else i = i + 1
     }
-   list
- }
+    list
+  }
+  
+  def getTokens(tokens : Array[Token]) = {
+    val list = new ArrayList[String]
+    tokens.foreach(token => list.add(token.getToken()))
+    list.toArray(Array[String]())
+  }
+  
+  
+  def testNP(s : String) = {
+    val tokens = tokenizer.tokenize(s)
+    val pos = tagger.tag(tokens)
+    val tags = chunker.chunk(tokens, pos).toArray
+
+    val list = new ArrayList[NPEntity]
+    // generate entities 
+    var i = 0
+    while (i < tags.size) {
+      if (tags(i).equals("B-NP")) {
+        val entity = new NPEntity(i)
+        var j = i + 1
+        while (j < tags.size && tags(j).equals("I-NP"))
+          j = j + 1
+        entity.end = j - 1
+        entity.content = tokens.slice(i, j).mkString(" ")
+        list.add(entity)
+        // move i to position j
+        i = j
+      } else i = i + 1
+    }
+    list
+  }
+  
+  
   
 }
 
