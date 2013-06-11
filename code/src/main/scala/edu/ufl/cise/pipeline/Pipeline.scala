@@ -300,7 +300,7 @@ object Pipeline extends Logging {
       //var end = np.end; if (np.end >= entity.begin) end = entity.begin - 1
       //println(np.begin + " " + np.end + " " + tokens.size)
       val byte_range = getByteRangeNP(tokens, np.begin, np.end)
-      KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Sample", tokens(np.begin).equiv_id, byte_range, comment)
+      KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Samples", tokens(np.begin).equiv_id, byte_range, comment)
     }
     
   }
