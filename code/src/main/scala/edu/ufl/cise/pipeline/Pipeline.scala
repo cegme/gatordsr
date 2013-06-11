@@ -211,13 +211,10 @@ object Pipeline extends Logging {
   
   def patternMatchNP(entity : LingEntity, index : Integer, 
     tokens : Array[Token], entities : ArrayList[LingEntity], array:Array[String]){
-    //println(SimpleJob.transform(tokens))
-    val s = SimpleJob.transform(tokens.slice(entity.end + 1, tokens.size))
-    //println(s)
-    // match titles pattern
-    val list = extractNPList(s)    
+    // the right noun phrase list
+    val list = extractNPList(tokens.slice(entity.end + 1, tokens.size))    
     // the left noun phrase list
-    val left_list = extractNPList(SimpleJob.transform(tokens.slice(0, entity.begin)))
+    val left_list = extractNPList(tokens.slice(0, entity.begin))
     
     //println(list)
     if (list.size() > 0){
@@ -314,19 +311,18 @@ object Pipeline extends Logging {
     tokens(end).getOffsets().get(OffsetType.findByValue(1)).length
     first + "-" + last    
   }
-  
-  
+
   // extract the NP list in the sentence
-  def extractNPList(s : String) = {
+  def extractNPList(ts: Array[Token]) = {
     // using chunking to extract NP from a tail string of the orignal string after the matching point   
-   val tokens: Array[String] = tokenizer.tokenize(s)
-   val pos = tagger.tag(tokens)
-   val tags = chunker.chunk(tokens, pos).toArray
-   
-   val list = new ArrayList[NPEntity]
-   // generate entities 
-   var i = 0
-   while (i < tags.size) {
+    val tokens = getTokens(ts)
+    val pos = tagger.tag(tokens)
+    val tags = chunker.chunk(tokens, pos).toArray
+
+    val list = new ArrayList[NPEntity]
+    // generate entities 
+    var i = 0
+    while (i < tags.size) {
       if (tags(i).equals("B-NP")) {
         val entity = new NPEntity(i)
         var j = i + 1
@@ -337,14 +333,15 @@ object Pipeline extends Logging {
         list.add(entity)
         // move i to position j
         i = j
-      } 
-      else i = i + 1
+      } else i = i + 1
     }
-   list
+    list
   }
   
   def getTokens(tokens : Array[Token]) = {
-    
+    val list = new ArrayList[String]
+    tokens.foreach(token => list.add(token.getToken()))
+    list.toArray(Array[String]())
   }
   
 }
