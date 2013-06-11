@@ -56,30 +56,35 @@ import edu.ufl.cise.util.StreamItemWrapper;
  */
 public class CorpusBatchProcessor {
 
-	public final static String				CORPUS_DIR_SERVER_SDE			= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public final static String				CORPUS_DIR_SERVER_SDD			= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public final static String				CORPUS_DIR_LOCAL					= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public final static String				LOG_DIR_SERVER						= "/media/sde/runs/";
-	public final static String				LOG_DIR_SERVER_OLD				= "/media/sde/backupFinal/";
-	public final static String				LOG_DIR_LOCAL							= "/home/morteza/trec/runs/";
-	public final static String				LOG_DIR_LOCAL_OLD					= "/home/morteza/trec/backup/";
-	public final static String				LOG_DIR_LOCAL_TO_PROCESS	= "/home/morteza/trec/toProcess/";
-	public final static String				LOG_DIR_SERVER_TO_PROCESS	= "/media/sde/toProcess/";
-	final String											FILTER										= "";
-	final String											query											= "president";
-	AtomicLong												fileCount									= new AtomicLong(0);
-	AtomicLong												siCount										= new AtomicLong(0);
-	AtomicLong												siFilteredCount						= new AtomicLong(0);
-	AtomicLong												processedSize							= new AtomicLong(0);
+	public final static String				CORPUS_DIR_SERVER_SDE												= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_SERVER_EXTRA											= "/media/sde/tempStorage/";
+	public final static String				CORPUS_DIR_SERVER_SDD												= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				CORPUS_DIR_LOCAL														= "/home/morteza/2013Corpus/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public final static String				LOG_DIR_SERVER															= "/media/sde/runs/";
+	public final static String				LOG_DIR_SERVER_OLD													= "/media/sde/backupFinal/";
+	public final static String				LOG_DIR_LOCAL																= "/home/morteza/trec/runs/";
+	public final static String				LOG_DIR_LOCAL_OLD														= "/home/morteza/trec/backup/";
+	public final static String				LOG_DIR_LOCAL_TO_PROCESS										= "/home/morteza/trec/toProcess/";
+	public final static String				LOG_DIR_SERVER_TO_PROCESS										= "/media/sde/toProcess/";
+	final String											FILTER																			= "";
+	final String											query																				= "president";
+	AtomicLong												fileCount																		= new AtomicLong(0);
+	AtomicLong												siCount																			= new AtomicLong(0);
+	AtomicLong												siFilteredCount															= new AtomicLong(0);
+	AtomicLong												processedSize																= new AtomicLong(0);
 
-	public static final DateFormat		format										= new SimpleDateFormat("yyyy-MM-dd-HH");
-	public static final DateFormat		logTimeFormat							= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static final DateFormat		format																			= new SimpleDateFormat(
+																																										"yyyy-MM-dd-HH");
+	public static final DateFormat		logTimeFormat																= new SimpleDateFormat(
+																																										"yyyy-MM-dd HH:mm:ss");
 	final int													indexOfThisProcess;
 	final int													totalNumProcesses;
 
-	final Pattern											pattern										= Pattern.compile(query);
+	final Pattern											pattern																			= Pattern
+																																										.compile(query);
 
-	DecimalFormat											numberFormatter						= new DecimalFormat("00");
+	DecimalFormat											numberFormatter															= new DecimalFormat(
+																																										"00");
 
 	List<Entity>											listEntity;
 
@@ -88,6 +93,10 @@ public class CorpusBatchProcessor {
 	final Hashtable<String, Boolean>	alreadyProcessedGPGFileHashTable;
 	final Hashtable<String, Boolean>	toBeProcessedGPGFileHashTable;
 
+	static final String[]							ENTITIES_TO_GET_MENTIONING_SENTENCES_ARRAY	= new String[] {
+			"https://twitter.com/CorbinSpeedway", "http://en.wikipedia.org/wiki/Klaus_Grutzka",
+			"https://twitter.com/GandBcoffee", "https://twitter.com/FrankandOak"			};
+
 	/**
 	 * gets the index of thus process and total # of processes that this process
 	 * is a member of to avoid duplicate process of corpus files.
@@ -95,27 +104,58 @@ public class CorpusBatchProcessor {
 	 * @throws FileNotFoundException
 	 * 
 	 */
-	public CorpusBatchProcessor(int indexOfThisProcess, int totalNumProcesses) throws FileNotFoundException {
+	public CorpusBatchProcessor(int indexOfThisProcess, int totalNumProcesses)
+			throws FileNotFoundException {
 		this.indexOfThisProcess = indexOfThisProcess;
 		this.totalNumProcesses = totalNumProcesses;
-		File f = new File(CORPUS_DIR_LOCAL);
-		localRun = f.exists();
-		alreadyProcessedGPGFileHashTable = localRun ? LogReader.getPreLoggedFileList(LOG_DIR_LOCAL_OLD) : LogReader
-				.getPreLoggedFileList(LOG_DIR_SERVER_OLD);
-		toBeProcessedGPGFileHashTable = localRun ? LogReader.getToProcessFileList(LOG_DIR_LOCAL_TO_PROCESS) : LogReader
-				.getToProcessFileList(LOG_DIR_SERVER_TO_PROCESS);
+
+		localRun = initLocalRun();
+		alreadyProcessedGPGFileHashTable = initAlreadyProcessedGPGFileHashTable();
+		toBeProcessedGPGFileHashTable = initToBeProcessedGPGFileHashTable();
 	}
 
+	/**
+	 * Run as a single process, go through fiels one by one, this could be a
+	 * multi-thread process, taking care of deviding jobs itself..
+	 * 
+	 * @throws FileNotFoundException
+	 */
 	public CorpusBatchProcessor() throws FileNotFoundException {
 		indexOfThisProcess = -1;
 		this.totalNumProcesses = -1;
-		File f = new File(CORPUS_DIR_LOCAL);
-		localRun = f.exists();
-		alreadyProcessedGPGFileHashTable = localRun ? LogReader.getPreLoggedFileList(LOG_DIR_LOCAL_OLD) : LogReader
-				.getPreLoggedFileList(LOG_DIR_SERVER_OLD);
-		toBeProcessedGPGFileHashTable = localRun ? LogReader.getToProcessFileList(LOG_DIR_LOCAL_TO_PROCESS) : LogReader
-				.getToProcessFileList(LOG_DIR_SERVER_TO_PROCESS);
 
+		localRun = initLocalRun();
+		alreadyProcessedGPGFileHashTable = initAlreadyProcessedGPGFileHashTable();
+		toBeProcessedGPGFileHashTable = initToBeProcessedGPGFileHashTable();
+	}
+
+	private boolean initLocalRun() {
+		File f = new File(CORPUS_DIR_LOCAL);
+		return f.exists();
+	}
+
+	private Hashtable<String, Boolean> initToBeProcessedGPGFileHashTable()
+			throws FileNotFoundException {
+		Hashtable<String, Boolean> hashTable = localRun ? LogReader
+				.getToProcessFileList(LOG_DIR_LOCAL_TO_PROCESS) : LogReader
+				.getToProcessFileList(LOG_DIR_SERVER_TO_PROCESS);
+		final List<String> fileList = DirList.getFileList(CORPUS_DIR_SERVER_EXTRA, "");
+		for (String s : fileList) {
+			hashTable.put(s, LogReader.TRUE);
+		}
+		return hashTable;
+	}
+
+	private Hashtable<String, Boolean> initAlreadyProcessedGPGFileHashTable()
+			throws FileNotFoundException {
+		Hashtable<String, Boolean> hashTable = localRun ? LogReader
+				.getPreLoggedFileList(LOG_DIR_LOCAL_OLD) : LogReader
+				.getPreLoggedFileList(LOG_DIR_SERVER_OLD);
+		final List<String> fileList = DirList.getFileList(CORPUS_DIR_SERVER_EXTRA, "");
+		for (String s : fileList) {
+			hashTable.put(s, LogReader.TRUE);
+		}
+		return hashTable;
 	}
 
 	/**
@@ -128,7 +168,8 @@ public class CorpusBatchProcessor {
 	 */
 	private static InputStream grabGPGLocal(String fileStr) {
 		// System.out.println(date + "/" + fileName);
-		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt " + fileStr;
+		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
+				+ fileStr;
 		// + fileStr + " | xz --decompress";
 		// System.out.println(command);
 		return FileProcessor.runBinaryShellCommand(command);
@@ -143,7 +184,8 @@ public class CorpusBatchProcessor {
 	 * @param is
 	 * @throws Exception
 	 */
-	private void getStreams(PrintWriter pw, String day, int hour, String fileName, InputStream is) throws Exception {
+	private void getStreams(PrintWriter pw, String day, int hour, String fileName, InputStream is)
+			throws Exception {
 		XZCompressorInputStream bais = new XZCompressorInputStream(is);
 		TIOStreamTransport transport = new TIOStreamTransport(bais);
 		transport.open();
@@ -194,7 +236,7 @@ public class CorpusBatchProcessor {
 			if (listSentence == null) {
 				System.out.println("lingpipe = Null: " + siw);
 			} else {
-				// /TODO a map from entoty to boolean true false takes less memory than
+
 				// initiing all sentences.
 				List<String> listStr = new LinkedList<String>();
 				for (Sentence sentence : listSentence) {
@@ -290,8 +332,8 @@ public class CorpusBatchProcessor {
 					String alias = entity.names().get(ientity);
 					if (s.contains(alias)) {
 						if (!printedFileName) {
-							pw.print(">" + siw.day + " | " + siw.fileName + " | " + siw.index + " | " + siw.streamItem.getDoc_id()
-									+ " || ");
+							pw.print(">" + siw.day + " | " + siw.fileName + " | " + siw.index + " | "
+									+ siw.streamItem.getDoc_id() + " || ");
 
 							printedFileName = true;
 						}
@@ -525,9 +567,10 @@ public class CorpusBatchProcessor {
 											// report(logTimeFormat, "Thread(" + threadIndex + ")" +
 											// date
 											// + "/" + fileName);
-											pw.println(logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
-													+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + " SIs: " + siCount.get()
-													+ " +SIs: " + siFilteredCount + " " + "Thread(" + threadIndex + ")" + date + "/" + fileName);
+											pw.println(logTimeFormat.format(new Date()) + " Total " + fileCount
+													+ " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB")
+													+ " SIs: " + siCount.get() + " +SIs: " + siFilteredCount + " "
+													+ "Thread(" + threadIndex + ")" + date + "/" + fileName);
 											pw.flush();
 										} catch (Exception e) {
 											e.printStackTrace();
@@ -566,9 +609,10 @@ public class CorpusBatchProcessor {
 		report(logTimeFormat, "Finished all threads");
 	}
 
-	
 	/**
-	 * Process in multithreaded fashion.
+	 * Process in multithreaded fashion. <br>
+	 * process all tobe processed files one more time, because toProcess doesn't
+	 * tell us which streamitem to look at.
 	 * 
 	 * @throws ParseException
 	 */
@@ -637,34 +681,37 @@ public class CorpusBatchProcessor {
 									final int hour = cTemp.get(Calendar.HOUR_OF_DAY);
 									final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
 									String dateFile = date + "/" + fileName;
-									if (isAlreadyProcessed(dateFile)) {
-										System.out.println("@ " + dateFile);
-										// Object o =
-										// alreadyProcessedGPGFileHashTable.remove(dateFile);
-										// if(o == null)
-										// throw new Exception("Exception");
-									} else if (isToBeProcessed(fileStr)) {
-										System.out.println("# " + fileStr);
-										try {
-											InputStream is = grabGPGLocal(fileStr);
-											getStreams(pw, date, hour, fileName, is);
-											is.close();
 
-											fileCount.incrementAndGet();
-											long size = FileProcessor.getLocalFileSize(fileStr);
-											processedSize.addAndGet(size);
-											// report(logTimeFormat, "Thread(" + threadIndex + ")" +
-											// date
-											// + "/" + fileName);
-											pw.println(logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
-													+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + " SIs: " + siCount.get()
-													+ " +SIs: " + siFilteredCount + " " + "Thread(" + threadIndex + ")" + date + "/" + fileName);
-											pw.flush();
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
+									// if (isAlreadyProcessed(dateFile)) {
+
+									// System.out.println("@ " + dateFile);
+									// Object o =
+									// alreadyProcessedGPGFileHashTable.remove(dateFile);
+									// if(o == null)
+									// throw new Exception("Exception");
+									// } else if (isToBeProcessed(fileStr)) {
+									System.out.println("# " + fileStr);
+									try {
+										InputStream is = grabGPGLocal(fileStr);
+										getStreams(pw, date, hour, fileName, is);
+										is.close();
+
+										fileCount.incrementAndGet();
+										long size = FileProcessor.getLocalFileSize(fileStr);
+										processedSize.addAndGet(size);
+										// report(logTimeFormat, "Thread(" + threadIndex + ")" +
+										// date
+										// + "/" + fileName);
+										pw.println(logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
+												+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + " SIs: "
+												+ siCount.get() + " +SIs: " + siFilteredCount + " " + "Thread("
+												+ threadIndex + ")" + date + "/" + fileName);
+										pw.flush();
+									} catch (Exception e) {
+										e.printStackTrace();
 									}
 								}
+								// }
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
@@ -697,9 +744,6 @@ public class CorpusBatchProcessor {
 		report(logTimeFormat, "Finished all threads");
 	}
 
-	
-	
-	
 	/**
 	 * Generate a timely statistics of the # of fiels, total file size processed
 	 * so far. # of StreamItems, # of Stream Items that contained an entity,
@@ -710,8 +754,8 @@ public class CorpusBatchProcessor {
 	 */
 	private void report(DateFormat df, String message) {
 		System.out.println(df.format(new Date()) + " Total " + fileCount + " Files "
-				+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + " SIs: " + siCount.get() + " +SIs: "
-				+ siFilteredCount + " " + message);
+				+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + " SIs: " + siCount.get()
+				+ " +SIs: " + siFilteredCount + " " + message);
 	}
 
 	/**
@@ -719,7 +763,8 @@ public class CorpusBatchProcessor {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json");
+		Preprocessor
+				.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json");
 
 		if (args.length == 0) {
 			CorpusBatchProcessor cps = new CorpusBatchProcessor();
