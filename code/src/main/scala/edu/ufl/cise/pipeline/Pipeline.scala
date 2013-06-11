@@ -50,7 +50,7 @@ object Pipeline extends Logging {
   // np patterns
   val titles = "is | was | be | been"
   val causeOfDeath = "died of | pass away of"
-  val awardsWon = "awarded | honored"
+  val awardsWon = "awarded | honored | award"
     
     
   logInfo("entities and patterns are loaded")
@@ -151,6 +151,7 @@ object Pipeline extends Logging {
             KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, target.equiv_id, getByteRange(target, tokens), comment)
           }
         })
+  
     }
     else{
       // find the patterns that fit with the two entities
@@ -166,6 +167,11 @@ object Pipeline extends Logging {
             KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, target.equiv_id, getByteRange(target, tokens), comment)
           }
         })
+      // generate these results for the DateOfDeath
+      if (entity.entity_type.equals("PER") && target.entity_type.equals("DATE") && entity.end + 1 == target.begin){
+         val comment = "# " + entity.content + " " + s + " " + target.content + " --- " + SimpleJob.transform(tokens)
+         KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", target.equiv_id, getByteRange(target, tokens), comment)
+      }
     }
   }
 
