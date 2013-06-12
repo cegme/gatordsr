@@ -52,7 +52,7 @@ object Pipeline extends Logging {
   // np patterns
   val titles = "is | was | be | been"
   val causeOfDeath = "died of | pass away of"
-  val awardsWon = "awarded | honored | award | won | prize"
+  val awardsWon = "awarded | honored | award | prize | honor"
     
     
   logInfo("entities and patterns are loaded")

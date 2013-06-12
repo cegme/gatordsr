@@ -71,7 +71,7 @@ case class Row(stream_id:String, topic_id : String, confidence : Integer,
     date_hour : String, slot_name : String, equiv_id : Integer, byte_range : String) {
   //this(triple:Triple)
   val team_id = "gatordsr"; // first column: team_id
-  val system_id ="gatordsr" // second column: system_id
+  val system_id ="gatordsr_new" // second column: system_id
   val relevance = 2 // sixth column: ccr relevance rating level integer in [-1, 0, 1, 2]
   val mention = 1 // seventh column: contains mention integer in [0, 1]
  

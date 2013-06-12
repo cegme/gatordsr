@@ -18,7 +18,7 @@ resolvers += "spray repo" at "http://repo.spray.io"
 
 resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases"
 
-resolvers += "opennlp sourceforge repo" at "http://opennlp.sourceforge.net/maven2"   
+resolvers += "opennlp maven repo" at "http://repo1.maven.org/maven2/org/apache/opennlp/"   
 
 libraryDependencies += "net.sf.jwordnet" % "jwnl" % "1.4_rc3"
 
@@ -54,6 +54,7 @@ libraryDependencies += "org.apache.opennlp" % "opennlp-uima" % "1.5.3"
 
 libraryDependencies += "org.apache.opennlp" % "opennlp-maxent" % "3.0.3"
 
+libraryDependencies += "org.apache.opennlp" % "open-nlp-ner-per-models" % "1.5.3" from "http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin"
 
 libraryDependencies += "edu.washington.cs.knowitall.ollie" % "ollie-core_2.9.2" % "1.0.3"
 
