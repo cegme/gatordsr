@@ -101,13 +101,3 @@ PER, DateOfDeath, claimed life, right, DATE
 PER, DateOfDeath, succumbed, right, DATE
 PER, DateOfDeath, slain, right, DATE
 PER, DateOfDeath, to death, right, DATE
-FAC, Contact_Meet_Entity, , left, ORG
-FAC, Contact_Meet_Entity, , right, ORG  
-FAC, Contact_Meet_Entity, , left, PER   
-FAC, Contact_Meet_Entity, , right, PER 
-PER, Contact_Meet_PlaceTime, , left, TIME
-PER, Contact_Meet_PlaceTime, , right, TIME
-PER, Contact_Meet_PlaceTime, , left, DATE
-PER, Contact_Meet_PlaceTime, , right, DATE
-PER, Contact_Meet_PlaceTime, , left, LOC
-PER, Contact_Meet_PlaceTime, , right, LOC
