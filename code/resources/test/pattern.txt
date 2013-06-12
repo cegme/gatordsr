@@ -85,3 +85,29 @@ ORG, Affiliate, and, right, FAC
 ORG, Affiliate, and, left, FAC
 FAC, Contact_Meet_Entity, at, left, PER
 FAC, Contact_Meet_Entity, in, left, PER
+PER, DateOfDeath, dead, right, DATE
+PER, DateOfDeath, died, right, DATE
+PER, DateOfDeath, passed away, right, DATE
+PER, DateOfDeath, drown, right, DATE
+PER, DateOfDeath, perished, right, DATE
+PER, DateOfDeath, deceased, right, DATE
+PER, DateOfDeath, murdered, right, DATE
+PER, DateOfDeath, killed, right, DATE
+PER, DateOfDeath, assasinated, right, DATE
+PER, DateOfDeath, executed, right, DATE
+PER, DateOfDeath, shot, right, DATE
+PER, DateOfDeath, fell, right, DATE
+PER, DateOfDeath, claimed life, right, DATE
+PER, DateOfDeath, succumbed, right, DATE
+PER, DateOfDeath, slain, right, DATE
+PER, DateOfDeath, to death, right, DATE
+FAC, Contact_Meet_Entity, , left, ORG
+FAC, Contact_Meet_Entity, , right, ORG  
+FAC, Contact_Meet_Entity, , left, PER   
+FAC, Contact_Meet_Entity, , right, PER 
+PER, Contact_Meet_PlaceTime, , left, TIME
+PER, Contact_Meet_PlaceTime, , right, TIME
+PER, Contact_Meet_PlaceTime, , left, DATE
+PER, Contact_Meet_PlaceTime, , right, DATE
+PER, Contact_Meet_PlaceTime, , left, LOC
+PER, Contact_Meet_PlaceTime, , right, LOC
