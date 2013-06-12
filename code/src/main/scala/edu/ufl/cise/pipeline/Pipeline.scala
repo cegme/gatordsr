@@ -63,7 +63,7 @@ object Pipeline extends Logging {
   val chunker = new ChunkerME(new ChunkerModel(this.getClass().getClassLoader().getResourceAsStream("en-chunker.bin")))
   val finder = new NameFinderME(new TokenNameFinderModel(new FileInputStream("resources/en-ner-person.bin")))
   
-  logInfo("opennlp tokenizer, pos tagger, chunker are loaded")
+  logInfo("opennlp tokenizer, pos tagger, chunker, finder are loaded")
   
   // preprocessing, to generate indexes for sentences from indexes for stream items
   //SimpleJob.filterSentences(3000) // FIXME SLOOOWWW
