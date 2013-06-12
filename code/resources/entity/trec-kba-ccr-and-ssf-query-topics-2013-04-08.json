@@ -761,7 +761,7 @@
             "entity_type": "PER", 
             "group": "kba2012", 
             "target_id": "http://en.wikipedia.org/wiki/Boris_Berezovsky_(pianist)",
-            "alias": ["Boris Berezovsky pianist", "Boris Berezovsky"]
+            "alias": ["Boris Berezovsky pianist", "Boris Vadimovich Berezovsky"]
         }, 
         {
             "entity_type": "PER", 
