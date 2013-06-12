@@ -73,9 +73,11 @@ object Pipeline extends Logging {
   // the main logic, used to generate KBA outputs
 
   def main(args : Array[String]){
-    println(testNP("Bronfman was unable to bid higher than Universal"))
-    println(testNP("Corbato was born on July 1, 1926, in Oakland"))
+    //println(testNP("Bronfman was unable to bid higher than Universal"))
+    //println(testNP("Corbato was born on July 1, 1926, in Oakland"))
     
+    //val array = Array(1, 2)
+    //println(array.slice(0, 0).mkString(" ") + "a")
     // args(0) -- input file
     // args(1) -- output prefix name
 
