@@ -155,7 +155,8 @@ public class CorpusBatchProcessor {
 		for (String s : fileList) {
 			hashTable.put(s, LogReader.TRUE);
 		}
-		return hashTable;
+	//	return hashTable; reprocess everything again
+		return new  Hashtable<String, Boolean>();
 	}
 
 	/**
