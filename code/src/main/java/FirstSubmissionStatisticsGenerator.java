@@ -40,20 +40,19 @@ public class FirstSubmissionStatisticsGenerator {
 	 * HashMap will do the work as we will not update the map but only update the
 	 * counts which are atomic ooperators themeslves.
 	 */
-	public final Hashtable<Entity, AtomicLong>	ALIAS_STAGE_MATCHED_DOCUMENT_WITH_LINGPIPE_HM;
-
-	public AtomicLong														a	= new AtomicLong(0);
-
-	public FirstSubmissionStatisticsGenerator(List<Entity> listEntity) {
-		ALIAS_STAGE_MATCHED_DOCUMENT_WITH_LINGPIPE_HM = new Hashtable<Entity, AtomicLong>();
-		for (Entity e : listEntity) {
-			ALIAS_STAGE_MATCHED_DOCUMENT_WITH_LINGPIPE_HM.put(e, new AtomicLong(0));
-		}
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
+//	public final Hashtable<Entity, AtomicLong>	ALIAS_STAGE_MATCHED_DOCUMENT_WITH_LINGPIPE_HM;
+//
+//	public AtomicLong														a	= new AtomicLong(0);
+//
+//	public FirstSubmissionStatisticsGenerator(List<Entity> listEntity) {
+//		ALIAS_STAGE_MATCHED_DOCUMENT_WITH_LINGPIPE_HM = new Hashtable<Entity, AtomicLong>();
+//		for (Entity e : listEntity) {
+//			ALIAS_STAGE_MATCHED_DOCUMENT_WITH_LINGPIPE_HM.put(e, new AtomicLong(0));
+//		}
+//	}
+//
+//	public static void main(String[] args) {
+//
+//	}
 
 }
