@@ -155,7 +155,8 @@ public class CorpusBatchProcessor {
 		for (String s : fileList) {
 			hashTable.put(s, LogReader.TRUE);
 		}
-		return hashTable;
+	//	return hashTable; reprocess everything again
+		return new  Hashtable<String, Boolean>();
 	}
 
 	/**
@@ -208,8 +209,7 @@ public class CorpusBatchProcessor {
 
 				// System.out.println(day + "|" + hour+ "|" + fileName+ "|" + index);
 				SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
-				// process(pw, siw);
-				processNoLingPipe(pw, siw);
+				process(pw, siw);
 
 				// si.clear();
 				index = index + 1;
@@ -228,6 +228,9 @@ public class CorpusBatchProcessor {
 	 * @param siw
 	 */
 	private void process(PrintWriter pw, SIWrapper siw) {
+
+		List<String> listMatchedSenteces = new LinkedList<String>();
+
 		boolean printedFileName = false;
 		if (siw.getStreamItem().getBody() != null) {
 
@@ -235,8 +238,22 @@ public class CorpusBatchProcessor {
 
 			if (listSentence == null) {
 				System.out.println("lingpipe = Null: " + siw);
-			} else {
 
+				String cleanVisible = siw.streamItem.getBody().getClean_visible();
+				if (cleanVisible != null)
+					matchToEntity("cleanVisible", cleanVisible, siw, pw);
+				else {
+					byte[] rawArr = siw.streamItem.getBody().getRaw();
+					if (rawArr != null) {
+						try {
+							String raw = new String(rawArr, "UTF-8");
+							raw = raw.replaceAll("<[^>]*>", " ");
+							matchToEntity("raw", raw, siw, pw);
+						} catch (UnsupportedEncodingException e) {
+						}
+					}
+				}
+			} else {
 				// initiing all sentences.
 				List<String> listStr = new LinkedList<String>();
 				for (Sentence sentence : listSentence) {
@@ -254,7 +271,7 @@ public class CorpusBatchProcessor {
 				for (Entity entity : listEntity) {
 					boolean matchedEntity = false;
 					// match all aliases of entity
-					for (int ientity = 0; ientity < entity.names().size(); ientity++) {
+					for (int ientity = 0; ientity < entity.names().size() && !matchedEntity; ientity++) {
 						// for all sentences
 						for (int isentence = 0; isentence < listStr.size() && !matchedEntity; isentence++) {
 							String s = listStr.get(isentence);
@@ -262,23 +279,41 @@ public class CorpusBatchProcessor {
 							String alias = entity.names().get(ientity);
 							if (s.contains(alias)) {
 								if (!printedFileName) {
-									pw.print(">" + siw.day + " | " + siw.fileName + " | " + siw.getIndex() + " | "
-											+ siw.getStreamItem().getDoc_id() + " || ");
+									pw.print("ling>" + siw.day + " | " + siw.fileName + " | " + siw.getIndex()
+											+ " | " + siw.getStreamItem().getDoc_id() + " || ");
 
 									printedFileName = true;
 								}
-								matchedEntity = true;
+
+								// Match each entity only once for all sentences and all
+								// aliases. If found proceed to the next entity.
+
+								// matchedEntity = true; comented for statistics purposes to
+								// count all senteces that matched.
+
+								/**
+								 * For each entity: how many documents: # rows <br>
+								 * For each entity: how many sentence: # total # of entity id in the report <br>
+								 * For each entity: how many sentence have slot values -> piepline
+								 * For each entity: how many documents no lingpipe: we have it in matchToEntity, calculate same as above.
+								 */
 
 								pw.print(entity.topic_id() + ", ");
 								siFilteredCount.incrementAndGet();
+
+								listMatchedSenteces.add(s);
 							}
 						}
 					}
 				}
 				// }
 				// }
-				if (printedFileName)
+				if (printedFileName) {
 					pw.println(); // final new line
+					for (String s : listMatchedSenteces) {
+						pw.println("Sentence>" + s);
+					}
+				}
 			}
 		}
 
@@ -289,40 +324,7 @@ public class CorpusBatchProcessor {
 		pw.flush();
 	}
 
-	/**
-	 * Process StreamItemWrapper by going through tokens and concatenating tehm to
-	 * make sure we can handle multi word entities.
-	 * 
-	 * @param siw
-	 */
-	private void processNoLingPipe(PrintWriter pw, SIWrapper siw) {
-		boolean printedFileName = false;
-		if (siw.getStreamItem().getBody() != null) {
-
-			List<Sentence> listSentence = siw.getStreamItem().getBody().getSentences().get("lingpipe");
-
-			if (listSentence == null) {
-				String cleanVisible = siw.streamItem.getBody().getClean_visible();
-				if (cleanVisible != null)
-					matchToEntity(cleanVisible, siw, pw);
-				else {
-
-					byte[] rawArr = siw.streamItem.getBody().getRaw();
-					if (rawArr != null) {
-						try {
-							String raw = new String(rawArr, "UTF-8");
-							raw = raw.replaceAll("<[^>]*>", " ");
-							matchToEntity(raw, siw, pw);
-						} catch (UnsupportedEncodingException e) {
-						}
-					}
-				}
-			}
-		}
-		pw.flush();
-	}
-
-	private boolean matchToEntity(String s, SIWrapper siw, PrintWriter pw) {
+	private boolean matchToEntity(String logPrefix, String s, SIWrapper siw, PrintWriter pw) {
 		boolean printedFileName = false;
 		if (s != null) {
 			for (Entity entity : listEntity) {
@@ -332,7 +334,7 @@ public class CorpusBatchProcessor {
 					String alias = entity.names().get(ientity);
 					if (s.contains(alias)) {
 						if (!printedFileName) {
-							pw.print(">" + siw.day + " | " + siw.fileName + " | " + siw.index + " | "
+							pw.print(logPrefix + ">" + siw.day + " | " + siw.fileName + " | " + siw.index + " | "
 									+ siw.streamItem.getDoc_id() + " || ");
 
 							printedFileName = true;
