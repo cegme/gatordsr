@@ -7,51 +7,52 @@
 package streamcorpus;
 
 /**
- * Offset and OffsetType are used by Annotation to identify the
- * portion of a ContentItem that a human labeled with a tag.
+ * Offset and OffsetType are used by Annotation to identify the portion of a ContentItem that a
+ * human labeled with a tag.
  */
 public enum OffsetType implements org.apache.thrift.TEnum {
-  /**
-   * annotation applies to a range of line numbers
-   */
-  LINES(0),
-  /**
-   * annotation applies to a range of bytes
-   */
-  BYTES(1),
-  /**
-   * annotation applies to a range of chars, typically unicode chars
-   */
-  CHARS(2);
+	/**
+	 * annotation applies to a range of line numbers
+	 */
+	LINES(0),
+	/**
+	 * annotation applies to a range of bytes
+	 */
+	BYTES(1),
+	/**
+	 * annotation applies to a range of chars, typically unicode chars
+	 */
+	CHARS(2);
 
-  private final int value;
+	private final int	value;
 
-  private OffsetType(int value) {
-    this.value = value;
-  }
+	private OffsetType(int value) {
+		this.value = value;
+	}
 
-  /**
-   * Get the integer value of this enum value, as defined in the Thrift IDL.
-   */
-  @Override
-public int getValue() {
-    return value;
-  }
+	/**
+	 * Get the integer value of this enum value, as defined in the Thrift IDL.
+	 */
+	@Override
+	public int getValue() {
+		return value;
+	}
 
-  /**
-   * Find a the enum type by its integer value, as defined in the Thrift IDL.
-   * @return null if the value is not found.
-   */
-  public static OffsetType findByValue(int value) { 
-    switch (value) {
-      case 0:
-        return LINES;
-      case 1:
-        return BYTES;
-      case 2:
-        return CHARS;
-      default:
-        return null;
-    }
-  }
+	/**
+	 * Find a the enum type by its integer value, as defined in the Thrift IDL.
+	 * 
+	 * @return null if the value is not found.
+	 */
+	public static OffsetType findByValue(int value) {
+		switch (value) {
+		case 0:
+			return LINES;
+		case 1:
+			return BYTES;
+		case 2:
+			return CHARS;
+		default:
+			return null;
+		}
+	}
 }

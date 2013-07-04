@@ -21,6 +21,7 @@ import edu.mit.jwi.item.Pointer;
 
 /**
  * MIT Java Wordnet Interface
+ * 
  * @author www.cse.iitb.ac.in/~cs626-449/JWI_JWKTL/DemoWordNet.java
  * 
  */
@@ -47,18 +48,17 @@ public class JWIFullDemo {
 
 class WordNet {
 	/*
-	 * IDictionary is the main interface for acessing WordNet dictionary Files.
-	 * Dictionary class implements IDictionary interface.
+	 * IDictionary is the main interface for acessing WordNet dictionary Files. Dictionary class
+	 * implements IDictionary interface.
 	 */
-	public IDictionary dictionary = null;
+	public IDictionary	dictionary	= null;
 
 	WordNet() {
 		try {
 			/*
-			 * 'path' holds the loaction of the WordNet dictionary files. In
-			 * this code it is assumed that the dictionary files are located
-			 * under "./resources/wordnet/dict/" directory. With the WordNet
-			 * directory & this class present in same directory
+			 * 'path' holds the loaction of the WordNet dictionary files. In this code it is assumed that
+			 * the dictionary files are located under "./resources/wordnet/dict/" directory. With the
+			 * WordNet directory & this class present in same directory
 			 */
 			String path = "./resources/wordnet/dict/";
 			URL url = new URL("file", null, path);
@@ -80,34 +80,29 @@ class WordNet {
 	public void searchWord(String key, POS pos) {
 
 		/*
-		 * A word is having a different WordId in different synsets. Each Word
-		 * is having a unique Index.
+		 * A word is having a different WordId in different synsets. Each Word is having a unique Index.
 		 */
 
 		// Get the index associated with the word, 'book' with Parts of Speech
 		// e.g. NOUN.
 		IIndexWord idxWord = dictionary.getIndexWord(key, pos);
 
-		System.out
-				.println("-----------------------------------------------------------------------------------");
-		System.out
-				.println("-----------------------------------------------------------------------------------");
-		System.out.println("-----------------------------Look up for: " + key
-				+ "[" + pos.toString().toUpperCase() + "]" + "------");
+		System.out.println("-----------------------------------------------------------------------------------");
+		System.out.println("-----------------------------------------------------------------------------------");
+		System.out.println("-----------------------------Look up for: " + key + "[" + pos.toString().toUpperCase() + "]"
+				+ "------");
 
 		// System.out
 		// .println("-----------------------------(Word, Par-Of-Speech) frequency  -> "
 		// + idxWord.getTagSenseCount() + "------");
-		System.out
-				.println("-----------------------------------------------------------------------------------");
-		System.out
-				.println("-----------------------------------------------------------------------------------");
+		System.out.println("-----------------------------------------------------------------------------------");
+		System.out.println("-----------------------------------------------------------------------------------");
 
 		int i = 1;
 
 		/*
-		 * getWordIDs() returns all the WordID associated with a index (the list
-		 * of meanings of the word)
+		 * getWordIDs() returns all the WordID associated with a index (the list of meanings of the
+		 * word)
 		 */
 		for (IWordID wordID : idxWord.getWordIDs()) {
 			// Construct an IWord object representing word associated with
@@ -116,16 +111,13 @@ class WordNet {
 			System.out.println("SENSE->" + i);
 			System.out.println("---------");
 
-			List<IWordID> antonymIds = dictionary.getWord(wordID)
-					.getRelatedWords(Pointer.ANTONYM);
+			List<IWordID> antonymIds = dictionary.getWord(wordID).getRelatedWords(Pointer.ANTONYM);
 			// get lemmas for each word ids
 
 			String strCount = "stack";
 			try {
 				System.out.println(strCount + ": count("
-						+ dictionary.getIndexWord(
-								new IndexWordID(strCount, pos))
-								.getTagSenseCount() + ")");
+						+ dictionary.getIndexWord(new IndexWordID(strCount, pos)).getTagSenseCount() + ")");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -133,9 +125,7 @@ class WordNet {
 
 			for (IWordID wordId : antonymIds) {
 				System.out.println("A: count("
-						+ dictionary.getIndexWord(
-								new IndexWordID(wordID.getLemma(), pos))
-								.getTagSenseCount() + ")"); // getWord(wordId).getLemma());
+						+ dictionary.getIndexWord(new IndexWordID(wordID.getLemma(), pos)).getTagSenseCount() + ")"); // getWord(wordId).getLemma());
 			}
 
 			// for (IWordID iwid : word.getRelatedWords(Pointer.ANTONYM)) {
@@ -200,10 +190,8 @@ class WordNet {
 	 * @param wordSynset
 	 */
 	private void checkGetWords(ISynset wordSynset, IWordID wordID, POS pos) {
-		System.out.print("count("
-				+ dictionary.getIndexWord(
-						new IndexWordID(wordID.getLemma(), pos))
-						.getTagSenseCount() + ") Synset {");
+		System.out.print("count(" + dictionary.getIndexWord(new IndexWordID(wordID.getLemma(), pos)).getTagSenseCount()
+				+ ") Synset {");
 		// dictionary.getSynset(wordSynset.getID());
 
 		// Returns all the words present in the synset wordSynset
@@ -267,8 +255,7 @@ class WordNet {
 		ids.addAll(getWordIdsForPos(value, POS.ADJECTIVE));
 		// get word ids of all antonyms
 		for (IWordID wordId : ids) {
-			antonymIds.addAll(dictionary.getWord(wordId).getRelatedWords(
-					Pointer.ANTONYM));
+			antonymIds.addAll(dictionary.getWord(wordId).getRelatedWords(Pointer.ANTONYM));
 		}
 		// get lemmas for each word ids
 		for (IWordID wordId : antonymIds) {
@@ -282,14 +269,13 @@ class WordNet {
 	 * Returns all word id for a given word with its corresponding {@link POS}.
 	 * 
 	 * @param value
-	 *            the word
-	 * @return the list of word ids, an empty list if the association of
-	 *         {@code value} and {@code pos} does not exist
+	 *          the word
+	 * @return the list of word ids, an empty list if the association of {@code value} and {@code pos}
+	 *         does not exist
 	 */
 	private List<IWordID> getWordIdsForPos(String value, POS pos) {
 		// Get the index word for all POS !.
-		IIndexWord idxWord = dictionary
-				.getIndexWord(new IndexWordID(value, pos));
+		IIndexWord idxWord = dictionary.getIndexWord(new IndexWordID(value, pos));
 
 		// Obtains all word ids for this word!
 		List<IWordID> allIds = new ArrayList<IWordID>();

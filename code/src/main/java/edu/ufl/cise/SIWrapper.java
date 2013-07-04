@@ -67,7 +67,7 @@ class SIWrapper {// extends Serializable {
 	}
 
 	public String toString() {
-		String str = day + //"-" + hour + 
+		String str = day + // "-" + hour +
 				"/" + fileName + "[" + index + "]";
 
 		// var str = new StringBuilder(getDirectoryName(day, hour) + "/" + fileName
