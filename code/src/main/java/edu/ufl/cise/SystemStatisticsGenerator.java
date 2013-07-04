@@ -2,8 +2,10 @@ package edu.ufl.cise;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicLong;
 
 import edu.ufl.cise.pipeline.Entity;
 import edu.ufl.cise.pipeline.Preprocessor;
@@ -62,36 +64,7 @@ public class SystemStatisticsGenerator {
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
 		List<Entity> listEntity = Preprocessor.entity_list();
-		List<String> listLogs = DirList.getFileList(SETTINGS.LOG_DIR, "");
-		for (String s : listLogs) {
-			Scanner sc = new Scanner(new File(s));
-			String line = sc.nextLine();
-
-			line = "ling>2012-02-16-23 | news-337-dfbde5b83aba149fcaa0cd7d2097447e-241783b11bc675f521068f3b3a5e9e71.sc.xz.gpg | 43 | fdd93a691c236dfdd9a5af15ee579bae || http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr., ";
-
-			String raw = "raw>";
-			String cleanVisible = "cleanVisible>";
-			String ling = "ling>";
-
-			String record = "";
-			if (line.substring(0, ling.length()) == ling) {
-				record = line.substring(ling.length());
-				getRecord(ling, line);
-			}
-			if (line.substring(0, ling.length() - 1) == raw) {
-				record = line.substring(ling.length());
-			}
-			if (line.substring(0, ling.length() - 1) == cleanVisible) {
-				record = line.substring(ling.length());
-			}
-		}
-
-	}
-
-	private static List<String> getRecord(String prefix, String line) {
-		String entityList = line.substring(line.indexOf("||"));
-
-		System.out.println(entityList);
-		return null;
+		Scanner sc = new Scanner(new File("S"));
+		;
 	}
 }
