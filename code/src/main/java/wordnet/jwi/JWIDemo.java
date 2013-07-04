@@ -31,7 +31,7 @@ public class JWIDemo {
 		// construct the URL to the Wordnet dictionary directory
 
 		String path = "./resources/wordnet/dict/";
-		URL url = new URL("file", null, path);    
+		URL url = new URL("file", null, path);
 		// construct the dictionary object and open it
 		IDictionary dict = new Dictionary(url);
 		dict.open();
@@ -42,13 +42,11 @@ public class JWIDemo {
 		System.out.println(" Id = " + wordID);
 		System.out.println(" Lemma = " + word.getLemma());
 		System.out.println(" Gloss = " + word.getSynset().getGloss());
-		
-		
-	    ISynset synset = word.getSynset();
-	    String LexFileName = synset.getLexicalFile().getName();
-	    System.out.println("Lexical Name : "+ LexFileName);
-	    
-	    
+
+		ISynset synset = word.getSynset();
+		String LexFileName = synset.getLexicalFile().getName();
+		System.out.println("Lexical Name : " + LexFileName);
+
 	}
 
 }
