@@ -33,9 +33,9 @@ public class RemoteGPGRetrieval {
 			// "arxiv-5-1432f036a5768d8e2f16f56770b2b13b-aae9af08ed49d35c0810f3c8fac1db00.sc.xz.gpg ");
 			// for (int i = 0; i < l.size(); i++) {
 			StreamItem si = l.get(44);
-			//System.out.println(si.doc_id);
+			// System.out.println(si.doc_id);
 			System.out.println(si.body.getClean_visible());
-		
+
 			Sentence s = si.body.sentences.get("lingpipe").get(0);
 			for (Token t : s.tokens) {
 				System.out.print(t);
@@ -50,8 +50,7 @@ public class RemoteGPGRetrieval {
 		return getLocalStreams(SDD_BASE_PATH, date, fileName);
 	}
 
-	public static List<StreamItem> getLocalStreams(String basePath, String date, String fileName)
-			throws IOException {
+	public static List<StreamItem> getLocalStreams(String basePath, String date, String fileName) throws IOException {
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
 				+ basePath + date + "/" + fileName;
 		// System.out.println(command);
@@ -155,8 +154,7 @@ public class RemoteGPGRetrieval {
 	/**
 	 * Reads non encrypted si files and returns a list of them.
 	 */
-	public static List<StreamItem> readNonEncrypted(String fileName) throws IOException,
-			TTransportException {
+	public static List<StreamItem> readNonEncrypted(String fileName) throws IOException, TTransportException {
 		InputStream is = new java.io.FileInputStream(new java.io.File(fileName));
 		XZCompressorInputStream xzis = new XZCompressorInputStream(is);
 		TIOStreamTransport transport = new TIOStreamTransport(xzis);
