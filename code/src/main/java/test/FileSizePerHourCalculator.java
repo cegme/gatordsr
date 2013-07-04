@@ -69,11 +69,13 @@ public class FileSizePerHourCalculator {
 				// System.out.println("Time in hours: " + diffHours + " hours.");
 
 				String tempSizeStr = FileProcessor.fileSizeToStr(size, "MB");
-				String reportLine = diffHours + ":" + diffMinutes + ":" + diffSeconds + ","
-						+ tempSizeStr//.substring(0, tempSizeStr.length() - 2)
-						;
+				String reportLine = diffHours + ":" + diffMinutes + ":" + diffSeconds + "," + tempSizeStr// .substring(0,
+																																																	// tempSizeStr.length()
+																																																	// -
+																																																	// 2)
+				;
 				pw.println(reportLine);
-				//System.out.println(reportLine);
+				// System.out.println(reportLine);
 			}
 		}
 		pw.close();

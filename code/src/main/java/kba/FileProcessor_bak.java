@@ -1,6 +1,5 @@
 package kba;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
@@ -42,8 +41,7 @@ public class FileProcessor_bak {
 				if (m1.find()) {
 					String linkStr = m1.group(1);
 					System.out.println(linkStr);
-					final String dir = linkStr.substring(0,
-							linkStr.indexOf('/'));
+					final String dir = linkStr.substring(0, linkStr.indexOf('/'));
 					System.out.println(dir);
 
 					Runnable worker = new Thread(i++ + " " + linkStr) {
@@ -110,11 +108,8 @@ public class FileProcessor_bak {
 						String gpgStr = "http://s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/"
 								+ dir + "/" + linkStr;
 
-						String command = "wget -O - "
-								+ gpgStr
-								+ " |   gpg --no-permission-warning --trust-model always --output "
-								+ localDir + dir + "/"
-								+ linkStr.substring(0, linkStr.length() - 4);
+						String command = "wget -O - " + gpgStr + " |   gpg --no-permission-warning --trust-model always --output "
+								+ localDir + dir + "/" + linkStr.substring(0, linkStr.length() - 4);
 
 						String[] cmd = { "/bin/sh", "-c", command };
 
@@ -122,10 +117,8 @@ public class FileProcessor_bak {
 						Process process = Runtime.getRuntime().exec(cmd);
 						// System.out.println(process.exitValue());
 						System.out.println(process.toString());
-						BufferedReader stdOut = new BufferedReader(
-								new InputStreamReader(process.getInputStream()));
-						BufferedReader stdErr = new BufferedReader(
-								new InputStreamReader(process.getErrorStream()));
+						BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+						BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 						while ((line = stdOut.readLine()) != null) {
 							System.out.println(line);
 						}
