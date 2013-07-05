@@ -1,12 +1,13 @@
 package test;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransport;
-import streamcorpus.StreamItem;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import streamcorpus.StreamItem;
 
 /**
  * User: jacek Date: 3/8/13 Time: 3:38 PM

@@ -6,18 +6,18 @@
  */
 package streamcorpus;
 
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.thrift.protocol.TTupleProtocol;
 import org.apache.thrift.scheme.IScheme;
 import org.apache.thrift.scheme.SchemeFactory;
 import org.apache.thrift.scheme.StandardScheme;
-
 import org.apache.thrift.scheme.TupleScheme;
-import org.apache.thrift.protocol.TTupleProtocol;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.Collections;
-import java.util.BitSet;
 
 /**
  * Labels are human generated assertions about a portion of a document For example, a human author
