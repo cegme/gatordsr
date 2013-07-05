@@ -17,7 +17,7 @@ ifdef linux
 tag = -n
 endif
 
-EXTRAS = -lfl -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H
+EXTRAS = -lfl -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H -DHAVE_INTTYPES_H
 
 main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o
 	$(CC) -w -o main streamcorpus_types.o streamcorpus_constants.o MentionChain.o $(EXTRAS)
