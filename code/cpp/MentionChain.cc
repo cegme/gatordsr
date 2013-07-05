@@ -96,9 +96,10 @@ std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
   // Call init() method to process Mention chain. -- This should get all mentions from the doc.
 
   std::vector<MentionChain> mchains;
-  std::for_each(entities.begin(), entities.end(), [=] (std::string e) {
+  std::for_each(entities.begin(), entities.end(), [=,&mchains] (std::string e) {
     MentionChain m(sis[si_index], e);
     m.init();
+    mchains.push_back(m);
   });
   return mchains;
 }

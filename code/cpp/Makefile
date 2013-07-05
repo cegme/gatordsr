@@ -1,6 +1,14 @@
 #CC = clang++ -std=c++0x
+
+GPP = g++
+SYS := $(shell gcc -dumpmachine)
+ifneq (, $(findstring centos, $(SYS)))
+ GPP = /opt/centos/devtoolset-1.1/root/usr/bin/c++
+endif
+
+
 DEBUG = -g
-CC = g++ $(DEBUG) -w -O7 -Wno-deprecated -std=c++0x -march=native 
+CC = $(GPP) $(DEBUG) -w -O7 -Wno-deprecated -std=c++0x -march=native 
 #CC = g++ -g -std=gnu++0x 
 
 #tag = -i
