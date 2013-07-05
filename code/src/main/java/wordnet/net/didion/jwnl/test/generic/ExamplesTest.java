@@ -1,6 +1,5 @@
 package wordnet.net.didion.jwnl.test.generic;
 
-import opennlp.maxent.Main;
 import junit.framework.TestCase;
 import net.didion.jwnl.JWNL;
 import net.didion.jwnl.JWNLException;
