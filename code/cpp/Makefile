@@ -2,7 +2,7 @@
 
 GPP = g++
 SYS := $(shell gcc -dumpmachine)
-ifneq (, $(findstring centos, $(SYS)))
+ifneq (, $(findstring redhat, $(SYS)))
  GPP = /opt/centos/devtoolset-1.1/root/usr/bin/c++
 endif
 
