@@ -129,8 +129,8 @@ public class StreamItemIO {
 							processedSize.addAndGet(size);
 							fileCount.incrementAndGet();
 							System.out.println();
-							System.out.println(CorpusBatchProcessor.logTimeFormat.format(new Date()) + " Total " + fileCount
-									+ " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB")
+							System.out.println(SETTINGS.logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
+									+ FileProcessor.fileSizeToStr(processedSize.get(), "MB")
 									// /+ "Thread("+index + ")"
 									+ date + "/" + fileName);
 						} catch (Exception e) {
@@ -234,8 +234,8 @@ public class StreamItemIO {
 										.getLocalFileSize(fileStrE);
 								processedSize.addAndGet(size);
 								fileCount.incrementAndGet();
-								System.out.println(CorpusBatchProcessor.logTimeFormat.format(new Date()) + " Total " + fileCount
-										+ " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB") + date + "/" + fileName);
+								System.out.println(SETTINGS.logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
+										+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + date + "/" + fileName);
 								// /+ "Thread("+index + ")"
 							} catch (Exception e) {
 								e.printStackTrace();

@@ -5,15 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.ufl.cise.CorpusBatchProcessor;
 import edu.ufl.cise.FileProcessor;
 import edu.ufl.cise.LogReader;
+import edu.ufl.cise.SETTINGS;
 
 public class FileSizePerHourCalculator {
 
@@ -36,7 +35,7 @@ public class FileSizePerHourCalculator {
 		else
 			baseDir = serverBaseDir;
 		Scanner sc = new Scanner(new File(args[0]));
-		DateFormat df = CorpusBatchProcessor.logTimeFormat;
+		DateFormat df = SETTINGS.logTimeFormat;
 		Pattern p = Pattern.compile(LogReader.FILE_LOG_PATTERN);
 
 		String line;

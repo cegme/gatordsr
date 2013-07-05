@@ -2,9 +2,6 @@ package wordnet.net.didion.jwnl.test.generic;
 
 import java.util.ArrayList;
 
-import net.didion.jwnl.data.Synset;
-import net.didion.jwnl.dictionary.Dictionary;
-
 public class WordNetTest {
 	public static void main(String[] args) {
 		ArrayList<String> synonyms = new ArrayList<String>();
