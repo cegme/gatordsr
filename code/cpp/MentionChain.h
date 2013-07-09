@@ -15,6 +15,8 @@ class MentionChain {
     "kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/%s/%s";
   constexpr static const char *media_sde = "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/"
     "kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/%s/%s";
+  constexpr static const char *tmp_prefix = "/var/tmp";
+  constexpr static const char *gpgDecompress = "gpg --quiet --no-verbose --no-permission-warning --trust-model always --output - --decrypt %s | xz --decompress > %s";
 
 private:
   std::string day;
@@ -35,9 +37,7 @@ public:
     * TODO: This function searches for all the entity mentions in the streamitem documents.
     * TODO: This also extracts/creates a feature vector
     */
-  void init () {
-    
-  } 
+  void init ();
 
   /** Take a line from a runXLog.txt file and make it into a MentionChain */
   static std::vector<MentionChain> ReadLine(std::string line);
@@ -45,10 +45,13 @@ public:
   /** Take a thrift file and extract all the stream items and put them in a vector */
   static std::vector<streamcorpus::StreamItem> FileToStreamItem(std::string filePath); 
 
-  static bool fexist (const char *fileName) {
-    std::ifstream ifile(fileName);
-    return ifile;
-  }
+  /** Check to see if a file exists */
+  static bool fexist (const char *fileName) { return std::ifstream (fileName); }
+
+  /**
+    * Decompresses and dencrypts a file to a temporary file and returns the file name.
+    */
+  static std::string CreateTempGPGFile (std::string fileName);
 };
 
 
