@@ -1,6 +1,7 @@
 
 
 #include "MentionChain.h"
+#include "Parameters.h"
 #include "QueryEntity.h"
 #include "streamcorpus_types.h"
 #include "streamcorpus_constants.h"
@@ -13,13 +14,56 @@
 #include <boost/algorithm/string.hpp>
 
 #include <fcntl.h>
+
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <sstream>
-#include <unordered_set>
+#include <queue>
 
+
+std::string MentionChain::printSentence(streamcorpus::Sentence s) {
+  std::stringstream ss;
+  for (auto &token : s.tokens) {
+    ss << token.token << " ";
+  }
+  //std::cerr << ss.str() << "\n";
+  return ss.str();
+}
+
+double MentionChain::TokenScore(QueryEntity qe, streamcorpus::Token t) {
+
+  // TODO 1- make scores for certain properties, 
+  // TODO 2- Sum up the scores of the properties
+
+  // TODO 3- In the calling function if the two tokens are adjacent we combine the scores by entity_id
+  // TODO 4- We keep the highest scoring equiv_id.
+  // TODO 5- Find the highest scoring equiv_id and put them in a (sentence_num, sentence_pos) map.
+
+
+  return 0.0;
+}
+
+
+struct equiv_struct {
+  int32_t equiv_id;
+  double score;
+
+  // Sentence token numbers locations
+  // <sentence_num, sentence_pos> 
+  std::vector<std::pair<size_t,size_t> > loc;
+
+  equiv_struct add (double _score, size_t sentence_num, size_t sentence_pos) {
+    score += _score;
+    loc.push_back(std::make_pair(sentence_num, sentence_pos));
+    return *this;
+  }
+
+  bool operator()(const equiv_struct& a, const equiv_struct& b) const {
+    return a.score < b.score;
+  }
+};
 
 void MentionChain::init() {
 
@@ -28,17 +72,84 @@ void MentionChain::init() {
   // Pick out all the possible entity Ids that may be associated with this mention
   // Keep a list of (sentencenum, tokennums)
   
+  // -------
+
+  // Create a vector of equiv_ids
+  std::map<int32_t, equiv_struct> equiv_map;
+
+  // Find the winningest equiv_id
+  size_t sentence_num = 0;
+  for (auto &sentence : si.body.sentences["lingpipe"]) {
+
+    //std::cerr << "-------------------\n";
+    //std::cerr << sentence_num << ": " << printSentence(sentence) << "\n";
+    //std::cerr << "-------------------\n";
+    for (auto &token : sentence.tokens) {
+      if (token.equiv_id == -1) continue;
+  
+      // Create a map of entity ids to tokens
+      // Create a function that turns the map into a (sentence, tokennum) map
+      // Score each of the chains to find the besst one.
+
+      //std::cerr << "token: " << token.token << "\n";
+      //std::cerr << "\ttoken_num: " << token.token_num << "\n";
+      //std::cerr << "\tsentence_pos: " << token.sentence_pos << "\n";
+      //std::cerr << "\tmention_id: " << token.mention_id << "\n";
+      //std::cerr << "\tlemma: " << token.lemma << "\n";
+      //std::cerr << "\tpos: " << token.pos << "\n";
+      //std::cerr << "\tequiv_id: " << token.equiv_id << "\n";
+      //std::cerr << "\tparent_id: " << token.parent_id << "\n";
+      //std::cerr << "\tdependency_path: " << token.dependency_path << "\n";
+
+      double total = 0.0;
+      auto qt_params = Parameters::qt_params;
+      for(auto qt: Parameters::qt_functions) {
+        // Indicator funtion * feature weight
+        total += qt.second(qe, token) * qt_params[qt.first];
+      }
+
+      // Add this token to the priority_queue
+      if(equiv_map.find(token.equiv_id) == equiv_map.end()) {
+        struct equiv_struct e;
+        e.equiv_id = token.equiv_id; 
+        e.add(total, sentence_num, token.sentence_pos);
+        
+        equiv_map.insert(std::make_pair(token.equiv_id, e));
+      }
+      else {
+        equiv_map[token.equiv_id].add(total, sentence_num, token.sentence_pos);
+      }
+
+    }
+    ++sentence_num;
+  }
+
+  // If the size of the equiv_map is empty, 
+  // Set query entity to null
+  if (equiv_map.empty()) {
+    QueryEntity _q;
+    this->qe = _q;
+  }
+  else {
+    // If not, find the highest score
+    // Set QueryEntity to the best one
+    auto maxElement = std::max_element(equiv_map.begin(), equiv_map.end(), 
+      [=] (const std::pair<int32_t,equiv_struct> &a, const std::pair<int32_t,equiv_struct> &b) {
+        return a.second.score > b.second.score;
+    });
+    locations = maxElement->second.loc;
+    equiv_id = maxElement->first;
+
+  }
+
 
 }
-
 
 
 std::vector<streamcorpus::StreamItem> MentionChain::FileToStreamItem(std::string filePath) {
 
   std::vector<streamcorpus::StreamItem> sis;
 
-  //std::cerr << "filePath: " << filePath << "\n" ;
-  
   int fd = open(filePath.c_str(), O_RDONLY);
   boost::shared_ptr<apache::thrift::transport::TFDTransport> transportInput(new apache::thrift::transport::TFDTransport(fd, apache::thrift::transport::TFDTransport::ClosePolicy::CLOSE_ON_DESTROY));
   //boost::shared_ptr<apache::thrift::transport::TFileTransport> transportInput(new apache::thrift::transport::TFileTransport(filePath, true));
@@ -80,8 +191,7 @@ std::vector<streamcorpus::StreamItem> MentionChain::FileToStreamItem(std::string
           default: std::cerr << "TTransportException: (Invalid exception type)\n"; break;
         }
         //std::cerr << "Stack err: " << e.what() << "\n";
-        if(eof)
-          break;
+        if(eof) break;
       }
       catch (apache::thrift::protocol::TProtocolException &e) {
         std::cerr << "Protocol has a negative size\n";
@@ -122,19 +232,21 @@ std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
   std::string docid(p);
   boost::algorithm::trim(docid);
   p = strtok(NULL, "|,"); 
+
+  //Get the List of Query Entities
+  std::vector<QueryEntity> all_entities = QueryEntity::fileToQueryEntity();
+
   // Grab entities
-  std::unordered_set<std::string> entities;
+  std::list<QueryEntity> entities;
   while (p) {
     std::string en(p);
     boost::algorithm::trim(en);
-    entities.insert(en); 
+    entities.push_back( QueryEntity::targetidToQueryEntity(en, all_entities) ); 
     p = strtok(NULL, ","); 
   }
 
   // Initialize Mention chain
     // Check the location of the file (sdd or sde).
-    // TODO decrypt and decompress the file to a local directory
-    // TODO Read the file and delete the temp file
     char gpgFile[500];
     snprintf(gpgFile, 500, media_sdd, date.c_str(), fileName.c_str());
     //std::cerr << "gpgFile_sdd: " << gpgFile << "\n";
@@ -145,25 +257,23 @@ std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
       assert(fexist(gpgFile));
     }
 
-    std::string tmpGpg = CreateTempGPGFile(gpgFile);
-    //std::cerr << "tmpGpg: " << tmpGpg << "\n";
+    // decrypt and decompress the file to a local directory
+    std::string tmpGpg (CreateTempGPGFile(gpgFile));
     
     // Then grab the mention items (using the method).
     auto sis = FileToStreamItem(tmpGpg);
 
     // Remove that tmp file
-    //remove(tmpGpg.c_str());
+    remove(tmpGpg.c_str());
     
     // Extract the appropriate one
     //std::cerr << "si_index: " << si_index << "\n";
     streamcorpus::StreamItem si(sis[si_index]);
     
-    //std::cerr << "|\n" << si.body.clean_visible << "\n";
-
   std::vector<MentionChain> mchains;
-  std::for_each(entities.begin(), entities.end(), [=,&mchains] (std::string e) {
-    MentionChain m(si, e);
-    m.init(); // Process the Mention Chains
+  std::for_each(entities.begin(), entities.end(), [=,&mchains] (QueryEntity qe) {
+    MentionChain m(si, qe);
+    //m.init(); // Don't Process all the Mention Chains
     mchains.push_back(m);
   });
   return mchains;
@@ -171,18 +281,18 @@ std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
 
 
 std::string MentionChain::CreateTempGPGFile (std::string gpgFileName) {
-  char cmd[500+L_tmpnam+L_tmpnam]; // The command to decrypt 
-  char fname [500+L_tmpnam]; // the tmp file name
-  char fullpath [500+L_tmpnam]; // The full path of the file name 
+  char cmd[512+L_tmpnam+L_tmpnam]; // The command to decrypt 
+  char fname [512+L_tmpnam]; // the tmp file name
+  char fullpath [512+L_tmpnam]; // The full path of the file name 
 
   // Get random temp file name
   tmpnam (fname);
   //std::cerr << "fname: " << fname << "\n";
 
   // Make the full file path
-  snprintf(fullpath, 500+L_tmpnam, "%s", fname);
+  snprintf(fullpath, 512+L_tmpnam, "%s", fname);
   ///std::cerr << "fullpath: " << fullpath << "\n";
-  snprintf(cmd, 500+L_tmpnam+L_tmpnam, gpgDecompress, gpgFileName.c_str(), fullpath);
+  snprintf(cmd, 512+L_tmpnam+L_tmpnam, gpgDecompress, gpgFileName.c_str(), fullpath);
   //std::cerr << "cmd: " << cmd << "\n";
 
   // Use system(" " ) to decrypt and decompress file here
@@ -194,9 +304,13 @@ std::string MentionChain::CreateTempGPGFile (std::string gpgFileName) {
 int main (int argc, char **argv) {
     std::string line("ling>2011-11-08-23 | social-265-c321d098ea52fed0c9612e7934034dbd-bf1d637ef0f126f139abb3fceb2ecb9c.sc.xz.gpg | 239 | 60adb14343a4fafabf0e76bd435cdaec || http://en.wikipedia.org/wiki/William_H._Miller_(writer), http://en.wikipedia.org/wiki/William_H._Miller");
 
-  MentionChain::ReadLine(line);
-
   QueryEntity::fileToQueryEntity("../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json");
+
+  std::vector<MentionChain> m(MentionChain::ReadLine(line));
+
+  std::for_each(m.begin(), m.end(), [&m] (MentionChain& mc) {
+    mc.init();
+  });
   return 0;
 }
 

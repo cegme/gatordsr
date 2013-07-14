@@ -11,6 +11,9 @@
 
 class QueryEntity {
 
+  constexpr static const char *entity_file = "../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json";
+
+public:
   std::string entity_type; // To the enum type
   std::string group;
   std::string target_id;
@@ -26,7 +29,12 @@ public:
 
   std::string toString();
 
+  /** Takes an entity_file and returns the list of query entities */
+  static std::vector<QueryEntity> fileToQueryEntity();
   static std::vector<QueryEntity> fileToQueryEntity(std::string fileName);
+
+  static QueryEntity targetidToQueryEntity(std::string targetid);
+  static QueryEntity targetidToQueryEntity(std::string targetid, std::vector<QueryEntity> entities);
 
 };
 

@@ -26,6 +26,10 @@ std::string QueryEntity::toString() {
 }
   
 
+std::vector<QueryEntity> QueryEntity::fileToQueryEntity() {
+  return QueryEntity::fileToQueryEntity(QueryEntity::entity_file);
+
+}
 std::vector<QueryEntity> QueryEntity::fileToQueryEntity(std::string fileName) {
 
   std::ifstream ifs(fileName, std::ifstream::in);
@@ -52,4 +56,33 @@ std::vector<QueryEntity> QueryEntity::fileToQueryEntity(std::string fileName) {
 
   return qes;
 }
+
+
+QueryEntity QueryEntity::targetidToQueryEntity(std::string target_id) {
+
+  auto entities = QueryEntity::fileToQueryEntity(QueryEntity::entity_file);
+
+  for(auto e: entities) {
+    if (target_id == e.target_id) {
+      //std::cerr << "Found one: " << target_id << "\n";
+      return e;
+    }
+  }
+  std::cerr << "Error: Could not find a query entity for target_id: " << target_id << "\n";
+  return QueryEntity();
+}
+
+
+QueryEntity QueryEntity::targetidToQueryEntity(std::string target_id, std::vector<QueryEntity> entities) {
+
+  for(auto e: entities) {
+    if (target_id == e.target_id) {
+      //std::cerr << "Found one: " << target_id << "\n";
+      return e;
+    }
+  }
+  std::cerr << "Error: Could not find a query entity for target_id: " << target_id << "\n";
+  return QueryEntity();
+}
+
 
