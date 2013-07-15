@@ -251,19 +251,19 @@
             "entity_type": "ORG", 
             "group": "startups", 
             "target_id": "https://twitter.com/FrankandOak",
-            "alias": ["FrankandOak", "Frank and Oak"]
+            "alias": ["FrankandOak", "Frank and Oak", "Frank & Oak", "FrankHelps"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "startups", 
             "target_id": "https://twitter.com/GandBcoffee",
-            "alias": ["GandBcoffee"]
+            "alias": ["GandBcoffee", "Glanville & Babinski", "Glanville and Babinski","G & B", "G&B"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "startups", 
             "target_id": "https://twitter.com/WCoffeeResearch",
-            "alias": ["WCoffeeResearch", "W Coffee Research"]
+            "alias": ["WCoffeeResearch", "W Coffee Research", "WorldCoffeeResearch", "World Coffee Research"]
         }, 
         {
             "entity_type": "ORG", 
@@ -323,7 +323,7 @@
             "entity_type": "PER", 
             "group": "commedians", 
             "target_id": "https://twitter.com/RonFunches",
-            "alias": ["RonFunches", "Ron Funches"]
+            "alias": ["RonFunches", "Ron Funches", "Ronald Funches"]
         }, 
         {
             "entity_type": "PER", 
@@ -335,7 +335,7 @@
             "entity_type": "PER", 
             "group": "danville", 
             "target_id": "https://twitter.com/AlexJoHamilton",
-            "alias": ["Alex Jo Hamilton", "AlexJoHamilton"]
+            "alias": ["Alex Jo Hamilton", "AlexJoHamilton", "Alexandra Hamilton"]
         }, 
         {
             "entity_type": "PER", 
@@ -347,7 +347,7 @@
             "entity_type": "PER", 
             "group": "danville", 
             "target_id": "https://twitter.com/RobCaud",
-            "alias": ["RobCaud", "Rob Caud"]
+            "alias": ["RobCaud", "Rob Caud", "Rob Caudill", "RobCaudill"]
         }, 
         {
             "entity_type": "PER", 
@@ -365,7 +365,7 @@
             "entity_type": "PER", 
             "group": "danville", 
             "target_id": "https://twitter.com/urbren00",
-            "alias": ["urbren00", "Brent Faulkner"]
+            "alias": ["urbren00", "Brent Faulkner", "brentmusicreviews", "brent music reviews"]
         }, 
         {
             "entity_type": "PER", 
@@ -959,31 +959,31 @@
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/BartowMcDonald",
-            "alias": ["BartowMcDonald", "Bartow McDonald"]
+            "alias": ["BartowMcDonald", "Bartow McDonald", "Ocala Commercial RE", "Ocala Commercial Real Estate", "Ocala Real Estate", "bartowmcdonald.com"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/KentGuinn4Mayor",
-            "alias": ["KentGuinn4Mayor", "Kent Guinn 4 Mayor", "Ken Guinn"]
+            "alias": ["KentGuinn4Mayor", "Kent Guinn 4 Mayor", "Kent Guinn for Mayor","Ken Guinn", "Kent Guinn"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/bobplaisted",
-            "alias": ["bobplaisted", "bob plaisted"]
+            "alias": ["bobplaisted", "bob plaisted", "Robert Plaisted", "RobertPlaisted"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/redmondmusic",
-            "alias": ["redmondmusic", "redmond music"]
+            "alias": ["redmondmusic", "redmond music", "Eric Redmond"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/sandrafriend",
-            "alias": ["sandrafriend", "sandra friend"]
+            "alias": ["sandrafriend", "sandra friend", "trailsandtravel", "trail sand travel"]
         }, 
         {
             "entity_type": "PER", 
@@ -995,7 +995,7 @@
             "entity_type": "PER", 
             "group": "screenwriters", 
             "target_id": "https://twitter.com/MissMarcel",
-            "alias": ["MissMarcel", "Miss Marcel"]
+            "alias": ["MissMarcel", "Miss Marcel", " Kelly Marcel"]
         }, 
         {
             "entity_type": "PER", 
