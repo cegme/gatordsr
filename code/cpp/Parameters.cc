@@ -34,3 +34,9 @@ bool Parameters::qt_overlap(QueryEntity qe, streamcorpus::Token t) {
     //return boost::ifind_first(t.token, alias) != std::string::npos;
   });
 }
+
+
+const long Parameters::SEED_CHAIN = 42;
+const long Parameters::SEED_ENTITY = 42;
+
+

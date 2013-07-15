@@ -19,7 +19,10 @@ endif
 
 EXTRAS = -lfl -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H -DHAVE_INTTYPES_H
 
-main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o
+main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o ER.o
+	$(CC) -w -o main streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o ER.o $(EXTRAS)
+
+MentionChain: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o
 	$(CC) -w -o main streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o $(EXTRAS)
 
 entity: streamcorpus_types.o streamcorpus_constants.o entity_match.o MentionChain.o
@@ -42,6 +45,12 @@ QueryEntity.o: QueryEntity.cc
 
 Parameters.o: Parameters.cc
 	$(CC) -c Parameters.cc $(EXTRAS)
+
+Entity.o: Entity.cc
+	$(CC) -c Entity.cc $(EXTRAS)
+
+ER.o: ER.cc
+	$(CC) -c ER.cc $(EXTRAS)
 
 
 clean:

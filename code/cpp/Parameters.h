@@ -25,6 +25,11 @@ public:
 
   /** Functions for searching for the propery entity refered by the query entity */
   static std::map<std::string, std::function<bool(QueryEntity, streamcorpus::Token)> > const qt_functions;
+
+
+
+  const static long SEED_CHAIN;
+  const static long SEED_ENTITY;
 };
 
 #endif  // PARAMETERS_H
