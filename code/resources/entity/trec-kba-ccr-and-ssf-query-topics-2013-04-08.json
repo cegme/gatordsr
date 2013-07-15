@@ -329,7 +329,7 @@
             "entity_type": "PER", 
             "group": "commedians", 
             "target_id": "https://twitter.com/roryscovel",
-            "alias": ["roryscovel", "rory scovel"]
+            "alias": ["roryscovel", "rory scovel", "r scovel", "r. scovel"]
         }, 
         {
             "entity_type": "PER", 
