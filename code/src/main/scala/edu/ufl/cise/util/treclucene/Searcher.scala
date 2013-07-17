@@ -26,17 +26,17 @@ object Searcher extends Logging {
 
     val reader = DirectoryReader.open(directory)
     val searcher = new IndexSearcher(reader)
-    val query = new TermQuery(new Term("clean_visible", args(0)))
+    val query = new TermQuery(new Term("clean_visible", args(0).toLowerCase))
 
-     val docs = searcher.search(query, 10)
+    val docs = searcher.search(query, 10)
 
-     docs.scoreDocs foreach { docId =>
-       val d = searcher.doc(docId.doc)
-       logInfo("Result: %s".format(d.get("si_index")))
-     }
+    docs.scoreDocs foreach { docId =>
+      val d = searcher.doc(docId.doc)
+      logInfo("Result: %s".format(d.get("si_index")))
+    }
 
-     //searcher.close
-     reader.close
+    //searcher.close
+    reader.close
 
   }
 
