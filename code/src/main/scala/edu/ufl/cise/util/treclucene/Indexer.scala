@@ -53,7 +53,7 @@ object Indexer extends Logging {
 }
 
 /** Index a directory of gpg files */
-class Indexer(val gpgdir:String, val indexdir:String = "/var/tmp/lucene/")  extends Logging with Actor {
+class Indexer(val gpgdir:String, val indexdir:String = "/media/sdc/kbaindex/")  extends Logging with Actor {
   
   // TODO Use a custom analyzer!!!
   val analyzer = new StandardAnalyzer(Version.LUCENE_43)
@@ -71,26 +71,23 @@ class Indexer(val gpgdir:String, val indexdir:String = "/var/tmp/lucene/")  exte
     d
   }
 
+  val newindexdir = "%s%s".format(indexdir,gpgdir)
+
   def act () {
     
     // If the index directory does not exist, create it
-    if (!new File(indexdir).exists) {
-      new File(indexdir).mkdir // Make the directory
+    if (!new File(newindexdir).exists) {
+      new File(newindexdir).mkdir // Make the directory
     }
   
     // Directory for the index 
     // XXX Check if I can use NIOFSDirectory with an actor
-    val directory = new NIOFSDirectory(new File(indexdir))
+    val directory = new NIOFSDirectory(new File(newindexdir))
     val iwc = new IndexWriterConfig(Version.LUCENE_43, analyzer)
     val writer = new IndexWriter(directory, iwc)
 
     // Get all the gpg files in the gpgdirectory
-    //val allFiles = new File(gpgdir).listFiles.toList//.withFilter(_.getName.endsWith(".gpg"))
-    //logInfo(allFiles.mkString(","))
-
-
     for (gpgFile <- new File(gpgdir).listFiles.withFilter(_.getName.endsWith(".gpg"))) {
-      //logInfo("gpgFile: %s".format(gpgFile.getPath))
       
       // Set the new file name for the index
       gpg_field.setStringValue(gpgFile.getPath)
