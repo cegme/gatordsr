@@ -1,4 +1,4 @@
-package edu.cise.ufl.util
+package edu.cise.ufl.util.treclucene
 
 import java.io.ByteArrayOutputStream 
 import java.io.ByteArrayInputStream 
