@@ -3,6 +3,7 @@ package edu.cise.ufl.util.treclucene
 import java.io.ByteArrayOutputStream 
 import java.io.ByteArrayInputStream 
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 import scala.actors.Actor
 import scala.collection.JavaConversions._
@@ -14,6 +15,8 @@ import edu.ufl.cise.Logging
 import streamcorpus.Sentence
 import streamcorpus.StreamItem
 import streamcorpus.Token
+
+import com.google.common.base.Stopwatch
 
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
 import org.apache.lucene.analysis.core.SimpleAnalyzer
@@ -34,6 +37,11 @@ import org.apache.thrift.transport.TTransportException
 
 object Indexer extends Logging {
   val decrypt_file = "gpg --no-permission-warning --trust-model always --output - --decrypt %s"
+
+  /** Use linux 'stat' to get a file size */
+  def getFileSize(fileName:String):Int = {
+    (("stat -c%s %s".format("%s",fileName)).!!).trim.toInt
+  }
 
 
   def main(args: Array[String]) {
@@ -74,7 +82,9 @@ class Indexer(val gpgdir:String, val indexdir:String = "/media/sdc/kbaindex/")  
   val newindexdir = "%s%s".format(indexdir,gpgdir)
 
   def act () {
-    
+   val toc = new Stopwatch 
+   toc.start
+
     // If the index directory does not exist, create it
     if (!new File(newindexdir).exists) {
       new File(newindexdir).mkdir // Make the directory
@@ -86,9 +96,20 @@ class Indexer(val gpgdir:String, val indexdir:String = "/media/sdc/kbaindex/")  
     val iwc = new IndexWriterConfig(Version.LUCENE_43, analyzer)
     val writer = new IndexWriter(directory, iwc)
 
+    // Warmup
+    toc.stop
+    logInfo("Warmup|%s|%s|nanoseconds".format(directory, toc.elapsed(TimeUnit.NANOSECONDS)))
+    toc.start // File Timer
+
+    val file_clock = new Stopwatch
+
     // Get all the gpg files in the gpgdirectory
+    var file_counter = 0
+    var total_size = 0
     for (gpgFile <- new File(gpgdir).listFiles.withFilter(_.getName.endsWith(".gpg"))) {
-      
+      file_clock.reset
+      file_clock.start
+
       // Set the new file name for the index
       gpg_field.setStringValue(gpgFile.getPath)
     
@@ -132,13 +153,20 @@ class Indexer(val gpgdir:String, val indexdir:String = "/media/sdc/kbaindex/")  
           case e: Exception => logDebug("Error in mkStreamItem"); isFinished = true
         }
       }
-
+      // End stopwatch
+      file_clock.stop
+      val sz =  Indexer.getFileSize(gpgFile.getPath)
+      logInfo("GPGFile|%s|%d|%s|nanoseconds".format(gpgFile.getPath, sz, file_clock.elapsed(TimeUnit.NANOSECONDS)))
+      file_counter += 1
+      total_size += sz
     }
     
     // End the writer
     writer.commit
     writer.close
 
+    toc.stop
+    logInfo("TotalDir|%s|%d|%d|bytes|%s|nanoseconds".format(gpgdir, file_counter, total_size, toc.elapsed(TimeUnit.NANOSECONDS)))
 
 
   }
