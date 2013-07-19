@@ -55,13 +55,14 @@ object Indexer extends Logging {
 
     val indexer = new Indexer(args(0)) // TODO decide where to puf all these index files, probably same type of hierarchy
 
-    indexer.start()
+    //indexer.start()
+    indexer.act
     
   }
 }
 
 /** Index a directory of gpg files */
-class Indexer(val gpgdir:String, val indexdir:String = "/media/sdc/kbaindex/")  extends Logging with Actor {
+class Indexer(val gpgdir:String, val indexdir:String = "/media/sdc/kbaindex/")  extends Logging /*with Actor*/ {
   
   // TODO Use a custom analyzer!!!
   val analyzer = new StandardAnalyzer(Version.LUCENE_43)
@@ -81,6 +82,7 @@ class Indexer(val gpgdir:String, val indexdir:String = "/media/sdc/kbaindex/")  
 
   val newindexdir = "%s%s".format(indexdir,gpgdir)
 
+  /** This is a fake actor*/
   def act () {
    val toc = new Stopwatch 
    toc.start
