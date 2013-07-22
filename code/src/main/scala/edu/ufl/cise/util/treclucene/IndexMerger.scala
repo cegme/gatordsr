@@ -43,7 +43,7 @@ object IndexMerger extends Logging {
 
     logInfo("Fetching indexdirs to merge...")
     val dirs = io.Source.fromFile(OLD_INDEXES).getLines.map(dirPath => new SimpleFSDirectory(new File(dirPath)))
-    val dirCount:Double = dirs.size
+    val dirCount = dirs.size * 1.0
     logInfo("Merging dirs: %d".format(dirCount))
 
  
