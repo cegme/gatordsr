@@ -95,11 +95,7 @@ public class LogReader {
 
 		System.out.println(getPreLoggedFileName(lineFileLog));
 
-<<<<<<< HEAD
 		Hashtable<String, Boolean> hash = getPreLoggedFileList(CorpusBatchProcessor.LOG_DIR_LOCAL_Archive);
-=======
-		Hashtable<String, Boolean> hash = getPreLoggedFileList(SETTINGS.LOG_DIR_ARCHIVE);
->>>>>>> 9d9e3aaa50bff6e7791b9e861772faecf06d1da2
 		System.out.println(hash);
 
 		String lineToProcess = "+ |/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/"

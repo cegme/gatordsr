@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
@@ -14,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Pattern;
 
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -49,7 +52,6 @@ import edu.ufl.cise.pipeline.Preprocessor;
  */
 public class CorpusBatchProcessor {
 
-<<<<<<< HEAD
 	// Corpus directory on server/local
 	public final static String				CORPUS_DIR_SERVER_SDE							= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 	public final static String				CORPUS_DIR_SERVER_SDD							= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
@@ -92,26 +94,6 @@ public class CorpusBatchProcessor {
 	List<Entity>											listEntity;
 
 	final boolean											localRun													= isLocalRun();
-=======
-	// Keep track of the # files, StreamItems, positive StreamItems, total file size processed.
-	AtomicLong												fileCount													= new AtomicLong(0);
-	AtomicLong												siCount														= new AtomicLong(0);
-	AtomicLong												siFilteredCount										= new AtomicLong(0);
-	AtomicLong												processedSize											= new AtomicLong(0);
-
-	final Hashtable<String, Boolean>	toBeProcessedGPGFileHashTable			= LogReader
-																																					.getToProcessFileList(SETTINGS.LOG_DIR_TO_PROCESS);
-
-	// return hashTable; reprocess everything again
-	final Hashtable<String, Boolean>	alreadyProcessedGPGFileHashTable	= new Hashtable<String, Boolean>();
-	// LogReader.getPreLoggedFileList(SETTINGS.LOG_DIR_ARCHIVE);
-
-	// for multi-process run
-	final int													indexOfThisProcess;
-	final int													totalNumProcesses;
-
-	List<Entity>											listEntity;
->>>>>>> 9d9e3aaa50bff6e7791b9e861772faecf06d1da2
 
 	/**
 	 * gets the index of thus process and total # of processes that this process is a member of to
@@ -134,7 +116,6 @@ public class CorpusBatchProcessor {
 	public CorpusBatchProcessor() throws FileNotFoundException {
 		indexOfThisProcess = -1;
 		this.totalNumProcesses = -1;
-<<<<<<< HEAD
 	}
 
 	/**
@@ -159,8 +140,6 @@ public class CorpusBatchProcessor {
 
 		// return hashTable; reprocess everything again
 		return new Hashtable<String, Boolean>();
-=======
->>>>>>> 9d9e3aaa50bff6e7791b9e861772faecf06d1da2
 	}
 
 	/**
@@ -374,20 +353,20 @@ public class CorpusBatchProcessor {
 		final Calendar cStart = Calendar.getInstance();
 		final Calendar cEnd = Calendar.getInstance();
 
-		final int threadCount = (SETTINGS.localRun) ? 1 : 64;
+		final int threadCount = (localRun) ? 1 : 64;
 		// final String CORPUS_DIRECTORY = (localRun) ? CORPUS_DIR_LOCAL :
 		// CORPUS_DIR_SERVER;
-		final String LOG_DIRECTORY = SETTINGS.LOG_DIR;
-		if (SETTINGS.localRun) {
+		final String LOG_DIRECTORY = (localRun) ? LOG_DIR_LOCAL : LOG_DIR_SERVER;
+		if (localRun) {
 			System.out.println("Local run.");
-			cStart.setTime(SETTINGS.format.parse("2011-10-05-00"));
+			cStart.setTime(format.parse("2011-10-05-00"));
 			// cStart.setTime(format.parse("2011-10-07-13"));
-			cEnd.setTime(SETTINGS.format.parse("2011-10-07-14"));
+			cEnd.setTime(format.parse("2011-10-07-14"));
 		} else {
 			System.out.println("Server run.");
-			cStart.setTime(SETTINGS.format.parse("2011-10-05-00"));
+			cStart.setTime(format.parse("2011-10-05-00"));
 			// cStart.setTime(format.parse("2012-08-18-01"));
-			cEnd.setTime(SETTINGS.format.parse("2013-02-13-23"));
+			cEnd.setTime(format.parse("2013-02-13-23"));
 		}
 
 		final AtomicInteger finishedThreadTracker = new AtomicInteger(0);
@@ -409,18 +388,18 @@ public class CorpusBatchProcessor {
 						// + format.format(cEnd.getTime()));
 						while (!(cTemp.getTime().compareTo(cEnd.getTime()) > 0)) {
 							try {
-								final String date = SETTINGS.format.format(cTemp.getTime());
+								final String date = format.format(cTemp.getTime());
 
-								File testDirectorySDD = new File(SETTINGS.CORPUS_DIR_SERVER_SDD + date);
-								File testDirectorySDE = new File(SETTINGS.CORPUS_DIR_SERVER_SDE + date);
+								File testDirectorySDD = new File(CORPUS_DIR_SERVER_SDD + date);
+								File testDirectorySDE = new File(CORPUS_DIR_SERVER_SDE + date);
 
 								List<String> tempFileList = null;
 								if (testDirectorySDD.exists())
-									tempFileList = DirList.getFileList(SETTINGS.CORPUS_DIR_SERVER_SDD + date, SETTINGS.FILTER);
+									tempFileList = DirList.getFileList(CORPUS_DIR_SERVER_SDD + date, FILTER);
 								else if (testDirectorySDE.exists())
-									tempFileList = DirList.getFileList(SETTINGS.CORPUS_DIR_SERVER_SDE + date, SETTINGS.FILTER);
+									tempFileList = DirList.getFileList(CORPUS_DIR_SERVER_SDE + date, FILTER);
 								else
-									tempFileList = DirList.getFileList(SETTINGS.CORPUS_DIR_LOCAL + date, SETTINGS.FILTER);
+									tempFileList = DirList.getFileList(CORPUS_DIR_LOCAL + date, FILTER);
 
 								if (tempFileList == null)
 									throw new RuntimeException("Corpus not found");
@@ -454,11 +433,7 @@ public class CorpusBatchProcessor {
 										// report(logTimeFormat, "Thread(" + threadIndex + ")" +
 										// date
 										// + "/" + fileName);
-<<<<<<< HEAD
 										pw.println(logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
-=======
-										pw.println(SETTINGS.logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
->>>>>>> 9d9e3aaa50bff6e7791b9e861772faecf06d1da2
 												+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + " SIs: " + siCount.get() + " +SIs: "
 												+ siFilteredCount + " " + "Thread(" + threadIndex + ")" + date + "/" + fileName);
 										pw.flush();
@@ -496,7 +471,7 @@ public class CorpusBatchProcessor {
 			}
 		}
 
-		report(SETTINGS.logTimeFormat, "Finished all threads");
+		report(logTimeFormat, "Finished all threads");
 	}
 
 	/**
