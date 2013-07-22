@@ -32,7 +32,14 @@ import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.util.Version
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
-import org.apache.thrift.transport.TTransportException
+  import org.apache.thrift.transport.TTransportException
+
+
+/**
+  * Example usage:
+  *  time find /media/sd{d,e}/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/????-??-??-?? -type d | parallel -j5 --results /media/sdc/lucenelog -u --progress --files "java -Done-jar.verbose=false -Done-jar.silent=true -jar /home/cgrant/projects/gatordsr/code/target/scala-2.9.2/gatordsr_2.9.2-0.01-one-jar.jar {}"
+  */
+
 
 
 object Indexer extends Logging {
@@ -69,12 +76,14 @@ class Indexer(val gpgdir:String, val indexdir:String = "/media/sdc/kbaindex/")  
 
 
   // Lucene fields 
+  val si_docid = new StringField("si_docid", "", Field.Store.YES);
   val int_field = new IntField("si_index", -1, Field.Store.YES);
   val gpg_field = new StringField("gpgfile", "", Field.Store.YES);
   val bdy_field = new TextField("clean_visible", "", Field.Store.YES);
   lazy val doc = { 
     val d = new Document
     d.add(int_field);
+    d.add(si_docid);
     d.add(gpg_field);
     d.add(bdy_field);
     d
@@ -136,6 +145,7 @@ class Indexer(val gpgdir:String, val indexdir:String = "/media/sdc/kbaindex/")  
           
           s.read(protocol)
           int_field.setIntValue(si_counter)
+          si_docid.setStringValue(s.doc_id)
           bdy_field.setStringValue(s.body.getClean_visible)
 
           writer.addDocument(doc)
