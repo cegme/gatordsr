@@ -32,7 +32,7 @@ import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.util.Version
 import org.apache.thrift.protocol.TBinaryProtocol
 import org.apache.thrift.transport.TIOStreamTransport
-  import org.apache.thrift.transport.TTransportException
+import org.apache.thrift.transport.TTransportException
 
 
 /**
