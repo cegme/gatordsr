@@ -59,6 +59,10 @@ object IndexMerger extends Logging {
       writer.addIndexes(dir)
       System.err.println("\r%d percent complete".format(i/dirCount))
     }
+    //writer.addIndexes(dirs)
+    //writer.addIndexes(java.util.Arrays.asList(dirs).toArray)
+    logInfo("now waiting for merges...")
+    writer.waitForMerges()
     logInfo("\nComplete!")
 
     logInfo("Optimizing Index with forceMerge(1)")
