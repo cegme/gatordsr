@@ -59,12 +59,17 @@ object IndexMerger extends Logging {
       writer.addIndexes(dir)
       System.err.println("\r%d percent complete".format(i/dirCount))
     }
-    logInfo("\nClosing.")
+    logInfo("\nComplete!")
 
+    logInfo("Optimizing Index with forceMerge(1)")
+    writer.forceMerge(1)
+    logInfo("Optimized!")
 
+    logInfo("Commiting and closing the index.")
     // Close and wait for the merge to complete
     writer.commit()
     writer.close(true)
+    logInfo("Done.")
   }
 
 
