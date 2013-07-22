@@ -1,8 +1,5 @@
 package test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,8 +44,7 @@ public class SubListCheck {
 		listSub.add("new");
 		listSub.add("boolean2");
 
-		String s1 = new String("listParent" + "add" + "LinkedList" + "new" + "boolean" + "new"
-				+ "boolean");
+		String s1 = new String("listParent" + "add" + "LinkedList" + "new" + "boolean" + "new" + "boolean");
 		String s2 = new String("new" + "boolean2");
 
 		long t0 = 0;
