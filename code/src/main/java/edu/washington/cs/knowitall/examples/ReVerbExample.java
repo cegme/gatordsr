@@ -7,8 +7,11 @@ import edu.washington.cs.knowitall.extractor.ReVerbExtractor;
 /* The class that is responsible for assigning a confidence score to an
  * extraction.
  */
+<<<<<<< HEAD
 =======
 >>>>>>> 9d9e3aaa50bff6e7791b9e861772faecf06d1da2
+=======
+>>>>>>> 4e64ab0
 import edu.washington.cs.knowitall.extractor.conf.ConfidenceFunction;
 import edu.washington.cs.knowitall.extractor.conf.ReVerbOpenNlpConfFunction;
 import edu.washington.cs.knowitall.nlp.ChunkedSentence;
