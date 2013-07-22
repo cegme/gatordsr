@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
  * 
  * with the lines
  * 
- * ProcessBuilder builder = new ProcessBuilder("/bin/bash");
- * builder.redirectErrorStream(true); Process process = builder.start();
+ * ProcessBuilder builder = new ProcessBuilder("/bin/bash"); builder.redirectErrorStream(true);
+ * Process process = builder.start();
  * 
  * @author morteza
  * 
@@ -73,8 +73,7 @@ public class S3CorpusDownloader {
 	}
 
 	/**
-	 * This method will download the corpus into two disks, fills one first then
-	 * fills the other one.
+	 * This method will download the corpus into two disks, fills one first then fills the other one.
 	 */
 	private void download() {
 
@@ -247,8 +246,7 @@ public class S3CorpusDownloader {
 	// return size;
 	// }
 
-	void downloadDir(String localDir, String dir, Hashtable<String, Boolean> alreadyDownloadedTable)
-			throws Exception {
+	void downloadDir(String localDir, String dir, Hashtable<String, Boolean> alreadyDownloadedTable) throws Exception {
 		String line;
 
 		InputStream is;
@@ -303,7 +301,7 @@ public class S3CorpusDownloader {
 						// + linkStr.substring(0, linkStr.length() - 4);
 
 						Process process = Runtime.getRuntime().exec(commandWget);
-						
+
 						process.destroy();
 
 						// String command = commandWget;

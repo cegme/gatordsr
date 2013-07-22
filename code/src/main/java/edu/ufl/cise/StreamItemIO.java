@@ -129,8 +129,8 @@ public class StreamItemIO {
 							processedSize.addAndGet(size);
 							fileCount.incrementAndGet();
 							System.out.println();
-							System.out.println(CorpusBatchProcessor.logTimeFormat.format(new Date()) + " Total " + fileCount
-									+ " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB")
+							System.out.println(SETTINGS.logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
+									+ FileProcessor.fileSizeToStr(processedSize.get(), "MB")
 									// /+ "Thread("+index + ")"
 									+ date + "/" + fileName);
 						} catch (Exception e) {
@@ -221,29 +221,29 @@ public class StreamItemIO {
 							String fileStr = RemoteGPGRetrieval.SDD_BASE_PATH + date + "/" + fileName;
 							String fileStrE = RemoteGPGRetrieval.SDE_BASE_PATH + date + "/" + fileName;
 							try {
-                                boolean fileTest = (new File(fileStr)).exists();
-                StreamItem si = fileTest ?
-                      RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date, fileName).get(index)
-                    : RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDE_BASE_PATH, date, fileName).get(index);
+								boolean fileTest = (new File(fileStr)).exists();
+								StreamItem si = fileTest ? RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDD_BASE_PATH, date,
+										fileName).get(index) : RemoteGPGRetrieval.getLocalStreams(RemoteGPGRetrieval.SDE_BASE_PATH, date,
+										fileName).get(index);
 
-                si.write(tbp);
-
+								si.write(tbp);
 
 								// tiost.flush();
 
-								long size = fileTest ? FileProcessor.getLocalFileSize(fileStr) :  FileProcessor.getLocalFileSize(fileStrE);
+								long size = fileTest ? FileProcessor.getLocalFileSize(fileStr) : FileProcessor
+										.getLocalFileSize(fileStrE);
 								processedSize.addAndGet(size);
 								fileCount.incrementAndGet();
-								System.out.println(CorpusBatchProcessor.logTimeFormat.format(new Date()) + " Total " + fileCount
-										+ " Files " + FileProcessor.fileSizeToStr(processedSize.get(), "MB") + date + "/" + fileName);
+								System.out.println(SETTINGS.logTimeFormat.format(new Date()) + " Total " + fileCount + " Files "
+										+ FileProcessor.fileSizeToStr(processedSize.get(), "MB") + date + "/" + fileName);
 								// /+ "Thread("+index + ")"
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
 						}
 
-            xzos.flush();
-            xzos.finish();
+						xzos.flush();
+						xzos.finish();
 
 						tiost.close();
 						xzos.close();
@@ -325,9 +325,9 @@ public class StreamItemIO {
 
 		// loadBulkSIs("/home/morteza/trec/totalSIs.o.1.totalEntitiesSIs.txt.sorted.2011");
 		if (baseDirServerTesterFile.exists()) {
-		//	LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
+			// LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2011");
 			LoadEntityStreamItemsPartitionerThrift("resources/entity/totalEntityList.txt.sorted.2012");
-//			LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
+			// LoadEntityStreamItemsPartitionerThrift("/media/sde/backupFinal/totalEntitiesSIs.txt.sorted.2013");
 		} else {
 			// LoadEntityStreamItemsPartitionerThrift("//home/morteza/trec/totalEntitiesSIs.txt.sorted.2011");
 			loadBulkSIsThrift(baseDir + "totalSIs.o.0.totalEntitiesSIs.txt.sorted.2011");
