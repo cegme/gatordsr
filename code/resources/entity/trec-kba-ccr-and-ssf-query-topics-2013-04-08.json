@@ -5,7 +5,7 @@
             "entity_type": "FAC", 
             "group": "danville", 
             "target_id": "http://en.wikipedia.org/wiki/Stuart_Powell_Field",
-            "alias": ["Stuart Powell Field"]
+            "alias": ["Stuart Powell Field", "KDVK", "DVK"]
         }, 
         {
             "entity_type": "FAC", 
@@ -17,61 +17,61 @@
             "entity_type": "FAC", 
             "group": "deeplearning", 
             "target_id": "http://en.wikipedia.org/wiki/IDSIA",
-            "alias": ["IDSIA"]
+            "alias": ["IDSIA", "Dalle Molle Institute for Artificial Intelligence Research", "Istituto Dalle Molle di Studi sull'Intelligenza Artificiale"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/Corn_Belt_Power_Cooperative",
-            "alias": ["Corn Belt Power Cooperative"]
+            "alias": ["Corn Belt Power Cooperative", "Corn Belt Power", "cbpower"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/Fargo-Moorhead_Symphony_Orchestra",
-            "alias": ["Fargo-Moorhead Symphony Orchestra"]
+            "alias": ["Fargo-Moorhead Symphony Orchestra", "FMSO", "fmsymphony", "Fargo-Moorhead Symphony", "Fargo Moorhead"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/Fargo_Air_Museum",
-            "alias": ["Fargo Air Museum"]
+            "alias": ["Fargo Air Museum", "fargoairmuseum"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/Hjemkomst_Center",
-            "alias": ["Hjemkomst Center", "Heritage Hjemkomst Interpretive Center"]
+            "alias": ["Hjemkomst Center", "Heritage Hjemkomst Interpretive Center", "Hjemkomst"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/John_D._Odegard_School_of_Aerospace_Sciences",
-            "alias": ["John D. Odegard School of Aerospace Sciences"]
+            "alias": ["John D. Odegard School of Aerospace Sciences", "UND Aerospace", "John D. Odegard"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/Red_River_Zoo",
-            "alias": ["Red River Zoo"]
+            "alias": ["Red River Zoo", "red river zoological society"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "fargo", 
             "target_id": "http://en.wikipedia.org/wiki/Star_Lite_Motel",
-            "alias": ["Star Lite Motel"]
+            "alias": ["Star Lite Motel", "starlite-motel", "starlite motel"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Elysian_Charter_School",
-            "alias": ["Elysian Charter School"]
+            "alias": ["Elysian Charter School", "ECS", "ecsnj"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "hoboken", 
             "target_id": "http://en.wikipedia.org/wiki/Stevens_Cooperative_School",
-            "alias": ["Stevens Cooperative School"]
+            "alias": ["Stevens Cooperative School", "SCS", "stevenscoop"]
         }, 
         {
             "entity_type": "FAC", 
@@ -83,7 +83,7 @@
             "entity_type": "FAC", 
             "group": "mining", 
             "target_id": "http://en.wikipedia.org/wiki/Copper_Basin_Railway",
-            "alias": ["Cooper Basin Railway"]
+            "alias": ["Cooper Basin Railway", "CBRY"]
         }, 
         {
             "entity_type": "FAC", 
@@ -95,7 +95,7 @@
             "entity_type": "FAC", 
             "group": "mining", 
             "target_id": "http://en.wikipedia.org/wiki/Lewis_and_Clark_Landing",
-            "alias": ["Lewis and Clark Landing"]
+            "alias": ["Lewis and Clark Landing", "Lewis-Clark Landing", "Lewis & Clark Landing", "Lewis Clark Landing"]
         }, 
         {
             "entity_type": "FAC", 
@@ -107,13 +107,13 @@
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Appleton_Museum_of_Art",
-            "alias": ["Appelton Museum of Art", "Appelton Museum"]
+            "alias": ["Appelton Museum of Art", "Appelton Museum", "appletonmuseum"]
         }, 
         {
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Don_Garlits_Museum_of_Drag_Racing",
-            "alias": ["Don Garlits Museum of Drag Racing", "Don Garlits Museum"]
+            "alias": ["Don Garlits Museum of Drag Racing", "Don Garlits Museum", "garlits.com"]
         }, 
         {
             "entity_type": "FAC", 
@@ -125,7 +125,7 @@
             "entity_type": "FAC", 
             "group": "ocala", 
             "target_id": "http://en.wikipedia.org/wiki/Lake_Weir_High_School",
-            "alias": ["Lake Weir High School", "Lake Weir High"]
+            "alias": ["Lake Weir High School", "Lake Weir High", "LWHS", "lakeweirhigh"]
         }, 
         {
             "entity_type": "FAC", 
@@ -251,19 +251,19 @@
             "entity_type": "ORG", 
             "group": "startups", 
             "target_id": "https://twitter.com/FrankandOak",
-            "alias": ["FrankandOak", "Frank and Oak"]
+            "alias": ["FrankandOak", "Frank and Oak", "Frank & Oak", "FrankHelps"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "startups", 
             "target_id": "https://twitter.com/GandBcoffee",
-            "alias": ["GandBcoffee"]
+            "alias": ["GandBcoffee", "Glanville & Babinski", "Glanville and Babinski","G & B", "G&B"]
         }, 
         {
             "entity_type": "ORG", 
             "group": "startups", 
             "target_id": "https://twitter.com/WCoffeeResearch",
-            "alias": ["WCoffeeResearch", "W Coffee Research"]
+            "alias": ["WCoffeeResearch", "W Coffee Research", "WorldCoffeeResearch", "World Coffee Research"]
         }, 
         {
             "entity_type": "ORG", 
@@ -323,19 +323,19 @@
             "entity_type": "PER", 
             "group": "commedians", 
             "target_id": "https://twitter.com/RonFunches",
-            "alias": ["RonFunches", "Ron Funches"]
+            "alias": ["RonFunches", "Ron Funches", "Ronald Funches"]
         }, 
         {
             "entity_type": "PER", 
             "group": "commedians", 
             "target_id": "https://twitter.com/roryscovel",
-            "alias": ["roryscovel", "rory scovel"]
+            "alias": ["roryscovel", "rory scovel", "r scovel", "r. scovel"]
         }, 
         {
             "entity_type": "PER", 
             "group": "danville", 
             "target_id": "https://twitter.com/AlexJoHamilton",
-            "alias": ["Alex Jo Hamilton", "AlexJoHamilton"]
+            "alias": ["Alex Jo Hamilton", "AlexJoHamilton", "Alexandra Hamilton"]
         }, 
         {
             "entity_type": "PER", 
@@ -347,7 +347,7 @@
             "entity_type": "PER", 
             "group": "danville", 
             "target_id": "https://twitter.com/RobCaud",
-            "alias": ["RobCaud", "Rob Caud"]
+            "alias": ["RobCaud", "Rob Caud", "Rob Caudill", "RobCaudill"]
         }, 
         {
             "entity_type": "PER", 
@@ -365,7 +365,7 @@
             "entity_type": "PER", 
             "group": "danville", 
             "target_id": "https://twitter.com/urbren00",
-            "alias": ["urbren00", "Brent Faulkner"]
+            "alias": ["urbren00", "Brent Faulkner", "brentmusicreviews", "brent music reviews"]
         }, 
         {
             "entity_type": "PER", 
@@ -959,31 +959,31 @@
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/BartowMcDonald",
-            "alias": ["BartowMcDonald", "Bartow McDonald"]
+            "alias": ["BartowMcDonald", "Bartow McDonald", "Ocala Commercial RE", "Ocala Commercial Real Estate", "Ocala Real Estate", "bartowmcdonald.com"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/KentGuinn4Mayor",
-            "alias": ["KentGuinn4Mayor", "Kent Guinn 4 Mayor", "Ken Guinn"]
+            "alias": ["KentGuinn4Mayor", "Kent Guinn 4 Mayor", "Kent Guinn for Mayor","Ken Guinn", "Kent Guinn"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/bobplaisted",
-            "alias": ["bobplaisted", "bob plaisted"]
+            "alias": ["bobplaisted", "bob plaisted", "Robert Plaisted", "RobertPlaisted"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/redmondmusic",
-            "alias": ["redmondmusic", "redmond music"]
+            "alias": ["redmondmusic", "redmond music", "Eric Redmond"]
         }, 
         {
             "entity_type": "PER", 
             "group": "ocala", 
             "target_id": "https://twitter.com/sandrafriend",
-            "alias": ["sandrafriend", "sandra friend"]
+            "alias": ["sandrafriend", "sandra friend", "trailsandtravel", "trail sand travel"]
         }, 
         {
             "entity_type": "PER", 
@@ -995,7 +995,7 @@
             "entity_type": "PER", 
             "group": "screenwriters", 
             "target_id": "https://twitter.com/MissMarcel",
-            "alias": ["MissMarcel", "Miss Marcel"]
+            "alias": ["MissMarcel", "Miss Marcel", " Kelly Marcel"]
         }, 
         {
             "entity_type": "PER", 
