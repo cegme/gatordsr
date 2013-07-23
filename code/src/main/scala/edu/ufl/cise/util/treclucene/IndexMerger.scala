@@ -46,8 +46,6 @@ object IndexMerger extends Logging {
     val dirCount = dirs.size * 1.0
     logInfo("Merging dirs: %f".format(dirCount))
 
- 
-
     val directory = new NIOFSDirectory(new File(INDEX_DIR))
     val iwc = new IndexWriterConfig(Version.LUCENE_43, analyzer)
     iwc.setRAMBufferSizeMB(3000)
