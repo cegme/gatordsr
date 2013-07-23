@@ -30,8 +30,7 @@ public class DirList {
 	}
 
 	/**
-	 * if filter is not null the file names containing that specific filter string
-	 * will be returned.
+	 * if filter is not null the file names containing that specific filter string will be returned.
 	 * 
 	 * @param dir
 	 * @param filter
