@@ -48,15 +48,20 @@ object IndexMerger extends Logging {
 
     val directory = new NIOFSDirectory(new File(INDEX_DIR))
     val iwc = new IndexWriterConfig(Version.LUCENE_43, analyzer)
-    iwc.setRAMBufferSizeMB(3000)
+    iwc.setRAMBufferSizeMB(10000)
     
     val writer = new IndexWriter(directory, iwc)
 
     logInfo("Merging Added Indexes...\n ")
     for ((dir,i) <- dirs.zipWithIndex) {
-      writer.addIndexes(dir)
+      try {
+        writer.addIndexes(dir)
+      }
+      catch {
+        case e: org.apache.lucene.index.IndexNotFoundException => e.printStackTrace
+      }
       //logInfo("%d| %s".format(i,dir))
-      System.err.println("\r%f percent complete".format(i/dirCount))
+      System.err.print("\r%f percent complete".format(i/dirCount))
     }
     //writer.addIndexes(dirs)
     //writer.addIndexes(java.util.Arrays.asList(dirs).toArray)
