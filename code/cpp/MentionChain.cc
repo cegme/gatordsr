@@ -5,11 +5,16 @@
 #include "QueryEntity.h"
 #include "streamcorpus_types.h"
 #include "streamcorpus_constants.h"
+#include "Util.h"
 
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TFDTransport.h>
 #include <thrift/transport/TFileTransport.h>
 #include <thrift/transport/TBufferTransports.h>
+
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
 
 #include <boost/algorithm/string.hpp>
 
@@ -79,7 +84,7 @@ void MentionChain::init() {
 
   // Find the winningest equiv_id
   size_t sentence_num = 0;
-  for (auto &sentence : si.body.sentences["lingpipe"]) {
+  for (auto &sentence : si.body.sentences.at("lingpipe")) {
 
     //std::cerr << "-------------------\n";
     //std::cerr << sentence_num << ": " << printSentence(sentence) << "\n";
@@ -141,10 +146,32 @@ void MentionChain::init() {
     equiv_id = maxElement->first;
 
   }
-
-
 }
 
+
+std::string MentionChain::get(size_t idx) const {
+  size_t sentence_num = this->locations[idx].first;
+  size_t sentence_pos = this->locations[idx].second;
+
+  std::map<std::string, std::vector<streamcorpus::Sentence> > ss = this->si.body.sentences;
+  const std::string token = ss["lingpipe"][sentence_num].tokens[sentence_pos].token;
+  return token;
+}
+
+
+std::vector<std::string> MentionChain::tokens() {
+  //log_info("locations.size(): %ld", locations.size());
+  std::vector<std::string> t;
+  for (size_t idx = 0; idx != locations.size(); ++idx) {
+    size_t sentence_num = locations[idx].first;
+    size_t sentence_pos = locations[idx].second;
+    std::map<std::string, std::vector<streamcorpus::Sentence> > ss = si.body.sentences;
+    std::string token = ss["lingpipe"][sentence_num].tokens[sentence_pos].token;
+    t.push_back(token);
+  }
+  return t;
+}
+   
 
 std::vector<streamcorpus::StreamItem> MentionChain::FileToStreamItem(std::string filePath) {
 
@@ -208,30 +235,32 @@ std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
     Sentence>adventism william miller
   */
 
-  char *p = strtok((char *)line.c_str(), ">");
+  char *data_line = new char[line.size()+1];
+  std::strcpy (data_line, line.c_str());
+  char *p = std::strtok(data_line, ">");
 
   // Parse out the data
-  p = strtok(NULL, "|"); 
+  p = std::strtok(p, "|");  // Need to update the tokenizer with the new string
   std::string date(p);
   boost::algorithm::trim(date);
-  p = strtok(NULL, "|"); 
+  p = std::strtok(NULL, "|"); 
 
   // parse out the file name
   std::string fileName(p);
   boost::algorithm::trim(fileName);
-  p = strtok(NULL, "|"); 
+  p = std::strtok(NULL, "|"); 
 
   // Grab the streamitem index
   std::string si_index_str(p);
   boost::algorithm::trim(si_index_str);
   size_t si_index;
   std::istringstream (si_index_str) >> si_index;
-  p = strtok(NULL, "|"); 
+  p = std::strtok(NULL, "|"); 
 
   // Doc id
   std::string docid(p);
   boost::algorithm::trim(docid);
-  p = strtok(NULL, "|,"); 
+  p = std::strtok(NULL, "|,"); 
 
   //Get the List of Query Entities
   std::vector<QueryEntity> all_entities = QueryEntity::fileToQueryEntity();
@@ -241,9 +270,15 @@ std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
   while (p) {
     std::string en(p);
     boost::algorithm::trim(en);
-    entities.push_back( QueryEntity::targetidToQueryEntity(en, all_entities) ); 
-    p = strtok(NULL, ","); 
+    if (!en.empty()) { // Take care of the trailing comma
+      entities.push_back( QueryEntity::targetidToQueryEntity(en, all_entities) ); 
+    }
+    p = std::strtok(NULL, ","); 
   }
+
+  // Delete created string
+  delete [] data_line;
+  
 
   // Initialize Mention chain
     // Check the location of the file (sdd or sde).
@@ -273,9 +308,10 @@ std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
   std::vector<MentionChain> mchains;
   std::for_each(entities.begin(), entities.end(), [=,&mchains] (QueryEntity qe) {
     MentionChain m(si, qe);
-    //m.init(); // Don't Process all the Mention Chains
+    m.init(); // TODO do we need to process all the Mention Chains
     mchains.push_back(m);
   });
+  //log_info ( "mchains.size() %ld", mchains.size() );
   return mchains;
 }
 
@@ -298,11 +334,11 @@ std::string MentionChain::CreateTempGPGFile (std::string gpgFileName) {
   // Use system(" " ) to decrypt and decompress file here
   system(cmd); // Create the file
   return std::string(fullpath); // Return the path
- }
+}
 
 
-int main (int argc, char **argv) {
-    std::string line("ling>2011-11-08-23 | social-265-c321d098ea52fed0c9612e7934034dbd-bf1d637ef0f126f139abb3fceb2ecb9c.sc.xz.gpg | 239 | 60adb14343a4fafabf0e76bd435cdaec || http://en.wikipedia.org/wiki/William_H._Miller_(writer), http://en.wikipedia.org/wiki/William_H._Miller");
+int test(int argc, char **argv) {
+  std::string line("ling>2011-11-08-23 | social-265-c321d098ea52fed0c9612e7934034dbd-bf1d637ef0f126f139abb3fceb2ecb9c.sc.xz.gpg | 239 | 60adb14343a4fafabf0e76bd435cdaec || http://en.wikipedia.org/wiki/William_H._Miller_(writer), http://en.wikipedia.org/wiki/William_H._Miller");
 
   QueryEntity::fileToQueryEntity("../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json");
 

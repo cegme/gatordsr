@@ -24,7 +24,7 @@ void Entity::init() {
 
   // Initialize the random number generator for selecting mention chains
   std::default_random_engine generator(Parameters::SEED_CHAIN);
-  std::uniform_int_distribution<size_t> chain_distribution(0, chains.size());
+  std::uniform_int_distribution<size_t> chain_distribution(0, chains.size()-1);
   random_chain = std::bind(chain_distribution, generator);
 
 }
@@ -32,6 +32,10 @@ void Entity::init() {
 void Entity::add(MentionChain *m) {
   chains.push_back(m); 
   init();
+}
+
+size_t Entity::size() {
+  return chains.size();
 }
 
 size_t Entity::rand() {

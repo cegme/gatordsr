@@ -3,6 +3,7 @@
 #define MENTION_CHAIN_H
 
 #include <fstream>
+#include <map>
 #include <string>
 
 #include "streamcorpus_types.h"
@@ -45,14 +46,19 @@ public:
     */
   void init ();
 
+  std::string get(size_t idx) const;
+  inline size_t tokencount () const { return locations.size(); }
+  std::string clean_visible () const { return si.body.clean_visible; }
+
+  /** Get a list of all tokens */
+  //std::vector<std::string> tokens() const;
+  std::vector<std::string> tokens();
+    
   /** Take a line from a runXLog.txt file and make it into a MentionChain */
   static std::vector<MentionChain> ReadLine(std::string line);
 
   /** Take a thrift file and extract all the stream items and put them in a vector */
   static std::vector<streamcorpus::StreamItem> FileToStreamItem(std::string filePath); 
-
-  /** Check to see if a file exists */
-  static bool fexist (const char *fileName) { return std::ifstream (fileName); }
 
   /**
     * Decompresses and dencrypts a file to a temporary file and returns the file name.

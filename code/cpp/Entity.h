@@ -8,14 +8,15 @@
 
 class Entity {
 
-//private:
 public:
+  Entity(): chains(std::vector<MentionChain*>()) { }
+  Entity(MentionChain *mc): chains({mc}) { }
+  Entity(std::vector<MentionChain *> mcs): chains(mcs) { }
+
   std::vector<MentionChain*> chains;
   std::function<size_t()> random_chain;
 
   MentionChain * remove_last();
-  
-public:
   MentionChain * remove(size_t mentionm_idx);
   void add(MentionChain *m);
 
@@ -25,6 +26,8 @@ public:
   /** Return the index of a random mention chain */
   size_t rand();
 
+  /** Return the number of chains */
+  size_t size();
 };
 
 
