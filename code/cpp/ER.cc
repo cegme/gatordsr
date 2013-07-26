@@ -62,7 +62,7 @@ double ER::score(const Entity &e1) {
 
 
 void ER::move(Entity &olde, size_t mc, Entity &newe) {
-  MentionChain * m = olde.remove(mc);
+  MentionChain *m = olde.remove(mc);
   newe.add(m);
 }
 
@@ -82,24 +82,18 @@ void ER::baseline_er(long samples) {
     log_info("sample: %ld", samples); 
     size_t e_i = random_entity();
     size_t e_j = random_entity();
-    //log_info("entities %ld, %ld", e_i, e_j);
     
-    if (entity[e_i].size() <= 0) { 
+    if (entity[e_i].size() <= 0 || e_i == e_j) { 
       ++samples;
-      if (retries--> 0)
-        continue;
-      else
-        break;
+      if (retries-- > 0) continue; else break;
     }
 
     size_t m = entity[e_i].rand();
 
     double old_score = score(entity[e_i]) + score(entity[e_j]);
-
     move(entity[e_i],m,entity[e_j]);
-    
     double new_score = score(entity[e_i]) + score(entity[e_j]);
-    log_info("score: %f -> %f", old_score, new_score);
+    log_info("score: [%ld] %f -> [%ld] %f", e_i, old_score, e_j, new_score);
 
     if(new_score < old_score) { 
       log_info("undo %ld: %ld -> %ld", m, e_i, e_j);
@@ -124,7 +118,7 @@ int main (int argc, char **argv) {
   // Mention Chains
   std::vector<MentionChain> mcs;
 
-  int limit = 3;
+  int limit = 20;
   while (std::getline(entity_file, line) && limit-- > 0 ) {
     std::vector<MentionChain> m(MentionChain::ReadLine(line));
     mcs.insert(mcs.end(), m.begin(), m.end());
@@ -137,6 +131,7 @@ int main (int argc, char **argv) {
   std::for_each(mcs.begin(), mcs.end(), [] (MentionChain& m) {
     m.init();
     //logInfo(m.clean_visible());
+    //log_info("--------------------------------------------------------------------------");
   });
 
   // Create the ER object

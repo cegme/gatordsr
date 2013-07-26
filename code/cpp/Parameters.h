@@ -22,6 +22,8 @@ private:
 
   /** Mention Chain to Mention Chain features are prefixed with mc_* */
   static bool mc_same_gender(const MentionChain &, const MentionChain &);
+  static bool mc_overlap(const MentionChain &m1, const MentionChain &m2);
+
 
   /** Entity wide features are prefixed with et_* */
   static bool et_same_tokens(const Entity &); // all mention chains have a match

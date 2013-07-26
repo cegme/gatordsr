@@ -9,7 +9,7 @@
 
 std::map<std::string, double> const Parameters::qt_params = {
   {"match", 100.0},
-  {"overlap", 50.0}
+  {"overlap", 150.0}
 };
 
 
@@ -20,7 +20,10 @@ std::map<std::string, std::function<bool(QueryEntity, streamcorpus::Token)> > co
 
 bool Parameters::qt_match(QueryEntity qe, streamcorpus::Token t) {
   return std::any_of(qe.aliases.cbegin(), qe.aliases.cend(), [t] (std::string alias) {
-    return boost::iequals(t.token, alias);
+    //log_info("istarts_with: %s --- %s", t.token.c_str(), alias.c_str());
+    return boost::algorithm::istarts_with(alias, t.token) ||
+      boost::algorithm::istarts_with(t.token, alias);
+    //return boost::iequals(t.token, alias);
   });
 }
 
@@ -40,11 +43,13 @@ bool Parameters::qt_overlap(QueryEntity qe, streamcorpus::Token t) {
 ////////////////////////////////////////////////////////////////////////////////
 
 std::map<std::string, std::function<bool(const MentionChain &, const MentionChain &)> > const Parameters::mc_functions = {
-  {"same_gender", Parameters::mc_same_gender}
+  {"same_gender", Parameters::mc_same_gender},
+  {"overlap", Parameters::mc_overlap}
 };
 
 std::map<std::string, double> const Parameters::mc_params = {
-  {"same_gender", 9.0}
+  {"same_gender", 9.0},
+  {"overlap", 50.0}
 };
 
 std::set<std::string> male = {"his", "him", "he", "man", "mister", "mr"};
@@ -73,6 +78,15 @@ bool Parameters::mc_same_gender(const MentionChain &m1, const MentionChain &m2) 
   return (m1_male >= m1_female) == (m2_male >= m2_female);
 }
 
+
+bool Parameters::mc_overlap(const MentionChain &m1, const MentionChain &m2) {
+  for (auto &t1 : m1.tokens()) {
+    for (auto t2 : m2.tokens()) {
+      if (boost::iequals(t1, t2)) return true;
+    }
+  }
+  return false;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 

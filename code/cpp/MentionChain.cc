@@ -45,9 +45,14 @@ double MentionChain::TokenScore(QueryEntity qe, streamcorpus::Token t) {
   // TODO 3- In the calling function if the two tokens are adjacent we combine the scores by entity_id
   // TODO 4- We keep the highest scoring equiv_id.
   // TODO 5- Find the highest scoring equiv_id and put them in a (sentence_num, sentence_pos) map.
+  double qt_score = 0.0;
+  for (auto &func: Parameters::qt_functions) {
+    qt_score +=  Parameters::qt_params.at(func.first) * func.second(qe, t);
+    //log_info("~~~~~~~~ %d",  func.second(qe, t));
+  }
 
-
-  return 0.0;
+  //if (qt_score > 0.0) log_info("qt_score %f :: [%s] :: %s", qt_score,  t.token.c_str(), qe.toString().c_str()); 
+  return qt_score;
 }
 
 
@@ -107,11 +112,12 @@ void MentionChain::init() {
       //std::cerr << "\tdependency_path: " << token.dependency_path << "\n";
 
       double total = 0.0;
-      auto qt_params = Parameters::qt_params;
+      /*auto qt_params = Parameters::qt_params;
       for(auto qt: Parameters::qt_functions) {
         // Indicator funtion * feature weight
         total += qt.second(qe, token) * qt_params[qt.first];
-      }
+      }*/
+      total += TokenScore(qe, token);
 
       // Add this token to the priority_queue
       if(equiv_map.find(token.equiv_id) == equiv_map.end()) {
@@ -140,10 +146,10 @@ void MentionChain::init() {
     // Set QueryEntity to the best one
     auto maxElement = std::max_element(equiv_map.begin(), equiv_map.end(), 
       [=] (const std::pair<int32_t,equiv_struct> &a, const std::pair<int32_t,equiv_struct> &b) {
-        return a.second.score > b.second.score;
+        return a.second.score < b.second.score;
     });
-    locations = maxElement->second.loc;
-    equiv_id = maxElement->first;
+    this->locations = maxElement->second.loc;
+    this->equiv_id = maxElement->first;
 
   }
 }
@@ -159,7 +165,7 @@ std::string MentionChain::get(size_t idx) const {
 }
 
 
-std::vector<std::string> MentionChain::tokens() {
+std::vector<std::string> MentionChain::tokens() const {
   //log_info("locations.size(): %ld", locations.size());
   std::vector<std::string> t;
   for (size_t idx = 0; idx != locations.size(); ++idx) {
