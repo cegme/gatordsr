@@ -67,13 +67,14 @@ object Searcher extends Logging {
     //printAllDocs(searcher)
 
     val docs = searcher.search(query,2)
+    logInfo("TermQueryFound: " + docs.scoreDocs.length )
 
-    docs.scoreDocs foreach { docId =>
-      val d = searcher.doc(docId.doc)
-      logInfo("Result: %s".format(d.get("si_index")))
-      logInfo("Result: %s".format(d.get("gpgfile")))
-      logInfo("Result: %s".format(d.get("clean_visible")))
-    }
+//    docs.scoreDocs foreach { docId =>
+//      val d = searcher.doc(docId.doc)
+//      logInfo("Result: %s".format(d.get("si_index")))
+//      logInfo("Result: %s".format(d.get("gpgfile")))
+//      logInfo("Result: %s".format(d.get("clean_visible")))
+//    }
 
     //searcher.close
     reader.close
@@ -100,7 +101,7 @@ object Searcher extends Logging {
    
        // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
-    val q = new QueryParser(Version.LUCENE_40, "title", analyzer).parse(querystr);
+    val q = new QueryParser(Version.LUCENE_40, "clean_visible", analyzer).parse(querystr);
 
     // 3. search
     val hitsPerPage = 10;
