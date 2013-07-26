@@ -52,7 +52,13 @@ object Searcher extends Logging {
 //      System.exit(1)
 //    }
 
-    val concatedArgs = args.map(s => {"\"" + s + "\""}).reduce((s1,s2) => s1 + " " + s2)
+    val concatedArgs = args.map(s => {
+   if(s == ",")
+     "OR"
+   else if(s!= "AND" && s != "OR") 
+        "\"" + s + "\"" 
+        else 
+          s}).reduce((s1,s2) => s1 + " " + s2)
     
       val allArgs = args.mkString(" ")
     logInfo("allArgs"+allArgs)
