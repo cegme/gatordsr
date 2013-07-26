@@ -55,7 +55,9 @@ object Searcher extends Logging {
 
   // searchTermQuery(args);
 
-    searchQueryParser(args(0))
+    val allArgs = args.mkString(" ")
+    println("All arguments: " + allArgs)
+    searchQueryParser(allArgs)
   }
   
   def searchTermQuery(args: Array[String]){
@@ -67,7 +69,7 @@ object Searcher extends Logging {
     //printAllDocs(searcher)
 
     val docs = searcher.search(query,2)
-    logInfo("TermQueryFound: " + docs.scoreDocs.length )
+    println("TermQuery found: " + docs.scoreDocs.length )
 
 //    docs.scoreDocs foreach { docId =>
 //      val d = searcher.doc(docId.doc)
@@ -104,7 +106,7 @@ object Searcher extends Logging {
     val q = new QueryParser(Version.LUCENE_40, "clean_visible", analyzer).parse(querystr);
 
     // 3. search
-    val hitsPerPage = 10;
+    val hitsPerPage = 10000000;
     val reader = DirectoryReader.open(index); //TODO check index is full
     val searcher = new IndexSearcher(reader);
     val collector = TopScoreDocCollector.create(hitsPerPage, true);
@@ -112,13 +114,13 @@ object Searcher extends Logging {
     val hits = collector.topDocs().scoreDocs;
    
     // 4. display results
-    System.out.println("Found " + hits.length + " hits.");
+    System.out.println("QueryParser found: " + hits.length + " hits.");
     //for(int i=0;i<hits.length;++i)
   
 //    hits.foreach(f => {
 //      val docId = f.doc;
 //      val d = searcher.doc(docId);
-//      System.out.println( d.get("isbn") + "\t" + d.get("title"));
+//      println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
 //    })
 
     // reader can only be closed when there
