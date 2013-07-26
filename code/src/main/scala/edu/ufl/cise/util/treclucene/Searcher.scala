@@ -14,6 +14,8 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.store.RAMDirectory
 import org.apache.lucene.search.TopScoreDocCollector
 import org.apache.lucene.store.MMapDirectory
+import edu.ufl.cise.pipeline.Entity
+import java.util.ArrayList
 
 
 object Searcher extends Logging {
@@ -60,8 +62,8 @@ object Searcher extends Logging {
         else 
           s}).reduce((s1,s2) => s1 + " " + s2)
     
-      val allArgs = args.mkString(" ")
-    logInfo("allArgs"+allArgs)
+//      val allArgs = args.mkString(" ")
+//    logInfo("allArgs"+allArgs)
 
    searchTermQuery(args);
 
@@ -90,6 +92,19 @@ object Searcher extends Logging {
 
     //searcher.close
     reader.close
+  }
+  
+  def searchEntity(aliasList: ArrayList[String]){
+    val aliases = aliasList.toArray(Array[String]())
+    val concatedArgs =  aliases.map(s => {
+   if(s == ",")
+     "OR"
+   else if(s!= "AND" && s != "OR") 
+        "\"" + s + "\"" 
+        else 
+          s}).reduce((s1,s2) => s1 + " " + s2)
+    
+      searchQueryParser(concatedArgs.toLowerCase())
   }
   
  def searchQueryParser( querystr: String) {
@@ -124,7 +139,7 @@ object Searcher extends Logging {
     val hits = collector.topDocs().scoreDocs;
    
     // 4. display results
-    System.out.println("QueryParser found: " + hits.length + " hits.");
+    println( hits.length + " hits for: " + querystr);
     //for(int i=0;i<hits.length;++i)
   
 //    hits.foreach(f => {
