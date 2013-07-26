@@ -1,14 +1,19 @@
 package edu.cise.ufl.util.treclucene
 
 import edu.ufl.cise.Logging
-
 import org.apache.lucene.index.DirectoryReader
-//import org.apache.lucene.index.IndexReader
 import org.apache.lucene.index.Term
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.search.TermQuery
 import org.apache.lucene.search.CollectionStatistics
 import org.apache.lucene.store.NIOFSDirectory
+import org.apache.lucene.store.FSDirectory
+import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.util.Version
+import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.store.RAMDirectory
+import org.apache.lucene.search.TopScoreDocCollector
+import org.apache.lucene.store.MMapDirectory
 
 
 object Searcher extends Logging {
@@ -48,7 +53,13 @@ object Searcher extends Logging {
 
     logInfo(args(0))
 
-    val reader = DirectoryReader.open(directory)
+  // searchTermQuery(args);
+
+    searchQueryParser(args(0))
+  }
+  
+  def searchTermQuery(args: Array[String]){
+     val reader = DirectoryReader.open(directory)
     val searcher = new IndexSearcher(reader)
     val query = new TermQuery(new Term("clean_visible", args(0).toLowerCase))
 
@@ -66,7 +77,51 @@ object Searcher extends Logging {
 
     //searcher.close
     reader.close
-
   }
+  
+ def searchQueryParser( querystr: String) {
+//		System.out.println("\nSearching for '" + searchString + "' using QueryParser");
+//		//Directory directory = FSDirectory.getDirectory(INDEX_DIRECTORY);
+//		val indexSearcher = new IndexSearcher(directory);
+//
+//		val queryParser = new QueryParser(FIELD_CONTENTS, new StandardAnalyzer());
+//		Query query = queryParser.parse(searchString);
+//		System.out.println("Type of query: " + query.getClass().getSimpleName());
+//		Hits hits = indexSearcher.search(query);
+//		displayHits(hits);
+   
+   
+   
+   val analyzer = new StandardAnalyzer(Version.LUCENE_40);
+   
+    // 1. create the index
+   // val index = new RAMDirectory();
+   val index =  new MMapDirectory(filedir);
+   
+       // the "title" arg specifies the default field to use
+    // when no field is explicitly specified in the query.
+    val q = new QueryParser(Version.LUCENE_40, "title", analyzer).parse(querystr);
 
+    // 3. search
+    val hitsPerPage = 10;
+    val reader = DirectoryReader.open(index); //TODO check index is full
+    val searcher = new IndexSearcher(reader);
+    val collector = TopScoreDocCollector.create(hitsPerPage, true);
+    searcher.search(q, collector);
+    val hits = collector.topDocs().scoreDocs;
+   
+    // 4. display results
+    System.out.println("Found " + hits.length + " hits.");
+    //for(int i=0;i<hits.length;++i)
+    hits.foreach(f => {
+      val docId = f.doc;
+      val d = searcher.doc(docId);
+      System.out.println( d.get("isbn") + "\t" + d.get("title"));
+    })
+
+    // reader can only be closed when there
+    // is no need to access the documents any more.
+    reader.close();
+
+	}
 }
