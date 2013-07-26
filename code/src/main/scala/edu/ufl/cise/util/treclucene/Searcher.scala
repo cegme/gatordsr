@@ -114,11 +114,12 @@ object Searcher extends Logging {
     // 4. display results
     System.out.println("Found " + hits.length + " hits.");
     //for(int i=0;i<hits.length;++i)
-    hits.foreach(f => {
-      val docId = f.doc;
-      val d = searcher.doc(docId);
-      System.out.println( d.get("isbn") + "\t" + d.get("title"));
-    })
+  
+//    hits.foreach(f => {
+//      val docId = f.doc;
+//      val d = searcher.doc(docId);
+//      System.out.println( d.get("isbn") + "\t" + d.get("title"));
+//    })
 
     // reader can only be closed when there
     // is no need to access the documents any more.
