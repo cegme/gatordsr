@@ -60,3 +60,5 @@ libraryDependencies += "org.apache.lucene" % "lucene-core" % "4.3.1"
 
 //libraryDependencies += "org.apache.lucene" % "lucene-analyzers" % "3.6.2"
 libraryDependencies += "org.apache.lucene" % "lucene-analyzers-common" % "4.3.1"
+
+libraryDependencies += "org.apache.lucene" % "lucene-queryparser" % "4.3.1"
