@@ -67,13 +67,14 @@ object Searcher extends Logging {
     //printAllDocs(searcher)
 
     val docs = searcher.search(query,2)
+    logInfo("TermQueryFound: " + docs.scoreDocs.length )
 
-    docs.scoreDocs foreach { docId =>
-      val d = searcher.doc(docId.doc)
-      logInfo("Result: %s".format(d.get("si_index")))
-      logInfo("Result: %s".format(d.get("gpgfile")))
-      logInfo("Result: %s".format(d.get("clean_visible")))
-    }
+//    docs.scoreDocs foreach { docId =>
+//      val d = searcher.doc(docId.doc)
+//      logInfo("Result: %s".format(d.get("si_index")))
+//      logInfo("Result: %s".format(d.get("gpgfile")))
+//      logInfo("Result: %s".format(d.get("clean_visible")))
+//    }
 
     //searcher.close
     reader.close
@@ -100,7 +101,7 @@ object Searcher extends Logging {
    
        // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
-    val q = new QueryParser(Version.LUCENE_40, "title", analyzer).parse(querystr);
+    val q = new QueryParser(Version.LUCENE_40, "clean_visible", analyzer).parse(querystr);
 
     // 3. search
     val hitsPerPage = 10;
@@ -113,11 +114,12 @@ object Searcher extends Logging {
     // 4. display results
     System.out.println("Found " + hits.length + " hits.");
     //for(int i=0;i<hits.length;++i)
-    hits.foreach(f => {
-      val docId = f.doc;
-      val d = searcher.doc(docId);
-      System.out.println( d.get("isbn") + "\t" + d.get("title"));
-    })
+  
+//    hits.foreach(f => {
+//      val docId = f.doc;
+//      val d = searcher.doc(docId);
+//      System.out.println( d.get("isbn") + "\t" + d.get("title"));
+//    })
 
     // reader can only be closed when there
     // is no need to access the documents any more.
