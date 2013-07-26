@@ -19,7 +19,8 @@ import org.apache.lucene.store.MMapDirectory
 object Searcher extends Logging {
 
   //var filedir = new java.io.File("/var/tmp/lucene")
-  var filedir = new java.io.File("/media/sdc/kbaindex/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-04-17-15")
+ // var filedir = new java.io.File("/media/sdc/kbaindex/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-04-17-15")
+ var filedir = new java.io.File("/media/sdc/optimizedindex/")
   val directory = new NIOFSDirectory(filedir)
 
   def getStats (searcher:IndexSearcher):Unit = {
@@ -46,18 +47,21 @@ object Searcher extends Logging {
 
   def main(args: Array[String]) {
 
-    if (args.length < 1 || args.length > 2) {
-      println("Usage: run 'My query'")
-      System.exit(1)
-    }
+//    if (args.length < 1 || args.length > 2) {
+//      println("Usage: run 'My query'")
+//      System.exit(1)
+//    }
 
-    logInfo(args(0))
+    val concatedArgs = args.map(s => {"\"" + s + "\""}).reduce((s1,s2) => s1 + " " + s2)
+    
+      val allArgs = args.mkString(" ")
+    logInfo("allArgs"+allArgs)
 
-  // searchTermQuery(args);
+   searchTermQuery(args);
 
-    val allArgs = args.mkString(" ")
-    println("All arguments: " + allArgs)
-    searchQueryParser(allArgs)
+  
+    println("All arguments: " + concatedArgs)
+    searchQueryParser(concatedArgs.toLowerCase())
   }
   
   def searchTermQuery(args: Array[String]){
