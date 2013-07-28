@@ -20,6 +20,8 @@ public:
   MentionChain * remove(size_t mentionm_idx);
   void add(MentionChain *m);
 
+  std::string pretty_print() const;
+
   /** Initialize the random number generaators */
   void init();
 
@@ -27,7 +29,7 @@ public:
   size_t rand();
 
   /** Return the number of chains */
-  size_t size();
+  size_t size() const;
 };
 
 

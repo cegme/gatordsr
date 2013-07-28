@@ -28,6 +28,7 @@ private:
   /** Entity wide features are prefixed with et_* */
   static bool et_same_tokens(const Entity &); // all mention chains have a match
   static bool et_match_exist(const Entity &); // A match between MentionChains exists
+  static bool et_single_mention(const Entity &); // Only on mention is in the set
 
 public:
   /** Parameters for searching for the propery entity refered by the query entity */
@@ -41,8 +42,8 @@ public:
   static std::map<std::string, std::function<bool(const Entity &)> > const et_functions;
 
 
-  const static long SEED_CHAIN;
-  const static long SEED_ENTITY;
+  /*const*/ static long SEED_CHAIN;
+  /*const*/ static long SEED_ENTITY;
 };
 
 #endif  // PARAMETERS_H

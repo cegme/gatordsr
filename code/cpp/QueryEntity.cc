@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "QueryEntity.h"
+#include "Util.h"
 
 
 
@@ -81,7 +82,7 @@ QueryEntity QueryEntity::targetidToQueryEntity(std::string target_id, std::vecto
       return e;
     }
   }
-  std::cerr << "Error fileToQueryEntity: Could not find a query entity for target_id: " << target_id << "\n";
+  log_err("Error fileToQueryEntity: Could not find a query entity for target_id: ", target_id.c_str());
   return QueryEntity();
 }
 

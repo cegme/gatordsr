@@ -37,7 +37,7 @@ public:
    */
   void init();
 
-  void baseline_er(long samples); 
+  void baseline_er(long samples, size_t retries); 
 };
 
 
