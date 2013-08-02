@@ -69,7 +69,7 @@ object Searcher extends Logging {
 
   
     println("All arguments: " + concatedArgs)
-    searchQueryParser(concatedArgs.toLowerCase())
+    searchQueryParser(concatedArgs)
   }
   
   def searchTermQuery(args: Array[String]){
@@ -140,17 +140,20 @@ object Searcher extends Logging {
    
     // 4. display results
     println( hits.length + " hits for: " + querystr);
-    //for(int i=0;i<hits.length;++i)
+
+    
+
+   // for(int i=0;i<hits.length;++i)
   
-//    hits.foreach(f => {
-//      val docId = f.doc;
-//      val d = searcher.doc(docId);
-//      println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
-//    })
+    hits.foreach(f => {
+      val docId = f.doc;
+      val d = searcher.doc(docId);
+      println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
+   })
 
     // reader can only be closed when there
     // is no need to access the documents any more.
-    reader.close();
+   // reader.close();
 
 	}
 }
