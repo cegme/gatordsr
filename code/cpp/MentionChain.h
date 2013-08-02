@@ -51,8 +51,7 @@ public:
   std::string clean_visible () const { return si.body.clean_visible; }
 
   /** Get a list of all tokens */
-  //std::vector<std::string> tokens() const;
-  std::vector<std::string> tokens();
+  std::vector<std::string> tokens() const;
     
   /** Take a line from a runXLog.txt file and make it into a MentionChain */
   static std::vector<MentionChain> ReadLine(std::string line);

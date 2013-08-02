@@ -1,9 +1,12 @@
 
-#include "Entity.h"
-#include "Parameters.h"
-
 #include <algorithm>
 #include <random>
+#include <sstream>
+
+#include "Entity.h"
+#include "Parameters.h"
+#include "Util.h"
+
 
 
 MentionChain* Entity::remove(size_t mention_idx) {
@@ -34,7 +37,16 @@ void Entity::add(MentionChain *m) {
   init();
 }
 
-size_t Entity::size() {
+
+std::string Entity::pretty_print() const {
+  std::stringstream ss;
+  for (auto &m : chains) {
+    ss <<  "    -  " << to_string( m->tokens(), ", ") << "\n";
+  }
+  return ss.str();
+}
+
+size_t Entity::size() const {
   return chains.size();
 }
 
