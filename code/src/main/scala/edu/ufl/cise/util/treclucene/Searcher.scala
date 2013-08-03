@@ -1,20 +1,28 @@
 package edu.cise.ufl.util.treclucene
 
 import edu.ufl.cise.Logging
-
 import org.apache.lucene.index.DirectoryReader
-//import org.apache.lucene.index.IndexReader
 import org.apache.lucene.index.Term
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.search.TermQuery
 import org.apache.lucene.search.CollectionStatistics
 import org.apache.lucene.store.NIOFSDirectory
+import org.apache.lucene.store.FSDirectory
+import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.util.Version
+import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.store.RAMDirectory
+import org.apache.lucene.search.TopScoreDocCollector
+import org.apache.lucene.store.MMapDirectory
+import edu.ufl.cise.pipeline.Entity
+import java.util.ArrayList
 
 
 object Searcher extends Logging {
 
   //var filedir = new java.io.File("/var/tmp/lucene")
-  var filedir = new java.io.File("/media/sdc/kbaindex/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-04-17-15")
+ // var filedir = new java.io.File("/media/sdc/kbaindex/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-04-17-15")
+ var filedir = new java.io.File("/media/sdc/optimizedindex/")
   val directory = new NIOFSDirectory(filedir)
 
   def getStats (searcher:IndexSearcher):Unit = {
@@ -41,14 +49,31 @@ object Searcher extends Logging {
 
   def main(args: Array[String]) {
 
-    if (args.length < 1 || args.length > 2) {
-      println("Usage: run 'My query'")
-      System.exit(1)
-    }
+//    if (args.length < 1 || args.length > 2) {
+//      println("Usage: run 'My query'")
+//      System.exit(1)
+//    }
 
-    logInfo(args(0))
+    val concatedArgs = args.map(s => {
+   if(s == ",")
+     "OR"
+   else if(s!= "AND" && s != "OR") 
+        "\"" + s + "\"" 
+        else 
+          s}).reduce((s1,s2) => s1 + " " + s2)
+    
+//      val allArgs = args.mkString(" ")
+//    logInfo("allArgs"+allArgs)
 
-    val reader = DirectoryReader.open(directory)
+   searchTermQuery(args);
+
+  
+    println("All arguments: " + concatedArgs)
+    searchQueryParser(concatedArgs.toLowerCase())
+  }
+  
+  def searchTermQuery(args: Array[String]){
+     val reader = DirectoryReader.open(directory)
     val searcher = new IndexSearcher(reader)
     val query = new TermQuery(new Term("clean_visible", args(0).toLowerCase))
 
@@ -56,17 +81,76 @@ object Searcher extends Logging {
     //printAllDocs(searcher)
 
     val docs = searcher.search(query,2)
+    println("TermQuery found: " + docs.scoreDocs.length )
 
-    docs.scoreDocs foreach { docId =>
-      val d = searcher.doc(docId.doc)
-      logInfo("Result: %s".format(d.get("si_index")))
-      logInfo("Result: %s".format(d.get("gpgfile")))
-      logInfo("Result: %s".format(d.get("clean_visible")))
-    }
+//    docs.scoreDocs foreach { docId =>
+//      val d = searcher.doc(docId.doc)
+//      logInfo("Result: %s".format(d.get("si_index")))
+//      logInfo("Result: %s".format(d.get("gpgfile")))
+//      logInfo("Result: %s".format(d.get("clean_visible")))
+//    }
 
     //searcher.close
     reader.close
-
   }
+  
+  def searchEntity(aliasList: ArrayList[String]){
+    val aliases = aliasList.toArray(Array[String]())
+    val concatedArgs =  aliases.map(s => {
+   if(s == ",")
+     "OR"
+   else if(s!= "AND" && s != "OR") 
+        "\"" + s + "\"" 
+        else 
+          s}).reduce((s1,s2) => s1 + " " + s2)
+    
+      searchQueryParser(concatedArgs.toLowerCase())
+  }
+  
+ def searchQueryParser( querystr: String) {
+//		System.out.println("\nSearching for '" + searchString + "' using QueryParser");
+//		//Directory directory = FSDirectory.getDirectory(INDEX_DIRECTORY);
+//		val indexSearcher = new IndexSearcher(directory);
+//
+//		val queryParser = new QueryParser(FIELD_CONTENTS, new StandardAnalyzer());
+//		Query query = queryParser.parse(searchString);
+//		System.out.println("Type of query: " + query.getClass().getSimpleName());
+//		Hits hits = indexSearcher.search(query);
+//		displayHits(hits);
+   
+   
+   
+   val analyzer = new StandardAnalyzer(Version.LUCENE_40);
+   
+    // 1. create the index
+   // val index = new RAMDirectory();
+   val index =  new MMapDirectory(filedir);
+   
+       // the "title" arg specifies the default field to use
+    // when no field is explicitly specified in the query.
+    val q = new QueryParser(Version.LUCENE_40, "clean_visible", analyzer).parse(querystr);
 
+    // 3. search
+    val hitsPerPage = 10000000;
+    val reader = DirectoryReader.open(index); //TODO check index is full
+    val searcher = new IndexSearcher(reader);
+    val collector = TopScoreDocCollector.create(hitsPerPage, true);
+    searcher.search(q, collector);
+    val hits = collector.topDocs().scoreDocs;
+   
+    // 4. display results
+    println( hits.length + " hits for: " + querystr);
+    //for(int i=0;i<hits.length;++i)
+  
+//    hits.foreach(f => {
+//      val docId = f.doc;
+//      val d = searcher.doc(docId);
+//      println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
+//    })
+
+    // reader can only be closed when there
+    // is no need to access the documents any more.
+    reader.close();
+
+	}
 }
