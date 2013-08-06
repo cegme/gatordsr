@@ -102,9 +102,9 @@ object Searcher extends Logging {
    else if(s!= "AND" && s != "OR") 
         "\"" + s + "\"" 
         else 
-          s}).reduce((s1,s2) => s1 + " " + s2)
+          s}).reduce((s1,s2) => s1 + " OR " + s2)
     
-      searchQueryParser(concatedArgs.toLowerCase())
+      searchQueryParser(concatedArgs.toLowerCase().replace(" or ", " OR "))
   }
   
  def searchQueryParser( querystr: String) {
