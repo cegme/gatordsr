@@ -42,7 +42,7 @@ object IndexMerger extends Logging {
     val analyzer = new StandardAnalyzer(Version.LUCENE_43)
 
     logInfo("Fetching indexdirs to merge...")
-    val dirs = io.Source.fromFile(OLD_INDEXES).getLines.map(dirPath => new SimpleFSDirectory(new File(dirPath)))
+    val dirs = io.Source.fromFile(OLD_INDEXES).getLines.map(dirPath => new SimpleFSDirectory(new File(dirPath))).toList
     val dirCount = dirs.size * 1.0
     logInfo("Merging dirs: %f".format(dirCount))
 
@@ -57,7 +57,8 @@ object IndexMerger extends Logging {
     logInfo("Merging Added Indexes...\n ")
     for ((dir,i) <- dirs.zipWithIndex) {
       writer.addIndexes(dir)
-      System.err.println("\r%d percent complete".format(i/dirCount))
+      //logInfo("%d| %s".format(i,dir))
+      System.err.println("\r%f percent complete".format(i/dirCount))
     }
     //writer.addIndexes(dirs)
     //writer.addIndexes(java.util.Arrays.asList(dirs).toArray)
