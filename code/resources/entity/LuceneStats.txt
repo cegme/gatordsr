@@ -1,43 +1,4 @@
-[0m[[0minfo[0m] [0mLoading project definition from /media/sde/devPipeline/gatordsr/code/project[0m
-[0m[[0minfo[0m] [0mSet current project to gatordsr (in build file:/media/sde/devPipeline/gatordsr/code/)[0m
-> run
-[0m[[0minfo[0m] [0mCompiling 1 Scala source to /media/sde/devPipeline/gatordsr/code/target/scala-2.9.2/classes...[0m
-[0m[[33mwarn[0m] [0m/media/sde/devPipeline/gatordsr/code/src/main/scala/edu/ufl/cise/util/treclucene/Searcher.scala:123: value LUCENE_40 in object Version is deprecated: see corresponding Javadoc for more information.[0m
-[0m[[33mwarn[0m] [0m   val analyzer = new StandardAnalyzer(Version.LUCENE_40);[0m
-[0m[[33mwarn[0m] [0m                                               ^[0m
-[0m[[33mwarn[0m] [0m/media/sde/devPipeline/gatordsr/code/src/main/scala/edu/ufl/cise/util/treclucene/Searcher.scala:131: value LUCENE_40 in object Version is deprecated: see corresponding Javadoc for more information.[0m
-[0m[[33mwarn[0m] [0m    val q = new QueryParser(Version.LUCENE_40, "clean_visible", analyzer).parse(querystr);[0m
-[0m[[33mwarn[0m] [0m                                    ^[0m
-[0m[[33mwarn[0m] [0mtwo warnings found[0m
 
-Multiple main classes detected, select one to run:
-
- [1] edu.ufl.cise.util.WordnetUtil
- [2] edu.ufl.cise.util.RelationChecker
- [3] edu.ufl.cise.util.treclucene.LuceneReporter
- [4] edu.ufl.cise.StreamRange
- [5] edu.ufl.cise.pipeline.Preprocessor
- [6] edu.ufl.cise.SystemStatisticsGenerator
- [7] edu.ufl.cise.CachedFaucet
- [8] edu.ufl.cise.StreamFaucet
- [9] edu.ufl.cise.util.treclucene.IndexMerger
- [10] test.LuceneTermQueryDemo
- [11] edu.ufl.cise.util.StreamItemUtil
- [12] edu.ufl.cise.util.S3Downloader
- [13] edu.ufl.cise.EmbededFaucet
- [14] edu.ufl.cise.util.Benchmark
- [15] edu.ufl.cise.KBAOutput
- [16] edu.ufl.cise.util.NameOrderGenerator
- [17] edu.ufl.cise.util.treclucene.Indexer
- [18] edu.ufl.cise.util.OntologySynonymGenerator
- [19] edu.ufl.cise.pipeline.Pipeline
- [20] edu.ufl.cise.pipeline.SimpleJob
- [21] edu.cise.ufl.util.treclucene.Searcher
-
-Enter number: 3
-
-[0m[[0minfo[0m] [0mRunning edu.ufl.cise.util.treclucene.LuceneReporter [0m
-Hi
 145 hits for: "stuart powell field" OR "kdvk" OR "dvk"
 0 hits for: "corbinspeedway" OR "corbin speedway"
 8 hits for: "idsia" OR "dalle molle institute for artificial intelligence research" OR "istituto dalle molle di studi sull'intelligenza artificiale"

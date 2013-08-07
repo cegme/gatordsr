@@ -14,22 +14,26 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.store.RAMDirectory
 import org.apache.lucene.search.TopScoreDocCollector
 import org.apache.lucene.store.MMapDirectory
+import org.apache.lucene.index.MultiFields
 import edu.ufl.cise.pipeline.Entity
 import java.util.ArrayList
 
+import scala.collection.JavaConversions._ 
 
-object Searcher extends Logging {
+
+object WikiSearcher extends Logging {
 
   //var filedir = new java.io.File("/var/tmp/lucene")
   //var filedir = new java.io.File("/media/sdc/kbaindex/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-04-17-15")
-  var filedir = new java.io.File("/media/sdc/optimizedindex/") //index of corpus
-   //  var filedir = new java.io.File("/media/sdc/wiki/index/index/") //index of wikipedia
+  var filedir = new java.io.File("/media/sdc/wiki/index/") //index of corpus
+//    var filedir = new java.io.File("/media/sdc/optimizedindex/") //index of wikipedia
 
   val directory = new NIOFSDirectory(filedir)
 
   def getStats (searcher:IndexSearcher):Unit = {
-    val stats:CollectionStatistics = searcher.collectionStatistics("clean_visible")
+    val stats:CollectionStatistics = searcher.collectionStatistics("body")
 
+    logInfo("Fields: " + MultiFields.getIndexedFields(searcher.getIndexReader()).mkString(","))
     logInfo("field: %s".format(stats.field))
     logInfo("docCount: %d".format(stats.docCount))
     logInfo("maxDoc: %d".format(stats.maxDoc))
@@ -70,20 +74,20 @@ object Searcher extends Logging {
    searchTermQuery(args);
 
   
-    println("All arguments: " + concatedArgs)
+    logInfo("All arguments: " + concatedArgs)
     searchQueryParser(concatedArgs)
   }
   
   def searchTermQuery(args: Array[String]){
-     val reader = DirectoryReader.open(directory)
+    val reader = DirectoryReader.open(directory)
     val searcher = new IndexSearcher(reader)
-    val query = new TermQuery(new Term("clean_visible", args(0).toLowerCase))
+    val query = new TermQuery(new Term("terms", args(0).toLowerCase))
 
     getStats(searcher)
     //printAllDocs(searcher)
 
     val docs = searcher.search(query,2)
-    println("TermQuery found: " + docs.scoreDocs.length )
+    logInfo("TermQuery found: " + docs.scoreDocs.length )
 
 //    docs.scoreDocs foreach { docId =>
 //      val d = searcher.doc(docId.doc)
@@ -104,9 +108,9 @@ object Searcher extends Logging {
    else if(s!= "AND" && s != "OR") 
         "\"" + s + "\"" 
         else 
-          s}).reduce((s1,s2) => s1 + " OR " + s2)
+          s}).reduce((s1,s2) => s1 + " " + s2)
     
-      searchQueryParser(concatedArgs.toLowerCase().replace(" or ", " OR "))
+      searchQueryParser(concatedArgs.toLowerCase())
   }
   
  def searchQueryParser( querystr: String) {
@@ -122,7 +126,7 @@ object Searcher extends Logging {
    
    
    
-   val analyzer = new StandardAnalyzer(Version.LUCENE_40);
+   val analyzer = new StandardAnalyzer(Version.LUCENE_43);
    
     // 1. create the index
    // val index = new RAMDirectory();
@@ -130,7 +134,7 @@ object Searcher extends Logging {
    
        // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
-    val q = new QueryParser(Version.LUCENE_40, "clean_visible", analyzer).parse(querystr);
+    val q = new QueryParser(Version.LUCENE_43, "body", analyzer).parse(querystr);
 
     // 3. search
     val hitsPerPage = 10000000;
@@ -141,16 +145,25 @@ object Searcher extends Logging {
     val hits = collector.topDocs().scoreDocs;
    
     // 4. display results
-    println( hits.length + " hits for: " + querystr);
+    logInfo( hits.length + " hits for: " + querystr);
 
     
 
    // for(int i=0;i<hits.length;++i)
-//    hits.foreach(f => {
-//      val docId = f.doc;
-//      val d = searcher.doc(docId);
-//      println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
-//   })
+  
+    hits.take(5).foreach(f => {
+      val docId = f.doc;
+      val d = searcher.doc(docId);
+      //println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
+      logInfo(d.get("doctitle"))
+      logInfo(d.get("docname"))
+      logInfo(d.get("docid"))
+      logInfo(d.get("docdate"))
+      logInfo(d.get("docdatenum"))
+      logInfo(d.get("doctimesecnum"))
+      logInfo(d.get("body"))
+      logInfo("~"*40)
+   })
 
     // reader can only be closed when there
     // is no need to access the documents any more.
