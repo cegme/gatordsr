@@ -23,7 +23,7 @@ object Searcher extends Logging {
   //var filedir = new java.io.File("/var/tmp/lucene")
   //var filedir = new java.io.File("/media/sdc/kbaindex/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-04-17-15")
   var filedir = new java.io.File("/media/sdc/optimizedindex/") //index of corpus
-//    var filedir = new java.io.File("/media/sdc/optimizedindex/") //index of wikipedia
+   //  var filedir = new java.io.File("/media/sdc/wiki/index/index/") //index of wikipedia
 
   val directory = new NIOFSDirectory(filedir)
 
@@ -146,12 +146,11 @@ object Searcher extends Logging {
     
 
    // for(int i=0;i<hits.length;++i)
-  
-    hits.foreach(f => {
-      val docId = f.doc;
-      val d = searcher.doc(docId);
-      println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
-   })
+//    hits.foreach(f => {
+//      val docId = f.doc;
+//      val d = searcher.doc(docId);
+//      println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
+//   })
 
     // reader can only be closed when there
     // is no need to access the documents any more.
