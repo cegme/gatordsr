@@ -142,7 +142,7 @@ object Searcher extends Logging {
     val hits = collector.topDocs().scoreDocs;
    
     // 4. display results
-    println( hits.length + " hits for: " + querystr);
+    println( hits.length + "\t hits for: " + querystr);
 
     
 
