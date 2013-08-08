@@ -22,7 +22,6 @@ object WikiAPI {
 
     val entity_list = new ArrayList[Entity]
     Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
-    //  println(generate(entity_list))
     val entities = entity_list.toArray(Array[Entity]())
 
     entities.foreach(e => {
@@ -31,10 +30,9 @@ object WikiAPI {
 
       val pageLines = new ListBuffer[String]();
       val eName = e.topic_id.substring(e.topic_id.lastIndexOf('/') + 1)
-      //println(eName)
       val url = new URL(
         "http://en.wikipedia.org/w/api.php?action=query&list=backlinks&bltitle=" + eName + "&blfilterredir=redirects&bllimit=max&format=json");
-      val is = url.openStream(); // throws an IOException
+      val is = url.openStream();
 
       val br = new BufferedReader(new InputStreamReader(is));
       var line = "";
@@ -44,7 +42,6 @@ object WikiAPI {
           finished = true;
         else
           pageLines += line;
-        //println(line)
       }
       br.close();
       is.close();
@@ -62,7 +59,6 @@ object WikiAPI {
       backlinks.foreach(target => {
         val entity: Map[String, Any] = target.asInstanceOf[Map[String, Any]]
         val alias = (entity.get("title").get.asInstanceOf[String])
-        //  println(alias)
         aliasList.add(alias)
         aliasList.add(alias.replaceAll("([a-z])([A-Z])", "$1 $2"))
 
@@ -81,18 +77,15 @@ object WikiAPI {
         e.names.clear()
       removeDuplicate(aliasList)
       e.names.addAll(aliasList)
-      println(generate(aliasList))
+      //  println(generate(aliasList))
 
-      // Searcher.searchEntity(aliasList)
+      Searcher.searchEntity(e.topic_id, aliasList)
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
     val json = generate(entities)
     p.print(json)
-    println(json)
-
-    //  println(generate(entity_list))
-
+    //  println(json)
   }
 
   def removeDuplicate(arlList: ArrayList[String]) {

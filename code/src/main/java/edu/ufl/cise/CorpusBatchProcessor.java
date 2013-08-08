@@ -123,7 +123,7 @@ public class CorpusBatchProcessor {
 	 * 
 	 * @return
 	 */
-	private boolean isLocalRun() {
+	public static boolean isLocalRun() {
 		File f = new File(CORPUS_DIR_LOCAL);
 		return f.exists();
 	}
