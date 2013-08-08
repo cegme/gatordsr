@@ -11,7 +11,7 @@ case class Pattern(entity_type : String, slot : String, pattern : String, direct
 
 
 
-class Entity(val entity_type: String, val group: String, val topic_id: String) {
+case class Entity(val entity_type: String, val group: String, val topic_id: String) {
 
   def this(entity_type: String, group: String, topic_id: String, alias: List[String]) = {
     this(entity_type, group, topic_id)

@@ -11,6 +11,10 @@ import java.util.ArrayList
 import edu.ufl.cise.pipeline.Entity
 import edu.cise.ufl.util.treclucene.Searcher
 import edu.ufl.cise.util.NameOrderGenerator
+import com.codahale.jerkson.Json._
+import java.util.HashSet
+import java.io.PrintWriter
+import java.io.File
 
 object WikiAPI {
 
@@ -18,10 +22,11 @@ object WikiAPI {
 
     val entity_list = new ArrayList[Entity]
     Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
+    //  println(generate(entity_list))
     val entities = entity_list.toArray(Array[Entity]())
 
     entities.foreach(e => {
-    //  println(e.topic_id)
+      //  println(e.topic_id)
       var finished = false;
 
       val pageLines = new ListBuffer[String]();
@@ -72,60 +77,28 @@ object WikiAPI {
         aliasList.addAll(NameOrderGenerator.namePermutation(aliasList.get(a)))
       }
 
-      // println(aliasList)
+      if (eName.contains("wikipedia"))
+        e.names.clear()
+      removeDuplicate(aliasList)
+      e.names.addAll(aliasList)
+      println(generate(aliasList))
 
-      Searcher.searchEntity(aliasList)
-
-      //   println("---------------------------------")
-
+      // Searcher.searchEntity(aliasList)
     })
 
-    //    entities.foreach(e => {
-    //      // println("Hi")
-    //      var finished = false;
-    //
-    //      val pageLines = new ListBuffer[String]();
-    //      val url = new URL(e.topic_id)
-    //      // "http://en.wikipedia.org/w/api.php?action=query&list=backlinks&bltitle=Boris_Berezovsky_%28businessman%29&blfilterredir=redirects&bllimit=max&format=json");
-    //      val is = url.openStream(); // throws an IOException
-    //
-    //      val br = new BufferedReader(new InputStreamReader(is));
-    //      var line = "";
-    //      while (!finished) {
-    //        line = br.readLine();
-    //
-    //        if (line == null)
-    //          finished = true;
-    //        else
-    //          pageLines += line;
-    //
-    //      }
-    //      br.close();
-    //      is.close();
-    //
-    //      val jsonStr = pageLines.apply(0)
-    //
-    //      val json = JSON.parseFull(jsonStr)
-    //      //    println(json)
-    //
-    //      val map: Map[String, Any] = json.get.asInstanceOf[Map[String, Any]]
-    //      val query = map.get("query").get.asInstanceOf[Map[String, Any]]
-    //      //   println(query)
-    //      val backlinks = query.get("backlinks").get.asInstanceOf[List[Any]]
-    //      // println(backlinks)
-    //      //    val entities: List[Any] = map.get("query").get.asInstanceOf[List[Any]]
-    //      backlinks.foreach(target => {
-    //        val entity: Map[String, Any] = target.asInstanceOf[Map[String, Any]]
-    //        val alias = (entity.get("title").get.asInstanceOf[String])
-    //        println(alias)
-    //        ////      val enType = entity.get("entity_type").asInstanceOf[Some[Any]].get.toString
-    //        ////      val enGroup = entity.get("group").asInstanceOf[Some[Any]].get.toString
-    //        ////      val enTargetId = entity.get("target_id").asInstanceOf[Some[Any]].get.toString
-    //        //
-    //      })
-    //    })
+    val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
+    val json = generate(entities)
+    p.print(json)
+    println(json)
 
-    //	for (String tempLine : pageLines) {
+    //  println(generate(entity_list))
+
+  }
+
+  def removeDuplicate(arlList: ArrayList[String]) {
+    val h = new HashSet(arlList);
+    arlList.clear();
+    arlList.addAll(h);
   }
 
 }

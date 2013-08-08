@@ -20,6 +20,8 @@ resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/release
 
 resolvers += "opennlp maven repo" at "http://repo1.maven.org/maven2/org/apache/opennlp/"   
 
+resolvers += "repo.codahale.com" at "http://repo.codahale.com"
+
 libraryDependencies += "net.sf.jwordnet" % "jwnl" % "1.4_rc3"
 
 libraryDependencies += "edu.mit" % "jwi" % "2.2.3"            
@@ -63,4 +65,4 @@ libraryDependencies += "org.apache.lucene" % "lucene-analyzers-common" % "4.3.1"
 
 libraryDependencies += "org.apache.lucene" % "lucene-queryparser" % "4.3.1"
 
-
+libraryDependencies += "com.codahale" % "jerkson_2.9.1" % "0.5.0"
