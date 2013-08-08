@@ -85,6 +85,7 @@ object WikiAPI {
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
     val json = generate(entities)
     p.print(json)
+    p.close()
     //  println(json)
   }
 

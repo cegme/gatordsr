@@ -36,7 +36,7 @@ object Pipeline extends Logging {
   // load entities and patterns from files
   // kba entities
   val entity_list = new ArrayList[Entity]
-  Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
+  Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json", entity_list)
   lazy val entities = entity_list.toArray(Array[Entity]())
   
   // patterns

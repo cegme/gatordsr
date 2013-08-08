@@ -1,1 +1,2858 @@
-[{"entity_type":"FAC","group":"danville","topic_id":"http://en.wikipedia.org/wiki/Stuart_Powell_Field","names":["Stuart Powell Field","KDVK","DVK","KDVK","Stuart Powell Field","Stuart_Powell_Field"]},{"entity_type":"FAC","group":"danville","topic_id":"https://twitter.com/CorbinSpeedway","names":["CorbinSpeedway","Corbin Speedway","C. Speedway","Corbin Speedway","CorbinSpeedway","Speedway, C.","Speedway, Corbin"]},{"entity_type":"FAC","group":"deeplearning","topic_id":"http://en.wikipedia.org/wiki/IDSIA","names":["IDSIA","Dalle Molle Institute for Artificial Intelligence Research","Istituto Dalle Molle di Studi sull'Intelligenza Artificiale","IDSIA"]},{"entity_type":"FAC","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Corn_Belt_Power_Cooperative","names":["Corn Belt Power Cooperative","Corn Belt Power","cbpower","Corn Belt Power Cooperative","The Corn Belt Power Cooperative","Corn_Belt_Power_Cooperative"]},{"entity_type":"FAC","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Fargo-Moorhead_Symphony_Orchestra","names":["Fargo-Moorhead Symphony Orchestra","FMSO","fmsymphony","Fargo-Moorhead Symphony","Fargo Moorhead","Fargo-Moorhead_Symphony_Orchestra","Fargo-Moorhead Symphony Orchestra"]},{"entity_type":"FAC","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Fargo_Air_Museum","names":["Fargo Air Museum","fargoairmuseum","Fargo_Air_Museum","Fargo Airplane Museum","Fargo Air Museum"]},{"entity_type":"FAC","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Hjemkomst_Center","names":["Hjemkomst Center","Heritage Hjemkomst Interpretive Center","Hjemkomst","Center, H.","Hjemkomst_Center","H. Center","Hjemkomst Center","Center, Hjemkomst"]},{"entity_type":"FAC","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/John_D._Odegard_School_of_Aerospace_Sciences","names":["John D. Odegard School of Aerospace Sciences","UND Aerospace","John D. Odegard","John D Odegard School of Aerospace Sciences","John D. Odegard School of Aerospace Sciences","Jdosas","John_D._Odegard_School_of_Aerospace_Sciences"]},{"entity_type":"FAC","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Red_River_Zoo","names":["Red River Zoo","red river zoological society","Red_River_Zoo","Red River Zoo"]},{"entity_type":"FAC","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Star_Lite_Motel","names":["Star Lite Motel","starlite-motel","starlite motel","Charley's Motel","Star Lite Motel","Motel, C.","C. Motel","Motel, Charley's","Star_Lite_Motel"]},{"entity_type":"FAC","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Elysian_Charter_School","names":["Elysian Charter School","ECS","ecsnj","Joanna Weintraub","J. Weintraub","Elysian_Charter_School","Elysian Charter School","Weintraub, Joanna","Elysian Charter School of Hoboken","Weintraub, J."]},{"entity_type":"FAC","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Stevens_Cooperative_School","names":["Stevens Cooperative School","SCS","stevenscoop","Hauser, Z.","Zoe Hauser","Z. Hauser","Stevens_Cooperative_School","Hauser, Zoe","Stevens Cooperative School"]},{"entity_type":"FAC","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Weehawken_Cove","names":["Weehawken Cove","Weehawken_Cove","Weehawken Cove","Cove, Hoboken","Cove, H.","W. Cove","H. Cove","Cove, Weehawken","Hoboken Cove","North Hoboken Harbor","Hoboken's Inner Harbor","Weehawken Cove (North Hoboken Harbor)","Cove, W."]},{"entity_type":"FAC","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Copper_Basin_Railway","names":["Cooper Basin Railway","CBRY","Copper Basin Railway","Copper_Basin_Railway"]},{"entity_type":"FAC","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Hayden_Smelter","names":["Hayden Smelter","Hayden Smelter","Smelter, Hayden","Hayden_Smelter","H. Smelter","Smelter, H."]},{"entity_type":"FAC","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Lewis_and_Clark_Landing","names":["Lewis and Clark Landing","Lewis-Clark Landing","Lewis & Clark Landing","Lewis Clark Landing","Lewis and Clark Landing","Lewis & Clark Landing","Lewis_and_Clark_Landing"]},{"entity_type":"FAC","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Toquepala_mine","names":["Toquepala mine","Toquepala_mine","mine, T.","T. mine","Toquepala mine","mine, Toquepala"]},{"entity_type":"FAC","group":"ocala","topic_id":"http://en.wikipedia.org/wiki/Appleton_Museum_of_Art","names":["Appelton Museum of Art","Appelton Museum","appletonmuseum","Appleton_Museum_of_Art","Arthur I. Appleton","Museum, Appleton","Appleton Museum","Appleton museum of art","Appleton Museum of Art","Museum, A.","A. Museum"]},{"entity_type":"FAC","group":"ocala","topic_id":"http://en.wikipedia.org/wiki/Don_Garlits_Museum_of_Drag_Racing","names":["Don Garlits Museum of Drag Racing","Don Garlits Museum","garlits.com","Don Garlits Museum of Drag Racing","Don_Garlits_Museum_of_Drag_Racing"]},{"entity_type":"FAC","group":"ocala","topic_id":"http://en.wikipedia.org/wiki/Eighth_Street_Elementary_School","names":["Eighth Street Elementary School","Eighth_Street_Elementary_School","Eighth Street Elementary School"]},{"entity_type":"FAC","group":"ocala","topic_id":"http://en.wikipedia.org/wiki/Lake_Weir_High_School","names":["Lake Weir High School","Lake Weir High","LWHS","lakeweirhigh","Lake_Weir_High_School","Lake Weir High School"]},{"entity_type":"FAC","group":"ocala","topic_id":"http://en.wikipedia.org/wiki/Marion_Technical_Institute","names":["Marion Technical Institute","Marion Tech","Marion_Technical_Institute","Marion Technical Institute","Life at MTI"]},{"entity_type":"FAC","group":"ocala","topic_id":"http://en.wikipedia.org/wiki/Osceola_Middle_School","names":["Osceola Middle School","Osceola Middle","Osceola_Middle_School","Osceola Middle School"]},{"entity_type":"FAC","group":"ocala","topic_id":"http://en.wikipedia.org/wiki/The_Ritz_Apartment_(Ocala,_Florida)","names":["The Ritz Apartment Ocala, Florida","The Ritz Apartment","The_Ritz_Apartment_(Ocala,_Florida)","The Ritz Apartment (Ocala, Florida)"]},{"entity_type":"ORG","group":"danville","topic_id":"http://en.wikipedia.org/wiki/Great_American_Brass_Band_Festival","names":["Great American Brass Band Festival","Great_American_Brass_Band_Festival","Great American Brass Band Festival"]},{"entity_type":"ORG","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Innovis_Health","names":["Innovis Health","Innovis","Innovis_Health","Health, I.","I. Health","Health, Innovis","Innovis Health"]},{"entity_type":"ORG","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Hoboken_Reporter","names":["Hoboken Reporter","Hoboken Newspaper","Hoboken paper","Hoboken_Reporter","Reporter, Hoboken","H. Reporter","The Hoboken Reporter","Reporter, H.","Hoboken Reporter"]},{"entity_type":"ORG","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Hoboken_Volunteer_Ambulance_Corps","names":["Hoboken Volunteer Ambulance Corps","Hoboken_Volunteer_Ambulance_Corps","Hoboken Volunteer Ambulance Corps"]},{"entity_type":"ORG","group":"kba2012","topic_id":"http://en.wikipedia.org/wiki/Basic_Element_(company)","names":["Basic Element company","Basic Element co","Basic Element Companies","Basic Element (corp)","Basic_Element_(company)","Basic Element Group","Basic Element (company)"]},{"entity_type":"ORG","group":"kba2012","topic_id":"http://en.wikipedia.org/wiki/Basic_Element_(music_group)","names":["Basic Element music groups","Basic Element music","Basic Element (music group)","Basic_Element_(music_group)"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Agroindustrial_Pomalca","names":["Agroindustrial Pomalca","Agroindustrial_Pomalca","Pomalca, A.","A. Pomalca","Pomalca, Agroindustrial","Agroindustrial Pomalca"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Atacocha","names":["Atacocha","Atacocha"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Austral_Group","names":["Austral Group","Austral Group","A. Group","Group, Austral","Group, A.","Austral_Group"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Cementos_Lima","names":["Cementos Lima","Lima, C.","Cementos Lima","C. Lima","Lima, Cementos","Cementos_Lima"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Dunkelvolk","names":["Dunkelvolk","Dunkelvolk"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Gran%C3%A3_y_Montero","names":["Granã y Montero","Grana y Montero","IGBVL","Gran%C3%A3 y Montero","Grana y Montero","Gran%C3%A3_y_Montero"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Intergroup_Financial_Services","names":["Intergroup Financial Services","Intergroup Financial Services","Intergroup_Financial_Services"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Luz_del_Sur","names":["Luz del Sur","Luz_del_Sur","Luz del Sur"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/SIMSA","names":["SIMSA","SIMSA"]},{"entity_type":"ORG","group":"mining","topic_id":"http://en.wikipedia.org/wiki/Scotiabank_Per%C3%BA","names":["Scotiabank Perú","Scotiabank Peru","Per%C3%BA, Scotiabank","S. Per%C3%BA","Scotiabank Per%C3%BA","Scotiabank_Per%C3%BA","Per%C3%BA, S."]},{"entity_type":"ORG","group":"startups","topic_id":"https://twitter.com/BlossomCoffee","names":["BlossomCoffee","Blossom Coffee","B. Coffee","Blossom Coffee","Coffee, Blossom","Coffee, B.","BlossomCoffee"]},{"entity_type":"ORG","group":"startups","topic_id":"https://twitter.com/FrankandOak","names":["FrankandOak","Frank and Oak","Frank & Oak","FrankHelps","F. Oak","Oak, Frankand","Frankand Oak","FrankandOak","Oak, F."]},{"entity_type":"ORG","group":"startups","topic_id":"https://twitter.com/GandBcoffee","names":["GandBcoffee","Glanville & Babinski","Glanville and Babinski","G & B","G&B","Bcoffee, Gand","G. Bcoffee","Bcoffee, G.","Gand Bcoffee","GandBcoffee"]},{"entity_type":"ORG","group":"startups","topic_id":"https://twitter.com/WCoffeeResearch","names":["WCoffeeResearch","W Coffee Research","WorldCoffeeResearch","World Coffee Research","Research, W.","Research, WCoffee","WCoffeeResearch","WCoffee Research","W. Research"]},{"entity_type":"ORG","group":"startups","topic_id":"https://twitter.com/evvnt","names":["evvnt","evvnt"]},{"entity_type":"PER","group":"bronfman","topic_id":"http://en.wikipedia.org/wiki/Benjamin_Bronfman","names":["Benjamin Bronfman","B. Bronfman","Bronfman, Benjamin","Bronfman, B.","Ben Brewer","Brewer, Ben","Bronfman, Benjamin","Bronfman, B.","Brewer, B.","B. Brewer","Benjamin Bronfman","B. Bronfman","Benjamin_Bronfman"]},{"entity_type":"PER","group":"bronfman","topic_id":"http://en.wikipedia.org/wiki/Charles_Bronfman","names":["Charles Bronfman","C. Bronfman","Bronfman, Charles","Bronfman, C.","Charles Bronfman","C. Bronfman","Charles_Bronfman","Charles Rosner Bronfman, PC, CC","Charles Rosner Bronfman","Bronfman, Charles","Bronfman, C."]},{"entity_type":"PER","group":"bronfman","topic_id":"http://en.wikipedia.org/wiki/Clare_Bronfman","names":["Clare Bronfman","C. Bronfman","Bronfman, Clare","Bronfman, C.","C. Bronfman","Bronfman, Clare","Bronfman, C.","Clare_Bronfman","Clare Bronfman"]},{"entity_type":"PER","group":"bronfman","topic_id":"http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.","names":["Edgar Bronfman, Jr.","Edgar Bronfman, Jr","Edgar Bronfman","E. Bronfman","Bronfman, Edgar","Bronfman, E.","Edgar Jr.","Efer","Edgar Bronfman Jr","Edgar Bronfman Jr.","Edgar Bronfman, Jr.","Edgar_Bronfman,_Jr."]},{"entity_type":"PER","group":"bronfman","topic_id":"http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.","names":["Edgar Bronfman, Sr.","Edgar Bronfman, Sr","Edgar Bronfman","E. Bronfman","Bronfman, Edgar","Bronfman, E.","Edgar Sr.","Edgar Bronfman, Sr.","Edgar Bronfman Sr.","Edgar Miles Bronfman","Edgar_Bronfman,_Sr.","Edgar Miles Bronfman Sr.","Edgar M. Bronfman","Edgar Miles Bronfman, Sr.","Edgar Bronfman Sr"]},{"entity_type":"PER","group":"bronfman","topic_id":"http://en.wikipedia.org/wiki/Phyllis_Lambert","names":["Phyllis Lambert","P. Lambert","Lambert, Phyllis","Lambert, P.","Lambert, P.","Lambert, Phyllis","Phyllis Barbara Lambert","Phyllis Lambert","Phyllis Barbara Lambert, CC, GOQ, OAL, FRAIC, FRSC, RCA","P. Lambert","Phyllis_Lambert"]},{"entity_type":"PER","group":"bronfman","topic_id":"http://en.wikipedia.org/wiki/Sara_Bronfman","names":["Sara Bronfman","S. Bronfman","Bronfman, Sara","Bronfman, S.","S. Bronfman","Bronfman, S.","Sara_Bronfman","Bronfman, Sara","Sara Bronfman"]},{"entity_type":"PER","group":"commedians","topic_id":"http://en.wikipedia.org/wiki/DeAnne_Smith","names":["DeAnne Smith","D. Smith","Smith, DeAnne","Smith, D.","Anne_Smith, De","De Anne_Smith","D. Anne_Smith","DeAnne Smith","Smith, D.","D. Smith","Smith, DeAnne","DeAnne_Smith","Anne_Smith, D."]},{"entity_type":"PER","group":"commedians","topic_id":"https://twitter.com/RonFunches","names":["RonFunches","Ron Funches","Ronald Funches","R. Funches","Funches, Ron","Funches, Ronald","Funches, R.","Funches, Ron","Funches, R.","R. Funches","RonFunches","Ron Funches"]},{"entity_type":"PER","group":"commedians","topic_id":"https://twitter.com/roryscovel","names":["roryscovel","Rory Scovel","R Scovel","Scovel, Rory","Scovel, R.","roryscovel"]},{"entity_type":"PER","group":"danville","topic_id":"https://twitter.com/AlexJoHamilton","names":["Alex Jo Hamilton","Alex J. Hamilton","Alexandra J Hamilton","Alexandra Hamilton","Hamilton, Alex","Hamilton, Alexandra","Hamilton, A.","Alex Jo Hamilton","AlexJoHamilton"]},{"entity_type":"PER","group":"danville","topic_id":"https://twitter.com/BobStovall","names":["Bob Stovall","B. Hamilton","Stovall, Bob","Stovall, B.","Stovall, Bob","BobStovall","B. Stovall","Bob Stovall","Stovall, B."]},{"entity_type":"PER","group":"danville","topic_id":"https://twitter.com/RobCaud","names":["RobCaud","Rob Caud","Rob Caudill","RobCaudill","R. Caud","R. Caudill","Caudill, Rob","Caudill, R.","Caud, Rob","Caud, R.","RobCaud","Rob Caud","R. Caud"]},{"entity_type":"PER","group":"danville","topic_id":"https://twitter.com/danvillekyengr","names":["danvillekyengr","danville engineering","danville ky engineering","danvillekyengr"]},{"entity_type":"PER","group":"danville","topic_id":"https://twitter.com/tonyg203","names":["tonyg203","Tony Gray","T. Gray","Gray, Tony","Gray, T.","tonyg203"]},{"entity_type":"PER","group":"danville","topic_id":"https://twitter.com/urbren00","names":["urbren00","Brent Faulkner","B. Faulkner","Faulkner, Brent","Faulkner, B.","brentmusicreviews","brent music reviews","urbren00"]},{"entity_type":"PER","group":"deeplearning","topic_id":"http://en.wikipedia.org/wiki/Geoffrey_E._Hinton","names":["Geoffrey E. Hinton","Geoffrey Hinton","G. Hinton","Hinton, Geoffrey","Hinton, G.","Geoffrey E. Hinton","Geoffrey_E._Hinton"]},{"entity_type":"PER","group":"deeplearning","topic_id":"http://en.wikipedia.org/wiki/L%C3%A9on_Bottou","names":["Léon Bottou","Leon Bottou","L. Bottou","Bottou, Léon","Bottou, Leon","Bottou, L.","Bottou, Leon","L%C3%A9on_Bottou","Bottou, L.","L. Bottou","Bottou, L%C3%A9on","L%C3%A9on Bottou","Leon Bottou"]},{"entity_type":"PER","group":"deeplearning","topic_id":"http://en.wikipedia.org/wiki/Yann_LeCun","names":["Yann LeCun","Y. LeCun","LeCun, Yann","LeCun, Y.","LeCun, Yann","Cun, Y.","Y. Cun","Yann_LeCun","Cun, Yann_Le","LeCun, Y.","Yann_Le Cun","Yann Le Cun","Yann LeCun","Y. LeCun"]},{"entity_type":"PER","group":"deeplearning","topic_id":"http://en.wikipedia.org/wiki/Zoubin_Ghahramani","names":["Zoubin Ghahramani","Z. Ghahramani","Ghahramani, Zoubin","Ghahramani, Z.","Zoubin Ghahramani","Ghahramani, Z.","Zoubin_Ghahramani","Z. Ghahramani","Ghahramani, Zoubin"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Blair_Thoreson","names":["Blair Thoer","B. Thoer","Thoer, Blair","Thoer, B.","B. Thoreson","Thoreson, Blair","Blair Thoreson","Blair B. Thoreson","Thoreson, B.","Blair_Thoreson"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Brenda_Weiler","names":["Brenda Weiler","B. Weiler","Weiler, Brenda","Weiler, B.","B. weiler","Weiler, B.","Brenda weiler","Brenda_Weiler","Brenda Weiler","weiler, Brenda","Weiler, Brenda","weiler, B.","B. Weiler"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Carey_McWilliams_(marksman)","names":["Carey McWilliams","C. McWilliams","McWilliams, Carey","McWilliams, C.","Williams_(marksman), C.","Carey_McWilliams_(marksman)","Williams_(marksman), Carey_Mc","C. Williams_(marksman)","Carey_Mc Williams_(marksman)","Carey McWilliams (marksman)"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Clark_Blaise","names":["Clark Blaise","C. Blaise","Blaise, Clark","Blaise, C.","Blaise, C.","Blaise, Clark","Clark_Blaise","C. Blaise","Clark Blaise"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Daniel_J._Crothers","names":["Daniel J. Crothers","Daniel Crothers","D. Crothers","Crothers, Daniel","Crothers, D.","Crothers, Daniel","D. Crothers","Crothers, D.","Daniel J. Crothers","Daniel_J._Crothers","Daniel John Crothers","Daniel Crothers"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Danny_Irmen","names":["Danny Irmen","D. Irmen","Irmen, Danny","Irmen, D.","Danny_Irmen","Irmen, Danny","Danny Irmen","Irmen, D.","D. Irmen"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/David_B._Danbom","names":["David B. Danbom","David Danbom","D. Danbom","Danbom, David","Danbom, D.","Danbom, David","David Danbom","Why Americans Value Rural Life","David B. Danbom","Danbom, D.","David_B._Danbom","D. Danbom"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Drew_Wrigley","names":["Drew Wrigley","D. Wrigley","Wrigley, Drew","Wrigley, D.","Drew Wrigley","Drew_Wrigley","Wrigley, Drew","D. Wrigley","Wrigley, D."]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Ed_Bok_Lee","names":["Ed Bok Lee","Ed Bok Lee","Ed_Bok_Lee"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Fargo_Moorhead_Derby_Girls","names":["Fargo Moorhead Derby Girls","Fargo Moorhead Derby Girls","Fargo-Moorhead Derby Girls","Fargo Moorehead Derby Girls","Fargo_Moorhead_Derby_Girls"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/George_Sinner","names":["George Sinner","G. Sinner","Sinner, George","Sinner, G.","Sinner, George","George Sinner","George A. Sinner","George_Sinner","G. Sinner","Sinner, G."]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Gretchen_Hoffman","names":["Gretchen Hoffman","G. Hoffman","Hoffman, Gretchen","Hoffman, G.","Hoffman, G.","Gretchen Hoffman","Gretchen_Hoffman","G. Hoffman","Hoffman, Gretchen"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Jamie_Parsley","names":["Jamie Parsley","J. Parsley","Parsley, Jamie","Parsley, J.","Jamie Parsley","Parsley, J.","Jamie_Parsley","Parsley, Jamie","J. Parsley"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Jasper_Schneider","names":["Jasper Schneider","J. Schneider","Schneider, Jasper","Schneider, J.","Jasper Schneider","Jasper_Schneider","Schneider, J.","Schneider, Jasper","J. Schneider"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Jeff_Severson","names":["Jeff Severson","J. Severson","Severson, Jeff","Severson, J.","Severson, Jeff","Severson, J.","J. Severson","Jeff Severson","Jeff_Severson"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Jennifer_Baumgardner","names":["Jennifer Baumgardner","J. Baumgardner","Baumgardner, Jennifer","Baumgardner, J.","Jennifer_Baumgardner","Jennifer Baumgardner","Baumgardner, Jennifer","Baumgardner, J.","J. Baumgardner"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Jim_Poolman","names":["Jim Poolman","J. Poolman","Poolman, Jim","Poolman, J.","Poolman, Jim","Poolman, J.","J. Poolman","Jim Poolman","Jim_Poolman"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/John_H._Lang","names":["John H. Lang","John H Lang","John Lang","J. Lang","Lang, John","Lang, J.","John H. Lang","John_H._Lang"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Joshua_Boschee","names":["Joshua Boschee","J. Boschee","Boschee, Joshua","Boschee, J.","Boschee, Josh","J. Boschee","Boschee, J.","Joshua Boschee","Boschee, Joshua","Josh Boschee","Joshua_Boschee"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Ken_Fowler","names":["Ken Fowler","K. Fowler","Fowler, Ken","Fowler, K.","K. Fowler","Ken Fowler","Ken_Fowler","Fowler, K.","Fowler, Ken"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Keri_Hehn","names":["Keri Hehn","K. Hehn","Hehn, Keri","Hehn, K.","Hehn, K.","Keri_Hehn","Keri Hehn","Hehn, Keri","K. Hehn"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Olaus_Murie","names":["Olaus Murie","O. Murie","Murie, Olaus","Murie, O.","Murie, O.","Olaus Johan Murie","O. Murie","Murie, Olaus","Olaus Murie","Olaus_Murie"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Paul_Johnsgard","names":["Paul Johnsgard","P. Johnsgard","Johnsgard, Paul","Johnsgard, P.","P. Johnsgard","Johnsgard, P.","Paul_Johnsgard","Johnsgard, Paul","Paul Johnsgard"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Paul_Marquart","names":["Paul Marquart","P. Marquart","Marquart, Paul","Marquart, P.","P. Marquart","Marquart, P.","Paul_Marquart","Marquart, Paul","Paul Marquart"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Richard_Edlund","names":["Richard Edlund","R. Edlund","Edlund, Richard","Edlund, R.","Richard Edlund","Richard_Edlund","Edlund, R.","R. Edlund","Edlund, Richard"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Richard_W._Goldberg","names":["Richard W. Goldberg","Richard W Goldberg","Richard Goldberg","Richard W. Goldberg","Richard_W._Goldberg"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/Susan_Krieg","names":["Richard Edlund","R. Edlund","Edlund, Richard","Edlund, R.","Krieg, Susan","S. Krieg","Krieg, S.","Susan_Krieg","Susan Krieg"]},{"entity_type":"PER","group":"fargo","topic_id":"http://en.wikipedia.org/wiki/William_P._Gerberding","names":["William P. Gerberding","William P Gerberding","William Gerberding","William_P._Gerberding","William P. Gerberding"]},{"entity_type":"PER","group":"french","topic_id":"http://en.wikipedia.org/wiki/Ana%C3%AFs_Croze","names":["Anaïs Croze","Croze, Anaïs","Anais Croze","A. Croze","Croze, Anais","Croze, A.","Croze, A.","Ana%C3%AFs_Croze","A. Croze","A. Croz","Croze, Anais","Ana�s Croz","croze, Ana�s","Croze, Ana%C3%AFs","croze, A.","croze, Anais","Croz, Ana�s","Anais croze","Ana%C3%AFs Croze","Croz, A.","Ana�s croze","Anais Croze","A. croze"]},{"entity_type":"PER","group":"french","topic_id":"http://en.wikipedia.org/wiki/Gwena%C3%ABlle_Aubry","names":["Gwenaëlle Aubry","Aubry, Gwenaëlle","Gwenaelle Aubry","G. Aubry","Aubry, Gwenaelle","Aubry, G.","Aubry, Gwenaelle","Gwena%C3%ABlle Aubry","G. Aubry","Gwenaelle Aubry","Gwena%C3%ABlle_Aubry","Aubry, Gwena%C3%ABlle","Aubry, G."]},{"entity_type":"PER","group":"french","topic_id":"http://en.wikipedia.org/wiki/Nicolas_Sch%C3%B6ffer","names":["Nicolas Schöffer","N. Schöffer","Schöffer, Nicolas","Schöffer, N.","Nicolas Schoffer","N. Schoffer","Schoffer, Nicolas","Schoffer, N.","Sch%C3%B6ffer, Nicolas","Sch%C3%B6ffer, N.","Schoeffer, Nicolas","N. Schoeffer","N. Schoffer","Nicolas Schoffer","Schoeffer, N.","Nicolas Sch%C3%B6ffer","Nicolas_Sch%C3%B6ffer","Nicolas Schoeffer","Schoffer, N.","N. Sch%C3%B6ffer","Schoffer, Nicolas"]},{"entity_type":"PER","group":"french","topic_id":"http://en.wikipedia.org/wiki/Th%C3%A9o_Mercier","names":["Théo Mercier","Mercier, Théo","Theo Mercier","T. Mercier","Mercier, Theo","Mercier, T.","Th%C3%A9o_Mercier","Mercier, T.","Th%C3%A9o Mercier","Mercier, Th%C3%A9o","Mercier, Theo","Theo Mercier","T. Mercier"]},{"entity_type":"PER","group":"hep","topic_id":"http://en.wikipedia.org/wiki/Chiara_Nappi","names":["Chiara Nappi","C. Nappi","Nappi, Chiara","Nappi, C.","C. Nappi","Chiara nappi","nappi, C.","Chiara_Nappi","Nappi, Chiara","Chiara Nappi","Nappi, C.","nappi, Chiara","C. nappi"]},{"entity_type":"PER","group":"hep","topic_id":"http://en.wikipedia.org/wiki/Eva_Silverstein","names":["Eva Silverstein","E. Silverstein","Silverstein, Eva","Silverstein, E.","Eva_Silverstein","Eva Silverstein","Silverstein, E.","E. Silverstein","Silverstein, Eva"]},{"entity_type":"PER","group":"hep","topic_id":"http://en.wikipedia.org/wiki/Matt_Witten","names":["Matt Witten","M. Witten","Witten, Matt","Witten, M.","Witten, Matt","Witten, M.","M. Witten","Matt_Witten","Matt Witten"]},{"entity_type":"PER","group":"hep","topic_id":"http://en.wikipedia.org/wiki/Shamit_Kachru","names":["Shamit Kachru","S. Kachru","Kachru, Shamit","Kachru, S.","Kachru, S.","Shamit_Kachru","S. Kachru","Shamit Kachru","Kachru, Shamit"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Angelo_Savoldi","names":["Angelo Savoldi","A. Savoldi","Savoldi, Angelo","Savoldi, A.","Savoldi, Angelo","Angelo Savoldi","A. Savoldi","Savoldi, A.","Angelo_Savoldi"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Bernard_Kenny","names":["Bernard Kenny","B. Kenny","Kenny, Bernard","Kenny, B.","Kenny, B.","Bernard F. Kenny","Kenny, Bernard","Bernard_Kenny","Bernard Kenny, Jr.","Bernard Kenny","B. Kenny","Bernard F. Kenny, Jr."]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Bob_Bert","names":["Bob Bert","B. Bert","Bert, Bob","Bert, B.","B. Bert","Bert, B.","Robert Bertelli","Bertelli, R.","Bewitched (American band)","R. Bertelli","Bertelli, Robert","Harshing My Mellow (album)","Bert, Bob","Bob Bert","Bob_Bert"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Carl_Chang_(tennis)","names":["Carl Chang","C. Chang","Chang, Carl","Chang, C.","Carl_Chang_(tennis)","Carl Chang (tennis)","Carl Chang (tennis player)"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Carla_Katz","names":["Carla Katz","C. Katz","Katz, Carla","Katz, C.","Katz, Carla","Katz, C.","Carla_Katz","Carla Katz","Carla A. Katz","C. Katz"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Derrick_Alston","names":["Derrick Alston","D. Alston","Alston, Derrick","Alston, D.","Derrick_Alston","Alston, D.","Alston, Derrick","Derrick Alston","D. Alston"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Frank_Winters","names":["Frank Winters","F. Winters","Winters, Frank","Winters, F.","Frank_Winters","Winters, F.","Frank Winters","F. Winters","Winters, Frank"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Henry_Gutierrez","names":["Henry Gutierrez","H. Gutierrez","Gutierrez, Henry","Gutierrez, H.","Gutierrez, H.","Hendrig Gutierrez","Gutierrez, Henry","Henry Gutierrez","Henry_Gutierrez","Gutierrez, Hendrig","H. Gutierrez"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Jack_Lazorko","names":["Jack Lazorko","J. Lazorko","Lazorko, Jack","Lazorko, J.","Lazorko, Jack","J. Lazorko","Lazorko, J.","Jack Lazorko","Jack_Lazorko"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Jeff_Tamarkin","names":["Jeff Tamarkin","J. Tamarkin","Tamarkin, Jeff","Tamarkin, J.","J. Tamarkin","Jeff Tamarkin","Tamarkin, J.","Jeff_Tamarkin","Tamarkin, Jeff"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Joanne_Borgella","names":["Joanne Borgella","J. Borgella","Borgella, Joanne","Borgella, J.","Borgella, J.","J. Borgella","Joanne Borgella","Borgella, Joanne","Joanne_Borgella"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Ken_Freedman","names":["Ken Freedman","K. Freedman","Freedman, Ken","Freedman, K.","Freedman, K.","Ken Freedman","freedman, K.","freedman, Ken","Ken_Freedman","K. freedman","K. Freedman","Freedman, Ken","Ken freedman"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Klaus_Grutzka","names":["Klaus Grutzka","K. Grutzka","Grutzka, Klaus","Grutzka, K.","Grutzka, Klaus","Grutzka, K.","Klaus_Grutzka","K. Grutzka","Klaus Grutzka"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Mark_SaFranko","names":["Mark SaFranko","M. SaFranko","SaFranko, Mark","SaFranko, M.","Mark SaFranko","SaFranko, Mark","M. SaFranko","Mark_Sa Franko","M. Franko","SaFranko, M.","Franko, M.","Franko, Mark_Sa","Mark_SaFranko"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Maurice_Fitzgibbons","names":["Maurice Fitzgibbons","M. Fitzgibbons","Fitzgibbons, Maurice","Fitzgibbons, M.","Maurice Fitzgibbons","M. Fitzgibbons","Fitzgibbons, Maurice","Maurice_Fitzgibbons","Fitzgibbons, M."]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Pat_Dapuzzo","names":["Pat Dapuzzo","P. Dapuzzo","Dapuzzo, Pat","Dapuzzo, P.","P. Dapuzzo","Dapuzzo, P.","Dapuzzo, Pat","Pat_Dapuzzo","Pat Dapuzzo"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Ruben_J._Ramos","names":["Ruben J. Ramos","Ruben J Ramos","Ruben Ramos","Ruben J. Ramos","Ruben_J._Ramos"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/Tilo_Rivas","names":["Tilo Rivas","T. Rivas","Rivas, Tilo","Rivas, T.","T. Rivas","Rivas, Tilo","Tilo E. Rivas","Rivas, T.","Tilo Rivas","Tilo_Rivas"]},{"entity_type":"PER","group":"hoboken","topic_id":"http://en.wikipedia.org/wiki/William_H._Miller_(writer)","names":["William H. Miller writer","William H. Miller","William H Miller","William Miller","William_H._Miller_(writer)","William H. Miller (writer)","Mr. Ocean Liner"]},{"entity_type":"PER","group":"kba2012","topic_id":"http://en.wikipedia.org/wiki/Aharon_Barak","names":["Aharon Barak","A. Barak","Barak, Aharon","Barak, A.","Barak, A.","???, ?.","Aharon Brick","Brick, A.","Barak, Aharon","???, ????","Barak, Aaron","A. Barak","?. ???","Brick, Aharon","???? ???","Aaron Barak","Aharon Barak","A. Brick","Aharon_Barak"]},{"entity_type":"PER","group":"kba2012","topic_id":"http://en.wikipedia.org/wiki/Alex_Kapranos","names":["Alex Kapranos","A. Kapranos","Kapranos, Alex","Kapranos, A.","Alex_Kapranos","Alex Huntley","Huntley, Alex","Krapranos, A.","Alexander Kapranos","Kapranas, A.","A. Krapranos","Krapranos, Alex","Kapranas, Alex","Alex Kapranos","Alex Kapranas","Kapranos, Alex","Alex Krapranos","Huntley, A.","A. Kapranos","A. Huntley","Kapranos, A.","A. Kapranas","Kapranos, Alexander"]},{"entity_type":"PER","group":"kba2012","topic_id":"http://en.wikipedia.org/wiki/Alexander_McCall_Smith","names":["Alexander McCall Smith","Alexander M. Smith","Alexander Smith","A. Smith","Smith, Alexander","Smith, A.","Alex Smith","Smith, Alex","Call_Smith, A.","A. Call_Smith","Alexander Mc Coll Smith","Alexander_Mc Call_Smith","Alexander McCall Smith","The 44 Scotland Street Series","Alexander McColl Smith","Alexander mccall smith","Call_Smith, Alexander_Mc","Alexander_McCall_Smith"]},{"entity_type":"PER","group":"kba2012","topic_id":"http://en.wikipedia.org/wiki/Annie_Laurie_Gaylor","names":["Annie Laurie Gaylor","Annie L. Gaylor","Annie Gaylor","A. Gaylor","Gaylor, Annie","Gaylor, A.","Annie Laurie Gaylor","Annie_Laurie_Gaylor"]},{"entity_type":"PER","group":"kba2012","topic_id":"http://en.wikipedia.org/wiki/Bill_Coen","names":["Bill Coen","B. Coen","Coen, Bill","Coen, B.","B. Coen","Bill_Coen","Coen, B.","Coen, Bill","Bill Coen"]},{"entity_type":"PER","group":"kba2012","topic_id":"http://en.wikipedia.org/wiki/Boris_Berezovsky_(businessman)","names":["Boris Berezovsky","B. Berezovsky","Berezovsky, Boris","Berezovsky, B.","P. Elenin","Boris Berezovsky (businessman)","B. Berezhovsky","Boris Berezhovsky","Death of Boris Berezovsky","Boris Abramovich Berezovsky","Boris_Berezovsky_(businessman)","Berezhovsky, Boris","Berezhovsky, B.","Platon Elenin","Elenin, P.","Boris A. Berezovsky","Elenin, Platon"]},{"entity_type":"PER","group":"kba2012","topic_id":"http://en.wikipedia.org/wiki/Boris_Berezovsky_(pianist)","names":["Boris Vadimovich Berezovsky","Boris V. Berezovsky","Boris Berezovsky","B. Berezovsky","Berezovsky, Boris","Berezovsky, B.","Boris Vadimovi
+[
+   {
+      "entity_type":"FAC",
+      "group":"danville",
+      "topic_id":"http://en.wikipedia.org/wiki/Stuart_Powell_Field",
+      "names":[
+         "Stuart Powell Field",
+         "KDVK",
+         "DVK",
+         "KDVK",
+         "Stuart Powell Field",
+         "Stuart_Powell_Field"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"danville",
+      "topic_id":"https://twitter.com/CorbinSpeedway",
+      "names":[
+         "CorbinSpeedway",
+         "Corbin Speedway",
+         "C. Speedway",
+         "Corbin Speedway",
+         "CorbinSpeedway",
+         "Speedway, C.",
+         "Speedway, Corbin"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"deeplearning",
+      "topic_id":"http://en.wikipedia.org/wiki/IDSIA",
+      "names":[
+         "IDSIA",
+         "Dalle Molle Institute for Artificial Intelligence Research",
+         "Istituto Dalle Molle di Studi sull'Intelligenza Artificiale",
+         "IDSIA"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Corn_Belt_Power_Cooperative",
+      "names":[
+         "Corn Belt Power Cooperative",
+         "Corn Belt Power",
+         "cbpower",
+         "Corn Belt Power Cooperative",
+         "The Corn Belt Power Cooperative",
+         "Corn_Belt_Power_Cooperative"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Fargo-Moorhead_Symphony_Orchestra",
+      "names":[
+         "Fargo-Moorhead Symphony Orchestra",
+         "FMSO",
+         "fmsymphony",
+         "Fargo-Moorhead Symphony",
+         "Fargo Moorhead",
+         "Fargo-Moorhead_Symphony_Orchestra",
+         "Fargo-Moorhead Symphony Orchestra"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Fargo_Air_Museum",
+      "names":[
+         "Fargo Air Museum",
+         "fargoairmuseum",
+         "Fargo_Air_Museum",
+         "Fargo Airplane Museum",
+         "Fargo Air Museum"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Hjemkomst_Center",
+      "names":[
+         "Hjemkomst Center",
+         "Heritage Hjemkomst Interpretive Center",
+         "Hjemkomst",
+         "Center, H.",
+         "Hjemkomst_Center",
+         "H. Center",
+         "Hjemkomst Center",
+         "Center, Hjemkomst"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/John_D._Odegard_School_of_Aerospace_Sciences",
+      "names":[
+         "John D. Odegard School of Aerospace Sciences",
+         "UND Aerospace",
+         "John D. Odegard",
+         "John D Odegard School of Aerospace Sciences",
+         "John D. Odegard School of Aerospace Sciences",
+         "Jdosas",
+         "John_D._Odegard_School_of_Aerospace_Sciences"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Red_River_Zoo",
+      "names":[
+         "Red River Zoo",
+         "red river zoological society",
+         "Red_River_Zoo",
+         "Red River Zoo"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Star_Lite_Motel",
+      "names":[
+         "Star Lite Motel",
+         "starlite-motel",
+         "starlite motel",
+         "Charley's Motel",
+         "Star Lite Motel",
+         "Motel, C.",
+         "C. Motel",
+         "Motel, Charley's",
+         "Star_Lite_Motel"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Elysian_Charter_School",
+      "names":[
+         "Elysian Charter School",
+         "ECS",
+         "ecsnj",
+         "Joanna Weintraub",
+         "J. Weintraub",
+         "Elysian_Charter_School",
+         "Elysian Charter School",
+         "Weintraub, Joanna",
+         "Elysian Charter School of Hoboken",
+         "Weintraub, J."
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Stevens_Cooperative_School",
+      "names":[
+         "Stevens Cooperative School",
+         "SCS",
+         "stevenscoop",
+         "Hauser, Z.",
+         "Zoe Hauser",
+         "Z. Hauser",
+         "Stevens_Cooperative_School",
+         "Hauser, Zoe",
+         "Stevens Cooperative School"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Weehawken_Cove",
+      "names":[
+         "Weehawken Cove",
+         "Weehawken_Cove",
+         "Weehawken Cove",
+         "Cove, Hoboken",
+         "Cove, H.",
+         "W. Cove",
+         "H. Cove",
+         "Cove, Weehawken",
+         "Hoboken Cove",
+         "North Hoboken Harbor",
+         "Hoboken's Inner Harbor",
+         "Weehawken Cove (North Hoboken Harbor)",
+         "Cove, W."
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Copper_Basin_Railway",
+      "names":[
+         "Cooper Basin Railway",
+         "CBRY",
+         "Copper Basin Railway",
+         "Copper_Basin_Railway"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Hayden_Smelter",
+      "names":[
+         "Hayden Smelter",
+         "Hayden Smelter",
+         "Smelter, Hayden",
+         "Hayden_Smelter",
+         "H. Smelter",
+         "Smelter, H."
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Lewis_and_Clark_Landing",
+      "names":[
+         "Lewis and Clark Landing",
+         "Lewis-Clark Landing",
+         "Lewis & Clark Landing",
+         "Lewis Clark Landing",
+         "Lewis and Clark Landing",
+         "Lewis & Clark Landing",
+         "Lewis_and_Clark_Landing"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Toquepala_mine",
+      "names":[
+         "Toquepala mine",
+         "Toquepala_mine",
+         "mine, T.",
+         "T. mine",
+         "Toquepala mine",
+         "mine, Toquepala"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Appleton_Museum_of_Art",
+      "names":[
+         "Appelton Museum of Art",
+         "Appelton Museum",
+         "appletonmuseum",
+         "Appleton_Museum_of_Art",
+         "Arthur I. Appleton",
+         "Museum, Appleton",
+         "Appleton Museum",
+         "Appleton museum of art",
+         "Appleton Museum of Art",
+         "Museum, A.",
+         "A. Museum"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Don_Garlits_Museum_of_Drag_Racing",
+      "names":[
+         "Don Garlits Museum of Drag Racing",
+         "Don Garlits Museum",
+         "garlits.com",
+         "Don Garlits Museum of Drag Racing",
+         "Don_Garlits_Museum_of_Drag_Racing"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Eighth_Street_Elementary_School",
+      "names":[
+         "Eighth Street Elementary School",
+         "Eighth_Street_Elementary_School",
+         "Eighth Street Elementary School"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Lake_Weir_High_School",
+      "names":[
+         "Lake Weir High School",
+         "Lake Weir High",
+         "LWHS",
+         "lakeweirhigh",
+         "Lake_Weir_High_School",
+         "Lake Weir High School"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Marion_Technical_Institute",
+      "names":[
+         "Marion Technical Institute",
+         "Marion Tech",
+         "Marion_Technical_Institute",
+         "Marion Technical Institute",
+         "Life at MTI"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Osceola_Middle_School",
+      "names":[
+         "Osceola Middle School",
+         "Osceola Middle",
+         "Osceola_Middle_School",
+         "Osceola Middle School"
+      ]
+   },
+   {
+      "entity_type":"FAC",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/The_Ritz_Apartment_(Ocala,_Florida)",
+      "names":[
+         "The Ritz Apartment Ocala, Florida",
+         "The Ritz Apartment",
+         "The_Ritz_Apartment_(Ocala,_Florida)",
+         "The Ritz Apartment (Ocala, Florida)"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"danville",
+      "topic_id":"http://en.wikipedia.org/wiki/Great_American_Brass_Band_Festival",
+      "names":[
+         "Great American Brass Band Festival",
+         "Great_American_Brass_Band_Festival",
+         "Great American Brass Band Festival"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Innovis_Health",
+      "names":[
+         "Innovis Health",
+         "Innovis",
+         "Innovis_Health",
+         "Health, I.",
+         "I. Health",
+         "Health, Innovis",
+         "Innovis Health"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Hoboken_Reporter",
+      "names":[
+         "Hoboken Reporter",
+         "Hoboken Newspaper",
+         "Hoboken paper",
+         "Hoboken_Reporter",
+         "Reporter, Hoboken",
+         "H. Reporter",
+         "The Hoboken Reporter",
+         "Reporter, H.",
+         "Hoboken Reporter"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Hoboken_Volunteer_Ambulance_Corps",
+      "names":[
+         "Hoboken Volunteer Ambulance Corps",
+         "Hoboken_Volunteer_Ambulance_Corps",
+         "Hoboken Volunteer Ambulance Corps"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Basic_Element_(company)",
+      "names":[
+         "Basic Element company",
+         "Basic Element co",
+         "Basic Element Companies",
+         "Basic Element (corp)",
+         "Basic_Element_(company)",
+         "Basic Element Group",
+         "Basic Element (company)"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Basic_Element_(music_group)",
+      "names":[
+         "Basic Element music groups",
+         "Basic Element music",
+         "Basic Element (music group)",
+         "Basic_Element_(music_group)"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Agroindustrial_Pomalca",
+      "names":[
+         "Agroindustrial Pomalca",
+         "Agroindustrial_Pomalca",
+         "Pomalca, A.",
+         "A. Pomalca",
+         "Pomalca, Agroindustrial",
+         "Agroindustrial Pomalca"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Atacocha",
+      "names":[
+         "Atacocha",
+         "Atacocha"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Austral_Group",
+      "names":[
+         "Austral Group",
+         "Austral Group",
+         "A. Group",
+         "Group, Austral",
+         "Group, A.",
+         "Austral_Group"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Cementos_Lima",
+      "names":[
+         "Cementos Lima",
+         "Lima, C.",
+         "Cementos Lima",
+         "C. Lima",
+         "Lima, Cementos",
+         "Cementos_Lima"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Dunkelvolk",
+      "names":[
+         "Dunkelvolk",
+         "Dunkelvolk"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Gran%C3%A3_y_Montero",
+      "names":[
+         "Granã y Montero",
+         "Grana y Montero",
+         "IGBVL",
+         "Gran%C3%A3 y Montero",
+         "Grana y Montero",
+         "Gran%C3%A3_y_Montero"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Intergroup_Financial_Services",
+      "names":[
+         "Intergroup Financial Services",
+         "Intergroup Financial Services",
+         "Intergroup_Financial_Services"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Luz_del_Sur",
+      "names":[
+         "Luz del Sur",
+         "Luz_del_Sur",
+         "Luz del Sur"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/SIMSA",
+      "names":[
+         "SIMSA",
+         "SIMSA"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"mining",
+      "topic_id":"http://en.wikipedia.org/wiki/Scotiabank_Per%C3%BA",
+      "names":[
+         "Scotiabank Perú",
+         "Scotiabank Peru",
+         "Per%C3%BA, Scotiabank",
+         "S. Per%C3%BA",
+         "Scotiabank Per%C3%BA",
+         "Scotiabank_Per%C3%BA",
+         "Per%C3%BA, S."
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"startups",
+      "topic_id":"https://twitter.com/BlossomCoffee",
+      "names":[
+         "BlossomCoffee",
+         "Blossom Coffee",
+         "B. Coffee",
+         "Blossom Coffee",
+         "Coffee, Blossom",
+         "Coffee, B.",
+         "BlossomCoffee"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"startups",
+      "topic_id":"https://twitter.com/FrankandOak",
+      "names":[
+         "FrankandOak",
+         "Frank and Oak",
+         "Frank & Oak",
+         "FrankHelps",
+         "F. Oak",
+         "Oak, Frankand",
+         "Frankand Oak",
+         "FrankandOak",
+         "Oak, F."
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"startups",
+      "topic_id":"https://twitter.com/GandBcoffee",
+      "names":[
+         "GandBcoffee",
+         "Glanville & Babinski",
+         "Glanville and Babinski",
+         "G & B",
+         "G&B",
+         "Bcoffee, Gand",
+         "G. Bcoffee",
+         "Bcoffee, G.",
+         "Gand Bcoffee",
+         "GandBcoffee"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"startups",
+      "topic_id":"https://twitter.com/WCoffeeResearch",
+      "names":[
+         "WCoffeeResearch",
+         "W Coffee Research",
+         "WorldCoffeeResearch",
+         "World Coffee Research",
+         "Research, W.",
+         "Research, WCoffee",
+         "WCoffeeResearch",
+         "WCoffee Research",
+         "W. Research"
+      ]
+   },
+   {
+      "entity_type":"ORG",
+      "group":"startups",
+      "topic_id":"https://twitter.com/evvnt",
+      "names":[
+         "evvnt",
+         "evvnt"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"bronfman",
+      "topic_id":"http://en.wikipedia.org/wiki/Benjamin_Bronfman",
+      "names":[
+         "Benjamin Bronfman",
+         "B. Bronfman",
+         "Bronfman, Benjamin",
+         "Bronfman, B.",
+         "Ben Brewer",
+         "Brewer, Ben",
+         "Bronfman, Benjamin",
+         "Bronfman, B.",
+         "Brewer, B.",
+         "B. Brewer",
+         "Benjamin Bronfman",
+         "B. Bronfman",
+         "Benjamin_Bronfman"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"bronfman",
+      "topic_id":"http://en.wikipedia.org/wiki/Charles_Bronfman",
+      "names":[
+         "Charles Bronfman",
+         "C. Bronfman",
+         "Bronfman, Charles",
+         "Bronfman, C.",
+         "Charles Bronfman",
+         "C. Bronfman",
+         "Charles_Bronfman",
+         "Charles Rosner Bronfman, PC, CC",
+         "Charles Rosner Bronfman",
+         "Bronfman, Charles",
+         "Bronfman, C."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"bronfman",
+      "topic_id":"http://en.wikipedia.org/wiki/Clare_Bronfman",
+      "names":[
+         "Clare Bronfman",
+         "C. Bronfman",
+         "Bronfman, Clare",
+         "Bronfman, C.",
+         "C. Bronfman",
+         "Bronfman, Clare",
+         "Bronfman, C.",
+         "Clare_Bronfman",
+         "Clare Bronfman"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"bronfman",
+      "topic_id":"http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.",
+      "names":[
+         "Edgar Bronfman, Jr.",
+         "Edgar Bronfman, Jr",
+         "Edgar Bronfman",
+         "E. Bronfman",
+         "Bronfman, Edgar",
+         "Bronfman, E.",
+         "Edgar Jr.",
+         "Efer",
+         "Edgar Bronfman Jr",
+         "Edgar Bronfman Jr.",
+         "Edgar Bronfman, Jr.",
+         "Edgar_Bronfman,_Jr."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"bronfman",
+      "topic_id":"http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.",
+      "names":[
+         "Edgar Bronfman, Sr.",
+         "Edgar Bronfman, Sr",
+         "Edgar Bronfman",
+         "E. Bronfman",
+         "Bronfman, Edgar",
+         "Bronfman, E.",
+         "Edgar Sr.",
+         "Edgar Bronfman, Sr.",
+         "Edgar Bronfman Sr.",
+         "Edgar Miles Bronfman",
+         "Edgar_Bronfman,_Sr.",
+         "Edgar Miles Bronfman Sr.",
+         "Edgar M. Bronfman",
+         "Edgar Miles Bronfman, Sr.",
+         "Edgar Bronfman Sr"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"bronfman",
+      "topic_id":"http://en.wikipedia.org/wiki/Phyllis_Lambert",
+      "names":[
+         "Phyllis Lambert",
+         "P. Lambert",
+         "Lambert, Phyllis",
+         "Lambert, P.",
+         "Lambert, P.",
+         "Lambert, Phyllis",
+         "Phyllis Barbara Lambert",
+         "Phyllis Lambert",
+         "Phyllis Barbara Lambert, CC, GOQ, OAL, FRAIC, FRSC, RCA",
+         "P. Lambert",
+         "Phyllis_Lambert"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"bronfman",
+      "topic_id":"http://en.wikipedia.org/wiki/Sara_Bronfman",
+      "names":[
+         "Sara Bronfman",
+         "S. Bronfman",
+         "Bronfman, Sara",
+         "Bronfman, S.",
+         "S. Bronfman",
+         "Bronfman, S.",
+         "Sara_Bronfman",
+         "Bronfman, Sara",
+         "Sara Bronfman"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"commedians",
+      "topic_id":"http://en.wikipedia.org/wiki/DeAnne_Smith",
+      "names":[
+         "DeAnne Smith",
+         "D. Smith",
+         "Smith, DeAnne",
+         "Smith, D.",
+         "Anne_Smith, De",
+         "De Anne_Smith",
+         "D. Anne_Smith",
+         "DeAnne Smith",
+         "Smith, D.",
+         "D. Smith",
+         "Smith, DeAnne",
+         "DeAnne_Smith",
+         "Anne_Smith, D."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"commedians",
+      "topic_id":"https://twitter.com/RonFunches",
+      "names":[
+         "RonFunches",
+         "Ron Funches",
+         "Ronald Funches",
+         "R. Funches",
+         "Funches, Ron",
+         "Funches, Ronald",
+         "Funches, R.",
+         "Funches, Ron",
+         "Funches, R.",
+         "R. Funches",
+         "RonFunches",
+         "Ron Funches"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"commedians",
+      "topic_id":"https://twitter.com/roryscovel",
+      "names":[
+         "roryscovel",
+         "Rory Scovel",
+         "R Scovel",
+         "Scovel, Rory",
+         "Scovel, R.",
+         "roryscovel"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"danville",
+      "topic_id":"https://twitter.com/AlexJoHamilton",
+      "names":[
+         "Alex Jo Hamilton",
+         "Alex J. Hamilton",
+         "Alexandra J Hamilton",
+         "Alexandra Hamilton",
+         "Hamilton, Alex",
+         "Hamilton, Alexandra",
+         "Hamilton, A.",
+         "Alex Jo Hamilton",
+         "AlexJoHamilton"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"danville",
+      "topic_id":"https://twitter.com/BobStovall",
+      "names":[
+         "Bob Stovall",
+         "B. Hamilton",
+         "Stovall, Bob",
+         "Stovall, B.",
+         "Stovall, Bob",
+         "BobStovall",
+         "B. Stovall",
+         "Bob Stovall",
+         "Stovall, B."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"danville",
+      "topic_id":"https://twitter.com/RobCaud",
+      "names":[
+         "RobCaud",
+         "Rob Caud",
+         "Rob Caudill",
+         "RobCaudill",
+         "R. Caud",
+         "R. Caudill",
+         "Caudill, Rob",
+         "Caudill, R.",
+         "Caud, Rob",
+         "Caud, R.",
+         "RobCaud",
+         "Rob Caud",
+         "R. Caud"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"danville",
+      "topic_id":"https://twitter.com/danvillekyengr",
+      "names":[
+         "danvillekyengr",
+         "danville engineering",
+         "danville ky engineering",
+         "danvillekyengr"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"danville",
+      "topic_id":"https://twitter.com/tonyg203",
+      "names":[
+         "tonyg203",
+         "Tony Gray",
+         "T. Gray",
+         "Gray, Tony",
+         "Gray, T.",
+         "tonyg203"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"danville",
+      "topic_id":"https://twitter.com/urbren00",
+      "names":[
+         "urbren00",
+         "Brent Faulkner",
+         "B. Faulkner",
+         "Faulkner, Brent",
+         "Faulkner, B.",
+         "brentmusicreviews",
+         "brent music reviews",
+         "urbren00"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"deeplearning",
+      "topic_id":"http://en.wikipedia.org/wiki/Geoffrey_E._Hinton",
+      "names":[
+         "Geoffrey E. Hinton",
+         "Geoffrey Hinton",
+         "G. Hinton",
+         "Hinton, Geoffrey",
+         "Hinton, G.",
+         "Geoffrey E. Hinton",
+         "Geoffrey_E._Hinton"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"deeplearning",
+      "topic_id":"http://en.wikipedia.org/wiki/L%C3%A9on_Bottou",
+      "names":[
+         "Léon Bottou",
+         "Leon Bottou",
+         "L. Bottou",
+         "Bottou, Léon",
+         "Bottou, Leon",
+         "Bottou, L.",
+         "Bottou, Leon",
+         "L%C3%A9on_Bottou",
+         "Bottou, L.",
+         "L. Bottou",
+         "Bottou, L%C3%A9on",
+         "L%C3%A9on Bottou",
+         "Leon Bottou"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"deeplearning",
+      "topic_id":"http://en.wikipedia.org/wiki/Yann_LeCun",
+      "names":[
+         "Yann LeCun",
+         "Y. LeCun",
+         "LeCun, Yann",
+         "LeCun, Y.",
+         "LeCun, Yann",
+         "Cun, Y.",
+         "Y. Cun",
+         "Yann_LeCun",
+         "Cun, Yann_Le",
+         "LeCun, Y.",
+         "Yann_Le Cun",
+         "Yann Le Cun",
+         "Yann LeCun",
+         "Y. LeCun"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"deeplearning",
+      "topic_id":"http://en.wikipedia.org/wiki/Zoubin_Ghahramani",
+      "names":[
+         "Zoubin Ghahramani",
+         "Z. Ghahramani",
+         "Ghahramani, Zoubin",
+         "Ghahramani, Z.",
+         "Zoubin Ghahramani",
+         "Ghahramani, Z.",
+         "Zoubin_Ghahramani",
+         "Z. Ghahramani",
+         "Ghahramani, Zoubin"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Blair_Thoreson",
+      "names":[
+         "Blair Thoer",
+         "B. Thoer",
+         "Thoer, Blair",
+         "Thoer, B.",
+         "B. Thoreson",
+         "Thoreson, Blair",
+         "Blair Thoreson",
+         "Blair B. Thoreson",
+         "Thoreson, B.",
+         "Blair_Thoreson"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Brenda_Weiler",
+      "names":[
+         "Brenda Weiler",
+         "B. Weiler",
+         "Weiler, Brenda",
+         "Weiler, B.",
+         "B. weiler",
+         "Weiler, B.",
+         "Brenda weiler",
+         "Brenda_Weiler",
+         "Brenda Weiler",
+         "weiler, Brenda",
+         "Weiler, Brenda",
+         "weiler, B.",
+         "B. Weiler"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Carey_McWilliams_(marksman)",
+      "names":[
+         "Carey McWilliams",
+         "C. McWilliams",
+         "McWilliams, Carey",
+         "McWilliams, C.",
+         "Williams_(marksman), C.",
+         "Carey_McWilliams_(marksman)",
+         "Williams_(marksman), Carey_Mc",
+         "C. Williams_(marksman)",
+         "Carey_Mc Williams_(marksman)",
+         "Carey McWilliams (marksman)"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Clark_Blaise",
+      "names":[
+         "Clark Blaise",
+         "C. Blaise",
+         "Blaise, Clark",
+         "Blaise, C.",
+         "Blaise, C.",
+         "Blaise, Clark",
+         "Clark_Blaise",
+         "C. Blaise",
+         "Clark Blaise"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Daniel_J._Crothers",
+      "names":[
+         "Daniel J. Crothers",
+         "Daniel Crothers",
+         "D. Crothers",
+         "Crothers, Daniel",
+         "Crothers, D.",
+         "Crothers, Daniel",
+         "D. Crothers",
+         "Crothers, D.",
+         "Daniel J. Crothers",
+         "Daniel_J._Crothers",
+         "Daniel John Crothers",
+         "Daniel Crothers"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Danny_Irmen",
+      "names":[
+         "Danny Irmen",
+         "D. Irmen",
+         "Irmen, Danny",
+         "Irmen, D.",
+         "Danny_Irmen",
+         "Irmen, Danny",
+         "Danny Irmen",
+         "Irmen, D.",
+         "D. Irmen"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/David_B._Danbom",
+      "names":[
+         "David B. Danbom",
+         "David Danbom",
+         "D. Danbom",
+         "Danbom, David",
+         "Danbom, D.",
+         "Danbom, David",
+         "David Danbom",
+         "Why Americans Value Rural Life",
+         "David B. Danbom",
+         "Danbom, D.",
+         "David_B._Danbom",
+         "D. Danbom"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Drew_Wrigley",
+      "names":[
+         "Drew Wrigley",
+         "D. Wrigley",
+         "Wrigley, Drew",
+         "Wrigley, D.",
+         "Drew Wrigley",
+         "Drew_Wrigley",
+         "Wrigley, Drew",
+         "D. Wrigley",
+         "Wrigley, D."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Ed_Bok_Lee",
+      "names":[
+         "Ed Bok Lee",
+         "Ed Bok Lee",
+         "Ed_Bok_Lee"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Fargo_Moorhead_Derby_Girls",
+      "names":[
+         "Fargo Moorhead Derby Girls",
+         "Fargo Moorhead Derby Girls",
+         "Fargo-Moorhead Derby Girls",
+         "Fargo Moorehead Derby Girls",
+         "Fargo_Moorhead_Derby_Girls"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/George_Sinner",
+      "names":[
+         "George Sinner",
+         "G. Sinner",
+         "Sinner, George",
+         "Sinner, G.",
+         "Sinner, George",
+         "George Sinner",
+         "George A. Sinner",
+         "George_Sinner",
+         "G. Sinner",
+         "Sinner, G."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Gretchen_Hoffman",
+      "names":[
+         "Gretchen Hoffman",
+         "G. Hoffman",
+         "Hoffman, Gretchen",
+         "Hoffman, G.",
+         "Hoffman, G.",
+         "Gretchen Hoffman",
+         "Gretchen_Hoffman",
+         "G. Hoffman",
+         "Hoffman, Gretchen"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Jamie_Parsley",
+      "names":[
+         "Jamie Parsley",
+         "J. Parsley",
+         "Parsley, Jamie",
+         "Parsley, J.",
+         "Jamie Parsley",
+         "Parsley, J.",
+         "Jamie_Parsley",
+         "Parsley, Jamie",
+         "J. Parsley"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Jasper_Schneider",
+      "names":[
+         "Jasper Schneider",
+         "J. Schneider",
+         "Schneider, Jasper",
+         "Schneider, J.",
+         "Jasper Schneider",
+         "Jasper_Schneider",
+         "Schneider, J.",
+         "Schneider, Jasper",
+         "J. Schneider"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Jeff_Severson",
+      "names":[
+         "Jeff Severson",
+         "J. Severson",
+         "Severson, Jeff",
+         "Severson, J.",
+         "Severson, Jeff",
+         "Severson, J.",
+         "J. Severson",
+         "Jeff Severson",
+         "Jeff_Severson"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Jennifer_Baumgardner",
+      "names":[
+         "Jennifer Baumgardner",
+         "J. Baumgardner",
+         "Baumgardner, Jennifer",
+         "Baumgardner, J.",
+         "Jennifer_Baumgardner",
+         "Jennifer Baumgardner",
+         "Baumgardner, Jennifer",
+         "Baumgardner, J.",
+         "J. Baumgardner"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Jim_Poolman",
+      "names":[
+         "Jim Poolman",
+         "J. Poolman",
+         "Poolman, Jim",
+         "Poolman, J.",
+         "Poolman, Jim",
+         "Poolman, J.",
+         "J. Poolman",
+         "Jim Poolman",
+         "Jim_Poolman"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/John_H._Lang",
+      "names":[
+         "John H. Lang",
+         "John H Lang",
+         "John Lang",
+         "J. Lang",
+         "Lang, John",
+         "Lang, J.",
+         "John H. Lang",
+         "John_H._Lang"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Joshua_Boschee",
+      "names":[
+         "Joshua Boschee",
+         "J. Boschee",
+         "Boschee, Joshua",
+         "Boschee, J.",
+         "Boschee, Josh",
+         "J. Boschee",
+         "Boschee, J.",
+         "Joshua Boschee",
+         "Boschee, Joshua",
+         "Josh Boschee",
+         "Joshua_Boschee"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Ken_Fowler",
+      "names":[
+         "Ken Fowler",
+         "K. Fowler",
+         "Fowler, Ken",
+         "Fowler, K.",
+         "K. Fowler",
+         "Ken Fowler",
+         "Ken_Fowler",
+         "Fowler, K.",
+         "Fowler, Ken"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Keri_Hehn",
+      "names":[
+         "Keri Hehn",
+         "K. Hehn",
+         "Hehn, Keri",
+         "Hehn, K.",
+         "Hehn, K.",
+         "Keri_Hehn",
+         "Keri Hehn",
+         "Hehn, Keri",
+         "K. Hehn"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Olaus_Murie",
+      "names":[
+         "Olaus Murie",
+         "O. Murie",
+         "Murie, Olaus",
+         "Murie, O.",
+         "Murie, O.",
+         "Olaus Johan Murie",
+         "O. Murie",
+         "Murie, Olaus",
+         "Olaus Murie",
+         "Olaus_Murie"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Paul_Johnsgard",
+      "names":[
+         "Paul Johnsgard",
+         "P. Johnsgard",
+         "Johnsgard, Paul",
+         "Johnsgard, P.",
+         "P. Johnsgard",
+         "Johnsgard, P.",
+         "Paul_Johnsgard",
+         "Johnsgard, Paul",
+         "Paul Johnsgard"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Paul_Marquart",
+      "names":[
+         "Paul Marquart",
+         "P. Marquart",
+         "Marquart, Paul",
+         "Marquart, P.",
+         "P. Marquart",
+         "Marquart, P.",
+         "Paul_Marquart",
+         "Marquart, Paul",
+         "Paul Marquart"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Richard_Edlund",
+      "names":[
+         "Richard Edlund",
+         "R. Edlund",
+         "Edlund, Richard",
+         "Edlund, R.",
+         "Richard Edlund",
+         "Richard_Edlund",
+         "Edlund, R.",
+         "R. Edlund",
+         "Edlund, Richard"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Richard_W._Goldberg",
+      "names":[
+         "Richard W. Goldberg",
+         "Richard W Goldberg",
+         "Richard Goldberg",
+         "Richard W. Goldberg",
+         "Richard_W._Goldberg"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/Susan_Krieg",
+      "names":[
+         "Richard Edlund",
+         "R. Edlund",
+         "Edlund, Richard",
+         "Edlund, R.",
+         "Krieg, Susan",
+         "S. Krieg",
+         "Krieg, S.",
+         "Susan_Krieg",
+         "Susan Krieg"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"fargo",
+      "topic_id":"http://en.wikipedia.org/wiki/William_P._Gerberding",
+      "names":[
+         "William P. Gerberding",
+         "William P Gerberding",
+         "William Gerberding",
+         "William_P._Gerberding",
+         "William P. Gerberding"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"french",
+      "topic_id":"http://en.wikipedia.org/wiki/Ana%C3%AFs_Croze",
+      "names":[
+         "Anaïs Croze",
+         "Croze, Anaïs",
+         "Anais Croze",
+         "A. Croze",
+         "Croze, Anais",
+         "Croze, A.",
+         "Croze, A.",
+         "Ana%C3%AFs_Croze",
+         "A. Croze",
+         "A. Croz",
+         "Croze, Anais",
+         "Anaïs Croz",
+         "croze, Anaïs",
+         "Croze, Ana%C3%AFs",
+         "croze, A.",
+         "croze, Anais",
+         "Croz, Anaïs",
+         "Anais croze",
+         "Ana%C3%AFs Croze",
+         "Croz, A.",
+         "Anaïs croze",
+         "Anais Croze",
+         "A. croze"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"french",
+      "topic_id":"http://en.wikipedia.org/wiki/Gwena%C3%ABlle_Aubry",
+      "names":[
+         "Gwenaëlle Aubry",
+         "Aubry, Gwenaëlle",
+         "Gwenaelle Aubry",
+         "G. Aubry",
+         "Aubry, Gwenaelle",
+         "Aubry, G.",
+         "Aubry, Gwenaelle",
+         "Gwena%C3%ABlle Aubry",
+         "G. Aubry",
+         "Gwenaelle Aubry",
+         "Gwena%C3%ABlle_Aubry",
+         "Aubry, Gwena%C3%ABlle",
+         "Aubry, G."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"french",
+      "topic_id":"http://en.wikipedia.org/wiki/Nicolas_Sch%C3%B6ffer",
+      "names":[
+         "Nicolas Schöffer",
+         "N. Schöffer",
+         "Schöffer, Nicolas",
+         "Schöffer, N.",
+         "Nicolas Schoffer",
+         "N. Schoffer",
+         "Schoffer, Nicolas",
+         "Schoffer, N.",
+         "Sch%C3%B6ffer, Nicolas",
+         "Sch%C3%B6ffer, N.",
+         "Schoeffer, Nicolas",
+         "N. Schoeffer",
+         "N. Schoffer",
+         "Nicolas Schoffer",
+         "Schoeffer, N.",
+         "Nicolas Sch%C3%B6ffer",
+         "Nicolas_Sch%C3%B6ffer",
+         "Nicolas Schoeffer",
+         "Schoffer, N.",
+         "N. Sch%C3%B6ffer",
+         "Schoffer, Nicolas"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"french",
+      "topic_id":"http://en.wikipedia.org/wiki/Th%C3%A9o_Mercier",
+      "names":[
+         "Théo Mercier",
+         "Mercier, Théo",
+         "Theo Mercier",
+         "T. Mercier",
+         "Mercier, Theo",
+         "Mercier, T.",
+         "Th%C3%A9o_Mercier",
+         "Mercier, T.",
+         "Th%C3%A9o Mercier",
+         "Mercier, Th%C3%A9o",
+         "Mercier, Theo",
+         "Theo Mercier",
+         "T. Mercier"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hep",
+      "topic_id":"http://en.wikipedia.org/wiki/Chiara_Nappi",
+      "names":[
+         "Chiara Nappi",
+         "C. Nappi",
+         "Nappi, Chiara",
+         "Nappi, C.",
+         "C. Nappi",
+         "Chiara nappi",
+         "nappi, C.",
+         "Chiara_Nappi",
+         "Nappi, Chiara",
+         "Chiara Nappi",
+         "Nappi, C.",
+         "nappi, Chiara",
+         "C. nappi"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hep",
+      "topic_id":"http://en.wikipedia.org/wiki/Eva_Silverstein",
+      "names":[
+         "Eva Silverstein",
+         "E. Silverstein",
+         "Silverstein, Eva",
+         "Silverstein, E.",
+         "Eva_Silverstein",
+         "Eva Silverstein",
+         "Silverstein, E.",
+         "E. Silverstein",
+         "Silverstein, Eva"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hep",
+      "topic_id":"http://en.wikipedia.org/wiki/Matt_Witten",
+      "names":[
+         "Matt Witten",
+         "M. Witten",
+         "Witten, Matt",
+         "Witten, M.",
+         "Witten, Matt",
+         "Witten, M.",
+         "M. Witten",
+         "Matt_Witten",
+         "Matt Witten"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hep",
+      "topic_id":"http://en.wikipedia.org/wiki/Shamit_Kachru",
+      "names":[
+         "Shamit Kachru",
+         "S. Kachru",
+         "Kachru, Shamit",
+         "Kachru, S.",
+         "Kachru, S.",
+         "Shamit_Kachru",
+         "S. Kachru",
+         "Shamit Kachru",
+         "Kachru, Shamit"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Angelo_Savoldi",
+      "names":[
+         "Angelo Savoldi",
+         "A. Savoldi",
+         "Savoldi, Angelo",
+         "Savoldi, A.",
+         "Savoldi, Angelo",
+         "Angelo Savoldi",
+         "A. Savoldi",
+         "Savoldi, A.",
+         "Angelo_Savoldi"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Bernard_Kenny",
+      "names":[
+         "Bernard Kenny",
+         "B. Kenny",
+         "Kenny, Bernard",
+         "Kenny, B.",
+         "Kenny, B.",
+         "Bernard F. Kenny",
+         "Kenny, Bernard",
+         "Bernard_Kenny",
+         "Bernard Kenny, Jr.",
+         "Bernard Kenny",
+         "B. Kenny",
+         "Bernard F. Kenny, Jr."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Bob_Bert",
+      "names":[
+         "Bob Bert",
+         "B. Bert",
+         "Bert, Bob",
+         "Bert, B.",
+         "B. Bert",
+         "Bert, B.",
+         "Robert Bertelli",
+         "Bertelli, R.",
+         "Bewitched (American band)",
+         "R. Bertelli",
+         "Bertelli, Robert",
+         "Harshing My Mellow (album)",
+         "Bert, Bob",
+         "Bob Bert",
+         "Bob_Bert"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Carl_Chang_(tennis)",
+      "names":[
+         "Carl Chang",
+         "C. Chang",
+         "Chang, Carl",
+         "Chang, C.",
+         "Carl_Chang_(tennis)",
+         "Carl Chang (tennis)",
+         "Carl Chang (tennis player)"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Carla_Katz",
+      "names":[
+         "Carla Katz",
+         "C. Katz",
+         "Katz, Carla",
+         "Katz, C.",
+         "Katz, Carla",
+         "Katz, C.",
+         "Carla_Katz",
+         "Carla Katz",
+         "Carla A. Katz",
+         "C. Katz"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Derrick_Alston",
+      "names":[
+         "Derrick Alston",
+         "D. Alston",
+         "Alston, Derrick",
+         "Alston, D.",
+         "Derrick_Alston",
+         "Alston, D.",
+         "Alston, Derrick",
+         "Derrick Alston",
+         "D. Alston"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Frank_Winters",
+      "names":[
+         "Frank Winters",
+         "F. Winters",
+         "Winters, Frank",
+         "Winters, F.",
+         "Frank_Winters",
+         "Winters, F.",
+         "Frank Winters",
+         "F. Winters",
+         "Winters, Frank"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Henry_Gutierrez",
+      "names":[
+         "Henry Gutierrez",
+         "H. Gutierrez",
+         "Gutierrez, Henry",
+         "Gutierrez, H.",
+         "Gutierrez, H.",
+         "Hendrig Gutierrez",
+         "Gutierrez, Henry",
+         "Henry Gutierrez",
+         "Henry_Gutierrez",
+         "Gutierrez, Hendrig",
+         "H. Gutierrez"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Jack_Lazorko",
+      "names":[
+         "Jack Lazorko",
+         "J. Lazorko",
+         "Lazorko, Jack",
+         "Lazorko, J.",
+         "Lazorko, Jack",
+         "J. Lazorko",
+         "Lazorko, J.",
+         "Jack Lazorko",
+         "Jack_Lazorko"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Jeff_Tamarkin",
+      "names":[
+         "Jeff Tamarkin",
+         "J. Tamarkin",
+         "Tamarkin, Jeff",
+         "Tamarkin, J.",
+         "J. Tamarkin",
+         "Jeff Tamarkin",
+         "Tamarkin, J.",
+         "Jeff_Tamarkin",
+         "Tamarkin, Jeff"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Joanne_Borgella",
+      "names":[
+         "Joanne Borgella",
+         "J. Borgella",
+         "Borgella, Joanne",
+         "Borgella, J.",
+         "Borgella, J.",
+         "J. Borgella",
+         "Joanne Borgella",
+         "Borgella, Joanne",
+         "Joanne_Borgella"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Ken_Freedman",
+      "names":[
+         "Ken Freedman",
+         "K. Freedman",
+         "Freedman, Ken",
+         "Freedman, K.",
+         "Freedman, K.",
+         "Ken Freedman",
+         "freedman, K.",
+         "freedman, Ken",
+         "Ken_Freedman",
+         "K. freedman",
+         "K. Freedman",
+         "Freedman, Ken",
+         "Ken freedman"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Klaus_Grutzka",
+      "names":[
+         "Klaus Grutzka",
+         "K. Grutzka",
+         "Grutzka, Klaus",
+         "Grutzka, K.",
+         "Grutzka, Klaus",
+         "Grutzka, K.",
+         "Klaus_Grutzka",
+         "K. Grutzka",
+         "Klaus Grutzka"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Mark_SaFranko",
+      "names":[
+         "Mark SaFranko",
+         "M. SaFranko",
+         "SaFranko, Mark",
+         "SaFranko, M.",
+         "Mark SaFranko",
+         "SaFranko, Mark",
+         "M. SaFranko",
+         "Mark_Sa Franko",
+         "M. Franko",
+         "SaFranko, M.",
+         "Franko, M.",
+         "Franko, Mark_Sa",
+         "Mark_SaFranko"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Maurice_Fitzgibbons",
+      "names":[
+         "Maurice Fitzgibbons",
+         "M. Fitzgibbons",
+         "Fitzgibbons, Maurice",
+         "Fitzgibbons, M.",
+         "Maurice Fitzgibbons",
+         "M. Fitzgibbons",
+         "Fitzgibbons, Maurice",
+         "Maurice_Fitzgibbons",
+         "Fitzgibbons, M."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Pat_Dapuzzo",
+      "names":[
+         "Pat Dapuzzo",
+         "P. Dapuzzo",
+         "Dapuzzo, Pat",
+         "Dapuzzo, P.",
+         "P. Dapuzzo",
+         "Dapuzzo, P.",
+         "Dapuzzo, Pat",
+         "Pat_Dapuzzo",
+         "Pat Dapuzzo"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Ruben_J._Ramos",
+      "names":[
+         "Ruben J. Ramos",
+         "Ruben J Ramos",
+         "Ruben Ramos",
+         "Ruben J. Ramos",
+         "Ruben_J._Ramos"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/Tilo_Rivas",
+      "names":[
+         "Tilo Rivas",
+         "T. Rivas",
+         "Rivas, Tilo",
+         "Rivas, T.",
+         "T. Rivas",
+         "Rivas, Tilo",
+         "Tilo E. Rivas",
+         "Rivas, T.",
+         "Tilo Rivas",
+         "Tilo_Rivas"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"hoboken",
+      "topic_id":"http://en.wikipedia.org/wiki/William_H._Miller_(writer)",
+      "names":[
+         "William H. Miller writer",
+         "William H. Miller",
+         "William H Miller",
+         "William Miller",
+         "William_H._Miller_(writer)",
+         "William H. Miller (writer)",
+         "Mr. Ocean Liner"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Aharon_Barak",
+      "names":[
+         "Aharon Barak",
+         "A. Barak",
+         "Barak, Aharon",
+         "Barak, A.",
+         "Barak, A.",
+         "ברק, א.",
+         "Aharon Brick",
+         "Brick, A.",
+         "Barak, Aharon",
+         "ברק, אהרן",
+         "Barak, Aaron",
+         "A. Barak",
+         "א. ברק",
+         "Brick, Aharon",
+         "אהרן ברק",
+         "Aaron Barak",
+         "Aharon Barak",
+         "A. Brick",
+         "Aharon_Barak"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Alex_Kapranos",
+      "names":[
+         "Alex Kapranos",
+         "A. Kapranos",
+         "Kapranos, Alex",
+         "Kapranos, A.",
+         "Alex_Kapranos",
+         "Alex Huntley",
+         "Huntley, Alex",
+         "Krapranos, A.",
+         "Alexander Kapranos",
+         "Kapranas, A.",
+         "A. Krapranos",
+         "Krapranos, Alex",
+         "Kapranas, Alex",
+         "Alex Kapranos",
+         "Alex Kapranas",
+         "Kapranos, Alex",
+         "Alex Krapranos",
+         "Huntley, A.",
+         "A. Kapranos",
+         "A. Huntley",
+         "Kapranos, A.",
+         "A. Kapranas",
+         "Kapranos, Alexander"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Alexander_McCall_Smith",
+      "names":[
+         "Alexander McCall Smith",
+         "Alexander M. Smith",
+         "Alexander Smith",
+         "A. Smith",
+         "Smith, Alexander",
+         "Smith, A.",
+         "Alex Smith",
+         "Smith, Alex",
+         "Call_Smith, A.",
+         "A. Call_Smith",
+         "Alexander Mc Coll Smith",
+         "Alexander_Mc Call_Smith",
+         "Alexander McCall Smith",
+         "The 44 Scotland Street Series",
+         "Alexander McColl Smith",
+         "Alexander mccall smith",
+         "Call_Smith, Alexander_Mc",
+         "Alexander_McCall_Smith"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Annie_Laurie_Gaylor",
+      "names":[
+         "Annie Laurie Gaylor",
+         "Annie L. Gaylor",
+         "Annie Gaylor",
+         "A. Gaylor",
+         "Gaylor, Annie",
+         "Gaylor, A.",
+         "Annie Laurie Gaylor",
+         "Annie_Laurie_Gaylor"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Bill_Coen",
+      "names":[
+         "Bill Coen",
+         "B. Coen",
+         "Coen, Bill",
+         "Coen, B.",
+         "B. Coen",
+         "Bill_Coen",
+         "Coen, B.",
+         "Coen, Bill",
+         "Bill Coen"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Boris_Berezovsky_(businessman)",
+      "names":[
+         "Boris Berezovsky",
+         "B. Berezovsky",
+         "Berezovsky, Boris",
+         "Berezovsky, B.",
+         "P. Elenin",
+         "Boris Berezovsky (businessman)",
+         "B. Berezhovsky",
+         "Boris Berezhovsky",
+         "Death of Boris Berezovsky",
+         "Boris Abramovich Berezovsky",
+         "Boris_Berezovsky_(businessman)",
+         "Berezhovsky, Boris",
+         "Berezhovsky, B.",
+         "Platon Elenin",
+         "Elenin, P.",
+         "Boris A. Berezovsky",
+         "Elenin, Platon"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Boris_Berezovsky_(pianist)",
+      "names":[
+         "Boris Vadimovich Berezovsky",
+         "Boris V. Berezovsky",
+         "Boris Berezovsky",
+         "B. Berezovsky",
+         "Berezovsky, Boris",
+         "Berezovsky, B.",
+         "Boris Vadimovich Berezovsky",
+         "Boris Berezovsky (violinist)",
+         "Boris Berezovsky (pianist)",
+         "Boris_Berezovsky_(pianist)"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Charlie_Savage",
+      "names":[
+         "Charlie Savage",
+         "C. Savage",
+         "Savage, Charlie",
+         "Savage, C.",
+         "Charlie savage",
+         "savage, C.",
+         "Savage, Charlie",
+         "savage, Charlie",
+         "Charlie_Savage",
+         "Savage, C.",
+         "C. Savage",
+         "Charlie Savage",
+         "C. savage"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Darren_Rowse",
+      "names":[
+         "Darren Rowse",
+         "D. Rowse",
+         "Rowse, Darren",
+         "Rowse, D.",
+         "Pro Blogger",
+         "Blogger, P.",
+         "ProBlogger",
+         "Darren_Rowse",
+         "Rowse, D.",
+         "Blogger.com, Pro",
+         "Pro Blogger.com",
+         "P. Blogger.com",
+         "Blogger.com, P.",
+         "ProBlogger.com",
+         "Darren Rowse",
+         "P. Blogger",
+         "Rowse, Darren",
+         "Blogger, Pro",
+         "D. Rowse"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Douglas_Carswell",
+      "names":[
+         "Douglas Carswell",
+         "D. Carswell",
+         "Carswell, Douglas",
+         "Carswell, D.",
+         "Carswell, D.",
+         "D. Carswell",
+         "Douglas_Carswell",
+         "Carswell, Douglas",
+         "Douglas Carswell",
+         "John Douglas Wilson Carswell"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Frederick_M._Lawrence",
+      "names":[
+         "Frederick M. Lawrence",
+         "Fredrick M Lawrence",
+         "Fredrick Lawrence",
+         "Frederick_M._Lawrence",
+         "Frederick M. Lawrence"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Ikuhisa_Minowa",
+      "names":[
+         "Ikuhisa Minowa",
+         "I. Minowa",
+         "Minowa, Ikuhisa",
+         "Minowa, I.",
+         "I. Minowa",
+         "Minowa, I.",
+         "Ikuhisa Minowa",
+         "Ikuhisa",
+         "Minowaman",
+         "Ikuhisa_Minowa",
+         "Minowa, Ikuhisa"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/James_McCartney",
+      "names":[
+         "James McCartney",
+         "J. McCartney",
+         "McCartney, James",
+         "McCartney, J.",
+         "James Louis McCartney",
+         "James Louis Mc Cartney",
+         "James_Mc Cartney",
+         "James mccartney",
+         "J. McCartney",
+         "James McCartney",
+         "Cartney, James_Mc",
+         "Cartney, J.",
+         "James_McCartney",
+         "mccartney, J.",
+         "McCartney, James",
+         "McCartney, J.",
+         "J. Cartney",
+         "mccartney, James",
+         "J. mccartney"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Jim_Steyer",
+      "names":[
+         "Jim Steyer",
+         "J. Steyer",
+         "Steyer, Jim",
+         "Steyer, J.",
+         "Steyer, J.",
+         "Jim_Steyer",
+         "Jim Steyer",
+         "J. Steyer",
+         "Steyer, Jim",
+         "James P. Steyer"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Lisa_Bloom",
+      "names":[
+         "Lisa Bloom",
+         "L. Bloom",
+         "Bloom, Lisa",
+         "Bloom, L.",
+         "Bloom, L.",
+         "Lisa Bloom",
+         "Lisa_Bloom",
+         "Bloom, Lisa",
+         "L. Bloom"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Lovebug_Starski",
+      "names":[
+         "Lovebug Starski",
+         "L. Starski",
+         "Starski, Lovebug",
+         "Starski, L.",
+         "Starsky, Lovebug",
+         "L. Starski",
+         "Starsky, L.",
+         "Starski, Lovebug",
+         "L. Starsky",
+         "Lovebug_Starski",
+         "Lovebug Starski",
+         "Starski, L.",
+         "Love Bug Starsky",
+         "Lovebug Starsky",
+         "Love Bug Starski"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Mario_Garnero",
+      "names":[
+         "Mario Garnero",
+         "M. Garnero",
+         "Garnero, Mario",
+         "Garnero, M.",
+         "Garnero, Mario",
+         "Mario Garnero",
+         "Garnero, M.",
+         "Mario_Garnero",
+         "M. Garnero"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Masaru_Emoto",
+      "names":[
+         "Masaru Emoto",
+         "M. Emoto",
+         "Emoto, Masaru",
+         "Emoto, M.",
+         "Emoto, Masoru",
+         "W. experiment",
+         "Emoto, M.",
+         "D. emoto",
+         "Dr. Masaru Emoto",
+         "M. Emoto",
+         "Masaru_Emoto",
+         "Water experiment",
+         "江本勝",
+         "emoto, D.",
+         "Emoto, D.",
+         "Masaru Emoto",
+         "experiment, Water",
+         "Masoru Emoto",
+         "Emoto, Doctor",
+         "Emoto, Masaru",
+         "Emoto, Dr.",
+         "D. Emoto",
+         "Dr. Emoto",
+         "Doctor masaru emoto",
+         "emoto, Dr",
+         "Dr Masaru Emoto",
+         "Dr emoto",
+         "experiment, W.",
+         "Doctor Emoto"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Nassim_Nicholas_Taleb",
+      "names":[
+         "Nassim Nicholas Taleb",
+         "Taleb, N.",
+         "Nasim Taleb",
+         "Nassim Nicholas Taleb",
+         "Tulip, Nero",
+         "taleb, N.",
+         "N. Tulip",
+         "taleb, Nassim",
+         "Anti-fragility",
+         "Taleb, Nicholas",
+         "Tulip, N.",
+         "N. taleb",
+         "N. Taleb",
+         "Nassim taleb",
+         "Nero Tulip",
+         "Nassim Taleb",
+         "Nassim_Nicholas_Taleb",
+         "Taleb, Nassim",
+         "Taleb, Nasim",
+         "Nicholas Nassim Taleb",
+         "Nassim nicholas taleb",
+         "Antifragility",
+         "Nicholas Taleb"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Rodrigo_Pimentel",
+      "names":[
+         "Rodrigo Pimentel",
+         "R. Pimentel",
+         "Pimentel, Rodrigo",
+         "Pimentel, R.",
+         "Pimentel, Rodrigo",
+         "Rodrigo Pimentel",
+         "Rodrigo_Pimentel",
+         "Pimentel, R.",
+         "R. Pimentel"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Roustam_Tariko",
+      "names":[
+         "Roustam Tariko",
+         "R. Tariko",
+         "Tariko, Roustam",
+         "Tariko, R.",
+         "Rustam Tariko",
+         "R. Tariko",
+         "Roustam_Tariko",
+         "Tariko, Roustam",
+         "Tariko, R.",
+         "Tariko, Rustam",
+         "Roustam Tariko"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Ruth_Rendell",
+      "names":[
+         "Ruth Rendell",
+         "R. Rendell",
+         "Rendell, Ruth",
+         "Rendell, R.",
+         "Rendell, Ruth",
+         "Baroness Rendell",
+         "B. Vine",
+         "Vine, Barbara",
+         "rendall, R.",
+         "B. Rendell",
+         "Baroness Rendell of Babergh",
+         "Ruth Barbara Rendell, Baroness Rendell of Babergh",
+         "Rendell, R.",
+         "Rendell, Lady",
+         "Lady Rendell",
+         "Ruth_Rendell",
+         "Ruth rendall",
+         "Rendell, Baroness",
+         "Ruth Rendell",
+         "Rendell, B.",
+         "Barbara Vine",
+         "L. Rendell",
+         "The Reason Why: An Anthology of the Murderous Mind",
+         "rendall, Ruth",
+         "Vine, B.",
+         "Rendell, L.",
+         "R. rendall",
+         "R. Rendell",
+         "Ruth Barbara Rendell",
+         "Ruth Rendell, Baroness Rendell of Babergh"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Satoshi_Ishii",
+      "names":[
+         "Satoshi Ishii",
+         "S. Ishii",
+         "Ishii, Satoshi",
+         "Ishii, S.",
+         "Satoshi Ishii",
+         "Ishii, S.",
+         "S. Ishii",
+         "Satoshi_Ishii",
+         "Ishii, Satoshi"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/Vladimir_Potanin",
+      "names":[
+         "Vladimir Potanin",
+         "V. Potanin",
+         "Potanin, Vladimir",
+         "Potanin, V.",
+         "V. Potanin",
+         "Potanin, V.",
+         "Potanin, Vladimir",
+         "Vladimir_Potanin",
+         "Vladimir Potanin"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/William_Cohen",
+      "names":[
+         "William Cohen",
+         "W. Cohen",
+         "Cohen, William",
+         "Cohen, W.",
+         "William_Cohen",
+         "B. Cohen",
+         "Cohen, William Sebastian",
+         "Cohen, William",
+         "Cohen, Bill",
+         "William s cohen",
+         "William Cohen",
+         "Cohen, B.",
+         "Cohen, Sebastian",
+         "W. Cohen",
+         "Sebastian Cohen",
+         "Cohen, W.",
+         "William Sebastian Cohen",
+         "Cohen, S.",
+         "S. Cohen",
+         "William S. Cohen",
+         "Bill Cohen"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/William_D._Cohan",
+      "names":[
+         "William D. Cohan",
+         "William D Cohan",
+         "William Cohan",
+         "W. Cohan",
+         "Cohan, William",
+         "Cohan, W.",
+         "W. Cohan",
+         "William, C.",
+         "William Cohan",
+         "William_D._Cohan",
+         "William D. Cohan",
+         "C. William",
+         "William, Cohan,",
+         "Cohan, William",
+         "Cohan, W."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"kba2012",
+      "topic_id":"http://en.wikipedia.org/wiki/William_H._Gates,_Sr",
+      "names":[
+         "William H. Gates, Sr",
+         "William H. Gates",
+         "William H Gates",
+         "William_H._Gates,_Sr",
+         "William H. Gates, Sr"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Buddy_MacKay",
+      "names":[
+         "Buddy MacKay",
+         "B. MacKay",
+         "MacKay, Buddy",
+         "MacKay, B.",
+         "Kenneth Hood \"Buddy\" MacKay, Jr.",
+         "MacKay, Buddy",
+         "Buddy Mackay",
+         "Buddy MacKay, Jr.",
+         "Buddy Mac Kay, Jr.",
+         "Kay, B.",
+         "MacKay, Kenneth",
+         "B. Kay",
+         "Kenneth Mac Kay",
+         "B. Mackay",
+         "Buddy Mackay, Jr.",
+         "McKay, Buddy",
+         "Kenneth Hood Mac Kay, Jr.",
+         "Kenneth Hood Mac Kay",
+         "Mackay, Buddy",
+         "Kenneth H. Mac Kay, Jr.",
+         "Buddy_Mac Kay",
+         "Kay, Buddy_Mac",
+         "Mackay, B.",
+         "MacKay, B.",
+         "McKay, B.",
+         "K. MacKay",
+         "Kenneth Hood \"Buddy\" Mac Kay, Jr.",
+         "B. MacKay",
+         "Kenneth MacKay, Jr.",
+         "Kenneth Mac Kay, Jr.",
+         "Kenneth Hood MacKay, Jr.",
+         "Buddy Mc Kay",
+         "Kenneth H. MacKay",
+         "B. McKay",
+         "Kenneth MacKay",
+         "Kenneth H. MacKay, Jr.",
+         "Buddy MacKay",
+         "Buddy McKay",
+         "Kenneth H. Mac Kay",
+         "Buddy_MacKay",
+         "MacKay, K.",
+         "Kenneth Hood MacKay"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Chuck_Pankow",
+      "names":[
+         "Chuck Pankow",
+         "C. Pankow",
+         "Pankow, Chuck",
+         "Pankow, C.",
+         "Pankow, C.",
+         "Chuck_Pankow",
+         "Pankow, Chuck",
+         "C. Pankow",
+         "Chuck Pankow"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Haven_Denney",
+      "names":[
+         "Haven Denney",
+         "H. Denney",
+         "Denney, Haven",
+         "Denney, H.",
+         "Haven_Denney",
+         "H. Denney",
+         "Denney, H.",
+         "Denney, Haven",
+         "Haven Denney"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Jeremy_McKinnon",
+      "names":[
+         "Jeremy McKinnon",
+         "J. McKinnon",
+         "McKinnon, Jeremy",
+         "McKinnon, J.",
+         "J. McKinnon",
+         "J. Kinnon",
+         "Kinnon, Jeremy_Mc",
+         "Jeremy_Mc Kinnon",
+         "Jeremy_McKinnon",
+         "McKinnon, Jeremy",
+         "McKinnon, J.",
+         "Jeremy McKinnon",
+         "Kinnon, J."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Joey_Mantia",
+      "names":[
+         "Joey Mantia",
+         "J. Mantia",
+         "Mantia, Joey",
+         "Mantia, J.",
+         "J. Mantia",
+         "Mantia, Joey",
+         "Joey_Mantia",
+         "Joey Mantia",
+         "Mantia, J."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Judd_Davis",
+      "names":[
+         "Judd Davis",
+         "J. Davis",
+         "Davis, Judd",
+         "Davis, J.",
+         "Davis, Judd",
+         "Davis, J.",
+         "J. davis",
+         "davis, J.",
+         "Judd Davis",
+         "Judd davis",
+         "Judd_Davis",
+         "davis, Judd",
+         "J. Davis"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Lorenzo_Williams_(basketball)",
+      "names":[
+         "Lorenzo Williams basketball",
+         "Lorenzo Williams",
+         "Lorenzo Williams (basketball)",
+         "Lorenzo_Williams_(basketball)"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Randy_Ewers",
+      "names":[
+         "Randy Ewers",
+         "R. Ewers",
+         "Ewers, Randy",
+         "Ewers, R.",
+         "Randy_Ewers",
+         "Ewers, R.",
+         "Ewers, Randy",
+         "Randy Ewers",
+         "R. Ewers"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Reid_Nichols",
+      "names":[
+         "Reid Nichols",
+         "R. Nichols",
+         "Nichols, Reid",
+         "Nichols, R.",
+         "Thomas Reid Nichols",
+         "Reid Nichols",
+         "Nichols, Reid",
+         "R. Nichols",
+         "Reid_Nichols",
+         "Nichols, R."
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Scot_Brantley",
+      "names":[
+         "Coach Brantley",
+         "Scot Eugene Brantley",
+         "Scot Brantley",
+         "S. Brantley",
+         "Brantley, Scot",
+         "Brantley, S.",
+         "Brantley, S.",
+         "Scot Brantley",
+         "Brantley, Scot",
+         "S. Brantley",
+         "Scot_Brantley"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Sean_Hampton",
+      "names":[
+         "Sean Hampton",
+         "S. Hampton",
+         "Hampton, Sean",
+         "Hampton, S.",
+         "Sean_Hampton",
+         "Hampton, Sean",
+         "Hampton, S.",
+         "Sean Hampton",
+         "S. Hampton"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"http://en.wikipedia.org/wiki/Travis_Mays",
+      "names":[
+         "Travis Mays",
+         "T. Mays",
+         "Mays, Travis",
+         "Mays, T.",
+         "Travis Mays",
+         "Travis_Mays",
+         "T. Mays",
+         "Mays, T.",
+         "Mays, Travis"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"https://twitter.com/BartowMcDonald",
+      "names":[
+         "BartowMcDonald",
+         "Bartow McDonald",
+         "Bartow McDonald",
+         "B. McDonald",
+         "McDonald, Bartow",
+         "McDonald, B.",
+         "Ocala Commercial RE",
+         "Ocala Commercial Real Estate",
+         "Ocala Real Estate",
+         "bartowmcdonald.com",
+         "Bartow Mc Donald",
+         "BartowMcDonald"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"https://twitter.com/KentGuinn4Mayor",
+      "names":[
+         "KentGuinn4Mayor",
+         "Kent Guinn",
+         "K. Guinn",
+         "Guinn, Kent",
+         "Guinn, K.",
+         "Guinn4Mayor, Kent",
+         "K. Guinn4Mayor",
+         "Guinn4Mayor, K.",
+         "Kent Guinn4Mayor",
+         "KentGuinn4Mayor"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"https://twitter.com/bobplaisted",
+      "names":[
+         "bobplaisted",
+         "bob plaisted",
+         "RobertPlaisted",
+         "Robert Plaisted",
+         "R. Plaisted",
+         "Plaisted, Robert",
+         "Plaisted, R.",
+         "Plaisted, Rob",
+         "bobplaisted"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"https://twitter.com/redmondmusic",
+      "names":[
+         "redmondmusic",
+         "redmond music",
+         "Eric Redmond",
+         "E. Redmond",
+         "Redmond, Eric",
+         "Redmond, E.",
+         "redmondmusic"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"ocala",
+      "topic_id":"https://twitter.com/sandrafriend",
+      "names":[
+         "sandrafriend",
+         "sandra friend",
+         "trailsandtravel",
+         "trail sand travel",
+         "sandrafriend"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"screenwriters",
+      "topic_id":"http://en.wikipedia.org/wiki/Joshua_Zetumer",
+      "names":[
+         "Joshua Zetumer",
+         "J. Zetumer",
+         "Zetumer, Joshua",
+         "Zetumer, J.",
+         "Zetumer, Joshua",
+         "J. Zetumer",
+         "Joshua Zetumer",
+         "Zetumer, J.",
+         "Joshua_Zetumer"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"screenwriters",
+      "topic_id":"https://twitter.com/MissMarcel",
+      "names":[
+         "MissMarcel",
+         "Miss Marcel",
+         "Kelly Marcel",
+         "K. Marcel",
+         "Marcel, Kelly",
+         "Marcel, K.",
+         "Marcel, Miss",
+         "MissMarcel",
+         "Miss Marcel",
+         "Marcel, M.",
+         "M. Marcel"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"turing",
+      "topic_id":"http://en.wikipedia.org/wiki/Barbara_Liskov",
+      "names":[
+         "Barbara Liskov",
+         "B. Liskov",
+         "Liskov, Barbara",
+         "Liskov, B.",
+         "Barbara Jane Liskov",
+         "Barbara Jane Huberman",
+         "Liskov, Barbara",
+         "B. Liskov",
+         "Liskov",
+         "Barbara_Liskov",
+         "Barbara H. Liskov",
+         "Barbara Huberman Liskov",
+         "Liskov, B.",
+         "Barbara Liskov"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"turing",
+      "topic_id":"http://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3",
+      "names":[
+         "Fernando J. Corbató",
+         "Fernando J Corbató",
+         "Fernando Corbató",
+         "Fernando Corbato",
+         "Fernando_J._Corbat%C3%B3",
+         "Corbato, Fernando",
+         "Fernando Corbató",
+         "Corbató's law",
+         "Corbató, Fernando",
+         "Corbató, F.",
+         "Fernando Corbato",
+         "law, C.",
+         "Corbato's law",
+         "law, Corbato's",
+         "law, Corbató's",
+         "F. Corbató",
+         "Corbato, F.",
+         "C. law",
+         "Fernando J. Corbato",
+         "F. Corbato",
+         "Fernando J. Corbat%C3%B3"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"turing",
+      "topic_id":"http://en.wikipedia.org/wiki/Juris_Hartmanis",
+      "names":[
+         "Juris Hartmanis",
+         "J. Hartmanis",
+         "Hartmanis, Juris",
+         "Hartmanis, J.",
+         "J. Hartmanis",
+         "Hartmanis",
+         "Hartmanis, Juris",
+         "Hartmanis, J.",
+         "Juris_Hartmanis",
+         "Juris Hartmanis"
+      ]
+   },
+   {
+      "entity_type":"PER",
+      "group":"turing",
+      "topic_id":"http://en.wikipedia.org/wiki/Shafi_Goldwasser",
+      "names":[
+         "Shafi Goldwasser",
+         "S. Goldwasser",
+         "Goldwasser, Shafi",
+         "Goldwasser, S.",
+         "Goldwasser, Shafi",
+         "Goldwasser, S.",
+         "S. Goldwasser",
+         "Shafrira Goldwasser",
+         "Shafi_Goldwasser",
+         "Goldwasser, Shafrira",
+         "Shafi Goldwasser"
+      ]
+   }
+]
