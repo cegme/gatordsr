@@ -16,7 +16,7 @@ object LuceneReporter extends App {
   val entities = elist.toArray(Array[Entity]())
   
   entities.foreach(e => {
-    Searcher.searchEntity("", e.names)
+    Searcher.searchEntity("", e.alias)
   })
   
 }

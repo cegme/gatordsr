@@ -15,6 +15,7 @@ import com.codahale.jerkson.Json._
 import java.util.HashSet
 import java.io.PrintWriter
 import java.io.File
+import edu.ufl.cise.pipeline.KBAJson
 
 object WikiAPI {
 
@@ -22,6 +23,9 @@ object WikiAPI {
 
     val entity_list = new ArrayList[Entity]
     Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
+    
+    val kbaJson  = new KBAJson(entity_list)
+    
     val entities = entity_list.toArray(Array[Entity]())
 
     entities.foreach(e => {
@@ -29,7 +33,7 @@ object WikiAPI {
       var finished = false;
 
       val pageLines = new ListBuffer[String]();
-      val eName = e.topic_id.substring(e.topic_id.lastIndexOf('/') + 1)
+      val eName = e.target_id.substring(e.target_id.lastIndexOf('/') + 1)
       val url = new URL(
         "http://en.wikipedia.org/w/api.php?action=query&list=backlinks&bltitle=" + eName + "&blfilterredir=redirects&bllimit=max&format=json");
       val is = url.openStream();
@@ -74,16 +78,16 @@ object WikiAPI {
       }
 
       if (eName.contains("wikipedia"))
-        e.names.clear()
+        e.alias.clear()
       removeDuplicate(aliasList)
-      e.names.addAll(aliasList)
+      e.alias.addAll(aliasList)
       //  println(generate(aliasList))
 
-      Searcher.searchEntity(e.topic_id, aliasList)
+     // Searcher.searchEntity(e.topic_id, aliasList)
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
-    val json = generate(entities)
+    val json = generate(kbaJson)
     p.print(json)
     p.close()
     //  println(json)

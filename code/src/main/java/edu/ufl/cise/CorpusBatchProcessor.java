@@ -252,12 +252,12 @@ public class CorpusBatchProcessor {
 				for (Entity entity : listEntity) {
 					boolean matchedEntity = false;
 					// match all aliases of entity
-					for (int ientity = 0; ientity < entity.names().size() && !matchedEntity; ientity++) {
+					for (int ientity = 0; ientity < entity.alias().size() && !matchedEntity; ientity++) {
 						// for all sentences
 						for (int isentence = 0; isentence < listStr.size() && !matchedEntity; isentence++) {
 							String s = listStr.get(isentence);
 
-							String alias = entity.names().get(ientity);
+							String alias = entity.alias().get(ientity);
 							if (s.contains(alias)) {
 								if (!printedFileName) {
 									pw.print("ling>" + siw.day + " | " + siw.fileName + " | " + siw.getIndex() + " | "
@@ -280,7 +280,7 @@ public class CorpusBatchProcessor {
 								 * above.
 								 */
 
-								pw.print(entity.topic_id() + ", ");
+								pw.print(entity.target_id() + ", ");
 								siFilteredCount.incrementAndGet();
 
 								listMatchedSenteces.add(s);
@@ -311,9 +311,9 @@ public class CorpusBatchProcessor {
 		if (s != null) {
 			for (Entity entity : listEntity) {
 				// match all aliases of entity
-				for (int ientity = 0; ientity < entity.names().size(); ientity++) {
+				for (int ientity = 0; ientity < entity.alias().size(); ientity++) {
 					// if(cleanVisible != null && cleanVisible.contains(entity)){
-					String alias = entity.names().get(ientity);
+					String alias = entity.alias().get(ientity);
 					if (s.contains(alias)) {
 						if (!printedFileName) {
 							pw.print(logPrefix + ">" + siw.day + " | " + siw.fileName + " | " + siw.index + " | "
@@ -321,7 +321,7 @@ public class CorpusBatchProcessor {
 
 							printedFileName = true;
 						}
-						pw.print(entity.topic_id() + ", ");
+						pw.print(entity.target_id() + ", ");
 						siFilteredCount.incrementAndGet();
 					}
 				}

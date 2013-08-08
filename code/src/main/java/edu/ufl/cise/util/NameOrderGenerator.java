@@ -20,7 +20,7 @@ public class NameOrderGenerator {
 		for (Entity e : l) {
 			if (e.entity_type().equals("PER")) {
 
-				namePermutation(e.names().get(0));
+				namePermutation(e.alias().get(0));
 
 			}
 		}

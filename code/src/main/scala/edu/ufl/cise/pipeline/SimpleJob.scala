@@ -105,7 +105,7 @@ object SimpleJob extends Logging {
           //println(s.toLowerCase())
           //println(s)
           ens.foreach(e => {
-              Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
+              Pipeline.entities(e).alias.toArray(Array[String]()).foreach(name => {
                   //println(name.toLowerCase())
                   if (s.toLowerCase().contains(name.toLowerCase())) { //take to annotate. morteza
                   // print line to the file, containing date_hour, filename, si_num, sentence i and entity index e
@@ -114,7 +114,7 @@ object SimpleJob extends Logging {
                   //println(num + " " + date_hour + " " + filename + " " + si_num + " " + i + " " + e + " " + Pipeline.entities(e).topic_id)
 
                   val tempStr = date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
-                  si.stream_id + ", " + Pipeline.entities(e).topic_id
+                  si.stream_id + ", " + Pipeline.entities(e).target_id
                   //Pipeline.annotate(ss.get(i), tempStr, e, name)
                   println("Hello! " + i)
 
@@ -169,7 +169,7 @@ val line =   entityListLine(eLine)
           val token = tokens.get(j)
           sb.append(token.token + " ")
           ens.foreach(e => {
-              Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
+              Pipeline.entities(e).alias.toArray(Array[String]()).foreach(name => {
                   //println(name.toLowerCase())
                   if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null && token.entity_type != null) {
 
@@ -192,7 +192,7 @@ val line =   entityListLine(eLine)
               if (token.equiv_id == lingentity.equiv_id) {
                 val e = lingentity.entityIndex
                 val tempStr = date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + lingentity.entityIndex + ", NA, " +
-                si.stream_id + ", " + Pipeline.entities(e).topic_id
+                si.stream_id + ", " + Pipeline.entities(e).target_id
                 Pipeline.annotate(ss.get(i), tempStr, e, lingentity)
               }
             }
@@ -248,7 +248,7 @@ val line =   entityListLine(eLine)
             val token = tokens.get(j)
             sb.append(token.token + " ")
             ens.foreach(e => {
-              Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
+              Pipeline.entities(e).alias.toArray(Array[String]()).foreach(name => {
                 //println(name.toLowerCase())
                 if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null && token.entity_type != null) {
 
@@ -270,7 +270,7 @@ val line =   entityListLine(eLine)
               if (token.equiv_id == lingentity.equiv_id) {
                 val e = lingentity.entityIndex
                 val tempStr = date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + lingentity.entityIndex + ", NA, " +
-                  si.stream_id + ", " + Pipeline.entities(e).topic_id
+                  si.stream_id + ", " + Pipeline.entities(e).target_id
                 Pipeline.annotate(ss.get(i), tempStr, e, lingentity)
               }
             }
@@ -299,7 +299,7 @@ val line =   entityListLine(eLine)
     var index = 0
     topics.foreach(topic => {
       for (i <- 0 until Pipeline.entities.size) {
-        if (Pipeline.entities(i).topic_id.toLowerCase().equals(topic.toLowerCase())) {
+        if (Pipeline.entities(i).target_id.toLowerCase().equals(topic.toLowerCase())) {
           ens(index) = i
           index = index + 1
         }
