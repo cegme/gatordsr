@@ -51,10 +51,10 @@ object Searcher extends Logging {
 
   def main(args: Array[String]) {
 
-    //    if (args.length < 1 || args.length > 2) {
-    //      println("Usage: run 'My query'")
-    //      System.exit(1)
-    //    }
+        if (args.length < 1) {
+         println("Usage: run 'My query'")
+          System.exit(1)
+        }
 
     val concatedArgs = args.map(s => {
       if (s == ",")
@@ -141,22 +141,22 @@ object Searcher extends Logging {
     val hits = collector.topDocs().scoreDocs;
 
     // 4. display results
-    //  println(hits.length + "\t hits for: " + querystr);
+      println(hits.length + "\t hits for: " + querystr);
 
-    hits.foreach(f => {
-      val docId = f.doc;
-      val d = searcher.doc(docId);
-      val gpgFile = d.get("gpgfile")
-
-      val m = p.matcher(gpgFile);
-      m.find()
-      val s1 = m.group(1);
-      val s2 = m.group(2);
-
-      println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
-        //d.get("si_docid") 
-        "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
-    })
+//    hits.foreach(f => {
+//      val docId = f.doc;
+//      val d = searcher.doc(docId);
+//      val gpgFile = d.get("gpgfile")
+//
+//      val m = p.matcher(gpgFile);
+//      m.find()
+//      val s1 = m.group(1);
+//      val s2 = m.group(2);
+//
+//      println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
+//        //d.get("si_docid") 
+//        "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
+//    })
 
     // reader can only be closed when there
     // is no need to access the documents any more.

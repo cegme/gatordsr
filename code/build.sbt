@@ -66,3 +66,5 @@ libraryDependencies += "org.apache.lucene" % "lucene-analyzers-common" % "4.3.1"
 libraryDependencies += "org.apache.lucene" % "lucene-queryparser" % "4.3.1"
 
 libraryDependencies += "com.codahale" % "jerkson_2.9.1" % "0.5.0"
+
+libraryDependencies += "org.bouncycastle" % "bcpg-jdk16" % "1.46"

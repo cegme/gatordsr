@@ -16,16 +16,21 @@ import java.util.HashSet
 import java.io.PrintWriter
 import java.io.File
 import edu.ufl.cise.pipeline.KBAJson
+import java.net.URLDecoder
 
+/**
+ * Preload entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json then populate
+ * trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json
+ */
 object WikiAPI {
 
   def main(args: Array[String]): Unit = {
 
     val entity_list = new ArrayList[Entity]
     Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
-    
-    val kbaJson  = new KBAJson(entity_list)
-    
+
+    val kbaJson = new KBAJson(entity_list)
+
     val entities = entity_list.toArray(Array[Entity]())
 
     entities.foreach(e => {
@@ -58,7 +63,15 @@ object WikiAPI {
       val backlinks = query.get("backlinks").get.asInstanceOf[List[Any]]
 
       val aliasList = new ArrayList[String]();
+
       aliasList.add(eName)
+      aliasList.add(URLDecoder.decode(eName, "UTF-8"))
+
+      aliasList.add(eName.replace('_', ' '))
+      aliasList.add(URLDecoder.decode(eName.replace('_', ' '), "UTF-8"))
+
+      aliasList.add(eName.replaceAll("([a-z])([A-Z])", "$1 $2"))
+      aliasList.add(URLDecoder.decode(eName.replaceAll("([a-z])([A-Z])", "$1 $2"), "UTF-8"))
 
       backlinks.foreach(target => {
         val entity: Map[String, Any] = target.asInstanceOf[Map[String, Any]]
@@ -68,22 +81,22 @@ object WikiAPI {
 
       })
 
-      aliasList.add(eName.replace('_', ' '))
-      aliasList.add(eName.replaceAll("([a-z])([A-Z])", "$1 $2"))
-
+      
+      
       //  NameOrderGenerator.
       val size = aliasList.size()
       for (a <- 0 to size) {
         aliasList.addAll(NameOrderGenerator.namePermutation(aliasList.get(a)))
       }
-
-      if (eName.contains("wikipedia"))
+      
+    
+      if (e.target_id.contains("wikipedia"))
         e.alias.clear()
       removeDuplicate(aliasList)
       e.alias.addAll(aliasList)
-      //  println(generate(aliasList))
+      //  println(generate(e.alias))
 
-     // Searcher.searchEntity(e.topic_id, aliasList)
+      Searcher.searchEntity(e.target_id, aliasList)
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
