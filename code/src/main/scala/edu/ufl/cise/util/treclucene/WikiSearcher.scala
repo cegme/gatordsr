@@ -151,17 +151,18 @@ object WikiSearcher extends Logging {
 
    // for(int i=0;i<hits.length;++i)
   
-    hits.take(5).foreach(f => {
+    hits.take(20).foreach(f => {
       val docId = f.doc;
       val d = searcher.doc(docId);
+      // body,docid,docdatenum,docdate,doctitle,doctimesecnum,docname
       //println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
-      logInfo(d.get("doctitle"))
-      logInfo(d.get("docname"))
-      logInfo(d.get("docid"))
-      logInfo(d.get("docdate"))
-      logInfo(d.get("docdatenum"))
-      logInfo(d.get("doctimesecnum"))
-      logInfo(d.get("body"))
+      logInfo("doctitle: " + d.get("doctitle"))
+      logInfo("docname: " + d.get("docname"))
+      logInfo("docid: " + d.get("docid"))
+      logInfo("docdate: " + d.get("docdate"))
+      logInfo("docdatenum: " + d.get("docdatenum"))
+      logInfo("doctimesecnum: " + d.get("doctimesecnum"))
+      //logInfo(d.get("body"))
       logInfo("~"*40)
    })
 

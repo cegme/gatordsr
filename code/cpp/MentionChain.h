@@ -21,7 +21,8 @@ class MentionChain {
   constexpr static const char *tmp_prefix = "/var/tmp";
   constexpr static const char *gpgDecompress = "gpg --quiet --no-verbose --no-permission-warning --trust-model always --output - --decrypt %s | xz --decompress > %s";
 
-private:
+//private:
+public:
   std::string day;
   std::string fileName;
   int stream_index;
@@ -53,8 +54,12 @@ public:
   /** Get a list of all tokens */
   std::vector<std::string> tokens() const;
     
+  // Pretty print the data structure
+  std::string pretty_string() const;
+
   /** Take a line from a runXLog.txt file and make it into a MentionChain */
   static std::vector<MentionChain> ReadLine(std::string line);
+  static std::vector<MentionChain> ReadLine(std::string line, std::vector<QueryEntity>);
 
   /** Take a thrift file and extract all the stream items and put them in a vector */
   static std::vector<streamcorpus::StreamItem> FileToStreamItem(std::string filePath); 

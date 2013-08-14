@@ -9,14 +9,20 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <boost/algorithm/string.hpp>
+#include "boost/algorithm/string_regex.hpp"
 #include "boost/date_time/gregorian/gregorian.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include <boost/date_time/time_clock.hpp>
 #include "/usr/include/boost/date_time/microsec_time_clock.hpp"
+#include <sys/stat.h>
 
 
 /** Check to see if a file exists */
-inline static bool fexist (const char *fileName) { return std::ifstream (fileName); }
+static bool fexist (const char *fileName) { 
+  struct stat buffer;
+  return (stat (fileName, &buffer) == 0);
+}
 
 /** Write out a stirng array */
 inline static std::string to_string(std::vector<std::string> v, std::string sep) {
@@ -29,6 +35,16 @@ inline static std::string to_string(std::vector<std::string> v, std::string sep)
   return ss.str();
 }
 
+/** tokenize wulti string separators */
+static std::vector<std::string> tok(std::string str, std::string sep) {
+
+  std::vector<std::string> results;
+  //boost::split(results, str, [sep] (std::string _sep) { return _sep == sep; });
+  boost::algorithm::split_regex(results, str, boost::regex(sep));
+  //boost::split(results, str, boost::is_any_of(", "));
+
+  return results;
+}
 
 #define DATE_STRING boost::posix_time::to_simple_string( boost::date_time::microsec_clock<boost::posix_time::ptime>::local_time() ).c_str()
 
@@ -44,6 +60,10 @@ inline static std::string to_string(std::vector<std::string> v, std::string sep)
 #define logInfo(M) std::cerr << DATE_STRING << "[INFO] (" << __FILE__ << ":" << __LINE__ << ") | " << M  << "\n"
 
 #define log_info(M, ...) fprintf(stderr, "%s [INFO] (%s:%d) | " M "\n", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__)
+
+#define log_trace(M, ...) fprintf(stderr, "%s [trace] (%s:%d) | " M "\n", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__)
+
+#define log_debug(M, ...) fprintf(stderr, "%s [DEBUG] (%s:%d) | " M "\n", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__)
 
 #define log_err(M, ...) fprintf(stderr, "%s [ERROR] (%s:%d: errno: %s) | " M "\n", DATE_STRING, __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
 
