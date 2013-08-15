@@ -69,6 +69,7 @@ libraryDependencies += "org.apache.lucene" % "lucene-analyzers-common" % "4.3.1"
 
 libraryDependencies += "org.apache.lucene" % "lucene-queryparser" % "4.3.1"
 
+<<<<<<< HEAD
 libraryDependencies += "com.codahale" % "jerkson_2.9.1" % "0.5.0"
 
 libraryDependencies += "org.bouncycastle" % "bcpg-jdk16" % "1.46"
@@ -76,3 +77,6 @@ libraryDependencies += "org.bouncycastle" % "bcpg-jdk16" % "1.46"
 libraryDependencies += "net.sourceforge.htmlcleaner" % "htmlcleaner" % "2.6"
 
 libraryDependencies += "edu.stanford.nlp" % "stanford-parser" % "3.2.0"
+=======
+
+>>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8

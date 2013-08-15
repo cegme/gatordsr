@@ -9,19 +9,21 @@ case class Pattern(entity_type : String, slot : String, pattern : String, direct
   val dir : Integer = if (direction.equals("right")) 1 else 0
 }
 
+case class KBAJson(val targets: ArrayList[Entity]){
+  
+}
 
+case class Entity(val entity_type: String, val group: String, val target_id: String) {
 
-class Entity(val entity_type: String, val group: String, val topic_id: String) {
-
-  def this(entity_type: String, group: String, topic_id: String, alias: List[String]) = {
-    this(entity_type, group, topic_id)
+  def this(entity_type: String, group: String, target_id: String, alias: List[String]) = {
+    this(entity_type, group, target_id)
     val list =  alias.toList
-   names.addAll(list)
+   this.alias.addAll(list)
   }
 
-  val names = new ArrayList[String] // the list of alias names for Entity
+  val alias = new ArrayList[String] // the list of alias names for Entity
 
-  def add(name: String) = names.add(name) // add one more alias name for the entity
+  def add(name: String) = alias.add(name) // add one more alias name for the entity
 
 }
 

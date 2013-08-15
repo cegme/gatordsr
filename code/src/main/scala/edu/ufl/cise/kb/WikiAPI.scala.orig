@@ -11,6 +11,7 @@ import java.util.ArrayList
 import edu.ufl.cise.pipeline.Entity
 import edu.cise.ufl.util.treclucene.Searcher
 import edu.ufl.cise.util.NameOrderGenerator
+<<<<<<< HEAD
 import com.codahale.jerkson.Json._
 import java.util.HashSet
 import java.io.PrintWriter
@@ -25,6 +26,8 @@ import edu.stanford.nlp.pipeline.StanfordCoreNLP
 import edu.stanford.nlp.pipeline.Annotation
 import edu.stanford.nlp.ling.CoreAnnotations
 import scala.collection.JavaConversions._
+=======
+>>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
 
 
 /**
@@ -49,6 +52,7 @@ object WikiAPI {
     val entities = entity_list.toArray(Array[Entity]())
 
     entities.foreach(e => {
+<<<<<<< HEAD
       //  println(e.topic_id)
       var finished = false;
 
@@ -57,6 +61,17 @@ object WikiAPI {
       val url = new URL(
         "http://en.wikipedia.org/w/api.php?action=query&list=backlinks&bltitle=" + eName + "&blfilterredir=redirects&bllimit=max&format=json");
       val is = url.openStream();
+=======
+    //  println(e.topic_id)
+      var finished = false;
+
+      val pageLines = new ListBuffer[String]();
+      val eName = e.topic_id.substring(e.topic_id.lastIndexOf('/') + 1)
+      //println(eName)
+      val url = new URL(
+        "http://en.wikipedia.org/w/api.php?action=query&list=backlinks&bltitle=" + eName + "&blfilterredir=redirects&bllimit=max&format=json");
+      val is = url.openStream(); // throws an IOException
+>>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
 
       val br = new BufferedReader(new InputStreamReader(is));
       var line = "";
@@ -78,6 +93,7 @@ object WikiAPI {
       val backlinks = query.get("backlinks").get.asInstanceOf[List[Any]]
 
       val aliasList = new ArrayList[String]();
+<<<<<<< HEAD
 
       aliasList.add(eName)
       aliasList.add(URLDecoder.decode(eName, "UTF-8"))
@@ -87,21 +103,35 @@ object WikiAPI {
 
       aliasList.add(eName.replaceAll("([a-z])([A-Z])", "$1 $2"))
       aliasList.add(URLDecoder.decode(eName.replaceAll("([a-z])([A-Z])", "$1 $2"), "UTF-8"))
+=======
+      aliasList.add(eName)
+>>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
 
       backlinks.foreach(target => {
         val entity: Map[String, Any] = target.asInstanceOf[Map[String, Any]]
         val alias = (entity.get("title").get.asInstanceOf[String])
+<<<<<<< HEAD
+=======
+        //  println(alias)
+>>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
         aliasList.add(alias)
         aliasList.add(alias.replaceAll("([a-z])([A-Z])", "$1 $2"))
 
       })
 
+<<<<<<< HEAD
+=======
+      aliasList.add(eName.replace('_', ' '))
+      aliasList.add(eName.replaceAll("([a-z])([A-Z])", "$1 $2"))
+
+>>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
       //  NameOrderGenerator.
       val size = aliasList.size()
       for (a <- 0 to size) {
         aliasList.addAll(NameOrderGenerator.namePermutation(aliasList.get(a)))
       }
 
+<<<<<<< HEAD
       if (e.target_id.contains("wikipedia"))
         e.alias.clear()
       removeDuplicate(aliasList)
@@ -109,6 +139,14 @@ object WikiAPI {
       //  println(generate(e.alias))
 
       Searcher.searchEntity(e.target_id, aliasList)
+=======
+      // println(aliasList)
+
+      Searcher.searchEntity(aliasList)
+
+      //   println("---------------------------------")
+
+>>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
