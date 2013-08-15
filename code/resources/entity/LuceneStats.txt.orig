@@ -1,0 +1,216 @@
+<<<<<<< HEAD
+[0m[[0minfo[0m] [0mLoading project definition from /media/sde/devPipeline/gatordsr/code/project[0m
+[0m[[0minfo[0m] [0mSet current project to gatordsr (in build file:/media/sde/devPipeline/gatordsr/code/)[0m
+> run
+[0m[[0minfo[0m] [0mCompiling 1 Scala source to /media/sde/devPipeline/gatordsr/code/target/scala-2.9.2/classes...[0m
+[0m[[33mwarn[0m] [0m/media/sde/devPipeline/gatordsr/code/src/main/scala/edu/ufl/cise/util/treclucene/Searcher.scala:123: value LUCENE_40 in object Version is deprecated: see corresponding Javadoc for more information.[0m
+[0m[[33mwarn[0m] [0m   val analyzer = new StandardAnalyzer(Version.LUCENE_40);[0m
+[0m[[33mwarn[0m] [0m                                               ^[0m
+[0m[[33mwarn[0m] [0m/media/sde/devPipeline/gatordsr/code/src/main/scala/edu/ufl/cise/util/treclucene/Searcher.scala:131: value LUCENE_40 in object Version is deprecated: see corresponding Javadoc for more information.[0m
+[0m[[33mwarn[0m] [0m    val q = new QueryParser(Version.LUCENE_40, "clean_visible", analyzer).parse(querystr);[0m
+[0m[[33mwarn[0m] [0m                                    ^[0m
+[0m[[33mwarn[0m] [0mtwo warnings found[0m
+
+Multiple main classes detected, select one to run:
+
+ [1] edu.ufl.cise.util.WordnetUtil
+ [2] edu.ufl.cise.util.RelationChecker
+ [3] edu.ufl.cise.util.treclucene.LuceneReporter
+ [4] edu.ufl.cise.StreamRange
+ [5] edu.ufl.cise.pipeline.Preprocessor
+ [6] edu.ufl.cise.SystemStatisticsGenerator
+ [7] edu.ufl.cise.CachedFaucet
+ [8] edu.ufl.cise.StreamFaucet
+ [9] edu.ufl.cise.util.treclucene.IndexMerger
+ [10] test.LuceneTermQueryDemo
+ [11] edu.ufl.cise.util.StreamItemUtil
+ [12] edu.ufl.cise.util.S3Downloader
+ [13] edu.ufl.cise.EmbededFaucet
+ [14] edu.ufl.cise.util.Benchmark
+ [15] edu.ufl.cise.KBAOutput
+ [16] edu.ufl.cise.util.NameOrderGenerator
+ [17] edu.ufl.cise.util.treclucene.Indexer
+ [18] edu.ufl.cise.util.OntologySynonymGenerator
+ [19] edu.ufl.cise.pipeline.Pipeline
+ [20] edu.ufl.cise.pipeline.SimpleJob
+ [21] edu.cise.ufl.util.treclucene.Searcher
+
+Enter number: 3
+
+[0m[[0minfo[0m] [0mRunning edu.ufl.cise.util.treclucene.LuceneReporter [0m
+Hi
+=======
+
+>>>>>>> b02cfdc7f4154ca5c72e71ed127fb085c15b6ef4
+145 hits for: "stuart powell field" OR "kdvk" OR "dvk"
+0 hits for: "corbinspeedway" OR "corbin speedway"
+8 hits for: "idsia" OR "dalle molle institute for artificial intelligence research" OR "istituto dalle molle di studi sull'intelligenza artificiale"
+0 hits for: "corn belt power cooperative" OR "corn belt power" OR "cbpower"
+232 hits for: "fargo-moorhead symphony orchestra" OR "fmso" OR "fmsymphony" OR "fargo-moorhead symphony" OR "fargo moorhead"
+4 hits for: "fargo air museum" OR "fargoairmuseum"
+21 hits for: "hjemkomst center" OR "heritage hjemkomst interpretive center" OR "hjemkomst"
+10 hits for: "john d. odegard school of aerospace sciences" OR "und aerospace" OR "john d. odegard"
+10 hits for: "red river zoo" OR "red river zoological society"
+35 hits for: "star lite motel" OR "starlite-motel" OR "starlite motel"
+5107 hits for: "elysian charter school" OR "ecs" OR "ecsnj"
+3602 hits for: "stevens cooperative school" OR "scs" OR "stevenscoop"
+0 hits for: "weehawken cove"
+1 hits for: "cooper basin railway" OR "cbry"
+0 hits for: "hayden smelter"
+5 hits for: "lewis and clark landing" OR "lewis-clark landing" OR "lewis & clark landing" OR "lewis clark landing"
+0 hits for: "toquepala mine"
+0 hits for: "appelton museum of art" OR "appelton museum" OR "appletonmuseum"
+15 hits for: "don garlits museum of drag racing" OR "don garlits museum" OR "garlits.com"
+0 hits for: "eighth street elementary school"
+58 hits for: "lake weir high school" OR "lake weir high" OR "lwhs" OR "lakeweirhigh"
+8 hits for: "marion technical institute" OR "marion tech"
+3 hits for: "osceola middle school" OR "osceola middle"
+0 hits for: "the ritz apartment ocala, florida" OR "the ritz apartment"
+1 hits for: "great american brass band festival"
+73 hits for: "innovis health" OR "innovis"
+44 hits for: "hoboken reporter" OR "hoboken newspaper" OR "hoboken paper"
+5 hits for: "hoboken volunteer ambulance corps"
+3 hits for: "basic element company" OR "basic element co" OR "basic element companies"
+0 hits for: "basic element music groups" OR "basic element music"
+0 hits for: "agroindustrial pomalca"
+4 hits for: "atacocha"
+0 hits for: "austral group"
+0 hits for: "cementos lima"
+14 hits for: "dunkelvolk"
+8 hits for: "granã y montero" OR "grana y montero" OR "igbvl"
+0 hits for: "intergroup financial services"
+0 hits for: "luz del sur"
+15 hits for: "simsa"
+3 hits for: "scotiabank perú" OR "scotiabank peru"
+14 hits for: "blossomcoffee" OR "blossom coffee"
+14 hits for: "frankandoak" OR "frank and oak" OR "frank & oak" OR "frankhelps"
+6002 hits for: "gandbcoffee" OR "glanville & babinski" OR "glanville and babinski" OR "g & b" OR "g&b"
+0 hits for: "wcoffeeresearch" OR "w coffee research" OR "worldcoffeeresearch" OR "world coffee research"
+0 hits for: "evvnt"
+14 hits for: "benjamin bronfman" OR "b. bronfman" OR "bronfman, benjamin" OR "bronfman, b."
+33 hits for: "charles bronfman" OR "c. bronfman" OR "bronfman, charles" OR "bronfman, c."
+29 hits for: "clare bronfman" OR "c. bronfman" OR "bronfman, clare" OR "bronfman, c."
+380 hits for: "edgar bronfman, jr." OR "edgar bronfman, jr" OR "edgar bronfman" OR "e. bronfman" OR "bronfman, edgar" OR "bronfman, e." OR "edgar jr." OR "efer"
+294 hits for: "edgar bronfman, sr." OR "edgar bronfman, sr" OR "edgar bronfman" OR "e. bronfman" OR "bronfman, edgar" OR "bronfman, e." OR "edgar sr."
+48 hits for: "phyllis lambert" OR "p. lambert" OR "lambert, phyllis" OR "lambert, p."
+33 hits for: "sara bronfman" OR "s. bronfman" OR "bronfman, sara" OR "bronfman, s."
+1237 hits for: "deanne smith" OR "d. smith" OR "smith, deanne" OR "smith, d."
+29 hits for: "ronfunches" OR "ron funches" OR "ronald funches" OR "r. funches" OR "funches, ron" OR "funches, ronald" OR "funches, r."
+77 hits for: "roryscovel" OR "rory scovel" OR "r scovel" OR "scovel, rory" OR "scovel, r."
+98584 hits for: "alex jo hamilton" OR "alex j. hamilton" OR "alexandra j hamilton" OR "alexandra hamilton" OR "hamilton, alex" OR "hamilton, alexandra" OR "hamilton, a."
+55 hits for: "bob stovall" OR "b. hamilton" OR "stovall, bob" OR "stovall, b."
+1 hits for: "robcaud" OR "rob caud" OR "rob caudill" OR "robcaudill" OR "r. caud" OR "r. caudill" OR "caudill, rob" OR "caudill, r."
+0 hits for: "danvillekyengr" OR "danville engineering" OR "danville ky engineering"
+504 hits for: "tonyg203" OR "tony gray" OR "t. gray" OR "gray, tony" OR "gray, t."
+58 hits for: "urbren00" OR "brent faulkner" OR "b. faulkner" OR "faulkner, brent" OR "faulkner, b." OR "brentmusicreviews" OR "brent music reviews"
+49 hits for: "geoffrey e. hinton" OR "geoffrey hinton" OR "g. hinton" OR "hinton, geoffrey" OR "hinton, g."
+50 hits for: "léon bottou" OR "leon bottou" OR "l. bottou" OR "bottou, léon" OR "bottou, leon" OR "bottou, l."
+35 hits for: "yann lecun" OR "y. lecun" OR "lecun, yann" OR "lecun, y."
+90 hits for: "zoubin ghahramani" OR "z. ghahramani" OR "ghahramani, zoubin" OR "ghahramani, z."
+0 hits for: "blair thoer" OR "b. thoer" OR "thoer, blair" OR "thoer, b."
+22 hits for: "brenda weiler" OR "b. weiler" OR "weiler, brenda" OR "weiler, b."
+104 hits for: "carey mcwilliams" OR "c. mcwilliams" OR "mcwilliams, carey" OR "mcwilliams, c."
+55 hits for: "clark blaise" OR "c. blaise" OR "blaise, clark" OR "blaise, c."
+1 hits for: "daniel j. crothers" OR "daniel crothers" OR "d. crothers" OR "crothers, daniel" OR "crothers, d."
+22 hits for: "danny irmen" OR "d. irmen" OR "irmen, danny" OR "irmen, d."
+0 hits for: "david b. danbom" OR "david danbom" OR "d. danbom" OR "danbom, david" OR "danbom, d."
+4 hits for: "drew wrigley" OR "d. wrigley" OR "wrigley, drew" OR "wrigley, d."
+30 hits for: "ed bok lee"
+0 hits for: "fargo moorhead derby girls"
+8 hits for: "george sinner" OR "g. sinner" OR "sinner, george" OR "sinner, g."
+170 hits for: "gretchen hoffman" OR "g. hoffman" OR "hoffman, gretchen" OR "hoffman, g."
+42 hits for: "jamie parsley" OR "j. parsley" OR "parsley, jamie" OR "parsley, j."
+251 hits for: "jasper schneider" OR "j. schneider" OR "schneider, jasper" OR "schneider, j."
+0 hits for: "jeff severson" OR "j. severson" OR "severson, jeff" OR "severson, j."
+39 hits for: "jennifer baumgardner" OR "j. baumgardner" OR "baumgardner, jennifer" OR "baumgardner, j."
+4 hits for: "jim poolman" OR "j. poolman" OR "poolman, jim" OR "poolman, j."
+312 hits for: "john h. lang" OR "john h lang" OR "john lang" OR "j. lang" OR "lang, john" OR "lang, j."
+0 hits for: "joshua boschee" OR "j. boschee" OR "boschee, joshua" OR "boschee, j."
+6 hits for: "ken fowler" OR "k. fowler" OR "fowler, ken" OR "fowler, k."
+0 hits for: "keri hehn" OR "k. hehn" OR "hehn, keri" OR "hehn, k."
+17 hits for: "olaus murie" OR "o. murie" OR "murie, olaus" OR "murie, o."
+12 hits for: "paul johnsgard" OR "p. johnsgard" OR "johnsgard, paul" OR "johnsgard, p."
+14 hits for: "paul marquart" OR "p. marquart" OR "marquart, paul" OR "marquart, p."
+32 hits for: "richard edlund" OR "r. edlund" OR "edlund, richard" OR "edlund, r."
+39 hits for: "richard w. goldberg" OR "richard w goldberg" OR "richard goldberg"
+32 hits for: "richard edlund" OR "r. edlund" OR "edlund, richard" OR "edlund, r."
+4 hits for: "william p. gerberding" OR "william p gerberding" OR "william gerberding"
+101 hits for: "anaïs croze" OR "croze, anaïs" OR "anais croze" OR "a. croze" OR "croze, anais" OR "croze, a."
+13 hits for: "gwenaëlle aubry" OR "aubry, gwenaëlle" OR "gwenaelle aubry" OR "g. aubry" OR "aubry, gwenaelle" OR "aubry, g."
+5 hits for: "nicolas schöffer" OR "n. schöffer" OR "schöffer, nicolas" OR "schöffer, n." OR "nicolas schoffer" OR "n. schoffer" OR "schoffer, nicolas" OR "schoffer, n."
+22 hits for: "théo mercier" OR "mercier, théo" OR "theo mercier" OR "t. mercier" OR "mercier, theo" OR "mercier, t."
+6 hits for: "chiara nappi" OR "c. nappi" OR "nappi, chiara" OR "nappi, c."
+95 hits for: "eva silverstein" OR "e. silverstein" OR "silverstein, eva" OR "silverstein, e."
+10 hits for: "matt witten" OR "m. witten" OR "witten, matt" OR "witten, m."
+186 hits for: "shamit kachru" OR "s. kachru" OR "kachru, shamit" OR "kachru, s."
+14 hits for: "angelo savoldi" OR "a. savoldi" OR "savoldi, angelo" OR "savoldi, a."
+162 hits for: "bernard kenny" OR "b. kenny" OR "kenny, bernard" OR "kenny, b."
+29 hits for: "bob bert" OR "b. bert" OR "bert, bob" OR "bert, b."
+323 hits for: "carl chang" OR "c. chang" OR "chang, carl" OR "chang, c."
+92 hits for: "carla katz" OR "c. katz" OR "katz, carla" OR "katz, c."
+15 hits for: "derrick alston" OR "d. alston" OR "alston, derrick" OR "alston, d."
+26 hits for: "frank winters" OR "f. winters" OR "winters, frank" OR "winters, f."
+50 hits for: "henry gutierrez" OR "h. gutierrez" OR "gutierrez, henry" OR "gutierrez, h."
+0 hits for: "jack lazorko" OR "j. lazorko" OR "lazorko, jack" OR "lazorko, j."
+29 hits for: "jeff tamarkin" OR "j. tamarkin" OR "tamarkin, jeff" OR "tamarkin, j."
+0 hits for: "joanne borgella" OR "j. borgella" OR "borgella, joanne" OR "borgella, j."
+17 hits for: "ken freedman" OR "k. freedman" OR "freedman, ken" OR "freedman, k."
+0 hits for: "klaus grutzka" OR "k. grutzka" OR "grutzka, klaus" OR "grutzka, k."
+9 hits for: "mark safranko" OR "m. safranko" OR "safranko, mark" OR "safranko, m."
+20 hits for: "maurice fitzgibbons" OR "m. fitzgibbons" OR "fitzgibbons, maurice" OR "fitzgibbons, m."
+0 hits for: "pat dapuzzo" OR "p. dapuzzo" OR "dapuzzo, pat" OR "dapuzzo, p."
+69 hits for: "ruben j. ramos" OR "ruben j ramos" OR "ruben ramos"
+4 hits for: "tilo rivas" OR "t. rivas" OR "rivas, tilo" OR "rivas, t."
+329 hits for: "william h. miller writer" OR "william h. miller" OR "william h miller" OR "william miller"
+6593 hits for: "aharon barak" OR "a. barak" OR "barak, aharon" OR "barak, a."
+40 hits for: "alex kapranos" OR "a. kapranos" OR "kapranos, alex" OR "kapranos, a."
+311868 hits for: "alexander mccall smith" OR "alexander m. smith" OR "alexander smith" OR "a. smith" OR "smith, alexander" OR "smith, a." OR "alex smith" OR "smith, alex"
+644 hits for: "annie laurie gaylor" OR "annie l. gaylor" OR "annie gaylor" OR "a. gaylor" OR "gaylor, annie" OR "gaylor, a."
+28 hits for: "bill coen" OR "b. coen" OR "coen, bill" OR "coen, b."
+328 hits for: "boris berezovsky" OR "b. berezovsky" OR "berezovsky, boris" OR "berezovsky, b."
+328 hits for: "boris vadimovich berezovsky" OR "boris v. berezovsky" OR "boris berezovsky" OR "b. berezovsky" OR "berezovsky, boris" OR "berezovsky, b."
+713 hits for: "charlie savage" OR "c. savage" OR "savage, charlie" OR "savage, c."
+1137 hits for: "darren rowse" OR "d. rowse" OR "rowse, darren" OR "rowse, d."
+496 hits for: "douglas carswell" OR "d. carswell" OR "carswell, douglas" OR "carswell, d."
+1 hits for: "frederick m. lawrence" OR "fredrick m lawrence" OR "fredrick lawrence"
+23 hits for: "ikuhisa minowa" OR "i. minowa" OR "minowa, ikuhisa" OR "minowa, i."
+79 hits for: "james mccartney" OR "j. mccartney" OR "mccartney, james" OR "mccartney, j."
+10 hits for: "jim steyer" OR "j. steyer" OR "steyer, jim" OR "steyer, j."
+104 hits for: "lisa bloom" OR "l. bloom" OR "bloom, lisa" OR "bloom, l."
+21 hits for: "lovebug starski" OR "l. starski" OR "starski, lovebug" OR "starski, l."
+7 hits for: "mario garnero" OR "m. garnero" OR "garnero, mario" OR "garnero, m."
+138 hits for: "masaru emoto" OR "m. emoto" OR "emoto, masaru" OR "emoto, m."
+429 hits for: "nassim nicholas taleb"
+19 hits for: "rodrigo pimentel" OR "r. pimentel" OR "pimentel, rodrigo" OR "pimentel, r."
+3 hits for: "roustam tariko" OR "r. tariko" OR "tariko, roustam" OR "tariko, r."
+403 hits for: "ruth rendell" OR "r. rendell" OR "rendell, ruth" OR "rendell, r."
+94 hits for: "satoshi ishii" OR "s. ishii" OR "ishii, satoshi" OR "ishii, s."
+28 hits for: "vladimir potanin" OR "v. potanin" OR "potanin, vladimir" OR "potanin, v."
+212 hits for: "william cohen" OR "w. cohen" OR "cohen, william" OR "cohen, w."
+166 hits for: "william d. cohan" OR "william d cohan" OR "william cohan" OR "w. cohan" OR "cohan, william" OR "cohan, w."
+70 hits for: "william h. gates, sr" OR "william h. gates" OR "william h gates"
+7 hits for: "buddy mackay" OR "b. mackay" OR "mackay, buddy" OR "mackay, b."
+3 hits for: "chuck pankow" OR "c. pankow" OR "pankow, chuck" OR "pankow, c."
+0 hits for: "haven denney" OR "h. denney" OR "denney, haven" OR "denney, h."
+91 hits for: "jeremy mckinnon" OR "j. mckinnon" OR "mckinnon, jeremy" OR "mckinnon, j."
+2 hits for: "joey mantia" OR "j. mantia" OR "mantia, joey" OR "mantia, j."
+656 hits for: "judd davis" OR "j. davis" OR "davis, judd" OR "davis, j."
+4 hits for: "lorenzo williams basketball" OR "lorenzo williams"
+2 hits for: "randy ewers" OR "r. ewers" OR "ewers, randy" OR "ewers, r."
+60 hits for: "reid nichols" OR "r. nichols" OR "nichols, reid" OR "nichols, r."
+14 hits for: "coach brantley" OR "scot eugene brantley" OR "scot brantley" OR "s. brantley" OR "brantley, scot" OR "brantley, s."
+55 hits for: "sean hampton" OR "s. hampton" OR "hampton, sean" OR "hampton, s."
+14 hits for: "travis mays" OR "t. mays" OR "mays, travis" OR "mays, t."
+59 hits for: "bartowmcdonald" OR "bartow mcdonald" OR "bartow mcdonald" OR "b. mcdonald" OR "mcdonald, bartow" OR "mcdonald, b." OR "ocala commercial re" OR "ocala commercial real estate" OR "ocala real estate" OR "bartowmcdonald.com"
+43 hits for: "kentguinn4mayor" OR "kent guinn" OR "k. guinn" OR "guinn, kent" OR "guinn, k."
+0 hits for: "bobplaisted" OR "bob plaisted" OR "robertplaisted" OR "robert plaisted" OR "r. plaisted" OR "plaisted, robert" OR "plaisted, r." OR "plaisted, rob"
+15 hits for: "redmondmusic" OR "redmond music" OR "eric redmond" OR "e. redmond" OR "redmond, eric" OR "redmond, e."
+4 hits for: "sandrafriend" OR "sandra friend" OR "trailsandtravel" OR "trail sand travel"
+4 hits for: "joshua zetumer" OR "j. zetumer" OR "zetumer, joshua" OR "zetumer, j."
+60 hits for: "missmarcel" OR "miss marcel" OR "kelly marcel" OR "k. marcel" OR "marcel, kelly" OR "marcel, k."
+17 hits for: "barbara liskov" OR "b. liskov" OR "liskov, barbara" OR "liskov, b."
+7 hits for: "fernando j. corbató" OR "fernando j corbató" OR "fernando corbató" OR "fernando corbato"
+8 hits for: "juris hartmanis" OR "j. hartmanis" OR "hartmanis, juris" OR "hartmanis, j."
+28 hits for: "shafi goldwasser" OR "s. goldwasser" OR "goldwasser, shafi" OR "goldwasser, s."
+[0m[[32msuccess[0m] [0mTotal time: 399 s, completed Jul 26, 2013 12:28:42 PM[0m
+> :q

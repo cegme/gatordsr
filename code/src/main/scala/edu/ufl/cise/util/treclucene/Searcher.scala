@@ -97,7 +97,8 @@ object Searcher extends Logging {
   }
   
   def searchEntity(aliasList: ArrayList[String]){
-    val aliases = aliasList.toArray(Array[String]())
+    val aliases = aliasList.toArray(Array[String]()).distinct
+    
     val concatedArgs =  aliases.map(s => {
    if(s == ",")
      "OR"
@@ -146,10 +147,18 @@ object Searcher extends Logging {
     
 
    // for(int i=0;i<hits.length;++i)
+<<<<<<< HEAD
 //    hits.foreach(f => {
 //      val docId = f.doc;
 //      val d = searcher.doc(docId);
 //      println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
+=======
+  
+//    hits.foreach(f => {
+//      val docId = f.doc;
+//      val d = searcher.doc(docId);
+//  // /   println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
+>>>>>>> Generate Lucene statistics for each entity using NameOrderGenerator
 //   })
 
     // reader can only be closed when there
