@@ -28,13 +28,17 @@ libraryDependencies += "edu.mit" % "jwi" % "2.2.3"
 
 libraryDependencies += "org.apache.thrift" % "libthrift" % "0.9.0"
 
-libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "1.3.4"
+//libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "1.3.4"
+libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.2.0"
+
+//libraryDependencies += "edu.stanford.nlp.models" % "stanford-corenlp-models" % "1.3.4" from "http://scalasbt.artifactoryonline.com/scalasbt/repo/edu/stanford/nlp/stanford-corenlp/1.3.4/stanford-corenlp-1.3.4-models.jar"
+libraryDependencies += "edu.stanford.nlp.models" % "stanford-corenlp-models" % "3.2.0" from "http://scalasbt.artifactoryonline.com/scalasbt/repo/edu/stanford/nlp/stanford-corenlp/3.2.0/stanford-corenlp-3.2.0-models.jar"
+
+//libraryDependencies += "edu.stanford.nlp" % "stanford-parser" % "3.2.0"
 
 libraryDependencies += "org.spark-project" % "spark-core_2.9.2" % "0.7.0"
 
 libraryDependencies += "org.spark-project" % "spark-streaming_2.9.2" % "0.7.0"
-
-libraryDependencies += "edu.stanford.nlp.models" % "stanford-corenlp-models" % "1.3.4" from "http://scalasbt.artifactoryonline.com/scalasbt/repo/edu/stanford/nlp/stanford-corenlp/1.3.4/stanford-corenlp-1.3.4-models.jar"
 
 libraryDependencies += "com.google.guava" % "guava" % "14.0.1"
 
@@ -68,3 +72,7 @@ libraryDependencies += "org.apache.lucene" % "lucene-queryparser" % "4.3.1"
 libraryDependencies += "com.codahale" % "jerkson_2.9.1" % "0.5.0"
 
 libraryDependencies += "org.bouncycastle" % "bcpg-jdk16" % "1.46"
+
+libraryDependencies += "net.sourceforge.htmlcleaner" % "htmlcleaner" % "2.6"
+
+libraryDependencies += "edu.stanford.nlp" % "stanford-parser" % "3.2.0"

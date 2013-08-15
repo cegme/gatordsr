@@ -17,6 +17,15 @@ import java.io.PrintWriter
 import java.io.File
 import edu.ufl.cise.pipeline.KBAJson
 import java.net.URLDecoder
+import org.htmlcleaner.HtmlCleaner
+import org.htmlcleaner.TagNode
+import scala.util.Properties
+import java.util.Properties
+import edu.stanford.nlp.pipeline.StanfordCoreNLP
+import edu.stanford.nlp.pipeline.Annotation
+import edu.stanford.nlp.ling.CoreAnnotations
+import scala.collection.JavaConversions._
+
 
 /**
  * Preload entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json then populate
@@ -25,6 +34,12 @@ import java.net.URLDecoder
 object WikiAPI {
 
   def main(args: Array[String]): Unit = {
+
+    inlineAliasGenerator();
+    // redirectAliasGenerator();
+  }
+
+  def redirectAliasGenerator() {
 
     val entity_list = new ArrayList[Entity]
     Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json", entity_list)
@@ -81,15 +96,12 @@ object WikiAPI {
 
       })
 
-      
-      
       //  NameOrderGenerator.
       val size = aliasList.size()
       for (a <- 0 to size) {
         aliasList.addAll(NameOrderGenerator.namePermutation(aliasList.get(a)))
       }
-      
-    
+
       if (e.target_id.contains("wikipedia"))
         e.alias.clear()
       removeDuplicate(aliasList)
@@ -104,12 +116,101 @@ object WikiAPI {
     p.print(json)
     p.close()
     //  println(json)
+
   }
 
   def removeDuplicate(arlList: ArrayList[String]) {
     val h = new HashSet(arlList);
     arlList.clear();
     arlList.addAll(h);
+  }
+
+  def inlineAliasGenerator() {
+    val pageLines = new ArrayList[String]();
+
+    val url = new URL("http://en.wikipedia.org/wiki/IDSIA")
+    val is = url.openStream(); // throws an IOException
+
+    val br = new BufferedReader(new InputStreamReader(is));
+    var documentStr = ""
+    var line = "";
+    var finished = false;
+    while (!finished) {
+
+      line = br.readLine();
+
+      if (line == null)
+        finished = true;
+      else
+        documentStr = documentStr.concat(line);
+
+    }
+    br.close();
+    is.close();
+
+    println(documentStr)
+
+    val htmlCleaner = new HtmlCleaner();
+    val root = htmlCleaner.clean(documentStr);
+    val boldAlias = root.evaluateXPath("//*[@id=\"mw-content-text\"]/p[1]/b");
+    if (boldAlias.length > 0) {
+      val f0 = boldAlias.apply(0)
+      val b = f0.isInstanceOf[TagNode];
+      val tagNode = f0.asInstanceOf[TagNode]
+      println(tagNode.getText())
+     // if (b) {
+     //   tagNode.removeFromTree();
+     // }
+    }
+    
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    
+    val firstParagraph = root.evaluateXPath("//*[@id=\"mw-content-text\"]/p[1]");
+    if (firstParagraph.length > 0) {
+      val f0 = firstParagraph.apply(0)
+      val b = f0.isInstanceOf[TagNode];
+      val tagNode = f0.asInstanceOf[TagNode]
+      println(tagNode.getText())
+    
+    
+    // creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution 
+    val props = new Properties();
+    props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+    val pipeline = new StanfordCoreNLP(props);
+    
+    // read some text in the text variable
+    val text = tagNode.getText() // Add your text here!
+    
+    // create an empty Annotation just with the given text
+    val document = new Annotation(text+"");
+    
+    // run all Annotators on this text
+    pipeline.annotate(document);
+    
+    // these are all the sentences in this document
+    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
+    val sentences = document.get(classOf[CoreAnnotations.SentencesAnnotation]);
+    
+    sentences.toList.foreach(s => {
+      println(s)
+      val tokens  = s.get(classOf[CoreAnnotations.TokensAnnotation])
+      
+      tokens.toList.foreach(t =>{println(t.lemma())})
+      })
+    
+    
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    
+    documentStr.replaceAll("<script[^>]*>[^<]*</script>", "")
+    documentStr = documentStr.replaceAll("<[^>]*>", "")
+    documentStr = documentStr.replaceAll("</[^>]*>", "")
+    println(documentStr)
   }
 
 }
