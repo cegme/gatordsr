@@ -33,7 +33,24 @@ std::string MentionChain::printSentence(streamcorpus::Sentence s) {
   for (auto &token : s.tokens) {
     ss << token.token << " ";
   }
-  //std::cerr << ss.str() << "\n";
+  return ss.str();
+}
+
+// day, instex, filename, tokens..., query entity
+std::string MentionChain::pretty_string() const {
+  
+  std::stringstream ss;
+
+  ss << day << "|" << fileName << "|" << stream_index << "|";
+  int max_tok = 7;
+  for (auto t : tokens()) {
+    ss << t << ",";
+    if (--max_tok < 1) {
+      ss << "...";
+    }
+  }
+  ss << "|" << qe.pretty_string();
+
   return ss.str();
 }
 
@@ -236,27 +253,37 @@ std::vector<streamcorpus::StreamItem> MentionChain::FileToStreamItem(std::string
 }
 
 std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
+  std::vector<QueryEntity> all_entities = QueryEntity::fileToQueryEntity();
+  return MentionChain::ReadLine(line, all_entities);
+}
+
+std::vector<MentionChain> MentionChain::ReadLine(std::string line, std::vector<QueryEntity> all_entities) {
   /* An example line:
     ling>2011-11-08-23 | social-265-c321d098ea52fed0c9612e7934034dbd-bf1d637ef0f126f139abb3fceb2ecb9c.sc.xz.gpg | 239 | 60adb14343a4fafabf0e76bd435cdaec || http://en.wikipedia.org/wiki/William_H._Miller_(writer),
     Sentence>adventism william miller
   */
+  log_debug("Reading Line: %s", line.c_str());
 
   char *data_line = new char[line.size()+1];
   std::strcpy (data_line, line.c_str());
-  char *p = std::strtok(data_line, ">");
+  char *p = std::strtok(data_line, " >");
+  p = std::strtok(NULL, "|");  // Need to update the tokenizer with the new string
 
   // Parse out the data
-  p = std::strtok(p, "|");  // Need to update the tokenizer with the new string
+  log_debug("date: %s", p);
+  //p = std::strtok(NULL, "|");  // Need to update the tokenizer with the new string
   std::string date(p);
   boost::algorithm::trim(date);
   p = std::strtok(NULL, "|"); 
 
   // parse out the file name
+  log_debug("fileName: %s", p);
   std::string fileName(p);
   boost::algorithm::trim(fileName);
   p = std::strtok(NULL, "|"); 
 
   // Grab the streamitem index
+  log_debug("si_index: %s", p);
   std::string si_index_str(p);
   boost::algorithm::trim(si_index_str);
   size_t si_index;
@@ -264,23 +291,32 @@ std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
   p = std::strtok(NULL, "|"); 
 
   // Doc id
+  log_debug("docid: %s", p);
   std::string docid(p);
   boost::algorithm::trim(docid);
   p = std::strtok(NULL, "|,"); 
 
   //Get the List of Query Entities
-  std::vector<QueryEntity> all_entities = QueryEntity::fileToQueryEntity();
+  
+  //std::vector<QueryEntity> all_entities = QueryEntity::fileToQueryEntity(); // Expensive!!!
 
-  // Grab entities
+  // Grab entities(p)
   std::list<QueryEntity> entities;
-  while (p) {
+  auto candidate_ids = tok(std::string(p), ", ");
+  for ( auto en : candidate_ids) {
+    boost::algorithm::trim(en);
+    log_debug("en: [%s]", en.c_str());
+    entities.push_back( QueryEntity::targetidToQueryEntity(en, all_entities) ); 
+  }
+  /*while (p) {
     std::string en(p);
+    log_trace("en: %s", p);
     boost::algorithm::trim(en);
     if (!en.empty()) { // Take care of the trailing comma
       entities.push_back( QueryEntity::targetidToQueryEntity(en, all_entities) ); 
     }
     p = std::strtok(NULL, ","); 
-  }
+  }*/
 
   // Delete created string
   delete [] data_line;
