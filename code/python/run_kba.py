@@ -7,7 +7,7 @@ import subprocess
 def ccr(infile, outfile):
   # TODO code to run the code
   # subprocess info http://docs.python.org/2/library/subprocess.html#subprocess.call
-  subprocess.call(["echo", "'sbt run-main ...'"])
+  subprocess.call([ "sbt run-main edu.ufl.cise.kb.WikiAPI", ">", outfile])
   pass
 
 
@@ -30,9 +30,9 @@ if __name__ == "__main__":
   import argparse
 
   parser = argparse.ArgumentParser(description='This is the file to execute the KBA program for the Gator DSR team')
-  parser.add_argument("ccrout", metavar="ccr_file", type=str, default="/tmp/ccr", nargs=1, help="This is the output file for the ccr step")
-  parser.add_argument("erout", metavar="cr_file", type=str, default="/tmp/ssf", nargs=1, help="This is the output file for the er step")
-  parser.add_argument("ssfout", metavar="ssf_file", type=str, default="/tmp/ssf", nargs=1, help="This is the output file for the ssf step")
+  parser.add_argument("ccrout", metavar="ccr_file", type=str, default="/tmp/ccr", help="This is the output file for the ccr step")
+  parser.add_argument("erout", metavar="cr_file", type=str, default="/tmp/ssf", help="This is the output file for the er step")
+  parser.add_argument("ssfout", metavar="ssf_file", type=str, default="/tmp/ssf", help="This is the output file for the ssf step")
 
   args = parser.parse_args()
 
