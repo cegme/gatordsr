@@ -20,7 +20,11 @@ public class NameOrderGenerator {
 		for (Entity e : l) {
 			if (e.entity_type().equals("PER")) {
 
+<<<<<<< HEAD
 				namePermutation(e.alias().get(0));
+=======
+				namePermutation(e.names().get(0));
+>>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
 
 			}
 		}

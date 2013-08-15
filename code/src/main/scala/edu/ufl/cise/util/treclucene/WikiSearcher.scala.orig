@@ -48,6 +48,7 @@
 //      logInfo("doc(%d): %s".format(i, searcher.doc(i).toString))
 //      i += 1
 //    }
+<<<<<<< HEAD
 //
 //  }
 //
@@ -170,3 +171,82 @@
 //
 //	}
 //}
+=======
+
+    //searcher.close
+    reader.close
+  }
+  
+  def searchEntity(aliasList: ArrayList[String]){
+    val aliases = aliasList.toArray(Array[String]())
+    val concatedArgs =  aliases.map(s => {
+   if(s == ",")
+     "OR"
+   else if(s!= "AND" && s != "OR") 
+        "\"" + s + "\"" 
+        else 
+          s}).reduce((s1,s2) => s1 + " " + s2)
+    
+      searchQueryParser(concatedArgs.toLowerCase())
+  }
+  
+ def searchQueryParser( querystr: String) {
+//		System.out.println("\nSearching for '" + searchString + "' using QueryParser");
+//		//Directory directory = FSDirectory.getDirectory(INDEX_DIRECTORY);
+//		val indexSearcher = new IndexSearcher(directory);
+//
+//		val queryParser = new QueryParser(FIELD_CONTENTS, new StandardAnalyzer());
+//		Query query = queryParser.parse(searchString);
+//		System.out.println("Type of query: " + query.getClass().getSimpleName());
+//		Hits hits = indexSearcher.search(query);
+//		displayHits(hits);
+   
+   
+   
+   val analyzer = new StandardAnalyzer(Version.LUCENE_43);
+   
+    // 1. create the index
+   // val index = new RAMDirectory();
+   val index =  new MMapDirectory(filedir);
+   
+       // the "title" arg specifies the default field to use
+    // when no field is explicitly specified in the query.
+    val q = new QueryParser(Version.LUCENE_43, "body", analyzer).parse(querystr);
+
+    // 3. search
+    val hitsPerPage = 10000000;
+    val reader = DirectoryReader.open(index); //TODO check index is full
+    val searcher = new IndexSearcher(reader);
+    val collector = TopScoreDocCollector.create(hitsPerPage, true);
+    searcher.search(q, collector);
+    val hits = collector.topDocs().scoreDocs;
+   
+    // 4. display results
+    logInfo( hits.length + " hits for: " + querystr);
+
+    
+
+   // for(int i=0;i<hits.length;++i)
+  
+    hits.take(20).foreach(f => {
+      val docId = f.doc;
+      val d = searcher.doc(docId);
+      // body,docid,docdatenum,docdate,doctitle,doctimesecnum,docname
+      //println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
+      logInfo("doctitle: " + d.get("doctitle"))
+      logInfo("docname: " + d.get("docname"))
+      logInfo("docid: " + d.get("docid"))
+      logInfo("docdate: " + d.get("docdate"))
+      logInfo("docdatenum: " + d.get("docdatenum"))
+      logInfo("doctimesecnum: " + d.get("doctimesecnum"))
+      //logInfo(d.get("body"))
+      logInfo("~"*40)
+   })
+
+    // reader can only be closed when there
+    // is no need to access the documents any more.
+   // reader.close();
+
+	}
+}
+>>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8

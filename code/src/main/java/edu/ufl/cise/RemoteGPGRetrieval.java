@@ -1,5 +1,6 @@
 package edu.ufl.cise;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -17,8 +18,8 @@ import streamcorpus.Token;
 
 public class RemoteGPGRetrieval {
 
-	public static final String	SDD_BASE_PATH	= "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
-	public static final String	SDE_BASE_PATH	= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public static final String SDD_BASE_PATH = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
+	public static final String SDE_BASE_PATH = "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
 
 	public static void main(String[] args) {
 		List<StreamItem> l = null;
@@ -46,11 +47,18 @@ public class RemoteGPGRetrieval {
 		}
 	}
 
-	public static List<StreamItem> getLocalStreams(String date, String fileName) throws IOException {
-		return getLocalStreams(SDD_BASE_PATH, date, fileName);
+	public static List<StreamItem> getLocalStreams(String date, String fileName)
+			throws IOException {
+		File f = new File(SDD_BASE_PATH + date + "/" + fileName);
+		if (f.exists())
+			return getLocalStreams(SDD_BASE_PATH, date, fileName);
+		else
+			return getLocalStreams(SDE_BASE_PATH, date, fileName);
+
 	}
 
-	public static List<StreamItem> getLocalStreams(String basePath, String date, String fileName) throws IOException {
+	public static List<StreamItem> getLocalStreams(String basePath,
+			String date, String fileName) throws IOException {
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
 				+ basePath + date + "/" + fileName;
 		// System.out.println(command);
@@ -72,7 +80,8 @@ public class RemoteGPGRetrieval {
 				if (protocol.getTransport().isOpen())
 					si.read(protocol);
 				list.add(si);
-				// SIWrapper siw = new SIWrapper(day, hour, fileName, index, si);
+				// SIWrapper siw = new SIWrapper(day, hour, fileName, index,
+				// si);
 				index = index + 1;
 			} catch (TTransportException e) {
 				tTransportExceptionPrintString(e);
@@ -136,7 +145,8 @@ public class RemoteGPGRetrieval {
 			StreamItem si = new StreamItem();
 			try {
 				si.read(protocol);
-				if (si.getBody() != null && si.getBody().getClean_visible() != null) {
+				if (si.getBody() != null
+						&& si.getBody().getClean_visible() != null) {
 					// System.out.println(si.getBody().getClean_visible()
 					// .substring(0, 5));
 				}
@@ -154,7 +164,8 @@ public class RemoteGPGRetrieval {
 	/**
 	 * Reads non encrypted si files and returns a list of them.
 	 */
-	public static List<StreamItem> readNonEncrypted(String fileName) throws IOException, TTransportException {
+	public static List<StreamItem> readNonEncrypted(String fileName)
+			throws IOException, TTransportException {
 		InputStream is = new java.io.FileInputStream(new java.io.File(fileName));
 		XZCompressorInputStream xzis = new XZCompressorInputStream(is);
 		TIOStreamTransport transport = new TIOStreamTransport(xzis);
@@ -168,7 +179,8 @@ public class RemoteGPGRetrieval {
 				StreamItem si = new StreamItem();
 				si.read(protocol);
 				listSI.add(si);
-				System.out.println(si.getBody().getSentences().get("lingpipe").get(0).getTokens().get(0));
+				System.out.println(si.getBody().getSentences().get("lingpipe")
+						.get(0).getTokens().get(0));
 			} catch (TTransportException e) {
 				RemoteGPGRetrieval.tTransportExceptionPrintString(e);
 				// e.printStackTrace();

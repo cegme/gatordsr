@@ -25,16 +25,16 @@ object SimpleJob extends Logging {
   def getPOS(tokens: Array[Token]): String = {
     var sb = new java.lang.StringBuilder
     tokens.foreach(token => {
-        sb.append(token.pos).append(" ")
-      })
+      sb.append(token.pos).append(" ")
+    })
     sb.toString()
   }
 
   def getNER(tokens: Array[Token]): String = {
     var sb = new java.lang.StringBuilder
     tokens.foreach(token => {
-        sb.append(token.entity_type).append(" ")
-      })
+      sb.append(token.entity_type).append(" ")
+    })
     //println(sb)
     sb.toString()
   }
@@ -42,16 +42,16 @@ object SimpleJob extends Logging {
   def getMentionID(tokens: Array[Token]): String = {
     var sb = new java.lang.StringBuilder
     tokens.foreach(token => {
-        sb.append(token.mention_id).append(" ")
-      })
+      sb.append(token.mention_id).append(" ")
+    })
     //println(sb)
     sb.toString()
   }
   def getEquivID(tokens: Array[Token]): String = {
     var sb = new java.lang.StringBuilder
     tokens.foreach(token => {
-        sb.append(token.equiv_id).append(" ")
-      })
+      sb.append(token.equiv_id).append(" ")
+    })
     //println(sb)
     sb.toString()
   }
@@ -59,8 +59,8 @@ object SimpleJob extends Logging {
   def transform(tokens: Array[Token]): String = {
     var sb = new java.lang.StringBuilder
     tokens.foreach(token => {
-        sb.append(token.token).append(" ")
-      })
+      sb.append(token.token).append(" ")
+    })
     //println(sb)
     sb.toString()
   }
@@ -68,9 +68,9 @@ object SimpleJob extends Logging {
   def transform2(tokens: Array[Token]): String = {
     var sb = new java.lang.StringBuilder
     tokens.foreach(token => {
-        if (token.getEntity_type() != null)
-          sb.append(token.token).append(" ")
-      })
+      if (token.getEntity_type() != null)
+        sb.append(token.token).append(" ")
+    })
     //println(sb)
     sb.toString()
   }
@@ -85,76 +85,76 @@ object SimpleJob extends Logging {
     //  val pw = new PrintWriter("resources/test/ss.txt")   
     val lines = Source.fromFile(filePath).getLines //.take(100)//.slice(0, n)
     lines.foreach(line => {
-        // parse one line to get parameters
-        val array = line.split(" \\| ")
-        val date_hour = array(0).split(">")(1)
-        val filename = array(1)
-        val si_num = array(2)
-        val topics = line.split("\\|\\| ")(1).split(", ")
-        println(num + " " + date_hour + " " + filename + " " + si_num)
-        //println(topics.mkString(" "))
-        val ens = findEntity(topics)
-        //val list = RemoteGPGRetrieval.getStreams(date_hour, filename)
-        //val si = list.get(Integer.parseInt(si_num))
-        val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
-        //val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
-        val ss = si.body.sentences.get("lingpipe")
-        // process all the sentences
-        for (i <- 0 until ss.size()) {
-          val s = SimpleJob.transform2(ss.get(i).getTokens().toArray(Array[Token]()))
-          //println(s.toLowerCase())
-          //println(s)
-          ens.foreach(e => {
-              Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
-                  //println(name.toLowerCase())
-                  if (s.toLowerCase().contains(name.toLowerCase())) { //take to annotate. morteza
-                  // print line to the file, containing date_hour, filename, si_num, sentence i and entity index e
-                  //println(s)
-                  // println(name)
-                  //println(num + " " + date_hour + " " + filename + " " + si_num + " " + i + " " + e + " " + Pipeline.entities(e).topic_id)
-
-                  val tempStr = date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
-                  si.stream_id + ", " + Pipeline.entities(e).topic_id
-                  //Pipeline.annotate(ss.get(i), tempStr, e, name)
-                  println("Hello! " + i)
-
-                  //pw.println(date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
-                    //   si.stream_id  + ", " +  Pipeline.entities(e).topic_id)
-                  //pw.flush()
-                  // store sentences into files, too             
-                }
-              })
-          })
-      }
-      num = num + 1
-    })
-  // improve the performance
-  //  pw.close()
-  // store the filtered sentences into a file
-}
-
-def filterUsingStreamFiles(filePath:String) = {
-
-    val entityListLine = Source.fromFile(filePath).getLines.toArray //.take(100)//.slice(0, n)
-
-    for( eLine <- 0 until entityListLine.size) {
-
-      val fileIndex:String = eLine / 250 + ""
-      val siIndex:String = eLine % 250 + ""
-
-val line =   entityListLine(eLine)
- val array = line.split(" \\| ")
+      // parse one line to get parameters
+      val array = line.split(" \\| ")
       val date_hour = array(0).split(">")(1)
       val filename = array(1)
       val si_num = array(2)
       val topics = line.split("\\|\\| ")(1).split(", ")
-  //    println(num + " " + date_hour + " " + filename + " " + si_num)
+      println(num + " " + date_hour + " " + filename + " " + si_num)
+      //println(topics.mkString(" "))
+      val ens = findEntity(topics)
+      //val list = RemoteGPGRetrieval.getStreams(date_hour, filename)
+      //val si = list.get(Integer.parseInt(si_num))
+      val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
+      //val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
+      val ss = si.body.sentences.get("lingpipe")
+      // process all the sentences
+      for (i <- 0 until ss.size()) {
+        val s = SimpleJob.transform2(ss.get(i).getTokens().toArray(Array[Token]()))
+        //println(s.toLowerCase())
+        //println(s)
+        ens.foreach(e => {
+          Pipeline.entities(e).alias.toArray(Array[String]()).foreach(name => {
+            //println(name.toLowerCase())
+            if (s.toLowerCase().contains(name.toLowerCase())) { //take to annotate. morteza
+              // print line to the file, containing date_hour, filename, si_num, sentence i and entity index e
+              //println(s)
+              // println(name)
+              //println(num + " " + date_hour + " " + filename + " " + si_num + " " + i + " " + e + " " + Pipeline.entities(e).topic_id)
+
+              val tempStr = date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
+                si.stream_id + ", " + Pipeline.entities(e).target_id
+              //Pipeline.annotate(ss.get(i), tempStr, e, name)
+              println("Hello! " + i)
+
+              //pw.println(date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + e + ", " + name + ", " +
+              //   si.stream_id  + ", " +  Pipeline.entities(e).topic_id)
+              //pw.flush()
+              // store sentences into files, too             
+            }
+          })
+        })
+      }
+      num = num + 1
+    })
+    // improve the performance
+    //  pw.close()
+    // store the filtered sentences into a file
+  }
+
+  def filterUsingStreamFiles(filePath: String) = {
+
+    val entityListLine = Source.fromFile(filePath).getLines.toArray //.take(100)//.slice(0, n)
+
+    for (eLine <- 0 until entityListLine.size) {
+
+      val fileIndex: String = eLine / 250 + ""
+      val siIndex: String = eLine % 250 + ""
+
+      val line = entityListLine(eLine)
+      val array = line.split(" \\| ")
+      val date_hour = array(0).split(">")(1)
+      val filename = array(1)
+      val si_num = array(2)
+      val topics = line.split("\\|\\| ")(1).split(", ")
+      //    println(num + " " + date_hour + " " + filename + " " + si_num)
 
       val ens = findEntity(topics)
 
       // fetch the streamItem
       val year = line.substring(1, 5)
-      val si:StreamItem = fetchFromStreamItemIndex(fileIndex, siIndex, year)
+      val si: StreamItem = fetchFromStreamItemIndex(fileIndex, siIndex, year)
 
       // TODO copy the other filter  tasks.
       val ss = si.body.sentences.get("lingpipe")
@@ -169,17 +169,17 @@ val line =   entityListLine(eLine)
           val token = tokens.get(j)
           sb.append(token.token + " ")
           ens.foreach(e => {
-              Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
-                  //println(name.toLowerCase())
-                  if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null && token.entity_type != null) {
+            Pipeline.entities(e).alias.toArray(Array[String]()).foreach(name => {
+              //println(name.toLowerCase())
+              if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null && token.entity_type != null) {
 
-                    val le = new LingEntity(token.entity_type.toString(), token.mention_id, token.equiv_id)
-                    le.entityIndex = e
-                    list.add(le)
-                    find = true
-                  }
-                })
+                val le = new LingEntity(token.entity_type.toString(), token.mention_id, token.equiv_id)
+                le.entityIndex = e
+                list.add(le)
+                find = true
+              }
             })
+          })
         }
 
         for (i <- 0 until ss.size()) {
@@ -192,7 +192,7 @@ val line =   entityListLine(eLine)
               if (token.equiv_id == lingentity.equiv_id) {
                 val e = lingentity.entityIndex
                 val tempStr = date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + lingentity.entityIndex + ", NA, " +
-                si.stream_id + ", " + Pipeline.entities(e).topic_id
+                  si.stream_id + ", " + Pipeline.entities(e).target_id
                 Pipeline.annotate(ss.get(i), tempStr, e, lingentity)
               }
             }
@@ -200,12 +200,12 @@ val line =   entityListLine(eLine)
         }
 
       }
-    }    
+    }
   }
 
   private val siFileCache: WeakHashMap[String, LinkedList[StreamItem]] = new WeakHashMap[String, LinkedList[StreamItem]]()
-  def fetchFromStreamItemIndex(fileIndex:String, siIndex:String, year : String): StreamItem = {
-    
+  def fetchFromStreamItemIndex(fileIndex: String, siIndex: String, year: String): StreamItem = {
+
     //Define these paths somewhere nice
     val theSIFile = "/media/sde/entitySIs.backup/totalSIs.o.%s.totalEntitiesSIs.txt.sorted.%s"
 
@@ -218,7 +218,6 @@ val line =   entityListLine(eLine)
 
     }
   }
-
 
   def filterSentencesCoref(n: Integer, filePath: String) = {
     var num = 1
@@ -236,62 +235,65 @@ val line =   entityListLine(eLine)
       val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
       val ss = si.body.sentences.get("lingpipe")
       // process all the sentences
-      for (i <- 0 until ss.size()) {
-
-        val tokens = ss.get(i).getTokens();
-        val sb = new StringBuilder("")
-        val list = new LinkedList[LingEntity]()
-        var find = false
-        val s = transform(tokens.toArray(Array[Token]()))
-        if (!isStop(s)){
-          for (j <- 0 until tokens.size() if !find) {
-            val token = tokens.get(j)
-            sb.append(token.token + " ")
-            ens.foreach(e => {
-              Pipeline.entities(e).names.toArray(Array[String]()).foreach(name => {
-                //println(name.toLowerCase())
-                if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null && token.entity_type != null) {
-
-                  val le = new LingEntity(token.entity_type.toString(), token.mention_id, token.equiv_id)
-                  le.entityIndex = e
-                  list.add(le)
-                  find = true
-                }
-              })
-            })
-          }
-        }
+      if (ss != null) {
         for (i <- 0 until ss.size()) {
+
           val tokens = ss.get(i).getTokens();
-          for (j <- 0 until tokens.size()) {
-            for (k <- 0 until list.size()) {
+          val sb = new StringBuilder("")
+          val list = new LinkedList[LingEntity]()
+          var find = false
+          val s = transform(tokens.toArray(Array[Token]()))
+          if (!isStop(s)) {
+            for (j <- 0 until tokens.size() if !find) {
               val token = tokens.get(j)
-              val lingentity = list.get(k)
-              if (token.equiv_id == lingentity.equiv_id) {
-                val e = lingentity.entityIndex
-                val tempStr = date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + lingentity.entityIndex + ", NA, " +
-                  si.stream_id + ", " + Pipeline.entities(e).topic_id
-                Pipeline.annotate(ss.get(i), tempStr, e, lingentity)
+              sb.append(token.token + " ")
+              ens.foreach(e => {
+                Pipeline.entities(e).alias.toArray(Array[String]()).foreach(name => {
+                  //println(name.toLowerCase())
+                  if (sb.toString.toLowerCase().contains(name.toLowerCase()) && token != null && token.entity_type != null) {
+
+                    val le = new LingEntity(token.entity_type.toString(), token.mention_id, token.equiv_id)
+                    le.entityIndex = e
+                    list.add(le)
+                    find = true
+                  }
+                })
+              })
+            }
+          }
+          for (i <- 0 until ss.size()) {
+            val tokens = ss.get(i).getTokens();
+            for (j <- 0 until tokens.size()) {
+              for (k <- 0 until list.size()) {
+                val token = tokens.get(j)
+                val lingentity = list.get(k)
+                if (token.equiv_id == lingentity.equiv_id) {
+                  val e = lingentity.entityIndex
+                  val tempStr = date_hour + ", " + filename + ", " + si_num + ", " + i + ", " + lingentity.entityIndex + ", NA, " +
+                    si.stream_id + ", " + Pipeline.entities(e).target_id
+                  Pipeline.annotate(ss.get(i), tempStr, e, lingentity)
+                }
               }
             }
           }
         }
+      }else{
+        logInfo("nullLing>"+line)
       }
-      
     })
   }
-  
-  def isStop(s : String) : Boolean = {
+
+  def isStop(s: String): Boolean = {
     var exist = false
     Pipeline.stops.foreach(stop => {
-      if (s.toLowerCase().contains(stop.toLowerCase())){
+      if (s.toLowerCase().contains(stop.toLowerCase())) {
         exist = true
         return exist
       }
     })
     exist
   }
-  
+
   // find corresponding entities by name
   def findEntity(topics: Array[String]) = {
     // get the indexes of the entities contained in one document
@@ -299,7 +301,7 @@ val line =   entityListLine(eLine)
     var index = 0
     topics.foreach(topic => {
       for (i <- 0 until Pipeline.entities.size) {
-        if (Pipeline.entities(i).topic_id.toLowerCase().equals(topic.toLowerCase())) {
+        if (Pipeline.entities(i).target_id.toLowerCase().equals(topic.toLowerCase())) {
           ens(index) = i
           index = index + 1
         }
