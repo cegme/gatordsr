@@ -17,6 +17,8 @@ import org.apache.lucene.store.MMapDirectory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
 
+import scala.collection.JavaConversions._
+
 import edu.ufl.cise.Logging
 
 object Searcher extends Logging {
@@ -97,7 +99,7 @@ object Searcher extends Logging {
   }
 
   def searchEntity(logNote: String, aliasList: ArrayList[String]) {
-    val aliases = aliasList.toArray(Array[String]()).distinct
+    val aliases = aliasList.toList.distinct
 
     val concatedArgs = aliases.map(s => {
       if (s == ",")
