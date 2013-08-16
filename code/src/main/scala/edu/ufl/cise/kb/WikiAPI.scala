@@ -129,7 +129,7 @@ object WikiAPI {
       removeDuplicate(e.alias)
       //  println(generate(e.alias))
      // println(e.alias)
-       Searcher.searchEntity(e.target_id, aliasList)
+       Searcher.searchEntity(e.target_id,  e.alias)
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
