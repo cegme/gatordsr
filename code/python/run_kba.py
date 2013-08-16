@@ -29,7 +29,7 @@ def ssf(infile, outfile):
 if __name__ == "__main__":
   import argparse
 
-  parser = argparse.ArgumentParser(description='This is the file to execute the KBA program for the Gator DSR team')
+  parser = argparse.ArgumentParser(description='This is the file to execute the KBA program for the Gator DSR team. You should run this from the code folder with python python/run_kba.py .')
   parser.add_argument("ccrout", metavar="ccr_file", type=str, default="/tmp/ccr", help="This is the output file for the ccr step")
   parser.add_argument("erout", metavar="cr_file", type=str, default="/tmp/ssf", help="This is the output file for the er step")
   parser.add_argument("ssfout", metavar="ssf_file", type=str, default="/tmp/ssf", help="This is the output file for the ssf step")
