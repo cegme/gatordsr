@@ -7,7 +7,7 @@ ifneq (, $(findstring redhat, $(SYS)))
 endif
 
 
-DEBUG = -g
+DEBUG = -g -pg
 CC = $(GPP) $(DEBUG) -w -O7 -Wno-deprecated -std=c++0x -march=native 
 #CC = g++ -g -std=gnu++0x 
 
@@ -17,16 +17,21 @@ ifdef linux
 tag = -n
 endif
 
-EXTRAS = -lfl -lboost_date_time -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H -DHAVE_INTTYPES_H
+#EXTRAS = -lfl -lboost_date_time -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H -DHAVE_INTTYPES_H -L/usr/local/lib
+EXTRAS = -lfl -lboost_date_time -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H -DHAVE_INTTYPES_H 
 
-main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o ER.o
-	$(CC) -w -o main streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o ER.o $(EXTRAS)
+main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o
+	$(CC) -w -o main ER.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o $(EXTRAS)
 
-MentionChain: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o
-	$(CC) -w -o main streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o $(EXTRAS)
+test:  streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o
+	$(CC) -w -o test test.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o $(EXTRAS)
 
-entity: streamcorpus_types.o streamcorpus_constants.o entity_match.o MentionChain.o
-	$(CC) -w -o entity streamcorpus_types.o streamcorpus_constants.o entity_match.o MentionChain.o $(EXTRAS)
+
+#MentionChain: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o
+#	$(CC) -w -o main streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o $(EXTRAS)
+
+#entity: streamcorpus_types.o streamcorpus_constants.o entity_match.o MentionChain.o
+#	$(CC) -w -o entity streamcorpus_types.o streamcorpus_constants.o entity_match.o MentionChain.o $(EXTRAS)
 
 streamcorpus_types.o: streamcorpus_types.cpp
 	$(CC) -c streamcorpus_types.cpp $(EXTRAS)
@@ -56,5 +61,6 @@ ER.o: ER.cc
 clean:
 	rm -f *.o
 	rm -f main
+	rm -f test
 
 

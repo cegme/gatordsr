@@ -7,6 +7,101 @@
 #include "Parameters.h"
 #include "Util.h"
 
+
+std::vector<std::pair<std::string, double> > const Parameters::get_params() {
+
+  std::vector<std::pair<std::string, double> > params;
+  
+  // TODO params.insert(params.end(), qm_params.cbegin(), qm_params.cend());
+  params.insert(params.end(), mc_params.cbegin(), mc_params.cend());
+  params.insert(params.end(), et_params.cbegin(), et_params.cend());
+
+  return params;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+std::map<std::string, double> const Parameters::qm_params = {
+  {"qe_match", 500.0},
+  {"jaccard_80", 100.0},
+  {"jaccard_90", 200.0}
+};
+
+bool Parameters::qm_qe_match(QueryEntity qe, const MentionChain &m) {
+  return qe.target_id == m.qe.target_id;
+}
+
+bool Parameters::qm_jaccard_80(QueryEntity qe, const MentionChain &m) {
+  // Get both Vvectors and sort it 
+  std::vector<std::string> a = qe.wikipedia_tokens;
+  std::vector<std::string> b = m.tokens();
+
+  // Sort vectors
+  std::sort(a.begin(), a.end());
+  std::sort(b.begin(), b.end());
+  
+  // Union the vocabulary of both vectors
+  // M11
+  std::vector<std::string> m11(a.size()+b.size());
+  auto it11 = std::set_union (a.begin(), a.end(), b.begin(), b.end(), m11.begin());
+  m11.resize(it11 - m11.begin());
+
+  // M01
+  std::vector<std::string> m01(a.size()+b.size());
+  auto it01 = std::set_difference (a.begin(), a.end(), b.begin(), b.end(), m01.begin());
+  m01.resize(it01 - m01.begin());
+
+  // M10
+  std::vector<std::string> m10(a.size()+b.size());
+  auto it10 = std::set_difference (a.begin(), a.end(), b.begin(), b.end(), m10.begin());
+  m10.resize(it10 - m10.begin());
+
+  
+  // Is this greater than 0.8
+  log_info("result jaccard_80: %f", (double) m11.size()/(m11.size() + m10.size() + m01.size()));
+  return (m11.size()/ (m11.size() + m10.size() + m01.size())) > .8 ? true:false;
+}
+
+bool Parameters::qm_jaccard_90(QueryEntity qe, const MentionChain &m) {
+  // Get both Vvectors and sort it 
+  std::vector<std::string> a = qe.wikipedia_tokens;
+  std::vector<std::string> b = m.tokens();
+
+  // Sort vectors
+  std::sort(a.begin(), a.end());
+  std::sort(b.begin(), b.end());
+  
+  // Union the vocabulary of both vectors
+  // M11
+  std::vector<std::string> m11(a.size()+b.size());
+  auto it11 = std::set_union (a.begin(), a.end(), b.begin(), b.end(), m11.begin());
+  m11.resize(it11 - m11.begin());
+
+  // M01
+  std::vector<std::string> m01(a.size()+b.size());
+  auto it01 = std::set_difference (a.begin(), a.end(), b.begin(), b.end(), m01.begin());
+  m01.resize(it01 - m01.begin());
+
+  // M10
+  std::vector<std::string> m10(a.size()+b.size());
+  auto it10 = std::set_difference (a.begin(), a.end(), b.begin(), b.end(), m10.begin());
+  m10.resize(it10 - m10.begin());
+
+  
+  // Is this greater than 0.9
+  log_debug("result jaccard_90: %f", (double) m11.size()/(m11.size() + m10.size() + m01.size()));
+  return (m11.size()/ (m11.size() + m10.size() + m01.size())) > .9 ? true:false;
+}
+
+
+std::map<std::string, std::function<bool(QueryEntity, const MentionChain &)> > const Parameters::qm_functions = {
+  {"qe_match", Parameters::qm_qe_match},
+  {"jaccard_80", Parameters::qm_jaccard_80},
+  {"jaccard_90", Parameters::qm_jaccard_90}
+};
+////////////////////////////////////////////////////////////////////////////////
+
 std::map<std::string, double> const Parameters::qt_params = {
   {"match", 100.0},
   {"overlap", 150.0}
@@ -128,7 +223,7 @@ bool Parameters::et_same_tokens(const Entity &e1) {
       log_info("m1:: %s", to_string(m1,",").c_str());
       log_info("m2:: %s", to_string(m2, ",").c_str());
       if (overlap.empty()) { log_info ("no_overlap"); return false; }
-      else  log_info ("overlap: %s", to_string(overlap, "+").c_str()); 
+      else  log_info ("yes_overlap: %s", to_string(overlap, "+").c_str()); 
     }
   }
 
