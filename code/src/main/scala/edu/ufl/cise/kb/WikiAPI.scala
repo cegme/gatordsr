@@ -128,8 +128,8 @@ object WikiAPI {
       e.alias.addAll(aliasList)
       removeDuplicate(e.alias)
       //  println(generate(e.alias))
-     // println(e.alias)
-       Searcher.searchEntity(e.target_id,  e.alias)
+      // println(e.alias)
+      Searcher.searchEntity(e.target_id, e.alias)
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
@@ -150,8 +150,6 @@ object WikiAPI {
 
     val aliases = new ArrayList[String]
     val pageLines = new ArrayList[String]();
-    
-    
 
     // val url = new URL("http://en.wikipedia.org/wiki/IDSIA")
     val url = new URL(urlStr)
@@ -175,8 +173,50 @@ object WikiAPI {
     is.close();
 
     // println(documentStr)
-
     val root = htmlCleaner.clean(documentStr);
+    boldExtractor(aliases, root);
+  //  regexExtractor(aliases, root);
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+
+    //      sentences.toList.foreach(s => {
+    //        //    println(s)
+    //        // val tokens = s.get(classOf[CoreAnnotations.TokensAnnotation])     
+    //        //tokens.toList.foreach(t =>{println(t.lemma())})
+    //      })
+
+    // println("---------------------Print sentences of first paragraph---------------------------")
+    //      val reader = new StringReader(text.toString());
+    //      val dp = new DocumentPreprocessor(reader);
+    //
+    //      val sentenceList = new ArrayList[String]();
+    //      val it = dp.iterator();
+    //      while (it.hasNext()) {
+    //        val sentenceSb = new StringBuilder();
+    //        val sentence: Array[HasWord] = it.next().toArray(Array[HasWord]())
+    //    //   println( sentence.deepToString)
+    //       
+    //        sentence.foreach(token => {
+    //          if (sentenceSb.length() > 1) {
+    //            sentenceSb.append(" ");
+    //          }
+    //          sentenceSb.append(token.word());
+    //        })
+    //
+    //        sentenceList.add(sentenceSb.toString());
+    //      }
+    //      sentenceList.foreach(f => println(f))
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    aliases
+  }
+
+  def boldExtractor(aliases: ArrayList[String], root: TagNode) {
+
     val boldAlias = root.evaluateXPath("//*[@id=\"mw-content-text\"]/p[1]/b");
     if (boldAlias.length > 0) {
       val f0 = boldAlias.apply(0)
@@ -189,10 +229,9 @@ object WikiAPI {
       //   tagNode.removeFromTree();
       // }
     }
+  }
 
-    /////////////////////////////////////////////////
-    /////////////////////////////////////////////////
-    /////////////////////////////////////////////////
+  def regexExtractor(aliases: ArrayList[String], root: TagNode) {
 
     val firstParagraph = root.evaluateXPath("//*[@id=\"mw-content-text\"]/p[1]");
     if (firstParagraph.length > 0) {
@@ -213,7 +252,7 @@ object WikiAPI {
       val sentences = document.get(classOf[CoreAnnotations.SentencesAnnotation]);
       val sentence = sentences.apply(0)
       val firstSentenceStr = sentence.get(classOf[CoreAnnotations.TextAnnotation])
-   //   println(firstSentenceStr)
+      //   println(firstSentenceStr)
       if (firstSentenceStr.contains('(')) {
         val parenthesisDesc = firstSentenceStr.substring(firstSentenceStr.indexOf('(') + 1, firstSentenceStr.indexOf(')'))
         // println(parenthesisDesc)
@@ -237,39 +276,6 @@ object WikiAPI {
         //   mapped.foreach(println)
         aliases.addAll(mapped.toList)
       }
-      //      sentences.toList.foreach(s => {
-      //        //    println(s)
-      //        // val tokens = s.get(classOf[CoreAnnotations.TokensAnnotation])     
-      //        //tokens.toList.foreach(t =>{println(t.lemma())})
-      //      })
-
-      // println("---------------------Print sentences of first paragraph---------------------------")
-      //      val reader = new StringReader(text.toString());
-      //      val dp = new DocumentPreprocessor(reader);
-      //
-      //      val sentenceList = new ArrayList[String]();
-      //      val it = dp.iterator();
-      //      while (it.hasNext()) {
-      //        val sentenceSb = new StringBuilder();
-      //        val sentence: Array[HasWord] = it.next().toArray(Array[HasWord]())
-      //    //   println( sentence.deepToString)
-      //       
-      //        sentence.foreach(token => {
-      //          if (sentenceSb.length() > 1) {
-      //            sentenceSb.append(" ");
-      //          }
-      //          sentenceSb.append(token.word());
-      //        })
-      //
-      //        sentenceList.add(sentenceSb.toString());
-      //      }
-      //      sentenceList.foreach(f => println(f))
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////
-    /////////////////////////////////////////////////
-    /////////////////////////////////////////////////
-    aliases
   }
-
 }
