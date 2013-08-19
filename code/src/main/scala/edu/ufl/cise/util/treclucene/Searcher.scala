@@ -120,7 +120,7 @@ object Searcher extends Logging {
    
    
    
-   val analyzer = new StandardAnalyzer(Version.LUCENE_40);
+   val analyzer = new StandardAnalyzer(Version.LUCENE_43);
    
     // 1. create the index
    // val index = new RAMDirectory();
@@ -128,7 +128,7 @@ object Searcher extends Logging {
    
        // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
-    val q = new QueryParser(Version.LUCENE_40, "clean_visible", analyzer).parse(querystr);
+    val q = new QueryParser(Version.LUCENE_43, "clean_visible", analyzer).parse(querystr);
 
     // 3. search
     val hitsPerPage = 10000000;
