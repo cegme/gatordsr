@@ -155,6 +155,7 @@ void QueryEntity::init() {
     boost::split(tokens, wikipedia_page, boost::is_any_of(", "), boost::token_compress_on);
     wikipedia_tokens = tokens;
   }
+  // Do something for twitter
 
 }
 

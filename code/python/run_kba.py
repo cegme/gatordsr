@@ -50,5 +50,6 @@ if __name__ == "__main__":
   # Run the pipeline
   ccr("", args.ccrout)
   er(args.ccrout, args.erout)
-  ssf(args.erout, args.ssfout)
+  # TODO split the args.ccrout file
+  ssf(args.erout, args.ssfout) # Run code/scriptfull.sh
 
