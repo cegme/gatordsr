@@ -112,24 +112,6 @@ object Searcher extends Logging {
 
     searchQueryParser(logNote, concatedArgs.toLowerCase().replace(" or ", " OR "))
   }
-<<<<<<< HEAD
-  
- def searchQueryParser( querystr: String) {
-//		System.out.println("\nSearching for '" + searchString + "' using QueryParser");
-//		//Directory directory = FSDirectory.getDirectory(INDEX_DIRECTORY);
-//		val indexSearcher = new IndexSearcher(directory);
-//
-//		val queryParser = new QueryParser(FIELD_CONTENTS, new StandardAnalyzer());
-//		Query query = queryParser.parse(searchString);
-//		System.out.println("Type of query: " + query.getClass().getSimpleName());
-//		Hits hits = indexSearcher.search(query);
-//		displayHits(hits);
-   
-   
-   
-   val analyzer = new StandardAnalyzer(Version.LUCENE_43);
-   
-=======
 
   def searchQueryParser(logNote: String, querystr: String) {
     //		System.out.println("\nSearching for '" + searchString + "' using QueryParser");
@@ -142,9 +124,8 @@ object Searcher extends Logging {
     //		Hits hits = indexSearcher.search(query);
     //		displayHits(hits);
 
-    val analyzer = new StandardAnalyzer(Version.LUCENE_40);
+    val analyzer = new StandardAnalyzer(Version.LUCENE_43);
 
->>>>>>> 0e14d48792e2c8da51965cd5e80ebf5cc3ebd2e5
     // 1. create the index
     // val index = new RAMDirectory();
     val index = new MMapDirectory(filedir);
@@ -164,20 +145,20 @@ object Searcher extends Logging {
     // 4. display results
       println(hits.length + "\t hits for: " + querystr);
 
-//    hits.foreach(f => {
-//      val docId = f.doc;
-//      val d = searcher.doc(docId);
-//      val gpgFile = d.get("gpgfile")
-//
-//      val m = p.matcher(gpgFile);
-//      m.find()
-//      val s1 = m.group(1);
-//      val s2 = m.group(2);
-//
-//      println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
-//        //d.get("si_docid") 
-//        "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
-//    })
+    hits.foreach(f => {
+      val docId = f.doc;
+      val d = searcher.doc(docId);
+      val gpgFile = d.get("gpgfile")
+
+      val m = p.matcher(gpgFile);
+      m.find()
+      val s1 = m.group(1);
+      val s2 = m.group(2);
+
+      println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
+        //d.get("si_docid") 
+        "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
+    })
 
     // reader can only be closed when there
     // is no need to access the documents any more.
