@@ -25,7 +25,9 @@ import edu.stanford.nlp.pipeline.StanfordCoreNLP
 import edu.stanford.nlp.pipeline.Annotation
 import edu.stanford.nlp.ling.CoreAnnotations
 import scala.collection.JavaConversions._
-
+import java.io.StringReader
+import edu.stanford.nlp.process.DocumentPreprocessor
+import edu.stanford.nlp.ling.HasWord
 
 /**
  * Preload entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json then populate
@@ -33,10 +35,18 @@ import scala.collection.JavaConversions._
  */
 object WikiAPI {
 
+  val htmlCleaner = new HtmlCleaner();
+  // creates a StanfordCoreNLP object, with POS tagging, lemmatization
+  val props = new Properties();
+  props.put("annotators", "tokenize, ssplit, pos, lemma");
+  val pipeline = new StanfordCoreNLP(props);
+
   def main(args: Array[String]): Unit = {
 
-    inlineAliasGenerator();
-    // redirectAliasGenerator();
+    val urlStr = "http://en.wikipedia.org/wiki/Basic_Element_%28company%29"
+    val inlineAliases = inlineAliasExtractor(urlStr);
+    //println(inlineAliases)
+    redirectAliasGenerator();
   }
 
   def redirectAliasGenerator() {
@@ -81,6 +91,7 @@ object WikiAPI {
 
       aliasList.add(eName)
       aliasList.add(URLDecoder.decode(eName, "UTF-8"))
+      aliasList.add(eName.replace("([^)]*)", ""))
 
       aliasList.add(eName.replace('_', ' '))
       aliasList.add(URLDecoder.decode(eName.replace('_', ' '), "UTF-8"))
@@ -96,6 +107,15 @@ object WikiAPI {
 
       })
 
+      try {
+        aliasList.addAll(inlineAliasExtractor(e.target_id))
+      } catch {
+        case ex: Exception => {
+          println(e.target_id + "Missing file exception.")
+        }
+
+      }
+
       //  NameOrderGenerator.
       val size = aliasList.size()
       for (a <- 0 to size) {
@@ -104,11 +124,12 @@ object WikiAPI {
 
       if (e.target_id.contains("wikipedia"))
         e.alias.clear()
-      removeDuplicate(aliasList)
-      e.alias.addAll(aliasList)
-      //  println(generate(e.alias))
 
-      Searcher.searchEntity(e.target_id, aliasList)
+      e.alias.addAll(aliasList)
+      removeDuplicate(e.alias)
+      //  println(generate(e.alias))
+     // println(e.alias)
+       Searcher.searchEntity(e.target_id,  e.alias)
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
@@ -125,10 +146,15 @@ object WikiAPI {
     arlList.addAll(h);
   }
 
-  def inlineAliasGenerator() {
-    val pageLines = new ArrayList[String]();
+  def inlineAliasExtractor(urlStr: String): ArrayList[String] = {
 
-    val url = new URL("http://en.wikipedia.org/wiki/IDSIA")
+    val aliases = new ArrayList[String]
+    val pageLines = new ArrayList[String]();
+    
+    
+
+    // val url = new URL("http://en.wikipedia.org/wiki/IDSIA")
+    val url = new URL(urlStr)
     val is = url.openStream(); // throws an IOException
 
     val br = new BufferedReader(new InputStreamReader(is));
@@ -148,69 +174,102 @@ object WikiAPI {
     br.close();
     is.close();
 
-    println(documentStr)
+    // println(documentStr)
 
-    val htmlCleaner = new HtmlCleaner();
     val root = htmlCleaner.clean(documentStr);
     val boldAlias = root.evaluateXPath("//*[@id=\"mw-content-text\"]/p[1]/b");
     if (boldAlias.length > 0) {
       val f0 = boldAlias.apply(0)
       val b = f0.isInstanceOf[TagNode];
       val tagNode = f0.asInstanceOf[TagNode]
-      println(tagNode.getText())
-     // if (b) {
-     //   tagNode.removeFromTree();
-     // }
+      val boldText = tagNode.getText().toString().trim()
+      aliases.add(boldText)
+      //   println(boldText)
+      // if (b) {
+      //   tagNode.removeFromTree();
+      // }
     }
-    
+
     /////////////////////////////////////////////////
     /////////////////////////////////////////////////
     /////////////////////////////////////////////////
-    
+
     val firstParagraph = root.evaluateXPath("//*[@id=\"mw-content-text\"]/p[1]");
     if (firstParagraph.length > 0) {
       val f0 = firstParagraph.apply(0)
       val b = f0.isInstanceOf[TagNode];
       val tagNode = f0.asInstanceOf[TagNode]
-      println(tagNode.getText())
-    
-    
-    // creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution 
-    val props = new Properties();
-    props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-    val pipeline = new StanfordCoreNLP(props);
-    
-    // read some text in the text variable
-    val text = tagNode.getText() // Add your text here!
-    
-    // create an empty Annotation just with the given text
-    val document = new Annotation(text+"");
-    
-    // run all Annotators on this text
-    pipeline.annotate(document);
-    
-    // these are all the sentences in this document
-    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
-    val sentences = document.get(classOf[CoreAnnotations.SentencesAnnotation]);
-    
-    sentences.toList.foreach(s => {
-      println(s)
-      val tokens  = s.get(classOf[CoreAnnotations.TokensAnnotation])
-      
-      tokens.toList.foreach(t =>{println(t.lemma())})
-      })
-    
-    
+      val text = tagNode.getText()
+      //  println(text)
+
+      // create an empty Annotation just with the given text
+      val document = new Annotation(text + "");
+
+      // run all Annotators on this text
+      pipeline.annotate(document);
+
+      // these are all the sentences in this document
+      // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
+      val sentences = document.get(classOf[CoreAnnotations.SentencesAnnotation]);
+      val sentence = sentences.apply(0)
+      val firstSentenceStr = sentence.get(classOf[CoreAnnotations.TextAnnotation])
+   //   println(firstSentenceStr)
+      if (firstSentenceStr.contains('(')) {
+        val parenthesisDesc = firstSentenceStr.substring(firstSentenceStr.indexOf('(') + 1, firstSentenceStr.indexOf(')'))
+        // println(parenthesisDesc)
+        val synArray = parenthesisDesc.split("[,;]")
+        val mapped = synArray.map(f => {
+          if (f.contains(":"))
+            f.substring(f.indexOf(":") + 1).trim()
+          else if (f.contains("\""))
+            f.substring(f.indexOf("\"") + 1, f.lastIndexOf("\"")).trim()
+          else if (f.contains("“"))
+            f.substring(f.indexOf("“") + 1, f.lastIndexOf("”")).trim()
+          else if (f.contains("also known as"))
+            f.substring(f.indexOf("also known as") + 1).trim()
+          else if (f.contains("also referred to as"))
+            f.substring(f.indexOf("also referred to as") + 1).trim()
+
+          else
+            f.trim()
+        })
+
+        //   mapped.foreach(println)
+        aliases.addAll(mapped.toList)
+      }
+      //      sentences.toList.foreach(s => {
+      //        //    println(s)
+      //        // val tokens = s.get(classOf[CoreAnnotations.TokensAnnotation])     
+      //        //tokens.toList.foreach(t =>{println(t.lemma())})
+      //      })
+
+      // println("---------------------Print sentences of first paragraph---------------------------")
+      //      val reader = new StringReader(text.toString());
+      //      val dp = new DocumentPreprocessor(reader);
+      //
+      //      val sentenceList = new ArrayList[String]();
+      //      val it = dp.iterator();
+      //      while (it.hasNext()) {
+      //        val sentenceSb = new StringBuilder();
+      //        val sentence: Array[HasWord] = it.next().toArray(Array[HasWord]())
+      //    //   println( sentence.deepToString)
+      //       
+      //        sentence.foreach(token => {
+      //          if (sentenceSb.length() > 1) {
+      //            sentenceSb.append(" ");
+      //          }
+      //          sentenceSb.append(token.word());
+      //        })
+      //
+      //        sentenceList.add(sentenceSb.toString());
+      //      }
+      //      sentenceList.foreach(f => println(f))
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////
     /////////////////////////////////////////////////
     /////////////////////////////////////////////////
-    
-    documentStr.replaceAll("<script[^>]*>[^<]*</script>", "")
-    documentStr = documentStr.replaceAll("<[^>]*>", "")
-    documentStr = documentStr.replaceAll("</[^>]*>", "")
-    println(documentStr)
+    aliases
   }
 
 }

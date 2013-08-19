@@ -54,10 +54,12 @@ public class NameOrderGenerator {
 	 * @return
 	 */
 	public static List<String> namePermutation(String name) {
+//		System.out.println("|"+name+"|");
 		LinkedList<String> list = new LinkedList<String>();
 		String[] nameArr = name.split(" ");
 		if (nameArr.length == 2) {
 			String fn = nameArr[0];
+
 			String ln = nameArr[1];
 
 			list.add(fn + " " + ln);
