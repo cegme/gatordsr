@@ -135,7 +135,7 @@ object Searcher extends Logging {
     val q = new QueryParser(Version.LUCENE_43, "clean_visible", analyzer).parse(querystr);
 
     // 3. search
-    val hitsPerPage = 10000000;
+    val hitsPerPage = 10000;
     val reader = DirectoryReader.open(index);
     val searcher = new IndexSearcher(reader);
     val collector = TopScoreDocCollector.create(hitsPerPage, true);
