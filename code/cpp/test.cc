@@ -8,6 +8,7 @@
 #include "Parameters.h"
 #include "QueryEntity.h"
 #include "Util.h"
+#include "Word2Vec.h"
 
 bool test1() {
   // Test the output of downloading a wikipage using the wikipedia api
@@ -80,12 +81,37 @@ bool test3 () {
   return false;
 }
 
+/** Train on the big wikipedia corpus */
+bool test4 () {
+
+  Word2Vec w;
+  const char *argv[] = {"./word2vec",
+    "-train", "/media/sdc/wiki/enwiki-20120104-pages-articles.txt", 
+    //"-train", "/home/cgrant/projects/word2vec-read-only/text8", 
+    "-output", "/media/sdc/enwiki-20120104-pages-articles.bin", 
+    //"-output", "/home/cgrant/projects/word2vec-read-only/vectors.bin", 
+    "-cbow", "0", 
+    "-size", "1000", // Too big here is dangerous
+    "-window", "15", 
+    "-hs", "1",
+    "-negative", "0",
+    "-sample", "1e6",  // Think about removing stopwords
+    "-threads", "32",
+    "-binary", "1",
+    "-save-vocab", "/media/sdc/enwiki-20120104-pages-articles.vocab",
+    "-debug", "2"};
+  w.Main(25, (char **)argv);
+
+  return false;
+}
+
 
 int main(int argc, char **argv) {
 
   //log_info("test1(): %s", (test1()) ? "true" : "false") ;
   //log_info("test2(): %s", (test2()) ? "true" : "false") ;
-  log_info("test3(): %s", (test3()) ? "true" : "false") ;
+  //log_info("test3(): %s", (test3()) ? "true" : "false") ;
+  log_info("test4(): %s", (test4()) ? "true" : "false");
 
   return 0;
 }

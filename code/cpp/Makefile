@@ -20,11 +20,11 @@ endif
 #EXTRAS = -lfl -lboost_date_time -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H -DHAVE_INTTYPES_H -L/usr/local/lib
 EXTRAS = -lfl -lboost_date_time -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H -DHAVE_INTTYPES_H 
 
-main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o
-	$(CC) -w -o main ER.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o $(EXTRAS)
+main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o
+	$(CC) -w -o main ER.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o $(EXTRAS)
 
-test:  streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o
-	$(CC) -w -o test test.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o $(EXTRAS)
+test:  streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o
+	$(CC) -w -o test test.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o $(EXTRAS)
 
 
 #MentionChain: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o
@@ -32,6 +32,10 @@ test:  streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.
 
 #entity: streamcorpus_types.o streamcorpus_constants.o entity_match.o MentionChain.o
 #	$(CC) -w -o entity streamcorpus_types.o streamcorpus_constants.o entity_match.o MentionChain.o $(EXTRAS)
+
+
+Word2Vec.o: Word2Vec.cc
+	$(CC) -c Word2Vec.cc $(EXTRAS)
 
 streamcorpus_types.o: streamcorpus_types.cpp
 	$(CC) -c streamcorpus_types.cpp $(EXTRAS)
