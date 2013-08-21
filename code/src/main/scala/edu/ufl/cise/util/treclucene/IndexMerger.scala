@@ -48,7 +48,7 @@ object IndexMerger extends Logging {
 
     val directory = new NIOFSDirectory(new File(INDEX_DIR))
     val iwc = new IndexWriterConfig(Version.LUCENE_43, analyzer)
-    iwc.setRAMBufferSizeMB(10000)
+    iwc.setRAMBufferSizeMB(30000)
     
     val writer = new IndexWriter(directory, iwc)
 

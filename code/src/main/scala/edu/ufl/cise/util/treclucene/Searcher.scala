@@ -124,7 +124,7 @@ object Searcher extends Logging {
     //		Hits hits = indexSearcher.search(query);
     //		displayHits(hits);
 
-    val analyzer = new StandardAnalyzer(Version.LUCENE_40);
+    val analyzer = new StandardAnalyzer(Version.LUCENE_43);
 
     // 1. create the index
     // val index = new RAMDirectory();
@@ -132,10 +132,10 @@ object Searcher extends Logging {
 
     // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
-    val q = new QueryParser(Version.LUCENE_40, "clean_visible", analyzer).parse(querystr);
+    val q = new QueryParser(Version.LUCENE_43, "clean_visible", analyzer).parse(querystr);
 
     // 3. search
-    val hitsPerPage = 10000000;
+    val hitsPerPage = 10000;
     val reader = DirectoryReader.open(index);
     val searcher = new IndexSearcher(reader);
     val collector = TopScoreDocCollector.create(hitsPerPage, true);
@@ -145,20 +145,20 @@ object Searcher extends Logging {
     // 4. display results
       println(hits.length + "\t hits for: " + querystr);
 
-//    hits.foreach(f => {
-//      val docId = f.doc;
-//      val d = searcher.doc(docId);
-//      val gpgFile = d.get("gpgfile")
-//
-//      val m = p.matcher(gpgFile);
-//      m.find()
-//      val s1 = m.group(1);
-//      val s2 = m.group(2);
-//
-//      println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
-//        //d.get("si_docid") 
-//        "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
-//    })
+    hits.foreach(f => {
+      val docId = f.doc;
+      val d = searcher.doc(docId);
+      val gpgFile = d.get("gpgfile")
+
+      val m = p.matcher(gpgFile);
+      m.find()
+      val s1 = m.group(1);
+      val s2 = m.group(2);
+
+      println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
+        //d.get("si_docid") 
+        "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
+    })
 
     // reader can only be closed when there
     // is no need to access the documents any more.

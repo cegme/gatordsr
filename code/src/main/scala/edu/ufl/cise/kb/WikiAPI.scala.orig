@@ -25,9 +25,13 @@ import edu.stanford.nlp.pipeline.StanfordCoreNLP
 import edu.stanford.nlp.pipeline.Annotation
 import edu.stanford.nlp.ling.CoreAnnotations
 import scala.collection.JavaConversions._
+<<<<<<< HEAD
 import java.io.StringReader
 import edu.stanford.nlp.process.DocumentPreprocessor
 import edu.stanford.nlp.ling.HasWord
+=======
+
+>>>>>>> Generating inline aliases from wiki
 
 /**
  * Preload entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json then populate
@@ -43,10 +47,15 @@ object WikiAPI {
 
   def main(args: Array[String]): Unit = {
 
+<<<<<<< HEAD
     val urlStr = "http://en.wikipedia.org/wiki/Basic_Element_%28company%29"
     val inlineAliases = inlineAliasExtractor(urlStr);
     //println(inlineAliases)
     redirectAliasGenerator();
+=======
+    inlineAliasGenerator();
+    // redirectAliasGenerator();
+>>>>>>> Generating inline aliases from wiki
   }
 
   def redirectAliasGenerator() {
@@ -107,6 +116,7 @@ object WikiAPI {
 
       })
 
+<<<<<<< HEAD
       try {
         aliasList.addAll(inlineAliasExtractor(e.target_id))
       } catch {
@@ -116,6 +126,8 @@ object WikiAPI {
 
       }
 
+=======
+>>>>>>> Generating inline aliases from wiki
       //  NameOrderGenerator.
       val size = aliasList.size()
       for (a <- 0 to size) {
@@ -146,6 +158,7 @@ object WikiAPI {
     arlList.addAll(h);
   }
 
+<<<<<<< HEAD
   def inlineAliasExtractor(urlStr: String): ArrayList[String] = {
 
     val aliases = new ArrayList[String]
@@ -153,6 +166,12 @@ object WikiAPI {
 
     // val url = new URL("http://en.wikipedia.org/wiki/IDSIA")
     val url = new URL(urlStr)
+=======
+  def inlineAliasGenerator() {
+    val pageLines = new ArrayList[String]();
+
+    val url = new URL("http://en.wikipedia.org/wiki/IDSIA")
+>>>>>>> Generating inline aliases from wiki
     val is = url.openStream(); // throws an IOException
 
     val br = new BufferedReader(new InputStreamReader(is));
@@ -172,6 +191,7 @@ object WikiAPI {
     br.close();
     is.close();
 
+<<<<<<< HEAD
     // println(documentStr)
     val root = htmlCleaner.clean(documentStr);
     boldExtractor(aliases, root);
@@ -217,11 +237,18 @@ object WikiAPI {
 
   def boldExtractor(aliases: ArrayList[String], root: TagNode) {
 
+=======
+    println(documentStr)
+
+    val htmlCleaner = new HtmlCleaner();
+    val root = htmlCleaner.clean(documentStr);
+>>>>>>> Generating inline aliases from wiki
     val boldAlias = root.evaluateXPath("//*[@id=\"mw-content-text\"]/p[1]/b");
     if (boldAlias.length > 0) {
       val f0 = boldAlias.apply(0)
       val b = f0.isInstanceOf[TagNode];
       val tagNode = f0.asInstanceOf[TagNode]
+<<<<<<< HEAD
       val boldText = tagNode.getText().toString().trim()
       aliases.add(boldText)
       //   println(boldText)
@@ -233,11 +260,24 @@ object WikiAPI {
 
   def regexExtractor(aliases: ArrayList[String], root: TagNode) {
 
+=======
+      println(tagNode.getText())
+     // if (b) {
+     //   tagNode.removeFromTree();
+     // }
+    }
+    
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    
+>>>>>>> Generating inline aliases from wiki
     val firstParagraph = root.evaluateXPath("//*[@id=\"mw-content-text\"]/p[1]");
     if (firstParagraph.length > 0) {
       val f0 = firstParagraph.apply(0)
       val b = f0.isInstanceOf[TagNode];
       val tagNode = f0.asInstanceOf[TagNode]
+<<<<<<< HEAD
       val text = tagNode.getText()
       //  println(text)
 
@@ -278,4 +318,47 @@ object WikiAPI {
       }
     }
   }
+=======
+      println(tagNode.getText())
+    
+    
+    // creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution 
+    val props = new Properties();
+    props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+    val pipeline = new StanfordCoreNLP(props);
+    
+    // read some text in the text variable
+    val text = tagNode.getText() // Add your text here!
+    
+    // create an empty Annotation just with the given text
+    val document = new Annotation(text+"");
+    
+    // run all Annotators on this text
+    pipeline.annotate(document);
+    
+    // these are all the sentences in this document
+    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
+    val sentences = document.get(classOf[CoreAnnotations.SentencesAnnotation]);
+    
+    sentences.toList.foreach(s => {
+      println(s)
+      val tokens  = s.get(classOf[CoreAnnotations.TokensAnnotation])
+      
+      tokens.toList.foreach(t =>{println(t.lemma())})
+      })
+    
+    
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    /////////////////////////////////////////////////
+    
+    documentStr.replaceAll("<script[^>]*>[^<]*</script>", "")
+    documentStr = documentStr.replaceAll("<[^>]*>", "")
+    documentStr = documentStr.replaceAll("</[^>]*>", "")
+    println(documentStr)
+  }
+
+>>>>>>> Generating inline aliases from wiki
 }

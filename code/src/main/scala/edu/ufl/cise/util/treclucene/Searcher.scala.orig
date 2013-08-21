@@ -24,11 +24,7 @@ object Searcher extends Logging {
   //var filedir = new java.io.File("/var/tmp/lucene")
   //var filedir = new java.io.File("/media/sdc/kbaindex/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-04-17-15")
   var filedir = new java.io.File("/media/sdc/optimizedindex/") //index of corpus
-<<<<<<< HEAD
   //    var filedir = new java.io.File("/media/sdc/optimizedindex/") //index of wikipedia
-=======
-   //  var filedir = new java.io.File("/media/sdc/wiki/index/index/") //index of wikipedia
->>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
 
   val directory = new NIOFSDirectory(filedir)
 
@@ -99,7 +95,6 @@ object Searcher extends Logging {
     //searcher.close
     reader.close
   }
-<<<<<<< HEAD
 
   def searchEntity(logNote: String, aliasList: ArrayList[String]) {
     val aliases = aliasList.toArray(Array[String]()).distinct
@@ -114,21 +109,6 @@ object Searcher extends Logging {
     }).reduce((s1, s2) => s1 + " OR " + s2)
 
     searchQueryParser(logNote, concatedArgs.toLowerCase().replace(" or ", " OR "))
-=======
-  
-  def searchEntity(aliasList: ArrayList[String]){
-    val aliases = aliasList.toArray(Array[String]()).distinct
-    
-    val concatedArgs =  aliases.map(s => {
-   if(s == ",")
-     "OR"
-   else if(s!= "AND" && s != "OR") 
-        "\"" + s + "\"" 
-        else 
-          s}).reduce((s1,s2) => s1 + " OR " + s2)
-    
-      searchQueryParser(concatedArgs.toLowerCase().replace(" or ", " OR "))
->>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
   }
 
   def searchQueryParser(logNote: String, querystr: String) {
@@ -159,11 +139,16 @@ object Searcher extends Logging {
     val collector = TopScoreDocCollector.create(hitsPerPage, true);
     searcher.search(q, collector);
     val hits = collector.topDocs().scoreDocs;
+<<<<<<< HEAD
+=======
+   
+    // 4. display results
+    println( hits.length + "\t hits for: " + querystr);
+>>>>>>> Generate Lucene statistics for each entity using NameOrderGenerator
 
     // 4. display results
       println(hits.length + "\t hits for: " + querystr);
 
-<<<<<<< HEAD
 //    hits.foreach(f => {
 //      val docId = f.doc;
 //      val d = searcher.doc(docId);
@@ -178,22 +163,6 @@ object Searcher extends Logging {
 //        //d.get("si_docid") 
 //        "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
 //    })
-=======
-   // for(int i=0;i<hits.length;++i)
-<<<<<<< HEAD
-//    hits.foreach(f => {
-//      val docId = f.doc;
-//      val d = searcher.doc(docId);
-//      println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
-=======
-  
-//    hits.foreach(f => {
-//      val docId = f.doc;
-//      val d = searcher.doc(docId);
-//  // /   println( d.get("gpgfile") +"\t"+ d.get("si_index") +  "\t" + d.get("clean_visible"));
->>>>>>> Generate Lucene statistics for each entity using NameOrderGenerator
-//   })
->>>>>>> 9ee911364bc9faf7f80caab20446e0c07d000ae8
 
     // reader can only be closed when there
     // is no need to access the documents any more.
