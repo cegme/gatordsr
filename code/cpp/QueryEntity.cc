@@ -103,7 +103,7 @@ std::string QueryEntity::getWikiBody(const char *page_title) {
   char cmd[512];
 
   // Create a tmp file name for the webpage
-  std::tmpnam(tmpfilenam);
+  mkstemp(tmpfilenam);
   //log_debug("tmpfilenam: %s", tmpfilenam);
   
   std::snprintf(cmd, 512, wiki_page, tmpfilenam, page_title);
