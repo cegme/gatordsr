@@ -20,6 +20,7 @@ import java.util.LinkedList
 object SimpleJob extends Logging {
   // method library
   def main(args: Array[String]) {
+    filterSentencesCoref("/home/morteza/trec/index.txt");
   }
 
   def getPOS(tokens: Array[Token]): String = {
@@ -219,7 +220,7 @@ object SimpleJob extends Logging {
     }
   }
 
-  def filterSentencesCoref(n: Integer, filePath: String) = {
+  def filterSentencesCoref( filePath: String) = {
     var num = 1
     val lines = Source.fromFile(filePath).getLines //.take(100)//.slice(0, n)
     lines.foreach(line => {
@@ -229,11 +230,14 @@ object SimpleJob extends Logging {
         val date_hour = array(0).split(">")(1)
         val filename = array(1)
         val si_num = array(2)
-        val topics = line.split("\\|\\| ")(1).split(", ")
+        val topicsStr = line.split("\\|\\| ")(1)
+        val topics = if(topicsStr.contains(","))  topicsStr.split(", ") else topicsStr.split(" ");
+        
         println(num + " " + date_hour + " " + filename + " " + si_num)
 
         val ens = findEntity(topics)
-        val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
+       // val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
+         val si = getRemoteStreamItem(date_hour, filename, Integer.parseInt(si_num))
         val ss = si.body.sentences.get("lingpipe")
         // process all the sentences
         if (ss != null) {
@@ -248,6 +252,10 @@ object SimpleJob extends Logging {
               for (j <- 0 until tokens.size() if !find) {
                 val token = tokens.get(j)
                 sb.append(token.token + " ")
+//                println("--")
+//                ens.foreach(println)
+//                println("--")
+                //println(ens)
                 ens.foreach(e => {
                   Pipeline.entities(e).alias.toArray(Array[String]()).foreach(name => {
                     //println(name.toLowerCase())
