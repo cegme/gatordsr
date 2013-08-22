@@ -82,12 +82,13 @@ object Pipeline extends Logging {
     // args(1) -- output prefix name
 
     //annotate()
+    
+    //modified with Chris and Milenko when Yang was in China to include coreference 
     if(args.size > 1)
       KBAOutput.outputPrefix = args(1)
-    if(args.size > 2)
-      SimpleJob.filterUsingStreamFiles(args(0))
-    else
-      SimpleJob.filterSentencesCoref(3000,args(0))//,args(1)) 
+//    if(args.size > 2)
+//      SimpleJob.filterUsingStreamFiles(args(0))
+    SimpleJob.filterSentencesCoref(args(0))//,args(1)) 
 }
 
   def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, le: LingEntity) = {

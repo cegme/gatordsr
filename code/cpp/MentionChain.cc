@@ -343,7 +343,7 @@ std::string MentionChain::CreateTempGPGFile (std::string gpgFileName) {
   char fullpath [512+L_tmpnam]; // The full path of the file name 
 
   // Get random temp file name
-  tmpnam (fname);
+  mkstemp (fname);
   //std::cerr << "fname: " << fname << "\n";
 
   // Make the full file path
