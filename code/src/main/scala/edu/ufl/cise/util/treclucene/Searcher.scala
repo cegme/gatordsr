@@ -112,6 +112,12 @@ object Searcher extends Logging {
 
     searchQueryParser(logNote, concatedArgs.toLowerCase().replace(" or ", " OR "))
   }
+  
+   val analyzer = new StandardAnalyzer(Version.LUCENE_43);
+
+    // 1. create the index
+    // val index = new RAMDirectory();
+    val index = new MMapDirectory(filedir);
 
   def searchQueryParser(logNote: String, querystr: String) {
     //		System.out.println("\nSearching for '" + searchString + "' using QueryParser");
@@ -124,18 +130,14 @@ object Searcher extends Logging {
     //		Hits hits = indexSearcher.search(query);
     //		displayHits(hits);
 
-    val analyzer = new StandardAnalyzer(Version.LUCENE_43);
-
-    // 1. create the index
-    // val index = new RAMDirectory();
-    val index = new MMapDirectory(filedir);
+   
 
     // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
     val q = new QueryParser(Version.LUCENE_43, "clean_visible", analyzer).parse(querystr);
 
     // 3. search
-    val hitsPerPage = 10000;
+    val hitsPerPage = 1000000;
     val reader = DirectoryReader.open(index);
     val searcher = new IndexSearcher(reader);
     val collector = TopScoreDocCollector.create(hitsPerPage, true);
