@@ -122,11 +122,12 @@ object WikiAPI {
         aliasList.addAll(NameOrderGenerator.namePermutation(aliasList.get(a)))
       }
 
-      if (e.target_id.contains("wikipedia"))
-        e.alias.clear()
-
-      e.alias.addAll(aliasList)
-      removeDuplicate(e.alias)
+      //update the aliases and search for them in lucene
+//      if (e.target_id.contains("wikipedia"))
+//        e.alias.clear()
+//      e.alias.addAll(aliasList)
+     
+      removeDuplicate(e.alias)      
      //  println(e.alias)
       Searcher.searchEntity(e.target_id, e.alias)
     })
