@@ -12,10 +12,10 @@ import java.io.FileOutputStream
 import java.io.File
 import java.lang.Integer
 import streamcorpus.Sentence
-
 import scala.collection.mutable.WeakHashMap
 import scala.ref.WeakReference
 import java.util.LinkedList
+import edu.ufl.cise.CorpusBatchProcessor
 
 object SimpleJob extends Logging {
   // method library
@@ -236,8 +236,13 @@ object SimpleJob extends Logging {
         println(num + " " + date_hour + " " + filename + " " + si_num)
 
         val ens = findEntity(topics)
+        
+      
        // val si = getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
-         val si = getRemoteStreamItem(date_hour, filename, Integer.parseInt(si_num))
+         val si =   if(CorpusBatchProcessor.isLocalRun()) 
+           getRemoteStreamItem(date_hour, filename, Integer.parseInt(si_num))
+           else
+             getLocalStreamItem(date_hour, filename, Integer.parseInt(si_num))
         val ss = si.body.sentences.get("lingpipe")
         // process all the sentences
         if (ss != null) {
