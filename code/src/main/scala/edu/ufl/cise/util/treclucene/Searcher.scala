@@ -2,9 +2,7 @@ package edu.cise.ufl.util.treclucene
 
 import java.util.ArrayList
 import java.util.regex.Pattern
-
 import scala.Array.canBuildFrom
-
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.Term
@@ -16,10 +14,9 @@ import org.apache.lucene.search.TopScoreDocCollector
 import org.apache.lucene.store.MMapDirectory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
-
 import scala.collection.JavaConversions._
-
 import edu.ufl.cise.Logging
+import org.apache.lucene.search.PhraseQuery
 
 object Searcher extends Logging {
 
@@ -53,10 +50,10 @@ object Searcher extends Logging {
 
   def main(args: Array[String]) {
 
-        if (args.length < 1) {
-         println("Usage: run 'My query'")
-          System.exit(1)
-        }
+    if (args.length < 1) {
+      println("Usage: run 'My query'")
+      System.exit(1)
+    }
 
     val concatedArgs = args.map(s => {
       if (s == ",")
@@ -84,8 +81,13 @@ object Searcher extends Logging {
     getStats(searcher)
     //printAllDocs(searcher)
 
-    val docs = searcher.search(query, 2)
+    var docs = searcher.search(query, 2000)
     println("TermQuery found: " + docs.scoreDocs.length)
+
+    val q = new PhraseQuery()
+    q.add(new Term("clean_visible", args(0).toLowerCase))
+    docs = searcher.search(q, 2000)
+    println("PhraseQuery found: " + docs.scoreDocs.length)
 
     //    docs.scoreDocs foreach { docId =>
     //      val d = searcher.doc(docId.doc)
@@ -112,12 +114,12 @@ object Searcher extends Logging {
 
     searchQueryParser(logNote, concatedArgs.toLowerCase().replace(" or ", " OR "))
   }
-  
-   val analyzer = new StandardAnalyzer(Version.LUCENE_43);
 
-    // 1. create the index
-    // val index = new RAMDirectory();
-    val index = new MMapDirectory(filedir);
+  val analyzer = new StandardAnalyzer(Version.LUCENE_43);
+
+  // 1. create the index
+  // val index = new RAMDirectory();
+  val index = new MMapDirectory(filedir);
 
   def searchQueryParser(logNote: String, querystr: String) {
     //		System.out.println("\nSearching for '" + searchString + "' using QueryParser");
@@ -129,8 +131,6 @@ object Searcher extends Logging {
     //		System.out.println("Type of query: " + query.getClass().getSimpleName());
     //		Hits hits = indexSearcher.search(query);
     //		displayHits(hits);
-
-   
 
     // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
@@ -145,7 +145,7 @@ object Searcher extends Logging {
     val hits = collector.topDocs().scoreDocs;
 
     // 4. display results
-      println(hits.length + "\t hits for: " + querystr);
+    println(hits.length + "\t hits for: " + querystr);
 
     hits.foreach(f => {
       val docId = f.doc;
