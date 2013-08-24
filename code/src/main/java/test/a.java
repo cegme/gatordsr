@@ -26,7 +26,8 @@ public class a {
 		h1.add("b");
 
 		HashSet<String> h2 = new HashSet<String>();
-		h2.add("a");
+		String a = new String("a");
+		h2.add(a);
 		h2.add("b");
 		h2.add("c");
 
