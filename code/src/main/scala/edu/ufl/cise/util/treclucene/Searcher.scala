@@ -16,6 +16,8 @@ import org.apache.lucene.search.TopScoreDocCollector
 import org.apache.lucene.store.MMapDirectory
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.Version
+import org.apache.lucene.search.PhraseQuery
+
 
 import scala.collection.JavaConversions._
 
@@ -81,11 +83,17 @@ object Searcher extends Logging {
     val searcher = new IndexSearcher(reader)
     val query = new TermQuery(new Term("clean_visible", args(0).toLowerCase))
 
-    getStats(searcher)
+//    getStats(searcher)
     //printAllDocs(searcher)
 
-    val docs = searcher.search(query, 2)
+    var docs = searcher.search(query, 2000)
     println("TermQuery found: " + docs.scoreDocs.length)
+
+
+ val q = new PhraseQuery()
+    q.add(new Term("clean_visible", args(0).toLowerCase))
+    docs = searcher.search(q, 2000)
+    println("PhraseQuery found: " + docs.scoreDocs.length)
 
     //    docs.scoreDocs foreach { docId =>
     //      val d = searcher.doc(docId.doc)
@@ -135,6 +143,7 @@ object Searcher extends Logging {
     // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
     val q = new QueryParser(Version.LUCENE_43, "clean_visible", analyzer).parse(querystr);
+              
 
     // 3. search
     val hitsPerPage = 1000000;
@@ -158,7 +167,8 @@ object Searcher extends Logging {
       val s2 = m.group(2);
 
       println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
-        //d.get("si_docid") 
+        //d.get("si_docid")
+//        d.get("clean_visible")+
         "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
     })
 
