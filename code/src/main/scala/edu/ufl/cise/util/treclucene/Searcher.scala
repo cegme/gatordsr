@@ -81,7 +81,9 @@ object Searcher extends Logging {
   def searchTermQuery(args: Array[String]) {
     val reader = DirectoryReader.open(directory)
     val searcher = new IndexSearcher(reader)
-    val query = new TermQuery(new Term("clean_visible", args(0).toLowerCase))
+    //val query = new TermQuery(new Term("clean_visible", args(0).toLowerCase))
+
+    val query = new TermQuery(new Term("gpgfile", args(0).toLowerCase))
 
 //    getStats(searcher)
     //printAllDocs(searcher)
@@ -142,7 +144,9 @@ object Searcher extends Logging {
 
     // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
-    val q = new QueryParser(Version.LUCENE_43, "clean_visible", analyzer).parse(querystr);
+    //val q = new QueryParser(Version.LUCENE_43, "clean_visible", analyzer).parse(querystr);
+              
+    val q = new QueryParser(Version.LUCENE_43, "gpgfile", analyzer).parse(querystr);
               
 
     // 3. search

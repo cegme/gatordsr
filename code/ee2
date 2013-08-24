@@ -1,0 +1,1516 @@
+[0m[[0minfo[0m] [0mLoading project definition from /media/sde/devPipeline/gatordsr/code/project[0m
+[0m[[0minfo[0m] [0mSet current project to gatordsr (in build file:/media/sde/devPipeline/gatordsr/code/)[0m
+> run
+[0m[[0minfo[0m] [0mCompiling 1 Java source to /media/sde/devPipeline/gatordsr/code/target/scala-2.9.2/classes...[0m
+
+Multiple main classes detected, select one to run:
+
+ [1] test.ReadThrift
+ [2] edu.ufl.cise.util.WordnetUtil
+ [3] edu.ufl.cise.util.RelationChecker
+ [4] edu.ufl.cise.util.treclucene.LuceneReporter
+ [5] wordnet.jwi.JWIFullDemo
+ [6] test.SubListCheck
+ [7] edu.ufl.cise.StreamRange
+ [8] wordnet.net.didion.jwnl.test.generic.ExamplesTest
+ [9] edu.ufl.cise.pipeline.Preprocessor
+ [10] edu.ufl.cise.StreamItemIO
+ [11] test.FileSizePerHourCalculator
+ [12] edu.ufl.cise.SystemStatisticsGenerator
+ [13] edu.ufl.cise.CorpusBatchProcessor
+ [14] edu.ufl.cise.CachedFaucet
+ [15] edu.ufl.cise.StreamFaucet
+ [16] edu.ufl.cise.util.treclucene.IndexMerger
+ [17] wordnet.net.didion.jwnl.test.generic.WordNetTest
+ [18] edu.ufl.cise.FileProcessor
+ [19] test.LuceneTermQueryDemo
+ [20] test.TestRegex
+ [21] edu.ufl.cise.util.StreamItemUtil
+ [22] edu.ufl.cise.util.S3Downloader
+ [23] edu.ufl.cise.EmbededFaucet
+ [24] edu.ufl.cise.benchmark.Benchmark
+ [25] edu.ufl.cise.util.Benchmark
+ [26] edu.ufl.cise.RemoteGPGRetrieval
+ [27] edu.ufl.cise.KBAOutput
+ [28] edu.ufl.cise.util.NameOrderGenerator
+ [29] edu.ufl.cise.util.treclucene.Indexer
+ [30] kba.FileProcessor_bak
+ [31] edu.ufl.cise.DirList
+ [32] edu.ufl.cise.benchmark.PGPFileProcessor
+ [33] edu.ufl.cise.util.OntologySynonymGenerator
+ [34] edu.ufl.cise.pipeline.Pipeline
+ [35] wordnet.jwi.JWIDemo
+ [36] edu.ufl.cise.LogReader
+ [37] edu.ufl.cise.IndexLogReader
+ [38] edu.ufl.cise.benchmark.SingleSignOnTest
+ [39] edu.ufl.cise.pipeline.SimpleJob
+ [40] edu.ufl.cise.kb.WikiAPI
+ [41] edu.cise.ufl.util.treclucene.Searcher
+ [42] edu.ufl.cise.S3CorpusDownloader
+
+Enter number: 26
+
+[0m[[0minfo[0m] [0mRunning edu.ufl.cise.RemoteGPGRetrieval [0m
+gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt /media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-10-12-16/arxiv-20-56cc59a5735b209b0a329fb334322dce-b13d700437b2ca9721b7e00c5abe9cff.sc.xz.gpg
+Autonomous Reinforcement of Behavioral
+Sequences in Neural Dynamics
+
+Sohrob Kazerounian∗, Matthew Luciw∗ , Mathis Richter† and Yulia Sandamirskaya†
+∗ IDSIA, Galleria 2, Manno CH-6928, Switzerland
+†Ruhr-Universit at Bochum, Institut f ur NeuroinformatikUniversit atstr, Bochum, Germany
+
+2
+1
+0
+2
+ 
+t
+c
+O
+ 
+2
+1
+ 
+ 
+]
+E
+N
+.
+s
+c
+[
+ 
+ 
+1
+v
+9
+6
+5
+3
+.
+0
+1
+2
+1
+:
+v
+i
+X
+r
+a
+
+Abstract —We introduce a dynamic neural algorithm for learn-
+ing a behavioral sequence from possibly delayed rewards. The
+algorithm, inspired by prior Dynamic Field Theory models of
+behavioral sequence representation, is called Dynamic Neural
+(DN) SARSA(λ), and is grounded in both neuronal dynamics and
+classical reinforcement learning. DN-SARSA(λ) is implemented
+on both a simulated and real mobile robot performing a search
+task for a speci fic sequence of color finding behaviors.
+
+I . INTRODUCT ION
+Computational approaches to reinforcement learning (RL)
+often formalize the learning problem in terms of discrete
+state and action spaces, with a learning agent that operates
+in discrete time [1]. The problem of how these discrete repre -
+sentations emerge from sensory-motor representations, wh ich
+are continuous in time and in space, is often not addressed
+in the RL literature. On the other hand, some RL models in
+neuroscience include the continuous neural representations of
+states and actions, but they do not address the problem of
+learning sequences of behaviors through reinforcement, as well
+as how these sequences may be generated using real sensors
+and motors [2], [3].
+Here, we present a neural-dynamic model that implements
+an RL agent, which is able to acquire action sequences based
+on a reward signal and uses the state and action representations
+that may be continuously linked to raw perceptual inputs
+and motor dynamics. In the neural-dynamic RL architecture,
+the behavioral decisions are modeled as instabilities in the
+dynamics of neural fields which are continuous in time and
+are graded in space. These instabilities demarcate transit ions
+between stable states that represent the agent’s actions, as
+they unfold continuously in physical time and environment.
+As stable states emerge from the continuous dynamics, they
+form the basis for building neural-dynamic representation s of
+previously selected pairs of states and actions, their elig ibility
+traces, and value function of the reinforcement learner.
+The model uses the neural-dynamic framework of Dynamic
+Field Theory (DFT) [4] to represent the behaviors of the agen t
+that form the state-action space, on which learning operates.
+The well-known RL algorithm SARSA is used to implement
+the reinforcement learning of action sequences over these
+representations. We provide a method for autonomously dis-
+cretizing behaviors occurring in a real-time continuous ne ural-
+dynamic framework that enables RL in continuous sensory-
+motor processes. We implement the model, which we call
+Dynamic Neural (DN) SARSA(λ), in a simple color sequence
+
+learning scenario and demonstrate its functioning on a real
+robot.
+
+I I . BACK GROUND
+A. Dynamic Field Theory
+Our model is based on Dynamic Field Theory (DFT) [5], a
+mathematical framework for cognitive processes. Within DFT,
+dynamic neural fields (DNFs) are used to represent activatio n
+distributions of neural populations. The activation is de fi ned
+over graded metric dimensions (e.g., color or space) releva nt
+to the task and develops in continuous time based on Amari
+dynamics [18]. Stable peaks of activation form as a result
+of supra-threshold activation and lateral interactions wi thin a
+field. Due to its process model nature, DFT architectures are
+able to deal with continuous time and real world environments
+and are thus well suited for robotic control systems.
+
+B. Previous Mechanisms of Learning in DFT
+The basic learning mechanism in DFT is a memory trace
+of the positive activation of a DNF. This mechanism has been
+used to model long-term memory with respect to task space
+[6], [7], the motor memory of previous movements [8], [9],
+to encode invariant features [10], and to represent locations
+of objects [11]. In these models, learning is achieved by the
+dynamics of the memory trace’s build-up and decay. Mem-
+ory traces of multi-dimensional DNFs implement associative
+learning between different modalities. Such associations may
+be used to encode serial order of actions [12] or association s
+of features and their locations in space [11], [13].
+In previous work, sequence learning in DFT amounted to
+storing memory traces of an observed sequence of behaviors.
+In this paper, the sequence of behaviors is discovered au-
+tonomously based on a delayed and non-specific reward signal
+.
+
+C. Reinforcement Learning
+A general statement of the RL problem, following Sutton
+and Barto (1998; [1]) assumes an agent which interacts with its
+environment. At any moment in time (t), the agent experiences
+the state of the environment (st ), and on that basis makes a
+decision about which action to take next (at ). This decision
+process is determined by the agent’s policy (π(s, a)) which
+maps state to action. The goal then, is that in the course of
+exploring its environment and receiving rewards at various
+points, the policy should be updated so that action selection
+is more likely to result in reward. Some common methods
+
+ learn the optimal policy by learning the value function (VF).
+The value of a state-action is (formally) the expected future
+cumulative discounted reward if the agent takes that action
+in that state and follows its policy thereafter. Policy iteration
+alternates between learning the VF of a policy and improving
+the policy (by selecting the value maximizing action).
+In many RL formulations, the environment is structured
+such that it has the property of being a Markov Decision
+Process (MDP). Informally, this means that the response of
+the environment depends solely on the state and action in that
+moment, independent of the history of states or actions prio r.
+An example would be a game of chess, where the next board
+con figuration depends only on the current con figuration and
+the selected action, rather than the sequence of moves which
+lead to that con figuration. However, in many environments th is
+property does not hold. When response of the environment
+depends not just on the current state and action, the envi-
+ronment is said to be a partially observable MDP (POMDP).
+Lastly, when the problem operates in continuous-time, such
+that actions are no longer operations that occur in discrete
+time-steps, the environment is said to be semi-MDP ( [1], pg.
+276). This occurs in the our tested environment, and many rea l-
+world environments, in which the action performed requires
+variable duration in order to complete.
+At the heart of traditional RL for MDPs is the idea of
+Temporal-Difference (TD) learning. TD learning is model free,
+and updates the value of a particular state (or state/action pair),
+based on the value of subsequent state(s) (or state/action pairs).
+The SARSA algorithm is an on-policy method which makes
+use of TD learning to update state-action values. SARSA(λ)
+extends that work by introducing the concept of an eligibility
+trace, which updates not just concurrent state-action values,
+but the history of state-action values over the course of a tr ial.
+That is, if we denote our TD-error at any given time t as
+δt , state-action values which occurred t timesteps back, are
+updated by a factor of γ tδt . The use of eligibility traces has
+not only been shown to speed up learning, but also been shown
+to help overcome the problem of learning in POMDPs [14].
+For detailed descriptions of these concepts, we refer the re ader
+to [1].
+
+D. RL and Computational Neuroscience
+Since we know that humans and animals learn in real-
+time, dynamic environments,
+it makes sense to consider
+views of RL taken in computational neuroscience. This ap-
+proach has largely focused on modeling TD learning, as there
+is accumulating neurophysiological evidence that midbrain
+dopaminergic neurons encode a form TD-error [2]. Indeed, a
+number of models have been able to model low-level aspects
+of reinforcement learning, including sequence production in
+Basal Ganglia [3], foraging behavior in bees [15], planned
+and reactive saccades
+[16]. However, while these models
+explain an impressive array of physiological data regardin g
+RL, they too make simplified assumptions about the nature
+of the environments they model. Moreover, they often fail to
+show how complex behavioral skills can be learned and in
+
+most cases do not account for how behavior is generated in
+continuous time based on realistic sensory information and
+tied into actual motor systems. It appears,
+that
+therefore,
+the neuroscience approach to RL may also be insufficient
+for enabling artificial agents and robots to learn in complex
+environments.
+As noted by Kawato and Sanejima [17], there are three
+primary problems facing neural models of RL. First, standar d
+TD algorithms learn too slowly to be considered realistic
+methods of learning, either in animals or in robots. Second,
+the exact mechanisms by which TD-errors are computed by
+neural circuits remain elusive. Third, neural models of RL
+fail to explain complex behavioral learning which incorporate
+cerebral cortex and cerebellum. It is therefore increasing ly
+clear that theories of learning will have to integrate both
+algorithmic and neuroscience traditions, in order to descr ibe
+(and model) how learning scales up to complex, real-time and
+dynamic environments.
+The goal of DN-SARSA(λ) is to provide a framework which
+can begin to address these difficulties, by showing how com-
+putational enhancements to learning, such as eligibility traces,
+can be realized in neural circuits; to propose a mechanism by
+which TD-errors with eligibility traces can be computed, wh ile
+maintaining the Bellman consistency; and to show how neural
+reinforcement learning algorithms can interact with senso ry
+cortices, all of which operate in real-time, on real inputs.
+
+I I I . TH E DN -SARSA (λ) ARCH I T ECTURE
+A. Overview
+The DN-SARSA(λ) model consists of a neural-dynamic
+architecture for generation of behavioral sequences as wel l as
+a neural-dynamic reinforcement learner. A number of couple d
+dynamic neural fields (DNFs) [18] and neural nodes form a
+representation of the elementary behaviors (EBs) of the agent’s
+behavioral repertory. Each EB has a DNF representation of
+the intention and of the condition-of-satisfaction (CoS) of the
+respective behavior. Both these representations are grade d in
+space and continuous in time attractor dynamics, which may
+be coupled to perceptual and motor systems of a robotic agent .
+The intention DNF interacts with bottom-up sensory inputs to
+drive low-level motor commands. Activation of the CoS DNF
+indicates that the currently active behavior has completed [19].
+For the reinforcement learner, an active CoS field represent s
+the state, in which the agent decides which action to activate
+next (represented by the intention DNF of the next EB). A
+state/action DNF of the reinforcement learner receives inp uts
+from CoS fields and the intention fields of the EBs and builds
+a peak of positive activation in each transition phase between
+EBs, when the CoS field of the previous EB is still active and
+the intention field of the next EB is already activated.
+The positive activation in the state/action DNF ultimately
+serves as input to an Item and Order working memory system
+[20], [21]. Activity in this system represents an eligibility
+trace, since the more recently occurring state/action tran si-
+tions result in higher levels of activity than those state/action
+transitions having occurred further in the past. The eligib ility
+
+ Sensory input
+Sensory Input
+
+Motor field
+
+Heading direction
+
+(cid:127)
+(cid:127)
+(cid:127)
+(cid:127)
+(cid:127)
+(cid:127)
+
+Reward
+
+50
+
+100
+
+150
+
+200
+
+250
+
+300
+
+Perceptual field
+
+CoS field
+
+20
+
+40
+
+60
+
+80
+
+e
+u
+H
+
+CoS nodes
+
+Value nodes
+
+TD 
+error
+
+Value opposition 
++
+
+-
+
+s
+e
+d
+o
+n
+ 
+n
+o
+i
+t
+n
+e
+t
+n
+I
+
+Eligibility trace 
+field
+
+Transient pulse cells
+
+(s',a') ON (s,a) OFF
+
+(cid:127)(cid:127)(cid:127)
+
+(cid:127)(cid:127)(cid:127)
+(cid:127)(cid:127)(cid:127)
+TP+
+(cid:127)(cid:127)(cid:127)
+(cid:127)(cid:127)(cid:127)
+(cid:127)(cid:127)(cid:127)(cid:127)
+(cid:127)(cid:127)(cid:127)(cid:127)
+(cid:127)(cid:127)(cid:127)(cid:127)
+(cid:127)(cid:127)(cid:127)(cid:127)
+
+(cid:127)
+
+(cid:127)(cid:127)(cid:127)(cid:127)
+(cid:127)
+
+(cid:127)(cid:127)(cid:127)
+
+(cid:127)
+
+(cid:127)(cid:127)(cid:127)
+
+(cid:127)
+
+(cid:127)
+
+TP-
+
+(cid:127)
+
+(cid:127)(cid:127)
+
+(cid:127)(cid:127)
+
+(cid:127)(cid:127)
+
+(cid:127)(cid:127)
+
+(cid:127)(cid:127)
+
+(cid:127)(cid:127)
+
+(cid:127)(cid:127)(cid:127)
+
+(cid:127)(cid:127)(cid:127)(cid:127)
+
+(cid:127)(cid:127)(cid:127)(cid:127)
+
+(cid:127)(cid:127)(cid:127)(cid:127)
+
+(cid:127)(cid:127)(cid:127)(cid:127)
+
+(cid:127)(cid:127)(cid:127)(cid:127)
+
+(cid:127)(cid:127)(cid:127)(cid:127)
+
+State/action field
+
+a
+
+s
+
+Fig. 1. System Architecture. See text for details.
+
+trace’s pattern of activity excites a value opposition (VO) field,
+which sets input to a dynamical array performing calculation
+of a Temporal Difference error. The calculated value of the
+TD-error modulates learning,
+implemented as a Hebb-like
+learning process, whose long-term memory values represent
+the stored Q-values of the reinforcement learner. The Q-val ues
+are updated in the learning process and are utilized during
+sequence production to select the next EBs. Fig. 1 shows a
+diagram of the architecture.
+
+B. Sequence Generation Dynamics
+1) Dynamic Neural Fields: The activation level of DNFs
+develops in time based on the following differential equation,
+as analyzed by [18]
+τ u(x, t) = −u(x, t) + h + S (x, t) + Z ω (x − x′ )σ(u(x, t))dx′ ,
+(1)
+
+where h < 0 is a negative resting level and S (x, t) is the sum
+of external inputs, for instance from sensors or other DNFs.
+The Gaussian-shaped kernel ω (∆x) determines the lateral
+interaction within the field. For supra-threshold activati on, this
+interaction leads to stable peaks of activation, the unit of
+representation in DFT.
+In order to represent actions
+2) Elementary Behaviors:
+(e.g.,
+”move to red object”) in a real-world environment
+and in continuous time, we use a DFT based model of an
+elementary behavior [22]. An EB consists of two dynamical
+structures: a representation of the intention (e.g., move toward
+red object) and of the condition of satisfaction (e.g., the agent
+is at the red object). At every point in time, the CoS DNF
+matches the intention with the current sensory input. Upon
+a successful match, the CoS signals the completion of the
+EB and deactivates its intention. The structure of EBs enables
+segmentation of a continuous behavioral flow into discrete
+intentional (goal-directed) actions.
+To represent the above, we’ve used coupled intention and
+CoS nodes, linked to perceptual and CoS fields . An example
+of a perceptual field is one which takes camera input, and
+transforms it so that the y-axis represents maximum hue,
+and the x-axis is pixel column [19]. The corresponding CoS
+field, de fined over the same axes as the perceptual field,
+serves as input to the CoS nodes. Intention nodes provide
+top-down biases to the perceptual and CoS fields, and these
+biases effectively de fine the behaviors. An intention node o f
+a particular EB (e.g., “
+find yellow ”) will bias the appropria
+te
+hue in the perceptual field and the appropriate area (e.g., th e
+center) of the CoS field. Bottom-up input from the CoS field
+to an EB’s CoS node allow the node to become active in
+response to the stimuli which de fine when the behavior has
+been completed [19].
+Superposition of the perceptual field and the preshape from
+intention nodes results in regions of super-threshold activity,
+which then drive low-level motor commands via the motor
+field, e.g., setting an equilibrium point for a muscle or an
+angular velocity for the wheels of a mobile robot. An example
+motor field is a simple 1D space representing heading direc-
+tion. As the agent performs an action, environmental stimul i
+such as visual input from cameras, or position information
+from motor encoders, change continuously in time, resulting
+in changes in the pattern of activity across the perceptual fi eld.
+The intention nodes balance self-excitation, inhibition from
+its own CoS node, and excitation from its value node (value
+nodes are explained later). The parameters are tuned so that ,
+when no intention node is above threshold (sigmoidal f is near
+zero for all) a winner-take-all behavior results. Otherwis e, a
+single intention node stays “on ” (high
+f ) due to self-excitation
+and suppression of the others. The equation for each intention
+node’s activity is given by:
+
+τ int dint
++ fS (dint
+i + hint + cint
+i = −dint
+val dval
+) + cint
+i
+i
+− Xk 6=i
+cosfS (dcos
+−cint
+fS (dint
+k ) − cint
+)
+i
+
+(2)
+
+ The CoS nodes signal when a behavior has been completed,
+on the basis of bottom-up perceptual input. The equation for
+each CoS node is given by:
+
+(3)
+
+f (U cos
+i,j )
+
+τ cos dcos
+i = −dcos
+i + hcos + ccos
++ fS (dcos
+)
+i
+int Xk 6=i
+input Xj
+−ccos
+f (dint
+k ) + ccos
+Activities of both nodes, (dint,cos
+), in the absence of ex-
+i
+citatory or inhibitory inputs are driven by a resting level,
+hint,cos as well as a passive decay term, −dint,cos
+which
+i
+drives the node’s activity back towards a resting equilibrium.
+Self-excitatory feedback (cint,cos
+fS (dint,cos
+)) stabilizes ac-
++
+i
+tivity of a node if an external input pushes it through the
+k ))
+activation threshold. Lateral inhibition (−cint
+− Pk 6=i fS (dint
+among intention nodes causes these nodes to compete in a
+winner-take-all fashion, such that only a single intention node
+can remain on, while suppressing others. This competition is
+biased by nodes which encode learned values via the term
+. Unlike the intention nodes, the CoS nodes receive
+val dval
+cint
+i
+bottom-up inputs from the perceptual field ccos
+input Pj f (U cos
+i,j )
+which excite a CoS node when environmental conditions
+match the expected context which de fines that a behavior is
+completed. Once a behavior is completed, the CoS node of the
+given behavior will become active, and shut down the active
+).
+intention node by inhibitory inputs −cint
+cosfS (dcos
+i
+In our simulation, we set the parameters in these equations
+as τ int = τ cos = .3, and hint = hcos = 5. The inhibitory
+cos = 5 and −ccos
+coefficients were set to cint
+− = 10 and cint
+int = 2,
++ = 10 and
+while the excitatory coefficients were set as
+cint
+i = 20.
+cint
+val dval
+The sigmoid function fS ensures that output activations are
+bounded between 0 and 1, and is given by:
+
+(4)
+
+fS =
+
+1 + β (x − µ)
+2(1 + β x − µ)
+Because of winner-take-all (WTA) competition between
+intention nodes of the EBs, only a single behavior can be se-
+lected and active at any given time. This competition is driven
+either by 1. endogenous random activity (during exploration),
+or 2. by long-term memory representations of values (during
+exploitation). These values, stored in weights Wij , can be read
+out into value nodes. In the absence of randomized exploration,
+the value weights specify a chain of behaviors. They cause
+one behavior to reliably follow another. Ideally, the chain of
+behaviors will serve to maximize the agents expected future
+reward.
+The activity of the value nodes is computed as:
+
+dval
+i
+
+τ val
+
+f (dcos
+j
+
+(t) = Xj
+Afterwards they are divisively normalized to sum to one.
+The value nodes, intention nodes, CoS nodes, perceptual
+and motor fields work together to produce a sequence of
+
+)Wij .
+
+(5)
+
+elementary behaviors. In the next subsection, we discuss the
+RL part, the goal of which is to tune the values.
+
+C. Reinforcement Learner
+The second major component of DN-SARSA(λ) is the
+reinforcement learner. An initial requirement of an RL syst em
+is a representation of states and actions.
+In DN-SARSA(λ) a
+1) State-Action Representations:
+state/action field is a set of discrete nodes organized in a
+matrix, wherein each row receives input from one of the inten -
+tion nodes, and each column receives inputs from one of the
+CoS nodes of the available EBs. The sites in the state/action
+field are excited in response to coincident activations of Co S
+and intention nodes, which happens only in a transition phase
+between two EBs. By detecting transitions in this manner, the
+states in the RL sense are de fined by the CoS nodes (i.e.,
+which behavior the agent has just finished), and the actions
+are de fined by the intention nodes (i.e., what behavior the
+agent selects next).
+The SA cells (Iij ) are not
+implemented as differential
+equations, but rather assume steady state dynamics, and are
+de fined by:
+
+))
+
+(6)
+
+k dcos
+dint
+l
+
+)fs (dcos
+j
+
+]fH (fs (dint
+i
+
+Iij = [Xk 6=i Xj 6=l
+2) Transient Pulse (TP)-Cells: The activity within the
+state/action field excite another field of nodes known as
+transient pulse cells [23]. Each node in this field is modeled
+as a coupled circuit composed of an excitatory and inhibitory
+TP cell (T P + and T P − respectively). The activities of each
+of the T P + cells in these circuits behave as onset and offset
+detectors for their respective state/action nodes, by prod ucing
+a transient excitatory pulse in response to the onset of inpu t
+from the state/action field, and a transient inhibitory (neg ative)
+pulse in response to the offset of that activity.
+The behavior of the field of coupled excitatory ( T P +
+ij ) and
+inhibitory (T P −
+ij ) cells is given by:
+
+(8)
+
+(7)
+
+τ T P
+
+τ T P
+
+T P +
+ij = (−T P +
+ij + Iij − T P −
+ij )
+T P −
+ij = (−T P −
+ij + Iij )
+Both the excitatory and inhibitory cells contain a passive
+decay term (−T P +
+i and −T P −
+i ), as well as excitatory input
+from their corresponding state/action cells, Iij . In addition, the
+T P +
+ij receive inhibition from their corresponding inhibitory
+cell, T P −
+ij . For each intention, i, and each CoS, j , both cells
+(T P +
+ij and T P −
+ij ) are initially at rest. When the input, Iij ,
+from the state/action field turns on, both cells integrate ac tivity
+at a rate proportional to this input. However, whereas the
+T P −
+ij cell integrates activity until it reaches equilibrium (whi le
+input remains on, equilibrium is reached at the value of the
+input), the T P +
+ij cell will begin to decrease in activity as
+T P −
+ij increases. In fact, it is easy to see that at equilibrium,
+T P +
+ij = Iij − T P −
+ij , which will therefore approach zero. Once
+
+ input shuts off, T P +
+ij is approximately 0, whereas T P −
+is
+ij
+approximately equal to the input strength. As a result, T P +
+ij
+will experience an initial burst of inhibition, until both T P +
+ij
+and T P −
+ij then relax back to rest at 0. In both equations, the
+parameter τ = 1/2.
+
+In DN-SARSA, the onset and offset detection capabilities
+of TP cells have multiple uses. Firstly, because they exhibit a
+fixed-width (in time) pulse of activation, they allow buffer ing
+of inputs to the eligibility trace layer, in order to prevent per-
+sistent inputs to those cells. Secondly, as consequence of the
+fact that they detect onsets and offsets of inputs, they can serve
+as the mechanism by which calculation Q(s′ , a′ ) − Q(s, a) is
+calculated. That is, if inputs occur in back-to-back fashion,
+such a mechanism results in the positive activation of TP
+cells corresponding to the currently active state/action p air
+(s′ , a′ ), while simultaneously producing negative activation of
+the previous state action pair (s, a).
+
+Activity from the T P + cells serves as input to a neural
+structure, wherein eligibility traces for the history of th e
+activated state/action pairs is maintained, as described next.
+
+3) Eligibility Trace: Since the eligibility trace in RL [1]
+may be interpreted as a form of a working memory, we
+simulate the eligibility trace (ET) field as an Item and Order
+working memory, which has been used to model a range of
+behavioral and psychological data regarding working memory,
+speech perception, and unsupervised sequence learning [20],
+[21]. Item and Order working memories encode the order
+of a sequence of presented items by the relative levels of
+activation across those items. In DN-SARSA(λ), more recently
+occurring state/action transitions result
+in higher level s of
+activity in the ET field than those state/action transitions
+having occurred further in the past. This property emerges
+naturally due to a ubiquitous neural architecture, known as a
+recurrent on-center, off-surround network, whose cells ob ey
+shunting dynamics. This structure ensures that the summed
+total activity is bounded, and that shunting dynamics lead to
+divisive normalization, which causes individual cell activities
+to be reduced by constant ratio factors upon presentation of
+new items. For a more technical analysis, see [24]. Because of
+the recurrent on-center, off-surround structure, cell act ivities
+can reach sustained equilibrium values in the absence of
+inputs. Further, because the inputs to this field are brief
+duration pulses corresponding to the onsets of inputs from
+state/action representations, the activity pattern acros s this field
+reaches equilibrium, and is no longer altered regardless of
+how long the state/action cell itself remains active. Taken
+together, these processing capabilities give rise to a system
+which can sustain a fixed activation level as variable length
+actions are undertaken, and whose activities self-stabilize in
+periods between, as well as during, subsequent actions.
+
+For a working memory cell which encodes the state/action
+pair indexed by (i, j ), its activity uij is given by:
+
+(9)
+
+ukl )
+
+τ u uij = (1 − uij )(αfP (T P +
+ij ) + βuij )
+−uij (α Xk,l 6=i,j
+kl ) + β Xk,l 6=i,j
+fP (T P +
+The cell’s activity is bounded below by 0, and bounded
+above by 1 due to the excitatory shunting term (1 − uij ),
+which prevents the inputs from having any effect once uij = 1,
+and the inhibitory shunting term (−uij ) which prevents the
+inhibitory inputs from having any effect once −uij = 0.
+Inputs from state/action pairs (Iij ) are pulse inputs resulting
+from joint activations in CoS and Intention nodes across
+the EBs. There are also on-center (βuij ) and off-surround
+(β Pk,l 6=i,j ukl ), which, when coupled with shunting dynam-
+ics, give rise to the Item and Order properties discussed above.
+The parameters are set as α = 1.1 and β = .8.
+4) Value Opposition Field: The pattern of activity which
+unfolds across the eligibility trace field excites a value op po-
+sition (VO) field, which prepares the calculation of the TD-
+error. In the VO field, the representations of the currently
+active state/action pair (with value Q(s′ , a′ )) and the negative
+of the previously active state/action pair (with value Q(s, a))
+become active. This results from the onset/offset detections
+of state/action pairs by the TP cells in the following way.
+When the state/action pair (s′ , a′ ) is selected to be performed,
+it’s corresponding T P + cell emits a pulse of activity. At
+the same time, the previous, just finished state/action pair ,
+(s, a), has a T P + cell emitting a negative pulse of activity,
+since its corresponding state/action representation is th e most
+recent one to have turned off. All other T P + cell activities
+remain zero. Consequently, the onset / offset detectors simul-
+taneously exhibit excitatory activation in the currently active
+state/action pair, with inhibitory activation in the previously
+active state/action pair. These TP-cell activations gate inputs
+from the eligibility trace field to the VO field. These inputs a
+re
+also weighted by LTM traces which represent the Q-Values.
+Together, these multiplicative inputs ensure that the activity in
+the VO field represent Q(s′ , a′ ), and −Q(s, a).
+Activity in the Value Opposition field follows the dynamics:
+
+τ O Oij = (−Oij + γ fH (uij )Wvu fH (T P +
+ij )
+−fH (uij )Wvu fH (−T P +
+ij ),
+
+(10)
+
+where the function fH (w) is the Heaviside function. Be-
+cause the only excitatory T P + cell activity corresponds to
+the presently active state action pair, (s′ , a′ ), and the only
+inhibitory T P + activity corresponds to the previously active
+state action pair, (s, a) at equilibrium gives Oij = (γW(s′ ,a′ )−
+W(s,a) ).
+where the weights correspond to our learned Q-values,
+and the indices i,j have been replaced by the presently and
+previously active state action pairs. Our parameter τ O = 1/10,
+and γ = .8.
+5) TD-Error: The TD-error is calculated in part by a value
+cell that receives excitatory inputs from all cells in the VO
+field. This ultimately results in a cell whose activity compu tes
+
+ Activation: Intention Nodes (Exploration)
+
+Activation: Intention Nodes (Exploitation)
+
+4
+2
+0
+−2
+−4
+1.5
+
+1.6
+
+1.55
+
+1.8
+4
+x 10
+Activation: Condition of Satisfaction (Exploration)
+
+1.65
+
+1.75
+
+1.7
+
+4
+2
+0
+−2
+−4
+7.5
+
+7.6
+
+7.55
+
+7.8
+4
+x 10
+Activation: Condition of Satisfaction (Exploitation)
+
+7.65
+
+7.75
+
+7.7
+
+2
+0
+−2
+−4
+−6
+
+2
+0
+−2
+−4
+−6
+
+1.5
+
+1.6
+
+1.55
+
+1.8
+4
+x 10
+Behavior Sequence: Intention Output (Exploration)
+
+1.75
+
+1.65
+
+1.7
+
+7.5
+
+7.6
+
+7.55
+
+7.8
+4
+x 10
+Behavior Sequence: Intention Output (Exploitation)
+
+7.65
+
+7.75
+
+7.7
+
+4
+
+3
+
+2
+
+r
+o
+i
+v
+a
+h
+e
+B
+
+1
+1.5
+
+1.55
+
+1.6
+
+1.65
+Time
+
+1.7
+
+1.75
+
+1.8
+4
+x 10
+
+4
+
+3
+
+2
+
+r
+o
+i
+v
+a
+h
+e
+B
+
+1
+7.5
+
+7.55
+
+7.6
+
+7.65
+Time
+
+7.7
+
+7.75
+
+7.8
+4
+x 10
+
+Behavior 1
+
+Behavior 2
+
+Behavior 3
+
+Behavior 4
+
+Fig. 2.
+Illustration of how our continuous time process model DN-SARSA(λ) converts sensory-motor representations to discrete-lik e events. Left: the
+activation of intention and condition of satisfaction nodes during a short chunk of time during the robot’s exploration phase. Left bottom: the intention node
+output, indicating the behavioral sequence. Not all behaviors take the same amount of time. Right: after learning. The optimal sequence was learned and has
+stabilized.
+
+the difference between the stored LTM values for the current ly
+and previously active State/Action pairs.
+The value cell activity is given by:
+
+IV. EX P ER IM ENTAL RE SULT S
+
+A. Environment and Behaviors
+
+(11)
+
+τ v v = (−v + X Oij )
+Because the LTM weights Wvu ultimately come to encode
+our desired Q-values, the value cell at equilibrium calcula tes,
+v = Pij O ≈ γWQ(s′ ,a′ ) − WQ(s,a) . The value stored here
+then modulates our learning law along with incoming rewards .
+6) LTM Weights (Q-Values): The update rule for the weight
+values of connections between the state/action pairs essential
+mirror the form of the update equation in SARSA. In particu-
+lar, the Q-values (that is Q(s′ , a′ ) and Q(s, a) representing the
+Q-values of the current and previous s/a pairs) are values of
+the weights, and the working memory based eligibility trace
+values correspond to the SARSA eligibility trace values. The
+weight update equation is Eq. 12,
+
+Wij = α(1 − SAij )[r + v ]uij
+
+(12)
+
+The summed activity across the VO field, plus any external
+reward present, modulate the weights storing Q-values, as do
+the eligibility traces which are the pre-synaptic cells to these
+weights.
+
+The model
+is tested on a robotic vehicle simulated in
+the Webots simulator, performing a search for rewarding
+sequences of colored blocks, as illustrated in Fig. 3(a). The E-
+Puck robot is surrounded by 16 blocks of four different color s
+(red(R), green(G), blue(B), yellow(Y)), which are picked up
+by the robot’s camera and are represented as localized color -
+space distributions in the perceptual DNF. The robot “
+a
+finds”
+particular color, as determined by the currently active int ention
+node, by rotating on the spot so that an object of the given
+color falls onto the center of the image of the vehicle’s camera.
+Once centered, activation in the CoS node of the particular
+EB initiates a new EB to be performed (i.e., a new color to be
+searched for). If the robot finds the correct five-item sequen
+ce
+G → B → Y → R → G, a positive reward is provided for a
+few time steps.
+Note that this is a POMDP, since our agent’s state encodes
+the previously completed behavior only. In our environment ,
+the optimal policy is not representable given just the observ-
+able state. If we use TD(0), for example, the horizon will be
+too short — if R → G → Y → B → R is uncovered and
+rewarded, the model will first boost values from B → R, and
+will next boost values of any of the three R → B , G → B ,
+
+  
+d
+r
+a
+w
+e
+R
+ 
+e
+v
+i
+t
+a
+l
+u
+m
+u
+C
+
+15000
+
+10000
+
+5000
+
+Exploit
+
+0
+0
+
+1
+
+Explore
+
+2
+5
+4
+3
+Time Step [S * 32]
+(b)
+
+6
+
+7
+4
+x 10
+
+p
+e
+t
+S
+ 
+e
+m
+i
+T
+
+5
+
+4
+
+3
+
+2
+
+1
+
+0
+
+4
+x 10
+
+Time When Correct Sequence Learned
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+7
+Run #
+(c)
+
+8
+
+9 10 11 12 13
+
+4
+x 10
+
+Sequence Finding Difficulty(Run 6)
+
+2
+
+1
+
+4
+
+2
+
+0
+
+r
+o
+r
+r
+E
+−
+D
+T
+ 
+.
+g
+v
+A
+
+(a)
+
+−2
+0
+
+2000
+
+Explore
+4000
+8000
+6000
+Error Measurements
+
+Exploit
+
+10000
+
+12000
+
+d
+r
+a
+w
+e
+R
+ 
+e
+v
+i
+t
+a
+l
+u
+m
+u
+C
+
+0
+0
+
+1
+
+2
+5
+4
+3
+Time Step [S * 32]
+
+6
+
+7
+4
+x 10
+
+Fig. 3.
+(a) Simulation environment in which a e-puck vehicle at the center rotates on the spot to direct its camera at colored objects and is rewarded for
+doing so in a particular order of colors. (b) Cumulative rewa rd as a function of time averaged across 13 runs. In the first 50, 000 time steps (32 time steps per
+second), the system randomly selects intended colors; thereafter it selects the most valuable intended color. (c) Time needed to learn the rewarded sequence
+in each of the 13 runs. (d) Average TD-error. (e) The cumulative reward from example run (6)
+
+(d)
+
+(e)
+
+Y → B , but there will be no feedback so that only the correct
+one could be learned. Memory of the last three behaviors is
+needed for the true state. Due to the eligibility trace, DN-
+SARSA(λ) can learn the sequence succesfully. It is known
+that eligibility traces are not a complete solution to POMDPs,
+but eligibility traces can lead to good or even optimal POMDP
+solutions in some cases.
+
+B. Setup of the Model
+Initially, the value-encoding weights of the reinforcement
+learner are set to zero. Ultimately, the goal for the robot is that
+it discovers and learns the target sequence by reinforcemen t
+learning. We use a random exploration strategy during the fir st
+50, 000 time steps in which noise is added to the weights. This
+causes the robot randomly select EBs for approximately 300
+orientation behaviors that occur during this period. One co uld
+imagine future work using more sophisticated exploration
+methods [25]. After 50, 000 steps, the noise is removed and the
+robot operates in exploitation mode, consistently excecuting
+what it estimates to be its most valuable next behavior while
+continuing to learn.
+
+C. Results
+Please see Fig. 2. This illustrates how temporally discrete
+events emerge from continuous time activation dynamics in the
+elementary behaviors. These events arise from instabilities in
+the neural dynamics triggered by CoS onsets. The left column
+illustrates the irregular activation of EBs during explora tion,
+while the right column shows the consistent sequence of
+activated EBs in the exploitation phase.
+Fig. 3(b)-(e) shows results in terms of the robot’s learn-
+ing performance. In all trials in which the robot uncovered
+the rewarding sequence in exploration mode, it was able to
+eventually execute the optimal policy in exploitation mode.
+
+In some trials, the optimal policy was attained only in the
+exploitation phase, which showed that it is useful to maintain
+learning both during exploration and exploitation. Learning
+in the exploitation phase consists primarily of unlearning
+incorrect “shortcuts” inherited from the exploration phas
+e.
+This occurs, for example, when the robot finds the sequence,
+and correctly values the transition from R → G the most, but
+incorrectly also values the transition from any other color than
+Y to R. During exploitation the robot realizes that shortcuts do
+not lead to reward (by executing them and not receiving any
+reward). Their values are diminished until the true rewardi ng
+sequence remains.
+Fig. 3(c) shows the time at which the sequence was first
+uncovered. Fig 3(e) illustrates the reward from one run, in
+which the robot finds the target sequence a first time after
+about 30, 000 steps, finds it again (by luck). When the system
+enters exploitation mode its starts maximizing reward by do ing
+the correct thing over and over again until the simulation ends.
+Fig. 3(d) shows the averaged TD-error, illustrating that th e
+neural system learns to predict discounted future reward. T he
+detection of reward acts as an instability for the reinforcement
+learner, and the learning mechanism is simply a constant drive
+towards stability.
+
+D. Transfer to Real Robot
+To show that our system can deal with real sensory in-
+formation and real motor system, we transferred a set of
+weights learned from a successful run of simulation to a
+real E-puck (see Fig. 4). A video of the robot success-
+fully moving through two iterations of the sequence is at
+http://www.idsia.ch/∼luciw/videos/DFTBot.mp4.
+In the video, the top row shows the sensorimotor process:
+from sensory input to the perceptual field and to the motor
+field. One can see the different colors that are detected alon g
+
+ the hue dimension (Y-axis of perception), and how priming
+from the different intention nodes causes selection of one color
+and execution of the corresponding behavior. Observe that the
+system is robust against perceptual noise and fluctuation in
+the visual channel (e.g. changing lighting conditions, shades,
+mismatch between the robotic and the simulated camera). The
+activities of the intention and CoS nodes in the bottom row
+show the behavioral switching dynamics. The CoS field is
+also shown here, which illustrates the link from perception to
+behavior completion. Finally, the learned value weight matrix
+is shown, where white indicates a high value, with CoS (state)
+on the y-axis and intention (action) on the x-axis. Note that it
+encodes the rewarding sequence.
+The successful transfer onto a real robotic system shows
+that the DN-SARSA(λ) reinforcement learner brings about a
+representation that is capable of producing behavior in the
+physical robot based on continuous (raw) visual input and
+physical motors, driven by continuous-time dynamics.
+
+Fig. 4. The E-puck in its environment, surrounded by the colored objects
+of different sizes and shapes. The ”thought bubble” shows th e rewarding
+sequence of colors.
+
+V. CONCLU S ION
+The DN-SARSA(λ) model provides a framework which
+shows how computational learning algorithms can be incorpo -
+rated into a continuous neural-dynamical model. This enables
+autonomous learning and acting in continuous and dynamic
+environments, a challenge that
+is easily overlooked when
+formalizing the learning problem in discretized spaces without
+accounting for their coupling to sensory-motor dynamics.
+
+ACK NOW L EDGM ENT
+We’d like to thank Alexander F orster for mounting the
+camera on the E-puck. The authors gratefully acknowledge the
+financial support of the European Union Seventh Framework
+Program FP7-ICT-2009-6 under Grant Agreement no. 270247
+– NeuralDynamics.
+
+RE F ERENCE S
+
+[1] R. Sutton and A. Barto, Reinforcement
+Cambridge Univ Press, 1998, vol. 1, no. 1.
+[2] W. Schultz, P. Dayan, and P. Montague, “A neural substrat e of prediction
+and reward,” Science, vol. 275, no. 5306, pp. 1593–1599, 1997.
+
+learning: An introduction.
+
+[3] G. Berns and T. Sejnowski, “A computational model of how t he basal
+ganglia produce sequences,” Journal of Cognitive Neuroscience, vol. 10,
+no. 1, pp. 108–121, 1998.
+[4] G. Sch oner, “Dynamical systems approaches to cognitio n,” Campridge
+Handbook of Computational Modelling.
+[5] G. Sch oner,
+“Dynamical systems approaches to cognitio n,” in Cam-
+bridge Handbook of Computational Cognitive Modeling, R. Sun, Ed.
+Cambridge, UK: Cambridge University Press, 2008, pp. 101–1 26.
+[6] K. Kopecz and G. Sch oner, “Saccadic motor planning by in tegrating
+visual
+information and pre-information on neural, dynamic fields,”
+Biological Cybernetics, vol. 73, pp. 49–60, 1995.
+[7] W. Erlhagen and G. Sch oner,
+“Dynamic field theory of move ment
+preparation,” Psychological Review, vol. 109, pp. 545–572, 2002.
+[8] E. Thelen, G. Sch oner, C. Scheier, and L. Smith, “The dyn amics of
+embodiment: A field theory of infant perseverative reaching .” Brain and
+Behavioral Sciences, vol. 24, pp. 1–33, 2001.
+[9] G. Sch oner and E. Thelen, “Using dynamic field theory to r ethink infant
+habituation,” Psychological Review, vol. 113, no. 2, pp. 273–299, 2006.
+[10] C. Faubel and G. Sch oner, “Learning to recognize objec ts on the fly:
+A neurally based dynamic field approach,”
+Neural Networks, vol. 21,
+no. 4, pp. 562–576, 2008.
+[11] S. K. U. Zibner, C. Faubel, I. Iossifidis, G. Sch oner, an d J. P. Spencer,
+fields: How to updat
+“Scenes and tracking with dynamic neural
+e
+a robotic scene representation,”
+in Proceedings of
+the International
+Conference on Development and Learning (ICDL’10), 2010.
+[12] Y. Sandamirskaya and G. Sch oner, “An embodied account of serial order:
+How instabilities drive sequence generation,” Neural Networks, vol. 23,
+no. 10, pp. 1164–1179, 2010.
+[13] J. S. Johnson, J. P. Spencer, and G. Sch oner, “A dynamic neural field
+theory of multi-item visual working memory and change detection,” in
+Proceedings of the 28th Annual Conference of the Cognitive Science
+Society (CogSci 2006), Vancouver, Canada, 2006, pp. 399–404.
+[14] M. Todd, Y. Niv, and J. Cohen, “Learning to use working me mory in
+partially observable environments through dopaminergic r einforcement,”
+in Neural information processing systems. Citeseer, 2009, pp. 1689–
+1696.
+[15] P. Montague, P. Dayan, C. Person, T. Sejnowski et al., “Bee foraging in
+uncertain environments using predictive hebbian learning ,” Nature, vol.
+377, no. 6551, pp. 725–728, 1995.
+[16] J. Brown, D. Bullock, and S. Grossberg, “How laminar fro ntal cortex and
+basal ganglia circuits interact to control planned and reac tive saccades,”
+Neural Networks, vol. 17, no. 4, pp. 471–510, 2004.
+[17] M. Kawato and K. Samejima, “Efficient reinforcement lea
+rning: com-
+putational
+theories, neuroscience and robotics,” Current opinion in
+neurobiology, vol. 17, no. 2, pp. 205–212, 2007.
+“Dynamics of pattern formation in lateral-in hibition type
+[18] S. Amari,
+neural fields,”
+Biological Cybernetics, vol. 27, pp. 77–87, 1977.
+[19] Y. Sandamirskaya, M. Richter, and G. Schoner,
+“A neural -dynamic
+architecture for behavioral organization of an embodied ag ent,” in De-
+velopment and Learning (ICDL), 2011 IEEE International Conference
+on, vol. 2.
+IEEE, 2011, pp. 1–7.
+[20] S. Grossberg and S. Kazerounian, “Neural dynamics of sp eech percep-
+tion: Phonemic restoration in noise using subsequent context.” Journal
+of the Acoustical Society of America, vol. 125, no. 1, 2011.
+[21] S. Grossberg, “Behavioral contrast in short-term memo ry: Serial binary
+memory models or parallel continuous memory models?”
+Journal of
+Mathematical Psychology, vol. 3, pp. 199–219, 1978.
+[22] Y. Sandamirskaya, M. Richter, and G. Sch oner,
+“A neura l-dynamic
+architecture for behavioral organization of an embodied ag ent,”
+in
+IEEE International Conference on Development and Learning and on
+Epigenetic Robotics (ICDL EPIROB 2011), 2011.
+[23] B. Rhodes,
+“Learning-driven changes in the temporal ch aracteristics
+of serial movement performance: A model based on cortico-ce rebellar
+cooperation,” Ph.D. dissertation, Department of Cognitiv e and Neural
+Systems, Boston University, 1999.
+[24] S. Grossberg, A theory of human memory: Self-organization and perfor-
+mance of sensory-motor codes, maps, and plans. New York: Academic
+Press, 1978, pp. 233–374.
+[25] J. Schmidhuber, “Formal theory of creativity, fun, and intrinsic motiva-
+tion (1990–2010),”
+IEEE Transactions on Autonomous Mental Develop-
+ment, vol. 2, no. 3, pp. 230–247, 2010.
+
+ 
+Token(token_num:0, token:Autonomous, offsets:{BYTES=Offset(type:BYTES, first:0, length:10, content_form:clean_visible)}, sentence_pos:0, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:1, token:Reinforcement, offsets:{BYTES=Offset(type:BYTES, first:11, length:13, content_form:clean_visible)}, sentence_pos:1, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:2, token:of, offsets:{BYTES=Offset(type:BYTES, first:25, length:2, content_form:clean_visible)}, sentence_pos:2, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:3, token:Behavioral, offsets:{BYTES=Offset(type:BYTES, first:28, length:10, content_form:clean_visible)}, sentence_pos:3, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:4, token:Sequences, offsets:{BYTES=Offset(type:BYTES, first:39, length:9, content_form:clean_visible)}, sentence_pos:4, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:5, token:in, offsets:{BYTES=Offset(type:BYTES, first:49, length:2, content_form:clean_visible)}, sentence_pos:5, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:6, token:Neural, offsets:{BYTES=Offset(type:BYTES, first:52, length:6, content_form:clean_visible)}, sentence_pos:6, entity_type:ORG, mention_id:0, equiv_id:0, parent_id:-1, labels:{})Token(token_num:7, token:Dynamics, offsets:{BYTES=Offset(type:BYTES, first:59, length:8, content_form:clean_visible)}, sentence_pos:7, entity_type:ORG, mention_id:0, equiv_id:0, parent_id:-1, labels:{})Token(token_num:8, token:Sohrob, offsets:{BYTES=Offset(type:BYTES, first:69, length:6, content_form:clean_visible)}, sentence_pos:8, entity_type:ORG, mention_id:0, equiv_id:0, parent_id:-1, labels:{})Token(token_num:9, token:Kazerounian∗, offsets:{BYTES=Offset(type:BYTES, first:76, length:14, content_form:clean_visible)}, sentence_pos:9, entity_type:ORG, mention_id:0, equiv_id:0, parent_id:-1, labels:{})Token(token_num:10, token:,, offsets:{BYTES=Offset(type:BYTES, first:90, length:1, content_form:clean_visible)}, sentence_pos:10, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:11, token:Matthew, offsets:{BYTES=Offset(type:BYTES, first:92, length:7, content_form:clean_visible)}, sentence_pos:11, entity_type:PER, mention_id:1, equiv_id:1, parent_id:-1, labels:{})Token(token_num:12, token:Luciw, offsets:{BYTES=Offset(type:BYTES, first:100, length:5, content_form:clean_visible)}, sentence_pos:12, entity_type:PER, mention_id:1, equiv_id:1, parent_id:-1, labels:{})Token(token_num:13, token:∗, offsets:{BYTES=Offset(type:BYTES, first:105, length:3, content_form:clean_visible)}, sentence_pos:13, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:14, token:,, offsets:{BYTES=Offset(type:BYTES, first:109, length:1, content_form:clean_visible)}, sentence_pos:14, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:15, token:Mathis, offsets:{BYTES=Offset(type:BYTES, first:111, length:6, content_form:clean_visible)}, sentence_pos:15, entity_type:PER, mention_id:2, equiv_id:2, parent_id:-1, labels:{})Token(token_num:16, token:Richter†, offsets:{BYTES=Offset(type:BYTES, first:118, length:10, content_form:clean_visible)}, sentence_pos:16, entity_type:PER, mention_id:2, equiv_id:2, parent_id:-1, labels:{})Token(token_num:17, token:and, offsets:{BYTES=Offset(type:BYTES, first:129, length:3, content_form:clean_visible)}, sentence_pos:17, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:18, token:Yulia, offsets:{BYTES=Offset(type:BYTES, first:133, length:5, content_form:clean_visible)}, sentence_pos:18, entity_type:PER, mention_id:3, equiv_id:3, parent_id:-1, labels:{})Token(token_num:19, token:Sandamirskaya, offsets:{BYTES=Offset(type:BYTES, first:139, length:13, content_form:clean_visible)}, sentence_pos:19, entity_type:PER, mention_id:3, equiv_id:3, parent_id:-1, labels:{})Token(token_num:20, token:†, offsets:{BYTES=Offset(type:BYTES, first:152, length:3, content_form:clean_visible)}, sentence_pos:20, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:21, token:∗, offsets:{BYTES=Offset(type:BYTES, first:156, length:3, content_form:clean_visible)}, sentence_pos:21, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:22, token:IDSIA, offsets:{BYTES=Offset(type:BYTES, first:160, length:5, content_form:clean_visible)}, sentence_pos:22, entity_type:ORG, mention_id:4, equiv_id:4, parent_id:-1, labels:{})Token(token_num:23, token:,, offsets:{BYTES=Offset(type:BYTES, first:165, length:1, content_form:clean_visible)}, sentence_pos:23, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:24, token:Galleria, offsets:{BYTES=Offset(type:BYTES, first:167, length:8, content_form:clean_visible)}, sentence_pos:24, entity_type:LOC, mention_id:5, equiv_id:5, parent_id:-1, labels:{})Token(token_num:25, token:2, offsets:{BYTES=Offset(type:BYTES, first:176, length:1, content_form:clean_visible)}, sentence_pos:25, entity_type:LOC, mention_id:5, equiv_id:5, parent_id:-1, labels:{})Token(token_num:26, token:,, offsets:{BYTES=Offset(type:BYTES, first:177, length:1, content_form:clean_visible)}, sentence_pos:26, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:27, token:Manno, offsets:{BYTES=Offset(type:BYTES, first:179, length:5, content_form:clean_visible)}, sentence_pos:27, entity_type:LOC, mention_id:6, equiv_id:6, parent_id:-1, labels:{})Token(token_num:28, token:CH, offsets:{BYTES=Offset(type:BYTES, first:185, length:2, content_form:clean_visible)}, sentence_pos:28, entity_type:LOC, mention_id:6, equiv_id:6, parent_id:-1, labels:{})Token(token_num:29, token:-6928,, offsets:{BYTES=Offset(type:BYTES, first:187, length:6, content_form:clean_visible)}, sentence_pos:29, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:30, token:Switzerland, offsets:{BYTES=Offset(type:BYTES, first:194, length:11, content_form:clean_visible)}, sentence_pos:30, entity_type:LOC, mention_id:7, equiv_id:7, parent_id:-1, labels:{})Token(token_num:31, token:†, offsets:{BYTES=Offset(type:BYTES, first:206, length:3, content_form:clean_visible)}, sentence_pos:31, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:32, token:Ruhr-Universit, offsets:{BYTES=Offset(type:BYTES, first:209, length:14, content_form:clean_visible)}, sentence_pos:32, entity_type:ORG, mention_id:8, equiv_id:8, parent_id:-1, labels:{})Token(token_num:33, token:at, offsets:{BYTES=Offset(type:BYTES, first:224, length:2, content_form:clean_visible)}, sentence_pos:33, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:34, token:Bochum,, offsets:{BYTES=Offset(type:BYTES, first:227, length:7, content_form:clean_visible)}, sentence_pos:34, entity_type:ORG, mention_id:9, equiv_id:9, parent_id:-1, labels:{})Token(token_num:35, token:Institut, offsets:{BYTES=Offset(type:BYTES, first:235, length:8, content_form:clean_visible)}, sentence_pos:35, entity_type:ORG, mention_id:9, equiv_id:9, parent_id:-1, labels:{})Token(token_num:36, token:f, offsets:{BYTES=Offset(type:BYTES, first:244, length:1, content_form:clean_visible)}, sentence_pos:36, entity_type:ORG, mention_id:9, equiv_id:9, parent_id:-1, labels:{})Token(token_num:37, token:ur, offsets:{BYTES=Offset(type:BYTES, first:246, length:2, content_form:clean_visible)}, sentence_pos:37, entity_type:ORG, mention_id:9, equiv_id:9, parent_id:-1, labels:{})Token(token_num:38, token:NeuroinformatikUniversit, offsets:{BYTES=Offset(type:BYTES, first:249, length:24, content_form:clean_visible)}, sentence_pos:38, entity_type:ORG, mention_id:9, equiv_id:9, parent_id:-1, labels:{})Token(token_num:39, token:atstr, offsets:{BYTES=Offset(type:BYTES, first:274, length:5, content_form:clean_visible)}, sentence_pos:39, entity_type:ORG, mention_id:9, equiv_id:9, parent_id:-1, labels:{})Token(token_num:40, token:,, offsets:{BYTES=Offset(type:BYTES, first:279, length:1, content_form:clean_visible)}, sentence_pos:40, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:41, token:Bochum, offsets:{BYTES=Offset(type:BYTES, first:281, length:6, content_form:clean_visible)}, sentence_pos:41, entity_type:LOC, mention_id:10, equiv_id:10, parent_id:-1, labels:{})Token(token_num:42, token:,, offsets:{BYTES=Offset(type:BYTES, first:287, length:1, content_form:clean_visible)}, sentence_pos:42, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:43, token:Germany, offsets:{BYTES=Offset(type:BYTES, first:289, length:7, content_form:clean_visible)}, sentence_pos:43, entity_type:LOC, mention_id:11, equiv_id:11, parent_id:-1, labels:{})Token(token_num:44, token:2, offsets:{BYTES=Offset(type:BYTES, first:298, length:1, content_form:clean_visible)}, sentence_pos:44, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:45, token:1, offsets:{BYTES=Offset(type:BYTES, first:300, length:1, content_form:clean_visible)}, sentence_pos:45, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:46, token:0, offsets:{BYTES=Offset(type:BYTES, first:302, length:1, content_form:clean_visible)}, sentence_pos:46, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:47, token:2, offsets:{BYTES=Offset(type:BYTES, first:304, length:1, content_form:clean_visible)}, sentence_pos:47, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:48, token:t, offsets:{BYTES=Offset(type:BYTES, first:308, length:1, content_form:clean_visible)}, sentence_pos:48, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:49, token:c, offsets:{BYTES=Offset(type:BYTES, first:310, length:1, content_form:clean_visible)}, sentence_pos:49, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:50, token:O, offsets:{BYTES=Offset(type:BYTES, first:312, length:1, content_form:clean_visible)}, sentence_pos:50, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:51, token:2, offsets:{BYTES=Offset(type:BYTES, first:316, length:1, content_form:clean_visible)}, sentence_pos:51, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:52, token:1, offsets:{BYTES=Offset(type:BYTES, first:318, length:1, content_form:clean_visible)}, sentence_pos:52, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:53, token:], offsets:{BYTES=Offset(type:BYTES, first:324, length:1, content_form:clean_visible)}, sentence_pos:53, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:54, token:E, offsets:{BYTES=Offset(type:BYTES, first:326, length:1, content_form:clean_visible)}, sentence_pos:54, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:55, token:N, offsets:{BYTES=Offset(type:BYTES, first:328, length:1, content_form:clean_visible)}, sentence_pos:55, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:56, token:., offsets:{BYTES=Offset(type:BYTES, first:330, length:1, content_form:clean_visible)}, sentence_pos:56, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:57, token:s, offsets:{BYTES=Offset(type:BYTES, first:332, length:1, content_form:clean_visible)}, sentence_pos:57, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:58, token:c, offsets:{BYTES=Offset(type:BYTES, first:334, length:1, content_form:clean_visible)}, sentence_pos:58, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:59, token:[, offsets:{BYTES=Offset(type:BYTES, first:336, length:1, content_form:clean_visible)}, sentence_pos:59, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:60, token:1, offsets:{BYTES=Offset(type:BYTES, first:342, length:1, content_form:clean_visible)}, sentence_pos:60, entity_type:PER, mention_id:12, equiv_id:12, parent_id:-1, labels:{})Token(token_num:61, token:v, offsets:{BYTES=Offset(type:BYTES, first:344, length:1, content_form:clean_visible)}, sentence_pos:61, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:62, token:9, offsets:{BYTES=Offset(type:BYTES, first:346, length:1, content_form:clean_visible)}, sentence_pos:62, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:63, token:6, offsets:{BYTES=Offset(type:BYTES, first:348, length:1, content_form:clean_visible)}, sentence_pos:63, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:64, token:5, offsets:{BYTES=Offset(type:BYTES, first:350, length:1, content_form:clean_visible)}, sentence_pos:64, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:65, token:3, offsets:{BYTES=Offset(type:BYTES, first:352, length:1, content_form:clean_visible)}, sentence_pos:65, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:66, token:., offsets:{BYTES=Offset(type:BYTES, first:354, length:1, content_form:clean_visible)}, sentence_pos:66, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:67, token:0, offsets:{BYTES=Offset(type:BYTES, first:356, length:1, content_form:clean_visible)}, sentence_pos:67, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:68, token:1, offsets:{BYTES=Offset(type:BYTES, first:358, length:1, content_form:clean_visible)}, sentence_pos:68, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:69, token:2, offsets:{BYTES=Offset(type:BYTES, first:360, length:1, content_form:clean_visible)}, sentence_pos:69, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:70, token:1, offsets:{BYTES=Offset(type:BYTES, first:362, length:1, content_form:clean_visible)}, sentence_pos:70, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:71, token::, offsets:{BYTES=Offset(type:BYTES, first:364, length:1, content_form:clean_visible)}, sentence_pos:71, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:72, token:v, offsets:{BYTES=Offset(type:BYTES, first:366, length:1, content_form:clean_visible)}, sentence_pos:72, entity_type:PER, mention_id:13, equiv_id:13, parent_id:-1, labels:{})Token(token_num:73, token:i, offsets:{BYTES=Offset(type:BYTES, first:368, length:1, content_form:clean_visible)}, sentence_pos:73, entity_type:PER, mention_id:13, equiv_id:13, parent_id:-1, labels:{})Token(token_num:74, token:X, offsets:{BYTES=Offset(type:BYTES, first:370, length:1, content_form:clean_visible)}, sentence_pos:74, entity_type:PER, mention_id:13, equiv_id:13, parent_id:-1, labels:{})Token(token_num:75, token:r, offsets:{BYTES=Offset(type:BYTES, first:372, length:1, content_form:clean_visible)}, sentence_pos:75, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:76, token:a, offsets:{BYTES=Offset(type:BYTES, first:374, length:1, content_form:clean_visible)}, sentence_pos:76, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:77, token:Abstract, offsets:{BYTES=Offset(type:BYTES, first:377, length:8, content_form:clean_visible)}, sentence_pos:77, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:78, token:—, offsets:{BYTES=Offset(type:BYTES, first:386, length:3, content_form:clean_visible)}, sentence_pos:78, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:79, token:We, offsets:{BYTES=Offset(type:BYTES, first:389, length:2, content_form:clean_visible)}, sentence_pos:79, entity_type:PER, mention_id:14, equiv_id:14, parent_id:-1, labels:{})Token(token_num:80, token:introduce, offsets:{BYTES=Offset(type:BYTES, first:392, length:9, content_form:clean_visible)}, sentence_pos:80, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:81, token:a, offsets:{BYTES=Offset(type:BYTES, first:402, length:1, content_form:clean_visible)}, sentence_pos:81, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:82, token:dynamic, offsets:{BYTES=Offset(type:BYTES, first:404, length:7, content_form:clean_visible)}, sentence_pos:82, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:83, token:neural, offsets:{BYTES=Offset(type:BYTES, first:412, length:6, content_form:clean_visible)}, sentence_pos:83, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:84, token:algorithm, offsets:{BYTES=Offset(type:BYTES, first:419, length:9, content_form:clean_visible)}, sentence_pos:84, entity_type:LOC, mention_id:15, equiv_id:15, parent_id:-1, labels:{})Token(token_num:85, token:for, offsets:{BYTES=Offset(type:BYTES, first:429, length:3, content_form:clean_visible)}, sentence_pos:85, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:86, token:learn-, offsets:{BYTES=Offset(type:BYTES, first:433, length:6, content_form:clean_visible)}, sentence_pos:86, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:87, token:ing, offsets:{BYTES=Offset(type:BYTES, first:440, length:3, content_form:clean_visible)}, sentence_pos:87, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:88, token:a, offsets:{BYTES=Offset(type:BYTES, first:444, length:1, content_form:clean_visible)}, sentence_pos:88, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:89, token:behavioral, offsets:{BYTES=Offset(type:BYTES, first:446, length:10, content_form:clean_visible)}, sentence_pos:89, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:90, token:sequence, offsets:{BYTES=Offset(type:BYTES, first:457, length:8, content_form:clean_visible)}, sentence_pos:90, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:91, token:from, offsets:{BYTES=Offset(type:BYTES, first:466, length:4, content_form:clean_visible)}, sentence_pos:91, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:92, token:possibly, offsets:{BYTES=Offset(type:BYTES, first:471, length:8, content_form:clean_visible)}, sentence_pos:92, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:93, token:delayed, offsets:{BYTES=Offset(type:BYTES, first:480, length:7, content_form:clean_visible)}, sentence_pos:93, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:94, token:rewards., offsets:{BYTES=Offset(type:BYTES, first:488, length:8, content_form:clean_visible)}, sentence_pos:94, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:95, token:The, offsets:{BYTES=Offset(type:BYTES, first:497, length:3, content_form:clean_visible)}, sentence_pos:95, entity_type:PER, mention_id:16, equiv_id:15, parent_id:-1, labels:{})Token(token_num:96, token:algorithm, offsets:{BYTES=Offset(type:BYTES, first:501, length:9, content_form:clean_visible)}, sentence_pos:96, entity_type:PER, mention_id:16, equiv_id:15, parent_id:-1, labels:{})Token(token_num:97, token:,, offsets:{BYTES=Offset(type:BYTES, first:510, length:1, content_form:clean_visible)}, sentence_pos:97, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:98, token:inspired, offsets:{BYTES=Offset(type:BYTES, first:512, length:8, content_form:clean_visible)}, sentence_pos:98, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:99, token:by, offsets:{BYTES=Offset(type:BYTES, first:521, length:2, content_form:clean_visible)}, sentence_pos:99, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:100, token:prior, offsets:{BYTES=Offset(type:BYTES, first:524, length:5, content_form:clean_visible)}, sentence_pos:100, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:101, token:Dynamic, offsets:{BYTES=Offset(type:BYTES, first:530, length:7, content_form:clean_visible)}, sentence_pos:101, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:102, token:Field, offsets:{BYTES=Offset(type:BYTES, first:538, length:5, content_form:clean_visible)}, sentence_pos:102, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:103, token:Theory, offsets:{BYTES=Offset(type:BYTES, first:544, length:6, content_form:clean_visible)}, sentence_pos:103, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:104, token:models, offsets:{BYTES=Offset(type:BYTES, first:551, length:6, content_form:clean_visible)}, sentence_pos:104, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:105, token:of, offsets:{BYTES=Offset(type:BYTES, first:558, length:2, content_form:clean_visible)}, sentence_pos:105, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:106, token:behavioral, offsets:{BYTES=Offset(type:BYTES, first:561, length:10, content_form:clean_visible)}, sentence_pos:106, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:107, token:sequence, offsets:{BYTES=Offset(type:BYTES, first:572, length:8, content_form:clean_visible)}, sentence_pos:107, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:108, token:representation,, offsets:{BYTES=Offset(type:BYTES, first:581, length:15, content_form:clean_visible)}, sentence_pos:108, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:109, token:is, offsets:{BYTES=Offset(type:BYTES, first:597, length:2, content_form:clean_visible)}, sentence_pos:109, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:110, token:called, offsets:{BYTES=Offset(type:BYTES, first:600, length:6, content_form:clean_visible)}, sentence_pos:110, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:111, token:Dynamic, offsets:{BYTES=Offset(type:BYTES, first:607, length:7, content_form:clean_visible)}, sentence_pos:111, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:112, token:Neural, offsets:{BYTES=Offset(type:BYTES, first:615, length:6, content_form:clean_visible)}, sentence_pos:112, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:113, token:(, offsets:{BYTES=Offset(type:BYTES, first:622, length:1, content_form:clean_visible)}, sentence_pos:113, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:114, token:DN), offsets:{BYTES=Offset(type:BYTES, first:623, length:3, content_form:clean_visible)}, sentence_pos:114, entity_type:ORG, mention_id:17, equiv_id:16, parent_id:-1, labels:{})Token(token_num:115, token:SARSA, offsets:{BYTES=Offset(type:BYTES, first:627, length:5, content_form:clean_visible)}, sentence_pos:115, entity_type:ORG, mention_id:17, equiv_id:16, parent_id:-1, labels:{})Token(token_num:116, token:(, offsets:{BYTES=Offset(type:BYTES, first:632, length:1, content_form:clean_visible)}, sentence_pos:116, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:117, token:λ, offsets:{BYTES=Offset(type:BYTES, first:633, length:2, content_form:clean_visible)}, sentence_pos:117, entity_type:LOC, mention_id:18, equiv_id:17, parent_id:-1, labels:{})Token(token_num:118, token:),, offsets:{BYTES=Offset(type:BYTES, first:635, length:2, content_form:clean_visible)}, sentence_pos:118, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:119, token:and, offsets:{BYTES=Offset(type:BYTES, first:638, length:3, content_form:clean_visible)}, sentence_pos:119, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:120, token:is, offsets:{BYTES=Offset(type:BYTES, first:642, length:2, content_form:clean_visible)}, sentence_pos:120, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:121, token:grounded, offsets:{BYTES=Offset(type:BYTES, first:645, length:8, content_form:clean_visible)}, sentence_pos:121, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:122, token:in, offsets:{BYTES=Offset(type:BYTES, first:654, length:2, content_form:clean_visible)}, sentence_pos:122, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:123, token:both, offsets:{BYTES=Offset(type:BYTES, first:657, length:4, content_form:clean_visible)}, sentence_pos:123, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:124, token:neuronal, offsets:{BYTES=Offset(type:BYTES, first:662, length:8, content_form:clean_visible)}, sentence_pos:124, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:125, token:dynamics, offsets:{BYTES=Offset(type:BYTES, first:671, length:8, content_form:clean_visible)}, sentence_pos:125, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:126, token:and, offsets:{BYTES=Offset(type:BYTES, first:680, length:3, content_form:clean_visible)}, sentence_pos:126, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:127, token:classical, offsets:{BYTES=Offset(type:BYTES, first:684, length:9, content_form:clean_visible)}, sentence_pos:127, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:128, token:reinforcement, offsets:{BYTES=Offset(type:BYTES, first:694, length:13, content_form:clean_visible)}, sentence_pos:128, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:129, token:learning., offsets:{BYTES=Offset(type:BYTES, first:708, length:9, content_form:clean_visible)}, sentence_pos:129, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:130, token:DN, offsets:{BYTES=Offset(type:BYTES, first:718, length:2, content_form:clean_visible)}, sentence_pos:130, entity_type:PER, mention_id:19, equiv_id:18, parent_id:-1, labels:{})Token(token_num:131, token:-, offsets:{BYTES=Offset(type:BYTES, first:720, length:1, content_form:clean_visible)}, sentence_pos:131, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:132, token:SARSA, offsets:{BYTES=Offset(type:BYTES, first:721, length:5, content_form:clean_visible)}, sentence_pos:132, entity_type:ORG, mention_id:20, equiv_id:19, parent_id:-1, labels:{})Token(token_num:133, token:(, offsets:{BYTES=Offset(type:BYTES, first:726, length:1, content_form:clean_visible)}, sentence_pos:133, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:134, token:λ, offsets:{BYTES=Offset(type:BYTES, first:727, length:2, content_form:clean_visible)}, sentence_pos:134, entity_type:LOC, mention_id:21, equiv_id:17, parent_id:-1, labels:{})Token(token_num:135, token:), offsets:{BYTES=Offset(type:BYTES, first:729, length:1, content_form:clean_visible)}, sentence_pos:135, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:136, token:is, offsets:{BYTES=Offset(type:BYTES, first:731, length:2, content_form:clean_visible)}, sentence_pos:136, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:137, token:implemented, offsets:{BYTES=Offset(type:BYTES, first:734, length:11, content_form:clean_visible)}, sentence_pos:137, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:138, token:on, offsets:{BYTES=Offset(type:BYTES, first:746, length:2, content_form:clean_visible)}, sentence_pos:138, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:139, token:both, offsets:{BYTES=Offset(type:BYTES, first:749, length:4, content_form:clean_visible)}, sentence_pos:139, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:140, token:a, offsets:{BYTES=Offset(type:BYTES, first:754, length:1, content_form:clean_visible)}, sentence_pos:140, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:141, token:simulated, offsets:{BYTES=Offset(type:BYTES, first:756, length:9, content_form:clean_visible)}, sentence_pos:141, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:142, token:and, offsets:{BYTES=Offset(type:BYTES, first:766, length:3, content_form:clean_visible)}, sentence_pos:142, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:143, token:real, offsets:{BYTES=Offset(type:BYTES, first:770, length:4, content_form:clean_visible)}, sentence_pos:143, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:144, token:mobile, offsets:{BYTES=Offset(type:BYTES, first:775, length:6, content_form:clean_visible)}, sentence_pos:144, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:145, token:robot, offsets:{BYTES=Offset(type:BYTES, first:782, length:5, content_form:clean_visible)}, sentence_pos:145, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:146, token:performing, offsets:{BYTES=Offset(type:BYTES, first:788, length:10, content_form:clean_visible)}, sentence_pos:146, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:147, token:a, offsets:{BYTES=Offset(type:BYTES, first:799, length:1, content_form:clean_visible)}, sentence_pos:147, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:148, token:search, offsets:{BYTES=Offset(type:BYTES, first:801, length:6, content_form:clean_visible)}, sentence_pos:148, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:149, token:task, offsets:{BYTES=Offset(type:BYTES, first:808, length:4, content_form:clean_visible)}, sentence_pos:149, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:150, token:for, offsets:{BYTES=Offset(type:BYTES, first:813, length:3, content_form:clean_visible)}, sentence_pos:150, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:151, token:a, offsets:{BYTES=Offset(type:BYTES, first:817, length:1, content_form:clean_visible)}, sentence_pos:151, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:152, token:speci, offsets:{BYTES=Offset(type:BYTES, first:819, length:5, content_form:clean_visible)}, sentence_pos:152, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:153, token:fic, offsets:{BYTES=Offset(type:BYTES, first:825, length:3, content_form:clean_visible)}, sentence_pos:153, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:154, token:sequence, offsets:{BYTES=Offset(type:BYTES, first:829, length:8, content_form:clean_visible)}, sentence_pos:154, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:155, token:of, offsets:{BYTES=Offset(type:BYTES, first:838, length:2, content_form:clean_visible)}, sentence_pos:155, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:156, token:color, offsets:{BYTES=Offset(type:BYTES, first:841, length:5, content_form:clean_visible)}, sentence_pos:156, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:157, token:finding, offsets:{BYTES=Offset(type:BYTES, first:847, length:7, content_form:clean_visible)}, sentence_pos:157, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:158, token:behaviors., offsets:{BYTES=Offset(type:BYTES, first:855, length:10, content_form:clean_visible)}, sentence_pos:158, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:159, token:I, offsets:{BYTES=Offset(type:BYTES, first:867, length:1, content_form:clean_visible)}, sentence_pos:159, entity_type:ORG, mention_id:22, equiv_id:20, parent_id:-1, labels:{})Token(token_num:160, token:., offsets:{BYTES=Offset(type:BYTES, first:869, length:1, content_form:clean_visible)}, sentence_pos:160, entity_type:ORG, mention_id:22, equiv_id:20, parent_id:-1, labels:{})Token(token_num:161, token:INTRODUCT, offsets:{BYTES=Offset(type:BYTES, first:871, length:9, content_form:clean_visible)}, sentence_pos:161, entity_type:ORG, mention_id:22, equiv_id:20, parent_id:-1, labels:{})Token(token_num:162, token:ION, offsets:{BYTES=Offset(type:BYTES, first:881, length:3, content_form:clean_visible)}, sentence_pos:162, entity_type:ORG, mention_id:22, equiv_id:20, parent_id:-1, labels:{})Token(token_num:163, token:Computational, offsets:{BYTES=Offset(type:BYTES, first:885, length:13, content_form:clean_visible)}, sentence_pos:163, entity_type:ORG, mention_id:22, equiv_id:20, parent_id:-1, labels:{})Token(token_num:164, token:approaches, offsets:{BYTES=Offset(type:BYTES, first:899, length:10, content_form:clean_visible)}, sentence_pos:164, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:165, token:to, offsets:{BYTES=Offset(type:BYTES, first:910, length:2, content_form:clean_visible)}, sentence_pos:165, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:166, token:reinforcement, offsets:{BYTES=Offset(type:BYTES, first:913, length:13, content_form:clean_visible)}, sentence_pos:166, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:167, token:learning, offsets:{BYTES=Offset(type:BYTES, first:927, length:8, content_form:clean_visible)}, sentence_pos:167, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:168, token:(, offsets:{BYTES=Offset(type:BYTES, first:936, length:1, content_form:clean_visible)}, sentence_pos:168, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:169, token:RL, offsets:{BYTES=Offset(type:BYTES, first:937, length:2, content_form:clean_visible)}, sentence_pos:169, entity_type:ORG, mention_id:23, equiv_id:21, parent_id:-1, labels:{})Token(token_num:170, token:), offsets:{BYTES=Offset(type:BYTES, first:939, length:1, content_form:clean_visible)}, sentence_pos:170, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:171, token:often, offsets:{BYTES=Offset(type:BYTES, first:941, length:5, content_form:clean_visible)}, sentence_pos:171, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:172, token:formalize, offsets:{BYTES=Offset(type:BYTES, first:947, length:9, content_form:clean_visible)}, sentence_pos:172, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:173, token:the, offsets:{BYTES=Offset(type:BYTES, first:957, length:3, content_form:clean_visible)}, sentence_pos:173, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:174, token:learning, offsets:{BYTES=Offset(type:BYTES, first:961, length:8, content_form:clean_visible)}, sentence_pos:174, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:175, token:problem, offsets:{BYTES=Offset(type:BYTES, first:970, length:7, content_form:clean_visible)}, sentence_pos:175, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:176, token:in, offsets:{BYTES=Offset(type:BYTES, first:978, length:2, content_form:clean_visible)}, sentence_pos:176, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:177, token:terms, offsets:{BYTES=Offset(type:BYTES, first:981, length:5, content_form:clean_visible)}, sentence_pos:177, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:178, token:of, offsets:{BYTES=Offset(type:BYTES, first:987, length:2, content_form:clean_visible)}, sentence_pos:178, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:179, token:discrete, offsets:{BYTES=Offset(type:BYTES, first:990, length:8, content_form:clean_visible)}, sentence_pos:179, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:180, token:state, offsets:{BYTES=Offset(type:BYTES, first:999, length:5, content_form:clean_visible)}, sentence_pos:180, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:181, token:and, offsets:{BYTES=Offset(type:BYTES, first:1005, length:3, content_form:clean_visible)}, sentence_pos:181, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:182, token:action, offsets:{BYTES=Offset(type:BYTES, first:1009, length:6, content_form:clean_visible)}, sentence_pos:182, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:183, token:spaces,, offsets:{BYTES=Offset(type:BYTES, first:1016, length:7, content_form:clean_visible)}, sentence_pos:183, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:184, token:with, offsets:{BYTES=Offset(type:BYTES, first:1024, length:4, content_form:clean_visible)}, sentence_pos:184, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:185, token:a, offsets:{BYTES=Offset(type:BYTES, first:1029, length:1, content_form:clean_visible)}, sentence_pos:185, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:186, token:learning, offsets:{BYTES=Offset(type:BYTES, first:1031, length:8, content_form:clean_visible)}, sentence_pos:186, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:187, token:agent, offsets:{BYTES=Offset(type:BYTES, first:1040, length:5, content_form:clean_visible)}, sentence_pos:187, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:188, token:that, offsets:{BYTES=Offset(type:BYTES, first:1046, length:4, content_form:clean_visible)}, sentence_pos:188, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:189, token:operates, offsets:{BYTES=Offset(type:BYTES, first:1051, length:8, content_form:clean_visible)}, sentence_pos:189, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:190, token:in, offsets:{BYTES=Offset(type:BYTES, first:1060, length:2, content_form:clean_visible)}, sentence_pos:190, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:191, token:discrete, offsets:{BYTES=Offset(type:BYTES, first:1063, length:8, content_form:clean_visible)}, sentence_pos:191, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:192, token:time, offsets:{BYTES=Offset(type:BYTES, first:1072, length:4, content_form:clean_visible)}, sentence_pos:192, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})Token(token_num:193, token:[1]., offsets:{BYTES=Offset(type:BYTES, first:1077, length:4, content_form:clean_visible)}, sentence_pos:193, mention_id:-1, equiv_id:-1, parent_id:-1, labels:{})[0m[[32msuccess[0m] [0mTotal time: 10 s, completed Aug 24, 2013 10:55:37 AM[0m
+> 
