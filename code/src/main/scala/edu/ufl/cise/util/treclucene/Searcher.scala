@@ -40,8 +40,8 @@ object Searcher extends Logging {
   val reader = DirectoryReader.open(directory)
   val searcher = new IndexSearcher(reader)
 
-  val ps = ".*?(\\d{4}-\\d{2}-\\d{2}-\\d{2}).*/(.*)";
-  val p = Pattern.compile(ps);
+  val FULL_PATH_GPG_REGEX_STR = ".*?(\\d{4}-\\d{2}-\\d{2}-\\d{2}).*/(.*)";
+  val FULL_PATH_GPG_REGEX = Pattern.compile(FULL_PATH_GPG_REGEX_STR);
 
   def getStats(searcher: IndexSearcher): Unit = {
     val stats: CollectionStatistics = searcher.collectionStatistics("clean_visible")
@@ -66,7 +66,7 @@ object Searcher extends Logging {
   def printDocument(d: Document, logNote: String = ""): Unit = {
     val gpgFile = d.get(SEARCH_INDEX_TYPE)
 
-    val m = p.matcher(gpgFile);
+    val m = FULL_PATH_GPG_REGEX.matcher(gpgFile);
     m.find()
     val s1 = m.group(1);
     val s2 = m.group(2);
