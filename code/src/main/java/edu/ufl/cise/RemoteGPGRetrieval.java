@@ -23,8 +23,8 @@ public class RemoteGPGRetrieval {
 
 	public static void main(String[] args) {
 		List<StreamItem> l = null;
-		String fileName = "news-245-4a17665c6805c1c383cb095ffda43fc0-2c169b7eab258091ad06d019cf66bfd2.sc.xz.gpg";
-		l = getStreams("2012-02-13-05", fileName);
+		String fileName = "arxiv-9-2b77905095542b5999cd89af987e4eac-c5f66a8b190517fa7b0efb2f304ffba6.sc.xz.gpg";
+		l = getStreams("2011-12-29-12", fileName);
 
 		try {
 			// List<StreamItem> l =
@@ -33,7 +33,7 @@ public class RemoteGPGRetrieval {
 			// l = getLocalStreams("2011-10-05-03",
 			// "arxiv-5-1432f036a5768d8e2f16f56770b2b13b-aae9af08ed49d35c0810f3c8fac1db00.sc.xz.gpg ");
 			// for (int i = 0; i < l.size(); i++) {
-			StreamItem si = l.get(44);
+			StreamItem si = l.get(3);
 			// System.out.println(si.doc_id);
 			System.out.println(si.body.getClean_visible());
 
