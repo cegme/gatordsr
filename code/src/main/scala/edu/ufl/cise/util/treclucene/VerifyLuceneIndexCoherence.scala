@@ -7,8 +7,8 @@ import java.util.Scanner
 import edu.cise.ufl.util.treclucene.Searcher
 import java.util.HashSet
 import java.util.ArrayList
-
 import scala.collection.JavaConversions._
+import java.io.PrintWriter
 
 object VerifyLuceneIndexCoherence {
 
@@ -18,6 +18,10 @@ object VerifyLuceneIndexCoherence {
     val reader = IndexReader.open(FSDirectory.open(indexDirectory));
     val num = reader.numDocs();
 
+    val pwLTI = new PrintWriter(new File("LuceneTotalIndex.txt"))
+
+    val pwDiff = new PrintWriter(new File("LuceneTotalIndexDiffStreamingSystem.txt"))
+
     val luceneIndexHashSet = new HashSet[String]()
     for (i <- 0 to reader.maxDoc()) {
       //   if (reader.isDeleted(i))
@@ -25,8 +29,14 @@ object VerifyLuceneIndexCoherence {
       val doc = reader.document(i);
       val docId = doc.get("gpgfile");
       //println(docId)
-      luceneIndexHashSet.add(docId)
+      val b = luceneIndexHashSet.add(docId)
+      if (b) {
+        pwLTI.print(docId)
+        println("#>" + docId)
+      }
     }
+    pwLTI.println("Completed.")
+    pwLTI.close()
 
     val sc = new Scanner(new File("/media/sde/totalGPGsList.txt"))
 
@@ -35,11 +45,18 @@ object VerifyLuceneIndexCoherence {
       val gpgFileStr = sc.nextLine()
       //   Searcher.searchTermQuery(Array(gpgFileStr))
       if (!luceneIndexHashSet.contains(gpgFileStr)) {
-        arr.add(gpgFileStr)
+        // arr.add(gpgFileStr)
+        println("+>" + gpgFileStr)
+      } else {
+        println("@>" + gpgFileStr)
+        pwDiff.println("@>" + gpgFileStr)
       }
     }
 
-    arr.toList.foreach(println)
+    pwDiff.println("Completed.")
+    pwDiff.close()
+
+    //  arr.toList.foreach(println)
 
   }
 
