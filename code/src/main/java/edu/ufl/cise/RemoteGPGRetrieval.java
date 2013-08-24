@@ -24,13 +24,13 @@ public class RemoteGPGRetrieval {
 	public static void main(String[] args) {
 		List<StreamItem> l = null;
 		String fileName = "arxiv-20-56cc59a5735b209b0a329fb334322dce-b13d700437b2ca9721b7e00c5abe9cff.sc.xz.gpg";
-//			l= getLocalStreams("/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-08-25-04/WEBLOG-233-1acf0a3bd8ede7500c73ba4f9bc9134f-9d22d788567ddf008b10b5edb921cced.sc.xz.gpg");
+		// l=
+		// getLocalStreams("/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-08-25-04/WEBLOG-233-1acf0a3bd8ede7500c73ba4f9bc9134f-9d22d788567ddf008b10b5edb921cced.sc.xz.gpg");
 		try {
 
-//l = getStreams("2012-08-25-04", fileName);
+			// l = getStreams("2012-08-25-04", fileName);
 
-        l = getLocalStreams("2012-10-12-16", fileName);
-
+			l = getLocalStreams("2012-10-12-16", fileName);
 
 			// List<StreamItem> l =
 			// getLocalStreams("/home/morteza/Downloads/social-222-fc6ce593d5a66a74da58358cfd87c9e1-5aa3991c8ea528a275238355aabc9d8c.sc.xz.gpg");
@@ -66,7 +66,7 @@ public class RemoteGPGRetrieval {
 			String date, String fileName) throws IOException {
 		String command = "gpg -q --no-verbose --no-permission-warning --trust-model always --output - --decrypt "
 				+ basePath + date + "/" + fileName;
-		 System.out.println(command);
+		System.out.println(command);
 		InputStream is = FileProcessor.runBinaryShellCommand(command);
 		XZCompressorInputStream xzis = new XZCompressorInputStream(is);
 		TIOStreamTransport transport = new TIOStreamTransport(xzis);
