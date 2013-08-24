@@ -90,6 +90,13 @@ object Searcher extends Logging {
 
     var docs = searcher.search(query, 2000)
     println("TermQuery found: " + docs.scoreDocs.length)
+        docs.scoreDocs foreach { docId =>
+          val d = searcher.doc(docId.doc)
+          logInfo("Result: %s".format(d.get("si_index")))
+          logInfo("Result: %s".format(d.get("gpgfile")))
+    //      logInfo("Result: %s".format(d.get("clean_visible")))
+        }
+
 
 
  val q = new PhraseQuery()
@@ -97,12 +104,12 @@ object Searcher extends Logging {
     docs = searcher.search(q, 2000)
     println("PhraseQuery found: " + docs.scoreDocs.length)
 
-    //    docs.scoreDocs foreach { docId =>
-    //      val d = searcher.doc(docId.doc)
-    //      logInfo("Result: %s".format(d.get("si_index")))
-    //      logInfo("Result: %s".format(d.get("gpgfile")))
+        docs.scoreDocs foreach { docId =>
+          val d = searcher.doc(docId.doc)
+          logInfo("Result: %s".format(d.get("si_index")))
+          logInfo("Result: %s".format(d.get("gpgfile")))
     //      logInfo("Result: %s".format(d.get("clean_visible")))
-    //    }
+        }
 
     //searcher.close
     reader.close
