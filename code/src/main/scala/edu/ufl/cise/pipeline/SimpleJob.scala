@@ -225,6 +225,8 @@ object SimpleJob extends Logging {
     val lines = Source.fromFile(filePath).getLines //.take(100)//.slice(0, n)
     lines.foreach(line => {
       if (line.contains("ling>")) {
+        
+         try {
         // parse one line to get parameters
         val array = line.split(" \\| ")
         val date_hour = array(0).split(">")(1)
@@ -294,6 +296,10 @@ object SimpleJob extends Logging {
         } else {
           logInfo("nullLing>" + line)
         }
+        } catch {
+        case ex: Exception => {
+          println("Ill formatted line.")
+        }}
       }
     })
   }
