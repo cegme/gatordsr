@@ -20,6 +20,7 @@ import edu.ufl.cise.Logging
 import org.apache.lucene.search.TopDocs
 import org.apache.lucene.search.ScoreDoc
 import org.apache.lucene.document.Document
+import java.io.PrintWriter
 
 object Searcher extends Logging {
 
@@ -33,6 +34,8 @@ object Searcher extends Logging {
 
   val directory = new NIOFSDirectory(filedir)
   val analyzer = new StandardAnalyzer(Version.LUCENE_43);
+
+  val queryParser = new QueryParser(Version.LUCENE_43, SEARCH_INDEX_TYPE, analyzer)
 
   // 1. create the index
   val index = new MMapDirectory(filedir)
@@ -72,6 +75,20 @@ object Searcher extends Logging {
     val s2 = m.group(2);
 
     println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
+      //d.get("si_docid")
+      //d.get("clean_visible")+
+      "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
+  }
+
+  def printToFile(d: Document, pw: PrintWriter, logNote: String = ""): Unit = {
+    val gpgFile = d.get(SEARCH_INDEX_TYPE)
+
+    val m = FULL_PATH_GPG_REGEX.matcher(gpgFile);
+    m.find()
+    val s1 = m.group(1);
+    val s2 = m.group(2);
+
+    pw.println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
       //d.get("si_docid")
       //d.get("clean_visible")+
       "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + logNote);
@@ -129,7 +146,7 @@ object Searcher extends Logging {
     reader.close
   }
 
-  def searchEntity(logNote: String, aliasList: ArrayList[String]) {
+  def aliasListToLuceneQuery(aliasList: ArrayList[String]): String = {
     val aliases = aliasList.toList.distinct
 
     val concatedArgs = aliases.map(s => {
@@ -141,6 +158,11 @@ object Searcher extends Logging {
         s
     }).reduce((s1, s2) => s1 + " OR " + s2)
 
+    concatedArgs
+  }
+
+  def searchEntity(logNote: String, aliasList: ArrayList[String]) {
+    val concatedArgs = aliasListToLuceneQuery(aliasList)
     searchQueryParser(logNote, concatedArgs.toLowerCase().replace(" or ", " OR "))
   }
 
@@ -159,7 +181,7 @@ object Searcher extends Logging {
     // when no field is explicitly specified in the query.
     //val q = new QueryParser(Version.LUCENE_43, "clean_visible", analyzer).parse(querystr);
 
-    val q = new QueryParser(Version.LUCENE_43, SEARCH_INDEX_TYPE, analyzer).parse(querystr);
+    val q = queryParser.parse(querystr);
 
     // 3. search
     val hitsPerPage = 1000000;
