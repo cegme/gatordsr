@@ -43,7 +43,6 @@ object IterativeSearcher {
 
       pw.println(f)//actual index path
       entity_list.foreach(e => {
-        //  e.target_id, 
         val querystr = Searcher.aliasListToLuceneQuery(e.alias)
         val q = Searcher.queryParser.parse(querystr)
 
@@ -56,12 +55,11 @@ object IterativeSearcher {
         val docs = collector.topDocs()
         val hits = docs.scoreDocs;
 
-        // 4. display results
         pw.println(hits.length + "\t hits for: " + querystr);
 
         docs.scoreDocs foreach { docId =>
           val d = searcher.doc(docId.doc)
-          val gpgFile = d.get("clean_visible")
+          val gpgFile = d.get(Searcher.SEARCH_INDEX_TYPE)
 
           val m = Searcher.FULL_PATH_GPG_REGEX.matcher(gpgFile);
           m.find()
@@ -74,6 +72,7 @@ object IterativeSearcher {
             "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + e.target_id);
         }
       })
+      pw.close()
     })
   }
 }
