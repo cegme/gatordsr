@@ -47,7 +47,7 @@ object Searcher extends Logging {
   val FULL_PATH_GPG_REGEX = Pattern.compile(FULL_PATH_GPG_REGEX_STR);
 
   def getStats(searcher: IndexSearcher): Unit = {
-    val stats: CollectionStatistics = searcher.collectionStatistics("clean_visible")
+    val stats: CollectionStatistics = searcher.collectionStatistics(SEARCH_INDEX_TYPE)
 
     logInfo("field: %s".format(stats.field))
     logInfo("docCount: %d".format(stats.docCount))
