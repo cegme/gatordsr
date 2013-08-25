@@ -33,7 +33,7 @@ object IterativeSearcher {
       luceneIndexesList.add(sc.nextLine());
     }
 
-    luceneIndexesList.toList.par.map(f => {
+    luceneIndexesList.toList.map(f => {
 
       val filedir = new java.io.File(f)
       val index = new MMapDirectory(filedir)
@@ -41,6 +41,7 @@ object IterativeSearcher {
       val date = f.substring(f.lastIndexOf('/') + 1)
       val pw = new PrintWriter("/media/sde/luceneSubmission/splittedEntityIndex/oneIndexPerDateHourDir/results-" + date)
 
+      pw.println(f)//actual index path
       entity_list.foreach(e => {
         //  e.target_id, 
         val querystr = Searcher.aliasListToLuceneQuery(e.alias)
@@ -56,7 +57,7 @@ object IterativeSearcher {
         val hits = docs.scoreDocs;
 
         // 4. display results
-        println(hits.length + "\t hits for: " + querystr);
+        pw.println(hits.length + "\t hits for: " + querystr);
 
         docs.scoreDocs foreach { docId =>
           val d = searcher.doc(docId.doc)
