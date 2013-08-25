@@ -7,12 +7,13 @@ import scala.collection.immutable.List
 import java.net.URL
 import java.io.PrintWriter
 
-import edu.ufl.edu.Logging
+import edu.ufl.cise.Logging
 
 object Alias extends Logging {
 
   def main(args:Array[String]){
-    extractWiki()
+    //extractWiki()
+    GetAliases("http://en.wikipedia.org/wiki/Aharon_Barak")
   }
 
   val URL = "http://en.wikipedia.org/w/api.php?format=json&action=query&prop=revisions&titles=%s&rvprop=timestamp|user|comment|content&rvend=20120104000000"
@@ -56,9 +57,9 @@ object Alias extends Logging {
           ||line.toLowerCase().contains("| other_names")){
         val array = line.split("=")
         if (array.size >= 2)
-        { val name = line.split("=")(1)
+        { val name = line.split("=")(1) trim()
          if(!names.contains(name))
-          names.add(name)
+          names.add(name.trim())
         }
       }
     })
