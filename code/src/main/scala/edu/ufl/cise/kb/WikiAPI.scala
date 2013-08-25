@@ -43,8 +43,8 @@ object WikiAPI {
 
   def main(args: Array[String]): Unit = {
 
-    val urlStr = "http://en.wikipedia.org/wiki/Basic_Element_%28company%29"
-    val inlineAliases = inlineAliasExtractor(urlStr);
+ //   val urlStr = "http://en.wikipedia.org/wiki/Basic_Element_%28company%29"
+  //  val inlineAliases = inlineAliasExtractor(urlStr);
     //println(inlineAliases)
     redirectAliasGenerator();
   }
@@ -123,13 +123,13 @@ object WikiAPI {
         aliasList.addAll(NameOrderGenerator.namePermutation(aliasList.get(a)))
       }
 
-      if (e.target_id.contains("wikipedia"))
-        e.alias.clear()
-
-      e.alias.addAll(aliasList)
-      removeDuplicate(e.alias)
-      //  println(generate(e.alias))
-      // println(e.alias)
+      //update the aliases and search for them in lucene
+//      if (e.target_id.contains("wikipedia"))
+//        e.alias.clear()
+//      e.alias.addAll(aliasList)
+     
+      removeDuplicate(e.alias)      
+     //  println(e.alias)
       Searcher.searchEntity(e.target_id, e.alias)
     })
 

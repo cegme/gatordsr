@@ -101,3 +101,28 @@ PER, DateOfDeath, claimed life, right, DATE
 PER, DateOfDeath, succumbed, right, DATE
 PER, DateOfDeath, slain, right, DATE
 PER, DateOfDeath, to death, right, DATE
+PER, DateOfDeath, dead, right, TIME
+PER, DateOfDeath, died, right, TIME
+PER, DateOfDeath, passed away, right, TIME
+PER, DateOfDeath, drown, right, TIME
+PER, DateOfDeath, perished, right, TIME
+PER, DateOfDeath, deceased, right, TIME
+PER, DateOfDeath, murdered, right, TIME
+PER, DateOfDeath, killed, right, TIME
+PER, DateOfDeath, assasinated, right, TIME
+PER, DateOfDeath, executed, right, TIME
+PER, DateOfDeath, shot, right, TIME
+PER, DateOfDeath, fell, right, TIME
+PER, DateOfDeath, claimed life, right, TIME
+PER, DateOfDeath, succumbed, right, TIME
+PER, DateOfDeath, slain, right, TIME
+PER, DateOfDeath, to death, right, TIME
+PER, Contact_Meet_PlaceTime, at, right, FAC
+PER, Contact_Meet_PlaceTime, in, right, FAC
+PER, Contact_Meet_PlaceTime, at, right, DATE
+PER, Contact_Meet_PlaceTime, in, right, DATE
+PER, Contact_Meet_PlaceTime, at, right, TIME
+PER, Contact_Meet_PlaceTime, in, right, TIME
+PER, Contact_Meet_PlaceTime, met, right, FAC
+PER, Contact_Meet_PlaceTime, met, right, DATE
+PER, Contact_Meet_PlaceTime, met, right, TIME

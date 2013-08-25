@@ -46,7 +46,7 @@ bool test3 () {
     // create temp file
     char tmpfilenam[128];
     char cmd[512];
-    std::tmpnam(tmpfilenam);
+    mkstemp(tmpfilenam);
     // run a command to write to that  flile
 
     // NOTE: I have to cd to /media/sde because it is a network fs

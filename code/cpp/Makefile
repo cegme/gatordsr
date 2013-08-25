@@ -3,7 +3,7 @@
 GPP = g++
 SYS := $(shell gcc -dumpmachine)
 ifneq (, $(findstring redhat, $(SYS)))
- GPP = /opt/centos/devtoolset-1.1/root/usr/bin/g++
+ GPP = /opt/centos/devtoolset-1.1/root/usr/bin/g++ -L/usr/local/lib/ -lthrift-1.0.0-dev
 endif
 
 
