@@ -10,6 +10,9 @@ import java.util.ArrayList
 import scala.collection.JavaConversions._
 import java.io.PrintWriter
 
+/**
+ * This code checked to see how many GPG files is our lucene index is missing.
+ */
 object VerifyLuceneIndexCoherence {
 
   def main(args: Array[String]): Unit = {
@@ -23,7 +26,7 @@ object VerifyLuceneIndexCoherence {
     val pwDiff = new PrintWriter(new File("LuceneTotalIndexDiffStreamingSystem.txt"))
 
     val luceneIndexHashSet = new HashSet[String]()
-    for (i <- 0 to reader.maxDoc()) {
+    for (i <- 0 to reader.maxDoc() - 1) {
       //   if (reader.isDeleted(i))
       //        continue;
       val doc = reader.document(i);
