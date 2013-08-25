@@ -37,6 +37,37 @@ std::vector<QueryEntity> QueryEntity::fileToQueryEntity() {
   return QueryEntity::fileToQueryEntity(QueryEntity::entity_file);
 }
 
+
+QueryEntity QueryEntity::fileToQueryEntity(std::string fileName, std::string target_url) {
+
+  std::ifstream ifs(fileName, std::ifstream::in);
+
+  boost::property_tree::ptree pt;
+  boost::property_tree::json_parser::read_json(fileName, pt);
+
+  std::vector<QueryEntity> qes;
+
+  // Iterate through each target
+  for (auto entity : pt.get_child("targets")){
+    if (entity.second.get<std::string>("target_id") == target_url) {
+      QueryEntity qe;
+      qe.entity_type = entity.second.get<std::string>("entity_type");
+      qe.group = entity.second.get<std::string>("group");
+      qe.target_id = entity.second.get<std::string>("target_id");
+      
+      std::vector<std::string> als;
+      for (auto &a : entity.second.get_child("alias")) {
+        als.push_back(a.second.data());
+      }
+      qe.aliases = als;
+      qe.init();
+      return qe;
+    }
+  }
+
+  return QueryEntity();
+}
+
 std::vector<QueryEntity> QueryEntity::fileToQueryEntity(std::string fileName) {
 
   std::ifstream ifs(fileName, std::ifstream::in);
@@ -60,12 +91,16 @@ std::vector<QueryEntity> QueryEntity::fileToQueryEntity(std::string fileName) {
     qe.aliases = als;
     qe.init();
     qes.push_back(qe);
-  };
+  }
 
   return qes;
 }
 
+QueryEntity QueryEntity::UrlToQueryEntity(std::string target_url) {
 
+  return fileToQueryEntity(entity_file, target_url) ;
+
+}
 QueryEntity QueryEntity::targetidToQueryEntity(std::string target_id) {
 
   auto entities = QueryEntity::fileToQueryEntity(QueryEntity::entity_file);

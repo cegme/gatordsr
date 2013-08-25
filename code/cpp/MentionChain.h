@@ -14,12 +14,13 @@
 
 class MentionChain {
 
+  constexpr static const char *tmp_prefix = "/var/tmp";
+  constexpr static const char *gpgDecompress = "gpg --quiet --no-verbose --no-permission-warning --trust-model always --output - --decrypt %s | xz --decompress > %s";
+public:
   constexpr static const char *media_sdd = "/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/"
     "kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/%s/%s";
   constexpr static const char *media_sde = "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/"
     "kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/%s/%s";
-  constexpr static const char *tmp_prefix = "/var/tmp";
-  constexpr static const char *gpgDecompress = "gpg --quiet --no-verbose --no-permission-warning --trust-model always --output - --decrypt %s | xz --decompress > %s";
 
 //private:
 public:
@@ -59,7 +60,6 @@ public:
 
   /** Take a line from a runXLog.txt file and make it into a MentionChain */
   static std::vector<MentionChain> ReadLine(std::string line);
-  static std::vector<MentionChain> ReadLine(std::string line, std::vector<QueryEntity>);
 
   /** Take a thrift file and extract all the stream items and put them in a vector */
   static std::vector<streamcorpus::StreamItem> FileToStreamItem(std::string filePath); 

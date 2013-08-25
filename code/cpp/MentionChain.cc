@@ -244,11 +244,6 @@ std::vector<streamcorpus::StreamItem> MentionChain::FileToStreamItem(std::string
 }
 
 std::vector<MentionChain> MentionChain::ReadLine(std::string line) {
-  std::vector<QueryEntity> all_entities = QueryEntity::fileToQueryEntity();
-  return MentionChain::ReadLine(line, all_entities);
-}
-
-std::vector<MentionChain> MentionChain::ReadLine(std::string line, std::vector<QueryEntity> all_entities) {
   /* An example line:
     ling>2011-11-08-23 | social-265-c321d098ea52fed0c9612e7934034dbd-bf1d637ef0f126f139abb3fceb2ecb9c.sc.xz.gpg | 239 | 60adb14343a4fafabf0e76bd435cdaec || http://en.wikipedia.org/wiki/William_H._Miller_(writer),
     Sentence>adventism william miller
@@ -297,7 +292,8 @@ std::vector<MentionChain> MentionChain::ReadLine(std::string line, std::vector<Q
   for ( auto en : candidate_ids) {
     boost::algorithm::trim(en);
     log_debug("en: [%s]", en.c_str());
-    entities.push_back( QueryEntity::targetidToQueryEntity(en, all_entities) ); 
+    //entities.push_back( QueryEntity::targetidToQueryEntity(en, all_entities) ); 
+    entities.push_back( QueryEntity::UrlToQueryEntity(en) ); 
   }
 
   // Delete created string

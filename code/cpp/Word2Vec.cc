@@ -1,6 +1,281 @@
 
+#include "Util.h"
 #include  "Word2Vec.h"
+
 #include <algorithm>
+#include <vector>
+
+
+std::vector<std::pair<std::string, float> > Word2Vec::distance(char * query, const long long N = 50) {
+
+  std::vector<std::pair<std::string, float> > vv;
+
+  const long long max_size = MAX_STRING;
+  const long long max_w = 50;              // max length of vocabulary entries
+
+  FILE *f;
+  char st1[max_size];
+  char bestw[N][max_size];
+  char file_name[max_size];
+  char st[MAX_STRING][max_size]; // All the words that will be searched
+  float dist, len, bestd[N], vec[max_size];
+  long long words, size, a, b, c, d, cn;
+  long long bi[MAX_STRING]; // The location of all the words to be searched
+  char ch;
+  float *M;
+  char *vocab;
+
+  f = fopen(output_file, "rb");
+  if (f == NULL) {
+    log_err("Input file not found\n");
+    return vv;
+  }
+
+  log_trace("Reading the projection file...");
+
+  fscanf(f, "%lld", &words);
+  fscanf(f, "%lld", &size);
+  vocab = (char *)malloc((long long)words * max_w * sizeof(char));
+  M = (float *)malloc((long long)words * (long long)size * sizeof(float));
+  if (M == NULL) {
+    log_err("Cannot allocate memory: %lld MB    %lld  %lld\n", (long long)words * size * sizeof(float) / 1048576, words, size);
+    return vv;
+  }
+
+  for (b = 0; b < words; b++) {
+    fscanf(f, "%s%c", &vocab[b * max_w], &ch);
+    for (a = 0; a < size; a++) fread(&M[a + b * size], sizeof(float), 1, f);
+    len = 0;
+    for (a = 0; a < size; a++) len += M[a + b * size] * M[a + b * size];
+    len = sqrt(len);
+    for (a = 0; a < size; a++) M[a + b * size] /= len;
+  }
+  fclose(f);
+
+  // Get the word/phrase (but we alreaady have it :-)
+  for (a = 0; a < N; a++) bestd[a] = 0;
+  for (a = 0; a < N; a++) bestw[a][0] = 0;
+
+  log_debug("query: %s", query);
+  log_debug("query.size: %ld", strlen(query));
+  b = 0; // column
+  cn = 0; // word
+  for(int i = 0; i < strlen(query); ++i) {
+    if ((query[i] == '\n') || (i >= max_size - 1)) {
+      st[cn][b] = 0;
+      ++cn; // next word
+      b = 0; // back to the first character
+      break;
+    }
+    else if (query[i] == ' ' || query[i] == ',' || query[i] == '.') {
+      if(b > 3) ++cn; //next word, only if previous was a word (and no 1 leter words)
+      b = 0; // first char
+      continue;
+    }
+    else {
+      st[cn][b] = query[i];
+      ++b;
+    }
+    st[cn][b] = 0; // End of the string
+    log_info("st[%lld][0 .. %lld]: %s", cn, b, st[cn]);
+  }
+
+  ++cn;
+  for (a = 0; a < cn; a++) {
+    for (b = 0; b < words; b++) if (!strcmp(&vocab[b * max_w], st[a])) break;
+    if (b == words) b = -1;
+    bi[a] = b;
+    log_info("Word: %s  Position in vocabulary: %lld", st[a], bi[a]);
+    if (b == -1) {
+      log_err("Out of dictionary word! '%s'\n", st[a]);
+      break;
+    }
+  }
+
+  if (b == -1) return vv; 
+
+  log_trace("Calculating Cosine distance...");
+
+  for (a = 0; a < size; a++)
+    vec[a] = 0;
+  for (b = 0; b < cn; b++) {
+    if (bi[b] == -1) continue;
+    for (a = 0; a < size; a++) vec[a] += M[a + bi[b] * size];
+  }
+  len = 0;
+  for (a = 0; a < size; a++)
+    len += vec[a] * vec[a];
+  len = sqrt(len);
+  for (a = 0; a < size; a++) vec[a] /= len;
+  for (a = 0; a < N; a++) bestd[a] = 0;
+  for (a = 0; a < N; a++) bestw[a][0] = 0;
+  for (c = 0; c < words; c++) {
+    a = 0;
+    for (b = 0; b < cn; b++) if (bi[b] == c) a = 1;
+    if (a == 1) continue;
+    dist = 0;
+    for (a = 0; a < size; a++) dist += vec[a] * M[a + c * size];
+    for (a = 0; a < N; a++) {
+      if (dist > bestd[a]) {
+        for (d = N - 1; d > a; d--) {
+          bestd[d] = bestd[d - 1];
+          strcpy(bestw[d], bestw[d - 1]);
+        }
+        bestd[a] = dist;
+        strcpy(bestw[a], &vocab[c * max_w]);
+        break;
+      }
+    }
+  }
+
+
+  for (a = 0; a < N; a++) { 
+    vv.push_back(std::make_pair(bestw[a], bestd[a]) );
+    log_info("%50s\t\t%f\n", bestw[a], bestd[a]);
+  }
+
+  return vv;
+} 
+
+std::vector<std::pair<std::string, float> > Word2Vec::distance(MentionChain *mc, const long long N) {
+  auto mc_t = to_string(mc->tokens(), " ");
+  log_info("mc_t.size(): %ld", mc_t.size());
+  std::transform(mc_t.begin(), mc_t.end(), mc_t.begin(), tolower);
+  return distance((char*) mc_t.c_str(), N);
+}
+
+std::vector<std::pair<std::string, float> > Word2Vec::distance(QueryEntity *qe, const long long N) {
+  auto qbc_e = to_string(qe->aliases, " ");
+  log_info("qbc_e.size(): %ld", qbc_e.size());
+  std::transform(qbc_e.begin(), qbc_e.end(), qbc_e.begin(), tolower);
+  return distance((char*)qbc_e.c_str(), N);
+}
+
+
+float Word2Vec::PairwiseSimilarity(char *word1, char *word2) {
+  // TODO check that the vocabilary file has been loaded
+
+  // Find the words in the Vocab file
+  int w1_pos = SearchVocab(word1);
+  if (w1_pos == -1) {
+    log_err("Word (%s) is not in the vocabulary.", word1);
+    return 0.0;
+  } 
+  
+  int w2_pos = SearchVocab(word2);
+  if (w2_pos == -1) {
+    log_err("Word (%s) is not in the vocabulary.", word2);
+    return 0.0;
+  } 
+
+
+  FILE *fin;
+  long long words; // Size of the vocab
+  long long size; // Dimension
+  char *vocab; // Word list
+  float *M; // The vectors for the words list
+  char ch; // A random character used to read spaces
+  float vec1[MAX_STRING]; // The vector for word1
+  float vec2[MAX_STRING]; // The vector for word2
+  float len1; // The sum of the first word's vector
+  float len2; // The sum of the second word's vector
+  float dist; // The distance between two words
+
+  fin = fopen(output_file, binary?"rb":"r");
+  if (fin == NULL) { 
+    log_err("Could not open file %s, (%s)", output_file, binary?"binary":"not binary");
+    return false;
+  }
+  
+  // The first line of the file has two values, first the size of the words, then the size (dimension)
+  fscanf(fin, "%lld", &words);
+  fscanf(fin, "%lld", &size);
+  
+  vocab = (char *)malloc((long long)words * MAX_STRING * sizeof(char));
+  M = (float *)malloc((long long)words * (long long)size * sizeof(float));
+  if (M == NULL) {
+    log_err("Cannot allocate memory: %lld MB    %lld  %lld\n", (long long)words * size * sizeof(float) / 1048576, words, size);
+    return false;
+  }
+
+  // Populate the word list and the M array
+  for (size_t i = 0; i < words; i++) {
+    fscanf(fin, "%s%c", &vocab[i * MAX_STRING], &ch);
+    for (size_t j = 0; j < size; j++) fread(&M[j + i * size], sizeof(float), 1, fin);
+    
+    /*int len = 0; // Used to normalize this vector this the range
+    float max = -1e15;
+    float min = 1e15;
+    for (size_t j = 0; j < size; j++){
+      //len += M[j + i * size] * M[j + i * size];
+      len += M[j + i * size];
+      max = std::max(max, M[j + i * size]);
+      min = std::min(min, M[j + i * size]);
+    }
+    //len = sqrt(len);
+    float avg = len / size;
+    for (size_t j = 0; j < size; j++) {
+      M[j + i * size] = (M[j + i * size] - min) / (max - min);
+    }*/
+  }
+  fclose(fin);
+
+  // Initially set the columns for the word vector to zero
+  for (int i = 0; i < size; ++i) vec1[i] = 0.0;
+  for (int i = 0; i < size; ++i) vec2[i] = 0.0;
+
+  // Make sure this is where the string is
+  if (!strcmp(&vocab[w1_pos], word1)) log_err("Word %s is not found", word1);
+  if (!strcmp(&vocab[w2_pos], word2)) log_err("Word %s is not found", word2);
+
+  if (w1_pos == -1) return false;
+  if (w2_pos == -1) return false;
+
+  // Word1
+  len1 = 0.0;
+  // Add the appropriate value to the vector columns
+  for (int i = 0; i < size; i++) vec1[i] += M[i + w1_pos * size];
+  // Be sure to renormalize
+  for (int i = 0; i < size; i++) len1 += vec1[i] * vec1[i]; // get the total
+  len1 = sqrt(len1);
+
+  // Word2
+  len2 = 0.0;
+  // Add the appropriate value to the vector columns
+  for (int i = 0; i < size; i++) vec2[i] += M[i + w2_pos * size];
+  // Be sure to renormalize
+  for (int i = 0; i < size; i++) len2 += vec2[i] * vec2[i]; // get the total
+  len2 = sqrt(len2);
+
+  //for (int i = 0; i < size; i++) log_info("vec1 %d, %f", i, vec1[i]); // Print vec1
+  //for (int i = 0; i < size; i++) log_info("M[i + w1_pos * size] %d, %f", i, M[i + w1_pos * size]); // Print vec1
+  //for (int i = 0; i < size; i++) log_info("vec2 %d, %f", i, vec2[i]); // Print vec2
+  
+
+  // Calculate Cosine the similarity 
+  dist = 0.0;
+  
+  float numerator = 0.0;
+  for (int i = 0; i < size; ++i) numerator += M[i + w2_pos * size] * M[i + w2_pos * size];
+  dist = numerator / (len1 * len2);
+  log_info("The cosine similarity between %s and %s is %f", word1, word2, dist);
+
+  // Calculate the KL divergence
+  dist = 0.0;
+  for (int i = 0; i < size; ++i) dist += log(M[i + w1_pos * size] / M[i + w2_pos * size]) * M[i + w1_pos * size];
+  log_info("The kl divergence similarity between %s and %s is %f", word1, word2, dist);
+
+  // Euclidean distance
+  dist = 0.0;
+  for (int i = 0; i < size; ++i) dist += pow(M[i + w1_pos * size] - M[i + w2_pos * size], 2);
+  dist = sqrt(dist);
+  log_info("The euclidean distance between %s and %s is %f", word1, word2, dist);
+  log_info("");
+
+  return true;
+
+}
+
 
 
 void Word2Vec::InitUnigramTable() {
@@ -91,21 +366,16 @@ int Word2Vec::AddWordToVocab(char *word) {
 int Word2Vec::VocabCompare(const void *a, const void *b) {
   return ((struct vocab_word *)b)->cn - ((struct vocab_word *)a)->cn;
 }
-int VocabCompare2(const void *a, const void *b) {
-  //return ((struct vocab_word *)b)->cn - ((struct vocab_word *)a)->cn;
-  //return reinterpret_cast<struct vocab_word *>(b)->cn - reinterpret_cast<struct vocab_word *>(a)->cn;
-  return 0;
-}
 
 void Word2Vec::SortVocab() {
   int a, size;
   unsigned int hash;
   // Sort the vocabulary and keep </s> at the first position
   //qsort(&vocab[1], vocab_size - 1, sizeof(struct vocab_word), VocabCompare);
-  //qsort(&vocab[1], vocab_size - 1, sizeof(struct vocab_word), VocabCompare2);
-  std::sort(&vocab[1], &vocab[0] + (vocab_size - 1), [] (const vocab_word &a, const vocab_word &b) ->  bool { // FIXME vocab_size-1?
-    return (b.cn - a.cn) < 0;
-  });
+  //std::sort(&vocab[1], &vocab[0] + (vocab_size - 1), [] (const vocab_word &a, const vocab_word &b) ->  bool {
+   // return (b.cn - a.cn) < 0;
+  //});
+  std::sort(&vocab[1], &vocab[0] + (vocab_size - 1));
 
   for (a = 0; a < vocab_hash_size; a++) vocab_hash[a] = -1;
   size = vocab_size;
@@ -245,8 +515,8 @@ void Word2Vec::LearnVocabFromTrainFile() {
   }
   SortVocab();
   if (debug_mode > 0) {
-    printf("Vocab size: %lld\n", vocab_size);
-    printf("Words in train file: %lld\n", train_words);
+    log_debug_r("Vocab size: %lld\n", vocab_size);
+    log_debug_r("Words in train file: %lld\n", train_words);
   }
   file_size = ftell(fin);
   fclose(fin);
@@ -270,7 +540,7 @@ void Word2Vec::ReadVocab() {
     printf("Vocabulary file not found\n");
     exit(1);
   }
-  for (a = 0; a < vocab_hash_size; a++) vocab_hash[a] = -1;
+  for (size_t i = 0; i < vocab_hash_size; i++) vocab_hash[i] = -1;
   vocab_size = 0;
   while (1) {
     ReadWord(word, fin);
@@ -281,8 +551,8 @@ void Word2Vec::ReadVocab() {
   }
   SortVocab();
   if (debug_mode > 0) {
-    printf("Vocab size: %lld\n", vocab_size);
-    printf("Words in train file: %lld\n", train_words);
+    log_debug("Vocab size: %lld\n", vocab_size);
+    log_debug("Words in train file: %lld\n", train_words);
   }
   fin = fopen(train_file, "rb");
   if (fin == NULL) {
@@ -302,8 +572,10 @@ void Word2Vec::InitNet() {
   if (hs) {
     a = posix_memalign((void **)&syn1, 128, (long long)vocab_size * layer1_size * sizeof(real));
     if (syn1 == NULL) {printf("Memory allocation failed\n"); exit(1);}
-    for (b = 0; b < layer1_size; b++) for (a = 0; a < vocab_size; a++)
-      syn1[a * layer1_size + b] = 0;
+
+    for (b = 0; b < layer1_size; b++)
+      for (a = 0; a < vocab_size; a++)
+        syn1[a * layer1_size + b] = 0;
   }
   if (negative>0) {
     a = posix_memalign((void **)&syn1neg, 128, (long long)vocab_size * layer1_size * sizeof(real));
@@ -508,9 +780,7 @@ void Word2Vec::TrainModel() {
   start = clock();
   //for (a = 0; a < num_threads; a++) pthread_create(&pt[a], NULL, TrainModelThread, (void *)a);
   for (a = 0; a < num_threads; a++) {
-    pthread_params pp;
-    pp.a = a;
-    pp.w = this;
+    pthread_params pp; pp.a = a; pp.w = this;
     pthread_create(&pt[a], NULL, TrainModelThreadHelper, (void *)&pp);
   }
   for (a = 0; a < num_threads; a++) pthread_join(pt[a], NULL);
@@ -572,6 +842,25 @@ void Word2Vec::TrainModel() {
   }
   fclose(fo);
 }
+
+
+void Word2Vec::init() {
+
+  output_file[0] = 0;
+  save_vocab_file[0] = 0;
+  read_vocab_file[0] = 0;
+
+  vocab = (struct vocab_word *)calloc(vocab_max_size, sizeof(struct vocab_word));
+  vocab_hash = (int *)calloc(vocab_hash_size, sizeof(int));
+  expTable = (real *)malloc((EXP_TABLE_SIZE + 1) * sizeof(real));
+  for (size_t i = 0; i < EXP_TABLE_SIZE; i++) {
+    expTable[i] = exp((i / (real)EXP_TABLE_SIZE * 2 - 1) * MAX_EXP); // Precompute the exp() table
+    expTable[i] = expTable[i] / (expTable[i] + 1);                   // Precompute f(x) = x / (x + 1)
+
+  }
+}
+
+
 
 int Word2Vec::ArgPos(char *str, int argc, char **argv) {
   int a;

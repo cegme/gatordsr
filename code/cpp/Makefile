@@ -8,7 +8,8 @@ endif
 
 
 DEBUG = -g -pg
-CC = $(GPP) $(DEBUG) -w -O7 -Wno-deprecated -std=c++0x -march=native 
+CC = $(GPP) $(DEBUG) -w -Wno-deprecated -std=c++0x -march=native 
+#CC = $(GPP) $(DEBUG) -w -O7 -Wno-deprecated -std=c++0x -march=native 
 #CC = g++ -g -std=gnu++0x 
 
 #tag = -i
@@ -20,19 +21,18 @@ endif
 #EXTRAS = -lfl -lboost_date_time -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H -DHAVE_INTTYPES_H -L/usr/local/lib
 EXTRAS = -lfl -lboost_date_time -lboost_program_options -lboost_system -lpthread -lboost_filesystem -lboost_regex -lthrift -DHAVE_NETINET_IN_H -DHAVE_INTTYPES_H 
 
-main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o
-	$(CC) -w -o main ER.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o $(EXTRAS)
+
+post_er:  PostSubmissionER.o streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o
+	$(CC) -w -o post_er PostSubmissionER.o streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o $(EXTRAS)
 
 test:  streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o
 	$(CC) -w -o test test.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o $(EXTRAS)
 
+main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o
+	$(CC) -w -o main ER.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o $(EXTRAS)
 
-#MentionChain: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o
-#	$(CC) -w -o main streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o $(EXTRAS)
-
-#entity: streamcorpus_types.o streamcorpus_constants.o entity_match.o MentionChain.o
-#	$(CC) -w -o entity streamcorpus_types.o streamcorpus_constants.o entity_match.o MentionChain.o $(EXTRAS)
-
+PostSubmissionER.o: PostSubmissionER.cc
+	$(CC) -c PostSubmissionER.cc $(EXTRAS)
 
 Word2Vec.o: Word2Vec.cc
 	$(CC) -c Word2Vec.cc $(EXTRAS)
@@ -66,5 +66,6 @@ clean:
 	rm -f *.o
 	rm -f main
 	rm -f test
+	rm -f post_er
 
 

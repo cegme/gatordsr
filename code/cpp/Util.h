@@ -73,6 +73,16 @@ static std::vector<std::string> tok(std::string str, std::string sep) {
 
 #define MAX(a,b) ( ((a) > (b)) ? (a) : (b) )
 
+// Do a carrage return after these lines so they will rewrite echother
+#define log_info_r(M, ...) fprintf(stderr, "%s [INFO] (%s:%d) | " M "\r", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__)
+
+#define log_trace_r(M, ...) fprintf(stderr, "%s [trace] (%s:%d) | " M "\r", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__)
+
+#define log_debug_r(M, ...) fprintf(stderr, "%s [DEBUG] (%s:%d) | " M "\r", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__)
+
+#define log_err_r(M, ...) fprintf(stderr, "%s [ERROR] (%s:%d: errno: %s) | " M "\r", DATE_STRING, __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
+
+#define log_warn_r(M, ...) fprintf(stderr, "%s [WARN] (%s:%d: errno: %s) | " M "\r", DATE_STRING, __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
 
 
 
