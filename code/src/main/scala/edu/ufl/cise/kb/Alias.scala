@@ -14,6 +14,7 @@ object Alias extends Logging {
   def main(args:Array[String]){
     //extractWiki()
     GetAliases("http://en.wikipedia.org/wiki/Aharon_Barak")
+    GetAliases("http://en.wikipedia.org/wiki/Bill_Coen")
   }
 
   val URL = "http://en.wikipedia.org/w/api.php?format=json&action=query&prop=revisions&titles=%s&rvprop=timestamp|user|comment|content&rvend=20120104000000"
@@ -37,6 +38,7 @@ object Alias extends Logging {
    
   }
 
+  // The WikiAPI.scala calls this code to get the 
   // Example: getAliases ("http://en.wikipedia.org/wiki/Shafi_Goldwasser")
   def GetAliases(target_id: String): ArrayList[String] = {
     // Get the title out of the full url

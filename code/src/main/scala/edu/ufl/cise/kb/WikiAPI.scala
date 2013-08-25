@@ -109,7 +109,7 @@ object WikiAPI {
 
       try {
         aliasList.addAll(inlineAliasExtractor(e.target_id))
-        aliasList.addAll(edu.ufl.cise.kb.Alias.GetAliases(e.target_id)) // Added here for Yangs code
+        //aliasList.addAll(edu.ufl.cise.kb.Alias.GetAliases(e.target_id)) // Added here for Yangs code
       } catch {
         case ex: Exception => {
           println(e.target_id + "Missing file exception.")
