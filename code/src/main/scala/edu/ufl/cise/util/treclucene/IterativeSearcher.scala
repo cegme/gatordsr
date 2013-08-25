@@ -39,7 +39,7 @@ object IterativeSearcher {
       val index = new MMapDirectory(filedir)
 
       val date = f.substring(f.lastIndexOf('/') + 1)
-      val pw = new PrintWriter("results-" + date)
+      val pw = new PrintWriter("/media/sde/luceneSubmission/splittedEntityIndex/oneIndexPerDateHourDir/results-" + date)
 
       entity_list.foreach(e => {
         //  e.target_id, 
