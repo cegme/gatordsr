@@ -12,7 +12,6 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import edu.ufl.cise.pipeline.Entity;
 import edu.ufl.cise.pipeline.Preprocessor;
 
@@ -108,11 +107,11 @@ public class IndexLogReader {
 						a);
 
 		HashMap<String, Integer> hm = new HashMap<String, Integer>();
-		
+
 		HashMap<String, Integer> hslotsTotal = new HashMap<String, Integer>();
-		
+
 		HashMap<String, HashSet<String>> hslots = new HashMap<String, HashSet<String>>();
-		
+
 		hslotsTotal.put("Affiliate", new Integer(0));
 		hslotsTotal.put("AssociateOf", new Integer(0));
 		hslotsTotal.put("Contact_Meet_PlaceTime", new Integer(0));
@@ -126,51 +125,54 @@ public class IndexLogReader {
 		hslotsTotal.put("TopMembers", new Integer(0));
 		hslotsTotal.put("FoundedBy", new Integer(0));
 		hslotsTotal.put("Samples", new Integer(0));
-		
 
 		for (Entity entity : a) {
 			hm.put(entity.target_id(), new Integer(0));
 		}
-//		while (sc.hasNextLine()) {
-//			String line = sc.nextLine();
-//			if (line.contains("ling>")) {
-//				String[] arr = line.split(" \\| ");
-//				String date_hour = arr[0].split(">")[1];
-//				String filename = arr[1];
-//				String si_num = arr[2];
-//				String topics = line.split("\\|\\| ")[1];
-//				//System.out.println(date_hour + filename + si_num + topics);
-//				hm.put(topics, hm.get(topics) + 1);
-//			}
-//		}
-		
+		// while (sc.hasNextLine()) {
+		// String line = sc.nextLine();
+		// if (line.contains("ling>")) {
+		// String[] arr = line.split(" \\| ");
+		// String date_hour = arr[0].split(">")[1];
+		// String filename = arr[1];
+		// String si_num = arr[2];
+		// String topics = line.split("\\|\\| ")[1];
+		// //System.out.println(date_hour + filename + si_num + topics);
+		// hm.put(topics, hm.get(topics) + 1);
+		// }
+		// }
+
 		while (sc.hasNextLine()) {
-		String line = sc.nextLine();
-		String[] arr = line.split(" ");
-		hm.put(arr[3], hm.get(arr[3]) + 1);
-		hslotsTotal.put(arr[8], hslotsTotal.get(arr[8]) + 1);
-	//	System.out.println(arr[8]);
-		if(hslots.get(arr[8]) == null)
-			hslots.put(arr[8], new HashSet<String>());
-		else
+			String line = sc.nextLine();
+			if (line.contains("FoundedBy")) {
+				System.out.println();
+			}
+			String[] arr = line.split(" ");
+			hm.put(arr[3], hm.get(arr[3]) + 1);
+			hslotsTotal.put(arr[8], hslotsTotal.get(arr[8]) + 1);
+			// System.out.println(arr[8]);
+			if (hslots.get(arr[8]) == null)
+				hslots.put(arr[8], new HashSet<String>());
 			hslots.get(arr[8]).add(arr[3]);
-		//hslots.put(arr[8], value)
-		}		
-		
-		
-		System.out.println("# of times the entity appears in slot values triples");
+			// hslots.put(arr[8], value)
+		}
+
+		System.out
+				.println("# of times the entity appears in slot values triples");
 		for (Entity entity : a) {
-			
-			System.out.println(entity.target_id() + "\t"+hm.get(entity.target_id()));
+
+			System.out.println(entity.target_id() + "\t"
+					+ hm.get(entity.target_id()));
 		}
 		System.out.println("\nTotal instances of slot value found");
-		for(String s: hslotsTotal.keySet()){
+		for (String s : hslotsTotal.keySet()) {
 			System.out.println(s + "\t" + hslotsTotal.get(s));
 		}
-		System.out.println("\n# of entities that we have found the slot value for");
-		
-		for (String s :hslots.keySet() ) {
-			System.out.println(s + "\t"+hslots.get(s).size());
+		System.out
+				.println("\n# of entities that we have found the slot value for");
+
+		for (String s : hslots.keySet()) {
+			System.out.println(s + "\t" + hslots.get(s).size());
 		}
 
 	}
