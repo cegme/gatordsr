@@ -14,17 +14,31 @@ import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.search.TopScoreDocCollector
 import scala.util.Random
 import java.io.PrintWriter
+import java.util.regex.Pattern
+import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.util.Version
+import org.apache.lucene.analysis.standard.StandardAnalyzer
+
 
 /**
  * Iterative search among all lucene index files. One index directory per corpus date-hour directory
  */
 object IterativeSearcher {
 
+    val analyzer = new StandardAnalyzer(Version.LUCENE_43);
+
+   val SEARCH_INDEX_TYPE = "gpgfile"
+   val queryParser = new QueryParser(Version.LUCENE_43, SEARCH_INDEX_TYPE, analyzer)
+
+
   def main(args: Array[String]): Unit = {
 
     val entity_list = new ArrayList[Entity]
     Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json", entity_list)
     lazy val entities = entity_list.toArray(Array[Entity]())
+    
+val FULL_PATH_GPG_REGEX_STR = ".*?(\\d{4}-\\d{2}-\\d{2}-\\d{2}).*/(.*)";
+  val FULL_PATH_GPG_REGEX = Pattern.compile(FULL_PATH_GPG_REGEX_STR);
 
     val sc = new Scanner(new File("/media/sde/devPipeline/gatordsr/code/allLuceneIndexDirectories.txt"));
 
@@ -33,7 +47,7 @@ object IterativeSearcher {
       luceneIndexesList.add(sc.nextLine());
     }
 
-    luceneIndexesList.toList.map(f => {
+    luceneIndexesList.toList.par.map(f => {
 
       val filedir = new java.io.File(f)
       val index = new MMapDirectory(filedir)
@@ -44,7 +58,7 @@ object IterativeSearcher {
       pw.println(f)//actual index path
       entity_list.foreach(e => {
         val querystr = Searcher.aliasListToLuceneQuery(e.alias)
-        val q = Searcher.queryParser.parse(querystr)
+        val q = queryParser.parse(querystr)
 
         val hitsPerPage = 1000000;
         val reader = DirectoryReader.open(index);
@@ -59,9 +73,10 @@ object IterativeSearcher {
 
         docs.scoreDocs foreach { docId =>
           val d = searcher.doc(docId.doc)
-          val gpgFile = d.get(Searcher.SEARCH_INDEX_TYPE)
+         val gpgFile = d.get("gpgfile") 
 
-          val m = Searcher.FULL_PATH_GPG_REGEX.matcher(gpgFile);
+          pw.flush()
+          val m = FULL_PATH_GPG_REGEX.matcher(gpgFile);
           m.find()
           val s1 = m.group(1);
           val s2 = m.group(2);
@@ -73,6 +88,8 @@ object IterativeSearcher {
         }
       })
       pw.close()
+      
+      ""
     })
   }
 }
