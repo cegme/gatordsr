@@ -53,7 +53,7 @@ object KBAOutput {
     // File array contains: [date_hour, filename, si_num, si_index, ling.EntityIndex, NA, si.stream_id, entity.target_id ]
     // It is constructred in filterSencencesCoref in SimpleJob.scala. It is called tmpStr
     // It is later split in the "Pipeline.annotate" function and turned into an array
-    pw.println("#%s|%d".format(file_data(1), file_data(3)))
+    pw.println("#%s|%s".format(file_data(1), file_data(3)))
     pw.println(comment)
     
     pw.close
