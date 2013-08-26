@@ -19,6 +19,8 @@ import org.apache.lucene.util.Version
 import edu.ufl.cise.pipeline.Entity
 import edu.ufl.cise.pipeline.Preprocessor
 
+import edu.cise.ufl.util.treclucene.Searcher
+
 /**
  * Iterative search among all lucene index files. One index directory per corpus date-hour directory
  */
@@ -47,62 +49,56 @@ object IterativeSearcher {
 
     luceneIndexesList.toList.map(f => {
 
-      val filedir = new java.io.File(f)
-      val index = new MMapDirectory(filedir)
+      try {
 
-      val date = f.substring(f.lastIndexOf('/') + 1)
-      val pw = new PrintWriter("/media/sde/luceneSubmission/splittedEntityIndex/oneIndexPerDateHourDir/results-" + date)
+        val filedir = new java.io.File(f)
+        val index = new MMapDirectory(filedir)
 
-      pw.println(f) //actual index path
-      entity_list.foreach(e => {
-        val querystr = aliasListToLuceneQuery(e.alias)
-        val q = queryParser.parse(querystr)
+        val date = f.substring(f.lastIndexOf('/') + 1)
+        val pw = new PrintWriter("/media/sde/luceneSubmission/splittedEntityIndex/oneIndexPerDateHourDir/results-" + date)
 
-        val hitsPerPage = 1000000;
-        val reader = DirectoryReader.open(index);
-        val searcher = new IndexSearcher(reader);
-        val collector = TopScoreDocCollector.create(hitsPerPage, true);
-        searcher.search(q, collector);
+        pw.println(f) //actual index path
+        entity_list.foreach(e => {
+          val querystr = Searcher.aliasListToLuceneQuery(e.alias)
+          val q = queryParser.parse(querystr)
 
-        val docs = collector.topDocs()
-        val hits = docs.scoreDocs;
+          val hitsPerPage = 1000000;
+          val reader = DirectoryReader.open(index);
+          val searcher = new IndexSearcher(reader);
+          val collector = TopScoreDocCollector.create(hitsPerPage, true);
+          searcher.search(q, collector);
 
-//        pw.println(hits.length + "\t hits for: " + querystr);
+          val docs = collector.topDocs()
+          val hits = docs.scoreDocs;
 
-        docs.scoreDocs foreach { docId =>
-          val d = searcher.doc(docId.doc)
-          val gpgFile = d.get("gpgfile")
+          pw.println(hits.length + "\t hits for: " + querystr);
 
-          pw.flush()
-          val m = FULL_PATH_GPG_REGEX.matcher(gpgFile);
-          m.find()
-          val s1 = m.group(1);
-          val s2 = m.group(2);
+          docs.scoreDocs foreach { docId =>
+            val d = searcher.doc(docId.doc)
+            val gpgFile = d.get("gpgfile")
 
-          pw.println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
-            //d.get("si_docid")
-            //d.get("clean_visible")+
-            "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + e.target_id);
+            pw.flush()
+            val m = FULL_PATH_GPG_REGEX.matcher(gpgFile);
+            m.find()
+            val s1 = m.group(1);
+            val s2 = m.group(2);
+
+            pw.println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
+              //d.get("si_docid")
+              //d.get("clean_visible")+
+              "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + e.target_id);
+          }
+        })
+        pw.close()
+
+        ""
+
+      } catch {
+        case ex: Exception => {
+          println(f + " had problems.")
         }
-      })
-      pw.close()
-
-      ""
+      }
     })
   }
 
-  def aliasListToLuceneQuery(aliasList: ArrayList[String]): String = {
-    val aliases = aliasList.toList.distinct
-
-    val concatedArgs = aliases.map(s => {
-      if (s == ",")
-        "OR"
-      else if (s != "AND" && s != "OR")
-        "\"" + s + "\""
-      else
-        s
-    }).reduce((s1, s2) => s1 + " OR " + s2)
-
-    concatedArgs
-  }
 }

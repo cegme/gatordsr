@@ -90,6 +90,8 @@ object WikiAPI {
       val aliasList = new ArrayList[String]();
 
       aliasList.add(eName)
+             aliasList.add(eName.replaceAll("_", " "))
+
       aliasList.add(URLDecoder.decode(eName, "UTF-8"))
       aliasList.add(eName.replace("([^)]*)", ""))
 
@@ -124,13 +126,16 @@ object WikiAPI {
       }
 
       //update the aliases and search for them in lucene
-//      if (e.target_id.contains("wikipedia"))
-//        e.alias.clear()
-//      e.alias.addAll(aliasList)
+      if (e.target_id.contains("wikipedia"))
+        e.alias.clear()
+      e.alias.addAll(aliasList)
      
+      val temp = e.alias.filter(x => x.size > 2 && x.split(' ').first.size > 2 && x.split(' ').last.size > 2)     
+      e.alias.clear()
+                e.alias.addAll(temp)
       removeDuplicate(e.alias)      
-     //  println(e.alias)
-      Searcher.searchEntity(e.target_id, e.alias)
+      println(e.alias)
+//      Searcher.searchEntity(e.target_id, e.alias)
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
