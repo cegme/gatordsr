@@ -19,6 +19,8 @@ import org.apache.lucene.util.Version
 import edu.ufl.cise.pipeline.Entity
 import edu.ufl.cise.pipeline.Preprocessor
 
+import edu.cise.ufl.util.treclucene.Searcher
+
 /**
  * Iterative search among all lucene index files. One index directory per corpus date-hour directory
  */
@@ -55,7 +57,7 @@ object IterativeSearcher {
 
       pw.println(f) //actual index path
       entity_list.foreach(e => {
-        val querystr = aliasListToLuceneQuery(e.alias)
+        val querystr = Searcher.aliasListToLuceneQuery(e.alias)
         val q = queryParser.parse(querystr)
 
         val hitsPerPage = 1000000;
@@ -67,7 +69,7 @@ object IterativeSearcher {
         val docs = collector.topDocs()
         val hits = docs.scoreDocs;
 
-//        pw.println(hits.length + "\t hits for: " + querystr);
+        pw.println(hits.length + "\t hits for: " + querystr);
 
         docs.scoreDocs foreach { docId =>
           val d = searcher.doc(docId.doc)
@@ -91,18 +93,4 @@ object IterativeSearcher {
     })
   }
 
-  def aliasListToLuceneQuery(aliasList: ArrayList[String]): String = {
-    val aliases = aliasList.toList.distinct
-
-    val concatedArgs = aliases.map(s => {
-      if (s == ",")
-        "OR"
-      else if (s != "AND" && s != "OR")
-        "\"" + s + "\""
-      else
-        s
-    }).reduce((s1, s2) => s1 + " OR " + s2)
-
-    concatedArgs
-  }
 }

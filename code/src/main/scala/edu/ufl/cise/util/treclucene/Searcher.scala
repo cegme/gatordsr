@@ -131,7 +131,7 @@ object Searcher extends Logging {
     val query = new TermQuery(new Term(SEARCH_INDEX_TYPE, args(0).toLowerCase))
     var docs = searcher.search(query, 2000)
     println("TermQuery found: " + docs.scoreDocs.length)
-    processAllTopDocs(docs, printDocument, "");
+//    processAllTopDocs(docs, printDocument, "");
 
     //    getStats(searcher)
     //printAllDocs(searcher)
@@ -140,7 +140,7 @@ object Searcher extends Logging {
     q.add(new Term(SEARCH_INDEX_TYPE, args(0).toLowerCase))
     docs = searcher.search(q, 2000)
     println("PhraseQuery found: " + docs.scoreDocs.length)
-    processAllTopDocs(docs, printDocument, "")
+//    processAllTopDocs(docs, printDocument, "")
 
     //searcher.close
     reader.close
@@ -149,21 +149,22 @@ object Searcher extends Logging {
   def aliasListToLuceneQuery(aliasList: ArrayList[String]): String = {
     val aliases = aliasList.toList.distinct
 
+    val  escapeChars ="[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?]";
     val concatedArgs = aliases.map(s => {
       if (s == ",")
         "OR"
       else if (s != "AND" && s != "OR")
-        "\"" + s + "\""
+        "\"" + s.replaceAll(escapeChars, "\\\\$0").replaceAll("\"", "\\\\\"") + "\""
       else
         s
     }).reduce((s1, s2) => s1 + " OR " + s2)
 
-    concatedArgs
+    concatedArgs.toLowerCase().replace(" or ", " OR ")
   }
 
   def searchEntity(logNote: String, aliasList: ArrayList[String]) {
     val concatedArgs = aliasListToLuceneQuery(aliasList)
-    searchQueryParser(logNote, concatedArgs.toLowerCase().replace(" or ", " OR "))
+    searchQueryParser(logNote, concatedArgs)
   }
 
   def searchQueryParser(logNote: String, querystr: String) {
@@ -196,7 +197,7 @@ object Searcher extends Logging {
     // 4. display results
     println(hits.length + "\t hits for: " + querystr);
 
-    processAllTopDocs(docs, printDocument, logNote)
+//    processAllTopDocs(docs, printDocument, logNote)
 
     // reader can only be closed when there
     // is no need to access the documents any more.
