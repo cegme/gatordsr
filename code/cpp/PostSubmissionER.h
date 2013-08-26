@@ -23,7 +23,12 @@ struct ssf_row {
   std::string slot_value;
   std::string byte_range;
 
-  std::string sentence;
+  // std::string sentence; // <-- the sentence context, we wont use this
+  void print() {
+    printf("%s %s %s %s %d %d %d %s %s %s %s", team_id.c_str(), system_id.c_str(),
+      stream_id.c_str(), entity_id.c_str(), confidence, relevance, contains,
+      date_hour.c_str(), slot_name.c_str(), slot_value.c_str(), byte_range.c_str());
+  }
 };
 
 class PostSubmissionER {
@@ -34,6 +39,9 @@ private:
   std::multimap<size_t,size_t> adjmap;
 
 public:
+  PostSubmissionER() {
+    init();
+  }
 
   // Initializes all data structures needed for ER
   void init();

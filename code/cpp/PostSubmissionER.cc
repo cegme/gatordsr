@@ -15,10 +15,12 @@ void PostSubmissionER::init () {
   // Finitialize 
  adjmap = std::multimap<size_t,size_t>(); 
 
-  // TODO initialize all the entities
+  // Initialize all the entities
+  log_info("Initializing all entities...");
   entities = QueryEntity::fileToQueryEntity();
 
   // Build functions
+  log_info("Building the Entity clusters...");
   initEntityClusters();
 
 }
@@ -40,12 +42,14 @@ void PostSubmissionER::initEntityClusters() {
         // Add to matrix 
         adjmap.insert(std::pair<size_t, size_t>(i, j));
         adjmap.insert(std::pair<size_t, size_t>(j, i));
+        log_info("Cluster Add(pref): %s -- %s", entities[i].target_id.c_str(), entities[j].target_id.c_str());
       }
 
-      else if ( entities[i].name().substr(std::string::npos - K) ==  entities[j].name().substr(std::string::npos - K)) {
+      else if ( entities[i].name().substr(entities[i].name().size() - K) ==  entities[j].name().substr(entities[j].name().size() - K)) {
         // Add to matrix 
         adjmap.insert(std::pair<size_t, size_t>(i, j));
         adjmap.insert(std::pair<size_t, size_t>(j, i));
+        log_info("Cluster Add(suff): %s -- %s", entities[i].target_id.c_str(), entities[j].target_id.c_str());
       }
       // TODO check for the thrid case
 
@@ -80,7 +84,6 @@ void PostSubmissionER::processSubmissionFile(std::string file_name) {
   strcpy(w.train_file,  "/home/cgrant/projects/word2vec-read-only/text8");
   strcpy(w.output_file,  "/home/cgrant/projects/word2vec-read-only/vectors.bin");
 
-
   std::ifstream infile(file_name);
 
   std::string line;
@@ -93,10 +96,11 @@ void PostSubmissionER::processSubmissionFile(std::string file_name) {
     // Get the MentionChain derived from the row
     MentionChain mc = ExtractMentionChain(&row);
 
+    // Get the word clustes from the mention chain
     auto mc_words = w.distance(&mc, 50);
 
-    std::vector<std::string> tmp(50); 
-    std::vector<std::string>::iterator tmp_it;
+    std::vector<std::pair<std::string, float> > tmp(50); 
+    std::vector<std::pair<std::string, float> >::iterator tmp_it;
 
     size_t the_max_size = -1;
     size_t the_max_index = -1;
@@ -106,15 +110,20 @@ void PostSubmissionER::processSubmissionFile(std::string file_name) {
     for ( auto idx : candidates) {
       auto qe_words = w.distance(&entities[idx], 50);
 
-      // FIXME need to use the same type of data structure here
-      tmp_it = std::set_intersection (mc_words.begin(), mc_words.end(), qe_words.begin(), qe_words.end(), tmp.begin());
+      // Count the overlap between the words
+      tmp_it = std::set_intersection (mc_words.begin(), mc_words.end(),
+        qe_words.begin(), qe_words.end(), tmp.begin(), 
+        [] (const std::pair<std::string, float> &a1, const std::pair<std::string, float> &a2 )
+        -> bool {
+          return a1.first == a2.first;;
+        }
+      );
       size_t qbc_size = tmp_it-tmp.begin();
 
       if ( the_max_size < qbc_size) {
         the_max_size = qbc_size;
         the_max_index = idx;
       }
-
     }
 
     size_t mc_index;
@@ -124,7 +133,12 @@ void PostSubmissionER::processSubmissionFile(std::string file_name) {
 
     if (the_max_index != -1 && the_max_index != mc_index) {
       // TODO do something about the new item
-      log_info("New Element here!!");
+      log_info("#New Element here!!");
+      // Update the entity
+      row.print();
+    }
+    else {
+      row.print(); // Print the row to standard out 
     }
 
 
@@ -153,7 +167,7 @@ QueryEntity PostSubmissionER::ExtractQueryEntity(ssf_row *row) {
 }
 
 std::string PostSubmissionER::ExtractGPGFile(ssf_row *row) {
-  size_t pos = row->stream_id.find('-');
+  size_t pos = row->stream_id.find('-')+1;
   return row->stream_id.substr(pos) + ".gpg";
 }
 
@@ -169,10 +183,16 @@ MentionChain PostSubmissionER::ExtractMentionChain(ssf_row *row) {
   // Check for the file in sdd and sde
   std::vector<streamcorpus::StreamItem> sis;
   if (fexist(media_sdd)) {
+    log_info("media_sdd: %s", media_sdd);
+    exit(1);
     sis = MentionChain::FileToStreamItem(media_sdd);
+    log_info("media_sdd, sis.size() %ld", sis.size());
   }
   else {
+    log_info("media_sde: %s", media_sde);
+    exit(2);
     sis = MentionChain::FileToStreamItem(media_sde);
+    log_info("media_sde, sis.size() %ld", sis.size());
   }
 
   // Fetch the StreamItem 
@@ -196,9 +216,14 @@ MentionChain PostSubmissionER::ExtractMentionChain(ssf_row *row) {
 // Output possible incorrect entities from the submission file
 int main( int argc, char **argv) {
 
-  std::string test_line = "gatordsr gatordsr_new 1327982549-85fe459503535923e8b7d6ab8e96877f http://en.wikipedia.org/wiki/Satoshi_Ishii 1000 2 1 2012-01-31-04 Affiliate 7 525-567";
+  //std::string test_line = "gatordsr gatordsr_new 1327982549-85fe459503535923e8b7d6ab8e96877f http://en.wikipedia.org/wiki/Satoshi_Ishii 1000 2 1 2012-01-31-04 Affiliate 7 525-567";
 
-  PostSubmissionER::Line2Row(test_line);
+  //PostSubmissionER::Line2Row(test_line);
+  
+  PostSubmissionER p;
+  p.processSubmissionFile("/media/sde/submission/allFullRuns/submission.txt");
 
   return 0;
 }
+
+
