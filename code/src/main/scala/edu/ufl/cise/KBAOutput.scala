@@ -42,13 +42,20 @@ object KBAOutput {
   // add one row into the row list
 
   def add(stream_id:String, topic_id : String, confidence : Integer, 
-    date_hour : String, slot_name : String, slot_value : Integer, byte_range : String, comment : String){
+    date_hour : String, slot_name : String, slot_value : Integer, byte_range : String, comment : String, file_data:Array[String]) {
+
     val pw = new PrintWriter(new BufferedWriter(new FileWriter(outputPrefix + slot_name, true)));
     val row = new Row(stream_id:String, topic_id : String, confidence : Integer, 
     date_hour : String, slot_name : String, slot_value : Integer, byte_range : String)
     pw.println(row.toString)
     row_num = row_num + 1
+
+    // File array contains: [date_hour, filename, si_num, si_index, ling.EntityIndex, NA, si.stream_id, entity.target_id ]
+    // It is constructred in filterSencencesCoref in SimpleJob.scala. It is called tmpStr
+    // It is later split in the "Pipeline.annotate" function and turned into an array
+    pw.println("#%s|%d".format(file_data(1), file_data(3)))
     pw.println(comment)
+    
     pw.close
 /*    pwr.synchronized({
       pwr.write(row.toString + "\n")

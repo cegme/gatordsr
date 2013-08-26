@@ -155,7 +155,7 @@ object Pipeline extends Logging {
           if (s.toLowerCase().contains(pattern.pattern)){
             // match, create KBA Output
             val comment = "# " + target.content + " " + s + " " + entity.content + " --- " + SimpleJob.transform(tokens)
-            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, target.equiv_id, getByteRange(target, tokens), comment)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, target.equiv_id, getByteRange(target, tokens), comment, array)
           }
         })
   
@@ -171,18 +171,18 @@ object Pipeline extends Logging {
           if (s.toLowerCase().contains(pattern.pattern)){
             // match, create KBA Output
             val comment = "# " + entity.content + " " + s + " " + target.content + " --- " + SimpleJob.transform(tokens)
-            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, target.equiv_id, getByteRange(target, tokens), comment)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), pattern.slot, target.equiv_id, getByteRange(target, tokens), comment, array)
           }
         })
       // generate these results for the DateOfDeath
       if (entity.entity_type.equals("PER") && target.entity_type.equals("DATE") && entity.end + 1 == target.begin){
          val comment = "# " + entity.content + " " + s + " " + target.content + " --- " + SimpleJob.transform(tokens)
-         KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", target.equiv_id, getByteRange(target, tokens), comment)
+         KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", target.equiv_id, getByteRange(target, tokens), comment, array)
       }
       
       if (entity.entity_type.equals("PER") && s.toLowerCase().contains("award")){
         val comment = "# " + entity.content + " " + s + " " + target.content + " --- " + SimpleJob.transform(tokens)
-        KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", target.equiv_id, getByteRange(target, tokens), comment)
+        KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", target.equiv_id, getByteRange(target, tokens), comment, array)
       }
       
     }
@@ -242,7 +242,7 @@ object Pipeline extends Logging {
             // TODO: output the result
             val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
             val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
-            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment, array)
             //println(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
           }
         })
@@ -251,7 +251,7 @@ object Pipeline extends Logging {
           val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
           //var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size - 1
           val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
-          KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+          KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment, array)
         }
         
         
@@ -262,7 +262,7 @@ object Pipeline extends Logging {
             val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
             //var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size - 1
             val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
-            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment, array)
             //println(array(6), entity.topic_id, 1000, array(0), "CauseOfDeath", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
           }
         })
@@ -273,7 +273,7 @@ object Pipeline extends Logging {
             val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
             //var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size - 1
             val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
-            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment, array)
           }
         })
 
@@ -281,7 +281,7 @@ object Pipeline extends Logging {
         val comment = "# " + entity.content + " " + text + " " + np.content + " --- " + SimpleJob.transform(tokens)
         var end = entity.end + np.end + 1; if (end >= tokens.size) end = tokens.size -1
         val byte_range = getByteRangeNP(tokens, entity.end + np.begin + 1, entity.end + np.end + 1)
-        KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Samples", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment)
+        KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Samples", tokens(entity.end + np.begin + 1).equiv_id, byte_range, comment, array)
       }
      }
 
@@ -295,7 +295,7 @@ object Pipeline extends Logging {
             val comment = "# " + np.content + " " + text + " " + entity.content + " --- " + SimpleJob.transform(tokens)
             //var end = np.end; if (np.end >= tokens.size) end = tokens.size - 1
             val byte_range = getByteRangeNP(tokens, np.begin, np.end)
-            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", tokens(np.begin).equiv_id, byte_range, comment)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "AwardsWon", tokens(np.begin).equiv_id, byte_range, comment, array)
           }
         })
         
@@ -304,7 +304,7 @@ object Pipeline extends Logging {
           val comment = "# " + np.content + " " + text + " " + entity.content + " --- " + SimpleJob.transform(tokens)
           //var end = np.end; if (np.end >= entity.begin) end = entity.begin - 1
           val byte_range = getByteRangeNP(tokens, np.begin, np.end)
-          KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(np.begin).equiv_id, byte_range, comment)
+          KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Titles", tokens(np.begin).equiv_id, byte_range, comment, array)
         }
       }
       // generate samples
@@ -312,7 +312,7 @@ object Pipeline extends Logging {
       //var end = np.end; if (np.end >= entity.begin) end = entity.begin - 1
       //println(np.begin + " " + np.end + " " + tokens.size)
       val byte_range = getByteRangeNP(tokens, np.begin, np.end)
-      KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Samples", tokens(np.begin).equiv_id, byte_range, comment)
+      KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Samples", tokens(np.begin).equiv_id, byte_range, comment, array)
     }
     
   }

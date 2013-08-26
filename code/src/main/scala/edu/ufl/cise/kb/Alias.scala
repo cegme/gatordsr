@@ -38,7 +38,7 @@ object Alias extends Logging {
    
   }
 
-  // The WikiAPI.scala calls this code to get the 
+  // The WikiAPI.scala calls this code to get aliases
   // Example: getAliases ("http://en.wikipedia.org/wiki/Shafi_Goldwasser")
   def GetAliases(target_id: String): ArrayList[String] = {
     // Get the title out of the full url
