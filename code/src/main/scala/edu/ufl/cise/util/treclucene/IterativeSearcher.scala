@@ -26,7 +26,7 @@ object IterativeSearcher {
 
   val analyzer = new StandardAnalyzer(Version.LUCENE_43);
 
-  val SEARCH_INDEX_TYPE = "gpgfile"
+  val SEARCH_INDEX_TYPE = "clean_visible"
   val queryParser = new QueryParser(Version.LUCENE_43, SEARCH_INDEX_TYPE, analyzer)
 
   def main(args: Array[String]): Unit = {
@@ -45,8 +45,7 @@ object IterativeSearcher {
       luceneIndexesList.add(sc.nextLine());
     }
 
-    val one = luceneIndexesList.toList.take(1)
-    one.par.map(f => {
+    luceneIndexesList.toList.map(f => {
 
       val filedir = new java.io.File(f)
       val index = new MMapDirectory(filedir)
@@ -68,7 +67,7 @@ object IterativeSearcher {
         val docs = collector.topDocs()
         val hits = docs.scoreDocs;
 
-        pw.println(hits.length + "\t hits for: " + querystr);
+//        pw.println(hits.length + "\t hits for: " + querystr);
 
         docs.scoreDocs foreach { docId =>
           val d = searcher.doc(docId.doc)
