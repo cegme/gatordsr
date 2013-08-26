@@ -24,8 +24,8 @@ import java.io.PrintWriter
 
 object Searcher extends Logging {
 
-  // val SEARCH_INDEX_TYPE = "clean_visible"
-  val SEARCH_INDEX_TYPE = "gpgfile"
+  val SEARCH_INDEX_TYPE = "clean_visible"
+  //val SEARCH_INDEX_TYPE = "gpgfile"
 
   //var filedir = new java.io.File("/var/tmp/lucene")
   //var filedir = new java.io.File("/media/sdc/kbaindex/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-04-17-15")
