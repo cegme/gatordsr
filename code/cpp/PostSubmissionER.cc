@@ -87,11 +87,20 @@ void PostSubmissionER::processSubmissionFile(std::string file_name) {
   std::ifstream infile(file_name);
 
   std::string line;
+  std::getline(infile, line); // Read the firsst like so we can trash it
   while (std::getline(infile, line)) {
-    if (line[0] == '#') continue;
+    if (line[0] == '#') continue; // This case should not happen, if it does it is out of place
 
     // Structure the line
     ssf_row row = Line2Row(line);
+
+    // Get the gpg file
+    std::getline(infile, line);
+    row.gpg_file = line.substr(1, line.find('|'));
+    
+    // Get the context sentence
+    std::getline(infile, line);
+    row.sentence = line.substr(1);
 
     // Get the MentionChain derived from the row
     MentionChain mc = ExtractMentionChain(&row);
@@ -142,7 +151,6 @@ void PostSubmissionER::processSubmissionFile(std::string file_name) {
     }
 
 
-
   }
 }
 
@@ -166,10 +174,10 @@ QueryEntity PostSubmissionER::ExtractQueryEntity(ssf_row *row) {
   return QueryEntity::UrlToQueryEntity(row->entity_id);
 }
 
-std::string PostSubmissionER::ExtractGPGFile(ssf_row *row) {
+/*std::string PostSubmissionER::ExtractGPGFile(ssf_row *row) {
   size_t pos = row->stream_id.find('-')+1;
   return row->stream_id.substr(pos) + ".gpg";
-}
+}*/
 
 
 MentionChain PostSubmissionER::ExtractMentionChain(ssf_row *row) {
@@ -177,8 +185,8 @@ MentionChain PostSubmissionER::ExtractMentionChain(ssf_row *row) {
   // Construct file string
   char media_sdd[150];
   char media_sde[150];
-  sprintf(media_sdd, MentionChain::media_sdd, row->date_hour.c_str(), PostSubmissionER::ExtractGPGFile(row).c_str());
-  sprintf(media_sde, MentionChain::media_sde, row->date_hour.c_str(), PostSubmissionER::ExtractGPGFile(row).c_str());
+  sprintf(media_sdd, MentionChain::media_sdd, row->date_hour.c_str(), row->gpg_file.c_str());
+  sprintf(media_sde, MentionChain::media_sde, row->date_hour.c_str(), row->gpg_file.c_str());
   
   // Check for the file in sdd and sde
   std::vector<streamcorpus::StreamItem> sis;

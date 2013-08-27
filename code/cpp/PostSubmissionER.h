@@ -23,7 +23,9 @@ struct ssf_row {
   std::string slot_value;
   std::string byte_range;
 
-  // std::string sentence; // <-- the sentence context, we wont use this
+  std::string gpg_file;
+  std::string sentence; // <-- the sentence context, we wont use this
+
   void print() {
     printf("%s %s %s %s %d %d %d %s %s %s %s", team_id.c_str(), system_id.c_str(),
       stream_id.c_str(), entity_id.c_str(), confidence, relevance, contains,
@@ -63,7 +65,7 @@ public:
 
   // Extract and build the file name from the ssf_row
   // Ex: "1327982549-85fe459503535923e8b7d6ab8e96877f" -> "85fe459503535923e8b7d6ab8e96877f.gpg"
-  static std::string ExtractGPGFile(ssf_row *row);
+  //static std::string ExtractGPGFile(ssf_row *row);
 
   // Extract the MentionChain that is refered to by this row
   static MentionChain ExtractMentionChain(ssf_row *row);
