@@ -114,6 +114,11 @@ object Pipeline extends Logging {
       // extractNPList(s)
       patternMatchNP(entity, index, tokens, entity_list, array)
     }
+
+    for (index <- getCorresEntities(target, entity_list, le)) {
+      val entity = entity_list.get(index)
+      farPatternMatch(entity, index, tokens, entity_list, array)
+    }
    
   }
 
@@ -225,6 +230,21 @@ object Pipeline extends Logging {
       }
     }
     index
+  }
+  def getCorresEntities(target : Entity, entity_list: ArrayList[LingEntity], le : LingEntity):List[Int] = {
+
+    var indexList = List[Int]()
+    for(i <- 0 until entity_list.size()){
+      val entity = entity_list.get(i)
+      if (entity.equiv_id == le.equiv_id){
+        indexList :+ i
+        //index = i
+        entity.topic_id = target.target_id
+        entity.group = target.group
+      }
+    }
+    index_list
+    //(0 until entity_list.size()).withFilter( i => entity_list.get(i).equiv_id == le.equiv_id)
   }
   
   def patternMatchNP(entity : LingEntity, index : Integer, 
