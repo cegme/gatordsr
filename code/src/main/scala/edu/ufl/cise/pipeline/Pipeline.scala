@@ -363,7 +363,9 @@ object Pipeline extends Logging {
 
 
       if(entity.entity_type.equals("PER")) {
-      dateOfDeath.split(" \\| ").foreach(date => {
+
+        // Search for one of the terms in dateOfDeath between the target entity and another entity
+        dateOfDeath.split(" \\| ").foreach(date => {
           if (text.contains(date)) { // slot found            
           // find the target entity
           for (i <- index + 1 to entities.size) {
@@ -371,7 +373,7 @@ object Pipeline extends Logging {
             val txt = SimpleJob.transform(tokens.slice(entity.end + 1, target.begin));
             if(txt.contains(date) && (target.entity_type.equals("TIME") || target.entity_type.equals("DATE"))) {
               // generate results and output
-              val comment = "# " + entity.content + " " + text + " " + target.content + " --- " + SimpleJob.transform(tokens);
+              val comment = "# " + entity.content + " " + txt + " " + target.content + " --- " + SimpleJob.transform(tokens);
               val byte_range = getByteRange(target, tokens);
               KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", tokens(target.begin).equiv_id, byte_range, comment, array)
             }
@@ -389,7 +391,7 @@ object Pipeline extends Logging {
           if(txt.contains(contact) && (target.entity_type.equals("TIME") || target.entity_type.equals("DATE") || 
             target.entity_type.equals("FAC"))) {
             // generate results and output
-            val comment = "# " + entity.content + " " + text + " " + target.content + " --- " + SimpleJob.transform(tokens);
+            val comment = "# " + entity.content + " " + txt + " " + target.content + " --- " + SimpleJob.transform(tokens);
             val byte_range = getByteRange(target, tokens);
             KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Contact_Meet_PlaceTime", tokens(target.begin).equiv_id, byte_range, comment, array)
           }
