@@ -233,11 +233,11 @@ object Pipeline extends Logging {
   }
   def getCorresEntities(target : Entity, entity_list: ArrayList[LingEntity], le : LingEntity):List[Int] = {
 
-    var indexList = List[Int]()
+    var index_list = List[Int]()
     for(i <- 0 until entity_list.size()){
       val entity = entity_list.get(i)
       if (entity.equiv_id == le.equiv_id){
-        indexList :+ i
+        index_list = i :: index_list
         //index = i
         entity.topic_id = target.target_id
         entity.group = target.group
