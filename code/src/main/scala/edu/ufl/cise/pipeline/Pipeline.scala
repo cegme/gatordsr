@@ -56,7 +56,7 @@ object Pipeline extends Logging {
   
   // dateOfDeath and contactMeetPlaceTime patterns
   val dateOfDeath = "dead | died | passed away | drown | perished | deceased | murdered | " + 
-  "killed | assasinated executed | shot | fell | claimed life | succumbed | slain | to death"
+  "killed | assasinated executed | shot | fell | claimed life | succumbed | slain | to death | dies"
   val contactMeetPlaceTime = "at | in | met"  
     
   logInfo("entities and patterns are loaded")
@@ -102,6 +102,9 @@ object Pipeline extends Logging {
     val entity_list = SimpleJob.extractEntities(sentence)
     val target = entities(targetIndex)
 
+    logInfo("sentenceStr: %s".format(sentenceStr))
+    logInfo("senetence: %s".format(tokens.map{_.token}.mkString("["," ","]")))
+
     val index = getCorresEntity(target, entity_list, le)
     if (index != -1) { // when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
       // start to try to find all the patterns fit for that entity
@@ -115,8 +118,10 @@ object Pipeline extends Logging {
       patternMatchNP(entity, index, tokens, entity_list, array)
     }
 
-    for (index <- getCorresEntities(target, entity_list, le)) {
+    val es = getCorresEntities(target, entity_list, le)
+    for (index <- es) {
       val entity = entity_list.get(index)
+      logInfo("Running the farPatternMatcher on index %s".format(index))
       farPatternMatch(entity, index, tokens, entity_list, array)
     }
    
@@ -374,38 +379,40 @@ object Pipeline extends Logging {
     }
     list
   }
-  
+
   def farPatternMatch(entity : LingEntity, index : Integer, 
     tokens : Array[Token], entities : ArrayList[LingEntity], array:Array[String]) {
     // find slot values for CauseOfDeath, DateOfDeath, ContactMeetPlaceTime 
 
-    val text =  SimpleJob.transform(tokens.slice(entity.end + 1, tokens.size))
+    val text =  SimpleJob.transform(tokens.slice(entity.end + 1, tokens.size));
 
 
-      if(entity.entity_type.equals("PER")) {
+    logInfo("entity.entity_type.equals: %s".format(entity.entity_type))
+    if(entity.entity_type.equals("PER")) {
 
-        // Search for one of the terms in dateOfDeath between the target entity and another entity
-        dateOfDeath.split(" \\| ").foreach(date => {
+      // Search for one of the terms in dateOfDeath between the target entity and another entity
+      dateOfDeath.split(" \\| ").foreach(date => {
           if (text.contains(date)) { // slot found            
           // find the target entity
-          for (i <- index + 1 to entities.size) {
+          for (i <- index + 1 until entities.size) {
             val target = entities.get(i);
             val txt = SimpleJob.transform(tokens.slice(entity.end + 1, target.begin));
+            if(txt.contains(date)) logInfo("target.entity_type: %s".format( target.entity_type) )
             if(txt.contains(date) && (target.entity_type.equals("TIME") || target.entity_type.equals("DATE"))) {
               // generate results and output
               val comment = "# " + entity.content + " " + txt + " " + target.content + " --- " + SimpleJob.transform(tokens);
               val byte_range = getByteRange(target, tokens);
-              KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", tokens(target.begin).equiv_id, byte_range, comment, array)
+              KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", tokens(target.begin).equiv_id, byte_range, comment, array);
             }
           }
         }
       })
-  }
+    }
 
-  contactMeetPlaceTime.split(" \\| ").foreach(contact => {
+    contactMeetPlaceTime.split(" \\| ").foreach(contact => {
       if (text.contains(contact)) { // slot found            
       // find the target entity
-        for (i <- index + 1 to entities.size) {
+        for (i <- index + 1 until entities.size) {
           val target = entities.get(i);
           val txt = SimpleJob.transform(tokens.slice(entity.end + 1, target.begin));
           if(txt.contains(contact) && (target.entity_type.equals("TIME") || target.entity_type.equals("DATE") || 
@@ -413,12 +420,12 @@ object Pipeline extends Logging {
             // generate results and output
             val comment = "# " + entity.content + " " + txt + " " + target.content + " --- " + SimpleJob.transform(tokens);
             val byte_range = getByteRange(target, tokens);
-            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Contact_Meet_PlaceTime", tokens(target.begin).equiv_id, byte_range, comment, array)
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Contact_Meet_PlaceTime", tokens(target.begin).equiv_id, byte_range, comment, array);
           }
         }
-    }
+      }
 
-  })
+    })
   }
 
   def getTokens(tokens : Array[Token]) = {
