@@ -24,9 +24,11 @@ import edu.cise.ufl.util.treclucene.Searcher
 /**
  * Iterative search among all lucene index files. One index directory per corpus date-hour directory
  */
-object IterativeSearcher {
+object IterativeSearcherPerGPG {
 
    def main(args: Array[String]): Unit = {
+
+     var countTotalStreamItems = 0L
 
     val entity_list = new ArrayList[Entity]
 //    Preprocessor.initEntityList("resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json", entity_list)
@@ -43,24 +45,26 @@ object IterativeSearcher {
       luceneIndexesList.add(sc.nextLine());
     }
 
+    println("Searching...")
     luceneIndexesList.toList.foreach(f => {
 //if(f.contains("2011-10-29-22"))
       try {
  val analyzer = new StandardAnalyzer(Version.LUCENE_43);
 
-  val SEARCH_INDEX_TYPE = "clean_visible"
+  val SEARCH_INDEX_TYPE = "gpgfile"
   val queryParser = new QueryParser(Version.LUCENE_43, SEARCH_INDEX_TYPE, analyzer)
 
 
+        println(f)
         val filedir = new java.io.File(f)
         val index = new MMapDirectory(filedir)
 
         val date = f.substring(f.lastIndexOf('/') + 1)
-        val pw = new PrintWriter("/media/sde/luceneSubmission/splittedEntityIndex/oneIndexPerDateHourDir/results-" + date)
+        val pw = new PrintWriter("/media/sde/luceneSubmission/splittedEntityIndex/oneIndexPerDateHourDir-PerEntityTest/results-" + date)
 
         pw.println(f) //actual index path
-        entity_list.foreach(e => {
-          val querystr = Searcher.aliasListToLuceneQuery(e.alias)
+
+          val querystr = args.apply(0)
           val q = queryParser.parse(querystr)
 
           val hitsPerPage = 1000000;
@@ -68,6 +72,8 @@ object IterativeSearcher {
           val searcher = new IndexSearcher(reader);
           val collector = TopScoreDocCollector.create(hitsPerPage, true);
           searcher.search(q, collector);
+
+          countTotalStreamItems = countTotalStreamItems + searcher.getIndexReader().numDocs()
 
           val docs = collector.topDocs()
           val hits = docs.scoreDocs;
@@ -87,9 +93,9 @@ object IterativeSearcher {
             pw.println("ling>" + s1 + " | " + s2 + " | " + d.get("si_index") + " | " +
               //d.get("si_docid")
               //d.get("clean_visible")+
-              "aab5ec27f5515cb8a0cec62d31b8654e" + " || " + e.target_id);
+              "aab5ec27f5515cb8a0cec62d31b8654e" + " || " );
           }
-        })
+       // )
         pw.close()
 
         ""
@@ -102,6 +108,7 @@ object IterativeSearcher {
         }
       }
     })
-  }
+println("countTotalStreamItems: " + countTotalStreamItems)
+}
 
 }
