@@ -144,8 +144,8 @@ public class CorpusBatchProcessor {
 	public CorpusBatchProcessor(String base_dir) throws FileNotFoundException {
 		indexOfThisProcess = -1;
 		this.totalNumProcesses = -1;
-		init();
 		this.BASE_DIR = base_dir;
+		init();
 	}
 
 	private void init() {
