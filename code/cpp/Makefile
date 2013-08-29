@@ -8,8 +8,8 @@ endif
 
 
 DEBUG = -g -pg
-CC = $(GPP) $(DEBUG) -w -Wno-deprecated -std=c++0x -march=native 
-#CC = $(GPP) $(DEBUG) -w -O7 -Wno-deprecated -std=c++0x -march=native 
+#CC = $(GPP) $(DEBUG) -w -Wno-deprecated -std=c++0x -march=native 
+CC = $(GPP) $(DEBUG) -w -O7 -Wno-deprecated -std=c++0x -march=native 
 #CC = g++ -g -std=gnu++0x 
 
 #tag = -i

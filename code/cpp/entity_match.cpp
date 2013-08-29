@@ -31,6 +31,8 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
 
+#include "alias_vector.h"
+
 using namespace std;
 using namespace boost;
 using namespace boost::filesystem;
@@ -49,8 +51,6 @@ using namespace streamcorpus;
 
 int main(int argc, char **argv) {
 
-  //clog << "Starting program" <<endl;
-  //clog << "File name: " << argv[1] << endl;
   string gpg_file;
   if (argc > 1) {
     gpg_file = argv[1];
@@ -62,43 +62,9 @@ int main(int argc, char **argv) {
 
   bool negate(false);
 
-  // Supported options.
-  po::options_description desc("Allowed options");
-  desc.add_options()
-    ("help,h", "help message")
-    ("gpgfile,f", "gpgfile")
-    //("text_source,t", po::value<string>(&text_source), "text source in stream item")
-    //("negate,n", po::value<bool>(&negate)->implicit_value(true), "negate sense of match")
-    ;
-
-  // Parse command line options
-  po::variables_map vm;
-  po::store(po::parse_command_line(argc, argv, desc), vm);
-  po::notify(vm);
-
-  /*if (vm.count("help")) {
-    cout << desc << "\n";
-    return 1;
-    }*/
-
   // Read in the entity JSON file
-  std::vector<found_entity> aliases(get_aliases());
-
-  // Create annotator object
-  Annotator annotator;
-  AnnotatorID annotatorID;
-  annotatorID = "example-matcher-v0.1";
-
-  // Annotator identifier
-  annotator.annotator_id = "example-matcher-v0.1";
-
-  // Time this annotator was started
-  StreamTime streamtime;
-  time_t seconds;
-  seconds = time(NULL);
-  streamtime.epoch_ticks = seconds;
-  streamtime.zulu_timestamp = ctime(&seconds);
-  annotator.__set_annotation_time(streamtime);
+  //std::vector<found_entity> aliases(get_aliases());
+  std::vector<found_entity> aliases(alias_vector); // A generated map file
 
   // Setup thrift reading and writing from stdin and stdout
   int input_fd = 0;
@@ -109,7 +75,6 @@ int main(int argc, char **argv) {
   boost::shared_ptr<TBufferedTransport> transportInput(new TBufferedTransport(innerTransportInput));
   boost::shared_ptr<TBinaryProtocol> protocolInput(new TBinaryProtocol(transportInput));
   transportInput->open();
-  //clog << "isOpen : " << transportInput->isOpen() << endl;
 
   // Read and process all stream items
   StreamItem stream_item;
@@ -151,7 +116,6 @@ int main(int argc, char **argv) {
       }
 
       // Check for an entity match
-
       struct HasEntity has_entity(content);
 
       if(streamcorpus::any_of(aliases.begin(), aliases.end(), has_entity)) {
@@ -159,26 +123,37 @@ int main(int argc, char **argv) {
         //if(std::any_of(aliases.begin(), aliases.end(), HasEntity(content))) 
 
         // Found an entity, print which one
-        //std::clog << "Found an entity in stream item: " << stream_item.doc_id;
         ++si_match;
+        while(stream_item.read(protocolInput.get())); // Read the rest of the pipe so we are not rude
         break; // Just find the first
-        // TODO Add a call to a function that prints out the file matched entity relations
-        //
-
       }
 
       // Increment count of stream items processed
       si_total++;
     }
     catch (TTransportException e) {
-      // Vital to flush the buffered output or you will lose the last one
-      //string is_good = (si_match>0)?"+":"-";
-      //cout << is_good << gpg_file <<endl;
-      break;
+      bool eof = false;
+      switch(e.getType()) {
+        case apache::thrift::transport::TTransportException::END_OF_FILE:
+          // This is the only acceptable exception
+          eof = true;
+          break;
+        case apache::thrift::transport::TTransportException::UNKNOWN: log_err("TTransportException: Unknown transport exception\n"); eof = true; break;
+        case apache::thrift::transport::TTransportException::NOT_OPEN: log_err("TTransportException: Transport not open\n"); eof = true; ;
+        case apache::thrift::transport::TTransportException::TIMED_OUT: log_err("TTransportException: Timed out\n"); eof = true; break;
+        case apache::thrift::transport::TTransportException::INTERRUPTED: log_err("TTransportException: Interrupted\n"); eof = true; break;
+        case apache::thrift::transport::TTransportException::BAD_ARGS: log_err("TTransportException: Invalid arguments\n"); eof = true; break;
+        case apache::thrift::transport::TTransportException::CORRUPTED_DATA: log_err("TTransportException: Corrupted Data\n"); eof = true; break;
+        case apache::thrift::transport::TTransportException::INTERNAL_ERROR: log_err( "TTransportException: Internal error\n"); eof = true; break;
+        default: log_err( "TTransportException: (Invalid exception type)\n"); break;
+      }
+      //log_err("Stack err: %s [%d]", e.what(), e.getType());
+      if(eof) break;
     }
   }
+  //log_info("si_total: %d", si_total);
   string is_good = (si_match>0)?"+ |":"- | ";
-  cout << is_good << gpg_file <<endl;
+  cout << is_good << gpg_file << endl;
 
   return 0;
 }

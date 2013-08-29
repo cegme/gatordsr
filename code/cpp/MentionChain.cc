@@ -222,13 +222,13 @@ std::vector<streamcorpus::StreamItem> MentionChain::FileToStreamItem(std::string
             //std::cerr <<"TTransportException: End of file\n";
             eof = true;
             break;
-          case apache::thrift::transport::TTransportException::UNKNOWN: std::cerr <<"TTransportException: Unknown transport exception\n"; break;
-          case apache::thrift::transport::TTransportException::NOT_OPEN: std::cerr <<"TTransportException: Transport not open\n"; break;
-          case apache::thrift::transport::TTransportException::TIMED_OUT: std::cerr <<"TTransportException: Timed out\n"; break;
-          case apache::thrift::transport::TTransportException::INTERRUPTED: std::cerr <<"TTransportException: Interrupted\n"; break;
-          case apache::thrift::transport::TTransportException::BAD_ARGS: std::cerr <<"TTransportException: Invalid arguments\n"; break;
-          case apache::thrift::transport::TTransportException::CORRUPTED_DATA: std::cerr <<"TTransportException: Corrupted Data\n"; break;
-          case apache::thrift::transport::TTransportException::INTERNAL_ERROR: std::cerr << "TTransportException: Internal error\n"; break;
+          case apache::thrift::transport::TTransportException::UNKNOWN: std::cerr <<"TTransportException: Unknown transport exception\n"; return sis;
+          case apache::thrift::transport::TTransportException::NOT_OPEN: std::cerr <<"TTransportException: Transport not open\n"; return sis;
+          case apache::thrift::transport::TTransportException::TIMED_OUT: std::cerr <<"TTransportException: Timed out\n"; return sis;
+          case apache::thrift::transport::TTransportException::INTERRUPTED: std::cerr <<"TTransportException: Interrupted\n"; return sis;
+          case apache::thrift::transport::TTransportException::BAD_ARGS: std::cerr <<"TTransportException: Invalid arguments\n"; return sis;
+          case apache::thrift::transport::TTransportException::CORRUPTED_DATA: std::cerr <<"TTransportException: Corrupted Data\n"; return sis;
+          case apache::thrift::transport::TTransportException::INTERNAL_ERROR: std::cerr << "TTransportException: Internal error\n"; return sis;
           default: std::cerr << "TTransportException: (Invalid exception type)\n"; break;
         }
         //std::cerr << "Stack err: " << e.what() << "\n";
