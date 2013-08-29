@@ -224,6 +224,7 @@ object SimpleJob extends Logging {
     var num = 1
     val lines = Source.fromFile(filePath).getLines //.take(100)//.slice(0, n)
     lines.foreach(line => {
+      logInfo("line: %s".format(line))
       if (line.contains("ling>")) {
         
          try {
@@ -298,7 +299,8 @@ object SimpleJob extends Logging {
         }
         } catch {
         case ex: Exception => {
-          println("Ill formatted line.")
+          logInfo("Ill formatted line.")
+          logInfo(ex.getStackTrace.mkString("\n"))
         }}
       }
     })
