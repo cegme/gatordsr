@@ -61,7 +61,7 @@ namespace streamcorpus {
 
   struct HasEntity {
     const std::string s;
-    HasEntity(std::string _s): s(_s){}
+    HasEntity(std::string _s): s(boost::algorithm::to_lower(_s)){ }
     bool operator()(const found_entity &v) const {
       //return v.alias.find(s) != std::string::npos;
       return s.find(v.alias) != std::string::npos;
