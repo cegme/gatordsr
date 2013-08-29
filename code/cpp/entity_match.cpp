@@ -18,6 +18,7 @@
 #include "streamcorpus_types.h"
 #include "streamcorpus_constants.h"
 #include "entity_match.h"
+#include "Util.h"
 
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/protocol/TDenseProtocol.h>
@@ -54,6 +55,7 @@ int main(int argc, char **argv) {
   if (argc > 1) {
     gpg_file = argv[1];
   }
+  //log_info("The gpgfile: %s", argv[1]);
 
   locale loc;
   string text_source("clean_visible");
@@ -153,8 +155,8 @@ int main(int argc, char **argv) {
       struct HasEntity has_entity(content);
 
       if(streamcorpus::any_of(aliases.begin(), aliases.end(), has_entity)) {
-        //if(streamcorpus::any_ofs(aliases.cbegin(), aliases.cend(), HasEntity(content))) {
-        //if(std::any_of(aliases.begin(), aliases.end(), HasEntity(content))) {
+        //if(streamcorpus::any_ofs(aliases.cbegin(), aliases.cend(), HasEntity(content))) 
+        //if(std::any_of(aliases.begin(), aliases.end(), HasEntity(content))) 
 
         // Found an entity, print which one
         //std::clog << "Found an entity in stream item: " << stream_item.doc_id;
@@ -165,21 +167,19 @@ int main(int argc, char **argv) {
 
       }
 
-
-
       // Increment count of stream items processed
       si_total++;
-      }
-      catch (TTransportException e) {
-        // Vital to flush the buffered output or you will lose the last one
-        //string is_good = (si_match>0)?"+":"-";
-        //cout << is_good << gpg_file <<endl;
-        break;
-      }
-      }
-      string is_good = (si_match>0)?"+ |":"- | ";
-      cout << is_good << gpg_file <<endl;
-
-      return 0;
     }
+    catch (TTransportException e) {
+      // Vital to flush the buffered output or you will lose the last one
+      //string is_good = (si_match>0)?"+":"-";
+      //cout << is_good << gpg_file <<endl;
+      break;
+    }
+  }
+  string is_good = (si_match>0)?"+ |":"- | ";
+  cout << is_good << gpg_file <<endl;
+
+  return 0;
+}
 

@@ -31,6 +31,12 @@ test:  streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.
 main: streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o
 	$(CC) -w -o main ER.cc streamcorpus_types.o streamcorpus_constants.o MentionChain.o QueryEntity.o Parameters.o Entity.o Word2Vec.o $(EXTRAS)
 
+entity_match: entity_match.o streamcorpus_types.o streamcorpus_constants.o
+	$(CC) -w -o entity_match entity_match.o streamcorpus_types.o streamcorpus_constants.o $(EXTRAS)
+
+
+
+
 PostSubmissionER.o: PostSubmissionER.cc
 	$(CC) -c PostSubmissionER.cc $(EXTRAS)
 
