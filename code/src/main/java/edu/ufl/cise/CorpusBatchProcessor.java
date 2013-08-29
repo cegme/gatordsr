@@ -141,8 +141,33 @@ public class CorpusBatchProcessor {
 		init();
 	}
 
+	public CorpusBatchProcessor(String base_dir) throws FileNotFoundException {
+		indexOfThisProcess = -1;
+		this.totalNumProcesses = -1;
+		init();
+		this.BASE_DIR = base_dir;
+	}
+
 	private void init() {
 		Preprocessor.initEntityList(JSON_FILE);
+		File temp = new File(BASE_DIR);
+		if (!temp.exists())
+			throw new RuntimeException("BASE_DIR" + BASE_DIR + ". Not found");
+
+		temp = new File(LOG_DIR);
+		if (!temp.exists())
+			throw new RuntimeException("LOG_DIR" + LOG_DIR + ". Not found");
+		if (temp.listFiles().length != 0)
+			throw new RuntimeException("LOG_DIR" + LOG_DIR + " is not empty. LOG_DIR should be clean to avoid over riding."
+					+ " Either delete its content or move them to ALREADY_PROCESSED_DIR.");
+
+		temp = new File(TO_PROCESS_DIR);
+		if (!temp.exists())
+			throw new RuntimeException("TO_PROCESS_DIR" + TO_PROCESS_DIR + ". Not found");
+
+		temp = new File(TO_PROCESS_DIR);
+		if (!temp.exists())
+			throw new RuntimeException("ALREADY_PROCESSED_DIR" + ALREADY_PROCESSED_DIR + ". Not found");
 	}
 
 	/**
@@ -503,6 +528,9 @@ public class CorpusBatchProcessor {
 		if (args.length == 0) {
 			CorpusBatchProcessor cps = new CorpusBatchProcessor();
 			// cps.process();
+			cps.processMultiThreads();
+		} else if (args.length == 1) {
+			CorpusBatchProcessor cps = new CorpusBatchProcessor(args[0]);
 			cps.processMultiThreads();
 		} else if (args.length == 2) {
 			// CorpusBatchProcessor cps = new
