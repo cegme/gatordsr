@@ -17,6 +17,22 @@ def print_entity_list():
         print smart_str(row)
 
 
+def create_c11_list():
+  header = """#include <vector>\n#include "entity_match.h\n"""
+  init = """std::vector<streamcorpus::found_entity> = {\n"""
+  footer = "};\n"
+  with open(ENTITYJSONFILE) as f:
+    j = json.load(f)
+    row = []
+    for i,k in enumerate(j["targets"]):
+      for alias in k["alias"]:
+        row = """found_entity("%s", "%s", "%s", "%s")""" % (k["target_id"], k["group"], k["entity_type"], alias) 
+    print smart_str(header)
+    print smart_str(init)
+    print smart_str(",\n".join(row))
+    print smart_str(footer)
+
+
 if __name__ == '__main__':
   """
     Prints all the aliases. The schema is target_id|group|entity_type|alias
@@ -25,7 +41,7 @@ if __name__ == '__main__':
   """
   import sys
 
-  jsonfile = ENTITYJSONFILE if len(sys.argv) < 1 else sys.argv[-1]
+  ENTITYJSONFILE = ENTITYJSONFILE if len(sys.argv) < 1 else sys.argv[-1]
     
   print_entity_list()
 

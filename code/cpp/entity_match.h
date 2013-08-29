@@ -18,12 +18,15 @@ namespace streamcorpus {
     std::string group;
     std::string entity_type;
     std::string alias;
+    found_entity() {}
+    found_entity(std::string _t, std::string _g, std::string _e, std::string _a): 
+      targetid(_t), group(_g), entity_type(_e), alias(_a) { }
   };
 
   std::vector<found_entity> get_aliases() {
 
     std::locale loc;
-    std::ifstream infile("../resources/entity/alias_list.txt");
+    std::ifstream infile("../resources/entity/alias_list_6_11.txt");
     std::vector<found_entity> v;
 
     std::string line;

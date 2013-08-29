@@ -131,8 +131,8 @@ int main(int argc, char **argv) {
       } else if (text_source == "raw") {
         content = stream_item.body.raw;
       } else {
-        cerr << "Bad text_source :" << text_source <<endl;
-        exit(-1);
+        log_err("Bad text_source: %s", text_source.c_str());
+        break;
       }
 
       if (content.empty()) {
@@ -144,7 +144,7 @@ int main(int argc, char **argv) {
 
         if (content.empty()) {
           // If all applicable text sources are empty, we have a problem and exit with an error
-          cerr << si_total << " Error, doc id: " << stream_item.doc_id << " was empty." << endl;
+          log_err("%d Error, doc id: %s was empty", si_total, stream_item.doc_id.c_str() );
           continue;
           //exit(-1);
         }
