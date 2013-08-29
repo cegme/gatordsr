@@ -20,7 +20,10 @@ namespace streamcorpus {
     std::string alias;
     found_entity() {}
     found_entity(std::string _t, std::string _g, std::string _e, std::string _a): 
-      targetid(_t), group(_g), entity_type(_e), alias(_a) { }
+      targetid(_t), group(_g), entity_type(_e), alias(_a) {
+      // Keep the aliases lowercase
+      boost::algorithm::to_lower(alias);
+    }
   };
 
   std::vector<found_entity> get_aliases() {
