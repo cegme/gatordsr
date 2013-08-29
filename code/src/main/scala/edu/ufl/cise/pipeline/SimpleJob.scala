@@ -295,7 +295,7 @@ object SimpleJob extends Logging {
             }
           }
         } else {
-          logInfo("nullLing>" + line)
+          logError("nullLing>" + line)
         }
         } catch {
         case ex: Exception => {
