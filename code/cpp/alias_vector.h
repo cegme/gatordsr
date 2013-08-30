@@ -77,7 +77,7 @@ namespace streamcorpus {
     streamcorpus::found_entity("http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.", "bronfman", "PER", "Edgar Bronfman, Jr"),
     streamcorpus::found_entity("http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.", "bronfman", "PER", "Edgar Bronfman"),
     streamcorpus::found_entity("http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.", "bronfman", "PER", "Edgar Jr."),
-    streamcorpus::found_entity("http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.", "bronfman", "PER", "Efer"),
+    //streamcorpus::found_entity("http://en.wikipedia.org/wiki/Edgar_Bronfman,_Jr.", "bronfman", "PER", "Efer"),
     streamcorpus::found_entity("http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.", "bronfman", "PER", "Edgar Bronfman, Sr."),
     streamcorpus::found_entity("http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.", "bronfman", "PER", "Edgar Bronfman, Sr"),
     streamcorpus::found_entity("http://en.wikipedia.org/wiki/Edgar_Bronfman,_Sr.", "bronfman", "PER", "Edgar Bronfman"),
