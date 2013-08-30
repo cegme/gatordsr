@@ -138,8 +138,7 @@
         "Hoboken Cove",
         "North Hoboken Harbor",
         "Hoboken\u0027s Inner Harbor",
-        "Weehawken Cove (North Hoboken Harbor)",
-        "Weehawken Cove"
+        "Weehawken Cove (North Hoboken Harbor)"
       ]
     },
     {
@@ -247,13 +246,13 @@
       "target_id": "http://en.wikipedia.org/wiki/The_Ritz_Apartment_(Ocala,_Florida)",
       "alias": [
         "Ritz Apartment",
+        "The_Ritz_Apartment_",
         "Apartment, Ritz",
         "The Ritz-Ocala Apartments",
         "The Acker-Ritz Apartments",
         "The Ritz Apartment (Ocala, Florida)",
         "The_Ritz_Apartment_(Ocala,_Florida)",
-        "The Ritz Apartment",
-        "The_Ritz_Apartment_"
+        "The Ritz Apartment"
       ]
     },
     {
@@ -303,15 +302,13 @@
       "group": "kba2012",
       "target_id": "http://en.wikipedia.org/wiki/Basic_Element_(company)",
       "alias": [
-        "Basic Element (corp)",
-        "Basic_Element_(company)",
         "Basic Element",
         "Basic Element Group",
         "Element, Basic",
+        "Basic Element (corp)",
+        "Basic_Element_(company)",
         "Basic Element (company)",
-        "Basic Element",
-        "Basic_Element_",
-        "Basic Element"
+        "Basic_Element_"
       ]
     },
     {
@@ -323,8 +320,7 @@
         "Basic Element",
         "Basic Element (music group)",
         "Element, Basic",
-        "Basic_Element_",
-        "Basic Element"
+        "Basic_Element_"
       ]
     },
     {
@@ -743,16 +739,15 @@
       "group": "fargo",
       "target_id": "http://en.wikipedia.org/wiki/Carey_McWilliams_(marksman)",
       "alias": [
-        "Carey McWilliams",
+        "Carey_McWilliams_",
         "Carey McWilliams (marksman)",
+        "Williams_, Carey_Mc",
+        "Carey McWilliams",
+        "Carey_Mc Williams_",
         "Carey_McWilliams_(marksman)",
         "Williams_(marksman), Carey_Mc",
         "Carey_Mc Williams_(marksman)",
-        "McWilliams, Carey",
-        "Carey McWilliams",
-        "Carey_McWilliams_",
-        "Williams_, Carey_Mc",
-        "Carey_Mc Williams_"
+        "McWilliams, Carey"
       ]
     },
     {
@@ -1166,15 +1161,15 @@
       "group": "hoboken",
       "target_id": "http://en.wikipedia.org/wiki/Bob_Bert",
       "alias": [
+        "Bertelli, Robert",
+        "Bob Bert",
+        "Harshing My Mellow",
+        "Bob_Bert",
         "Robert Bertelli",
         "Bewitched (American band)",
-        "Bertelli, Robert",
         "Harshing My Mellow (album)",
         "Bert, Bob",
-        "Bob Bert",
-        "Bob_Bert",
-        "Bewitched",
-        "Harshing My Mellow"
+        "Bewitched"
       ]
     },
     {
@@ -1183,13 +1178,11 @@
       "target_id": "http://en.wikipedia.org/wiki/Carl_Chang_(tennis)",
       "alias": [
         "Carl_Chang_(tennis)",
+        "Carl_Chang_",
         "Carl Chang (tennis)",
         "Chang, Carl",
         "Carl Chang",
-        "Carl Chang (tennis player)",
-        "Carl_Chang_",
-        "Carl Chang",
-        "Carl Chang"
+        "Carl Chang (tennis player)"
       ]
     },
     {
@@ -1350,11 +1343,10 @@
       "target_id": "http://en.wikipedia.org/wiki/William_H._Miller_(writer)",
       "alias": [
         "William_H._Miller_(writer)",
-        "William H. Miller",
         "William H. Miller (writer)",
         "Mr. Ocean Liner",
-        "William_H._Miller_",
-        "William H. Miller"
+        "William H. Miller",
+        "William_H._Miller_"
       ]
     },
     {
@@ -1431,17 +1423,17 @@
       "group": "kba2012",
       "target_id": "http://en.wikipedia.org/wiki/Boris_Berezovsky_(businessman)",
       "alias": [
+        "Boris_Berezovsky_",
         "Boris Berezovsky (businessman)",
         "Boris Berezhovsky",
         "Death of Boris Berezovsky",
         "Boris Abramovich Berezovsky",
         "Boris_Berezovsky_(businessman)",
         "Berezhovsky, Boris",
+        "Boris Berezovsky",
         "Platon Elenin",
         "Boris A. Berezovsky",
-        "Elenin, Platon",
-        "Boris Berezovsky",
-        "Boris_Berezovsky_"
+        "Elenin, Platon"
       ]
     },
     {
@@ -1450,11 +1442,10 @@
       "target_id": "http://en.wikipedia.org/wiki/Boris_Berezovsky_(pianist)",
       "alias": [
         "Boris Vadimovich Berezovsky",
+        "Boris_Berezovsky_",
         "Boris_Berezovsky_(pianist)",
         "Boris Berezovsky (violinist)",
         "Boris Berezovsky (pianist)",
-        "Boris_Berezovsky_",
-        "Boris Berezovsky",
         "Boris Berezovsky"
       ]
     },
@@ -1542,9 +1533,9 @@
         "Jim_Steyer",
         "Jim Steyer",
         "James P. Steyer",
+        "James  P. Steyer",
         "Steyer, Jim",
-        "James (Jim) P. Steyer",
-        "James  P. Steyer"
+        "James (Jim) P. Steyer"
       ]
     },
     {
@@ -1834,11 +1825,10 @@
       "target_id": "http://en.wikipedia.org/wiki/Lorenzo_Williams_(basketball)",
       "alias": [
         "Williams, Lorenzo",
+        "Lorenzo Williams",
+        "Lorenzo_Williams_",
         "Lorenzo Williams (basketball)",
-        "Lorenzo_Williams_(basketball)",
-        "Lorenzo Williams",
-        "Lorenzo Williams",
-        "Lorenzo_Williams_"
+        "Lorenzo_Williams_(basketball)"
       ]
     },
     {

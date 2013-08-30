@@ -29,6 +29,8 @@ import java.io.StringReader
 import edu.stanford.nlp.process.DocumentPreprocessor
 import edu.stanford.nlp.ling.HasWord
 import java.util.regex.Pattern
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 
 /**
  * Preload entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json then populate
@@ -126,6 +128,7 @@ object WikiAPI {
         aliasList.addAll(NameOrderGenerator.namePermutation(aliasList.get(a)))
       }
 
+       addWithoutParenthesis(aliasList)
       //update the aliases and search for them in lucene
       if (e.target_id.contains("wikipedia"))
         e.alias.clear()
@@ -136,14 +139,19 @@ object WikiAPI {
       e.alias.clear()
       e.alias.addAll(temp)
       removeDuplicate(e.alias)
-      addWithoutParenthesis(e.alias)
+     
       println(e.alias)
       //      Searcher.searchEntity(e.target_id, e.alias)
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
     val json = generate(kbaJson)
-    p.print(json)
+    val gson = new GsonBuilder().setPrettyPrinting().create();
+    val jp = new JsonParser();
+    val je = jp.parse(json);
+    val prettyJson = gson.toJson(je)
+   // p.print(json)
+    p.print(prettyJson)
     p.close()
     //  println(json)
 
