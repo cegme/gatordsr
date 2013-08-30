@@ -97,8 +97,8 @@
       "group": "fargo",
       "target_id": "http://en.wikipedia.org/wiki/Star_Lite_Motel",
       "alias": [
-        "Charley\u0027s Motel",
-        "Motel, Charley\u0027s",
+        "Charley's Motel",
+        "Motel, Charley's",
         "Star Lite Motel",
         "Star_Lite_Motel"
       ]
@@ -137,7 +137,7 @@
         "Cove, Weehawken",
         "Hoboken Cove",
         "North Hoboken Harbor",
-        "Hoboken\u0027s Inner Harbor",
+        "Hoboken's Inner Harbor",
         "Weehawken Cove (North Hoboken Harbor)"
       ]
     },
@@ -166,7 +166,7 @@
       "group": "mining",
       "target_id": "http://en.wikipedia.org/wiki/Lewis_and_Clark_Landing",
       "alias": [
-        "Lewis \u0026 Clark Landing",
+        "Lewis & Clark Landing",
         "Lewis_and_Clark_Landing",
         "Lewis and Clark Landing"
       ]
@@ -437,7 +437,7 @@
       "group": "startups",
       "target_id": "https://twitter.com/FrankandOak",
       "alias": [
-        "Frank \u0026 Oak",
+        "Frank & Oak",
         "Frank and Oak",
         "Oak, Frankand",
         "Frankand Oak",
@@ -451,7 +451,7 @@
       "target_id": "https://twitter.com/GandBcoffee",
       "alias": [
         "Bcoffee, Gand",
-        "Glanville \u0026 Babinski",
+        "Glanville & Babinski",
         "Glanville and Babinski",
         "Gand Bcoffee",
         "GandBcoffee"
@@ -1723,7 +1723,7 @@
       "group": "kba2012",
       "target_id": "http://en.wikipedia.org/wiki/William_H._Gates,_Sr",
       "alias": [
-        "William Henry Gates\u0026#160;II",
+        "William Henry Gates&#160;II",
         "William_H._Gates,_Sr",
         "William Henry Gates, Sr."
       ]
@@ -1991,15 +1991,15 @@
         "Corbato, Fernando",
         "Fernando Jos√© \"Corby\" Corbat√≥",
         "Fernando Corbató",
-        "Corbató\u0027s law",
+        "Corbató's law",
         "Corbató, Fernando",
         "Fernando Corbato",
         "Fernando J. Corbato",
-        "Corbato\u0027s law",
+        "Corbato's law",
         "Fernando_J._Corbató",
-        "law, Corbato\u0027s",
+        "law, Corbato's",
         "Fernando J. Corbató",
-        "law, Corbató\u0027s",
+        "law, Corbató's",
         "Fernando J. Corbat%C3%B3"
       ]
     },
