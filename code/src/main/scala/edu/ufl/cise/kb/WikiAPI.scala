@@ -43,8 +43,8 @@ object WikiAPI {
 
   def main(args: Array[String]): Unit = {
 
- //   val urlStr = "http://en.wikipedia.org/wiki/Basic_Element_%28company%29"
-  //  val inlineAliases = inlineAliasExtractor(urlStr);
+    //   val urlStr = "http://en.wikipedia.org/wiki/Basic_Element_%28company%29"
+    //  val inlineAliases = inlineAliasExtractor(urlStr);
     //println(inlineAliases)
     redirectAliasGenerator();
   }
@@ -90,7 +90,7 @@ object WikiAPI {
       val aliasList = new ArrayList[String]();
 
       aliasList.add(eName)
-             aliasList.add(eName.replaceAll("_", " "))
+      aliasList.add(eName.replaceAll("_", " "))
 
       aliasList.add(URLDecoder.decode(eName, "UTF-8"))
       aliasList.add(eName.replace("([^)]*)", ""))
@@ -129,13 +129,13 @@ object WikiAPI {
       if (e.target_id.contains("wikipedia"))
         e.alias.clear()
       e.alias.addAll(aliasList)
-     
-      val temp = e.alias.filter(x => x.size > 2 && x.split(' ').first.size > 2 && x.split(' ').last.size > 2)     
+
+      val temp = e.alias.filter(x => x.size > 2 && x.split(' ').first.size > 2 && x.split(' ').last.size > 2)
       e.alias.clear()
-                e.alias.addAll(temp)
-      removeDuplicate(e.alias)      
+      e.alias.addAll(temp)
+      removeDuplicate(e.alias)
       println(e.alias)
-//      Searcher.searchEntity(e.target_id, e.alias)
+      //      Searcher.searchEntity(e.target_id, e.alias)
     })
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
@@ -181,7 +181,7 @@ object WikiAPI {
     // println(documentStr)
     val root = htmlCleaner.clean(documentStr);
     boldExtractor(aliases, root);
-  //  regexExtractor(aliases, root);
+    //  regexExtractor(aliases, root);
     /////////////////////////////////////////////////
     /////////////////////////////////////////////////
     /////////////////////////////////////////////////
@@ -225,7 +225,8 @@ object WikiAPI {
 
     val boldAlias = root.evaluateXPath("//*[@id=\"mw-content-text\"]/p[1]/b");
     if (boldAlias.length > 0) {
-      val f0 = boldAlias.apply(0)
+      /*
+       * val f0 = boldAlias.apply(0)
       val b = f0.isInstanceOf[TagNode];
       val tagNode = f0.asInstanceOf[TagNode]
       val boldText = tagNode.getText().toString().trim()
@@ -234,6 +235,16 @@ object WikiAPI {
       // if (b) {
       //   tagNode.removeFromTree();
       // }
+       * 
+       */
+
+      boldAlias.foreach(f0 => {
+          val b = f0.isInstanceOf[TagNode];
+      val tagNode = f0.asInstanceOf[TagNode]
+      val boldText = tagNode.getText().toString().trim()
+      println(boldText)
+      aliases.add(boldText)
+      });
     }
   }
 
