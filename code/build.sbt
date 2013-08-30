@@ -76,3 +76,5 @@ libraryDependencies += "org.bouncycastle" % "bcpg-jdk16" % "1.46"
 libraryDependencies += "net.sourceforge.htmlcleaner" % "htmlcleaner" % "2.6"
 
 libraryDependencies += "edu.stanford.nlp" % "stanford-parser" % "3.2.0"
+
+libraryDependencies += "com.google.code.gson" % "gson" % "2.2.4"
