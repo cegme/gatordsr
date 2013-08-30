@@ -146,7 +146,7 @@ object WikiAPI {
 
     val p = new PrintWriter(new File("./resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"))
     val json = generate(kbaJson)
-    val gson = new GsonBuilder().disableHtmlEscaping().create();
+    val gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     val jp = new JsonParser();
     val je = jp.parse(json);
     val prettyJson = gson.toJson(je)
