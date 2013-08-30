@@ -7,9 +7,12 @@
 #include <locale>
 #include <sstream>
 #include <string>
+#include <regex>
 #include <vector>
 #include <boost/algorithm/string.hpp>    
+#include <boost/regex.hpp>
 
+#include "Util.h"
 
 namespace streamcorpus {
 
@@ -18,11 +21,17 @@ namespace streamcorpus {
     std::string group;
     std::string entity_type;
     std::string alias;
+    boost::regex alias_regex;
     found_entity() {}
     found_entity(std::string _t, std::string _g, std::string _e, std::string _a): 
       targetid(_t), group(_g), entity_type(_e), alias(_a) {
-      // Keep the aliases lowercase
-      boost::algorithm::to_lower(alias);
+        // Keep the aliases lowercase
+        boost::algorithm::to_lower(alias);
+        init_regex();
+      }
+    inline void init_regex() {
+      std::string r("\\b" + alias + "\\b");
+      alias_regex = r;
     }
   };
 
@@ -39,18 +48,19 @@ namespace streamcorpus {
       std::size_t start = line.find("|");
       e.targetid = line.substr(0,start);
       //e.targetid = tolower(line.substr(0,start), loc);
-      
+
       std::size_t end = line.find("|",start+1);
       e.group = line.substr(end, start);
- 
+
       start = end;
       end = line.find("|",start+1);
       e.entity_type = line.substr(start, end);
-    
+
       start = end;
       e.alias = line.substr(start+1);
-    
+
       boost::algorithm::to_lower(e.alias);
+      e.init_regex();
       boost::algorithm::to_lower(e.targetid);
       boost::algorithm::to_lower(e.group);
       boost::algorithm::to_lower(e.entity_type);
@@ -73,18 +83,18 @@ namespace streamcorpus {
     }
   };
 
-   /**
-    * I had to create my own any_of because centos has an
-    * old version of gcc
-    */
+  /**
+   * I had to create my own any_of because centos has an
+   * old version of gcc
+   */
   template< class InputIt, class UnaryPredicate >
     bool any_of(InputIt first, InputIt last, UnaryPredicate p) {
 
-    for (; first != last; ++first) {
-      if (p(*first)) return true;
+      for (; first != last; ++first) {
+        if (p(*first)) return true;
+      }
+      return false;
     }
-    return false;
-  }
 
 }
 

@@ -1,7 +1,11 @@
 #!/usr/bin/python
 
 import codecs
+import io
+
 import json
+from json import dumps as dumps
+
 
 from django.utils.encoding import smart_str
 
@@ -24,11 +28,12 @@ def create_c11_list():
   init = """  std::vector<streamcorpus::found_entity> alias_vector = {\n"""
   namespace_close = " }; // streamcorpus \n"
   footer = "  };\n"
-  with open(ENTITYJSONFILE) as f:
-    j = json.load(f)
+  with io.open(ENTITYJSONFILE, 'r', encoding="utf-8") as f:
+    j = json.load(f, encoding="utf-8")
     row = []
     for i,k in enumerate(j["targets"]):
       for alias in k["alias"]:
+        alias = alias.replace('"', '\\"')
         row += ["""    streamcorpus::found_entity("%s", "%s", "%s", "%s")""" % (k["target_id"], k["group"], k["entity_type"], alias) ]
     print smart_str(header)
     print smart_str(namespace_open)
