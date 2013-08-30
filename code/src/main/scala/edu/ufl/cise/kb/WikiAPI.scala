@@ -130,7 +130,8 @@ object WikiAPI {
         e.alias.clear()
       e.alias.addAll(aliasList)
 
-      val temp = e.alias.filter(x => x.size > 2 && x.split(' ').first.size > 2 && x.split(' ').last.size > 2)
+      //Skip abbreviated forms.
+      val temp = e.alias.filter(x => x.size > 3 && x.split(' ').first.size > 2 && x.split(' ').last.size > 2)
       e.alias.clear()
       e.alias.addAll(temp)
       removeDuplicate(e.alias)
@@ -239,11 +240,11 @@ object WikiAPI {
        */
 
       boldAlias.foreach(f0 => {
-          val b = f0.isInstanceOf[TagNode];
-      val tagNode = f0.asInstanceOf[TagNode]
-      val boldText = tagNode.getText().toString().trim()
-      println(boldText)
-      aliases.add(boldText)
+        val b = f0.isInstanceOf[TagNode];
+        val tagNode = f0.asInstanceOf[TagNode]
+        val boldText = tagNode.getText().toString().trim()
+        println(boldText)
+        aliases.add(boldText)
       });
     }
   }
