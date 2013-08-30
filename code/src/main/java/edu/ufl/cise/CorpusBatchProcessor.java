@@ -347,7 +347,7 @@ public class CorpusBatchProcessor {
 								 * matchToEntity, calculate same as above.
 								 */
 
-								pw.print(entity.target_id() + ", ");
+								pw.print(entity.target_id() + "[" + alias + "]" + ", ");
 								siFilteredCount.incrementAndGet();
 
 								listMatchedSenteces.add(s);
@@ -511,8 +511,7 @@ public class CorpusBatchProcessor {
 											e.printStackTrace();
 										}
 									} else {
-										System.out.println("X" + date + "/"
-												+ fileName);
+					//					System.out.println("X" + date + "/"	+ fileName);
 									}
 								}
 							} catch (Exception e1) {
