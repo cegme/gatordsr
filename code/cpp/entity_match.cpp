@@ -124,14 +124,16 @@ int main(int argc, char **argv) {
 
         // Found an entity, print which one
         ++si_match;
-        for (auto &a : aliases) {
-          if (content.find(a.alias) != std::string::npos) {
-            auto pos = content.find(a.alias);
-            log_info("The match is: <%s | %s>", a.alias.c_str(), content.substr(pos, a.alias.length()).c_str());
-            break;
+        if (false) { // This slows down the process so we will not do it
+          for (auto &a : aliases) {
+            if (content.find(a.alias) != std::string::npos) {
+              auto pos = content.find(a.alias);
+              log_info("The match is: <%s | %s>", a.alias.c_str(), content.substr(pos, a.alias.length()).c_str());
+              break;
+            }
           }
+          while(stream_item.read(protocolInput.get())); // Read the rest of the pipe so we are not rude
         }
-        while(stream_item.read(protocolInput.get())); // Read the rest of the pipe so we are not rude
         break; // Just find the first
       }
 
