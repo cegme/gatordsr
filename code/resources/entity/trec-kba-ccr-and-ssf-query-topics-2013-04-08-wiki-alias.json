@@ -377,9 +377,9 @@
       "alias": [
         "Gran%C3%A3 y Montero",
         "Grana y Montero",
-        "Gran‹ y Montero",
+        "Granï¿½ y Montero",
         "GraÃ±a y Montero",
-        "Gran‹_y_Montero",
+        "Granï¿½_y_Montero",
         "Gran%C3%A3_y_Montero"
       ]
     },
@@ -415,10 +415,10 @@
       "target_id": "http://en.wikipedia.org/wiki/Scotiabank_Per%C3%BA",
       "alias": [
         "Per%C3%BA, Scotiabank",
-        "Scotiabank_Perœ",
+        "Scotiabank_Perï¿½",
         "Scotiabank_Per%C3%BA",
-        "Perœ, Scotiabank",
-        "Scotiabank Perœ",
+        "Perï¿½, Scotiabank",
+        "Scotiabank Perï¿½",
         "Scotiabank Per%C3%BA"
       ]
     },
@@ -679,13 +679,13 @@
         "Bottou, LÃ©on",
         "Bottou, Leon",
         "Leon Bottou",
-        "LŽon Bottou",
+        "Lï¿½on Bottou",
         "L%C3%A9on_Bottou",
         "LÃ©on Bottou",
         "Bottou, L%C3%A9on",
-        "LŽon_Bottou",
+        "Lï¿½on_Bottou",
         "L%C3%A9on Bottou",
-        "Bottou, LŽon"
+        "Bottou, Lï¿½on"
       ]
     },
     {
@@ -1018,20 +1018,20 @@
       "alias": [
         "AnaÃ¯s Croze",
         "Ana%C3%AFs_Croze",
-        "Croze, Ana•s",
+        "Croze, Anaï¿½s",
         "Croze, Anais",
         "Croze, AnaÃ¯s",
-        "Ana•s Croz",
-        "croze, Ana•s",
+        "Anaï¿½s Croz",
+        "croze, Anaï¿½s",
         "AnaÃ¯s",
-        "Ana•s_Croze",
+        "Anaï¿½s_Croze",
         "Croze, Ana%C3%AFs",
         "croze, Anais",
-        "Ana•s Croze",
-        "Croz, Ana•s",
+        "Anaï¿½s Croze",
+        "Croz, Anaï¿½s",
         "Anais croze",
         "Ana%C3%AFs Croze",
-        "Ana•s croze",
+        "Anaï¿½s croze",
         "Anais Croze"
       ]
     },
@@ -1045,11 +1045,11 @@
         "Gwenaelle Aubry",
         "Gwena%C3%ABlle_Aubry",
         "Aubry, Gwena%C3%ABlle",
-        "Gwena‘lle_Aubry",
-        "Gwena‘lle Aubry",
+        "Gwenaï¿½lle_Aubry",
+        "Gwenaï¿½lle Aubry",
         "Aubry, Gwenaelle",
         "Aubry, GwenaÃ«lle",
-        "Aubry, Gwena‘lle"
+        "Aubry, Gwenaï¿½lle"
       ]
     },
     {
@@ -1060,13 +1060,13 @@
         "Sch%C3%B6ffer, Nicolas",
         "Schoeffer, Nicolas",
         "Nicolas SchÃ¶ffer",
-        "Schšffer, Nicolas",
+        "Schï¿½ffer, Nicolas",
         "Nicolas Schoffer",
         "Nicolas Sch%C3%B6ffer",
         "Nicolas_Sch%C3%B6ffer",
         "Nicolas Schoeffer",
-        "Nicolas Schšffer",
-        "Nicolas_Schšffer",
+        "Nicolas Schï¿½ffer",
+        "Nicolas_Schï¿½ffer",
         "SchÃ¶ffer, Nicolas",
         "Schoffer, Nicolas"
       ]
@@ -1076,15 +1076,15 @@
       "group": "french",
       "target_id": "http://en.wikipedia.org/wiki/Th%C3%A9o_Mercier",
       "alias": [
-        "ThŽo Mercier",
+        "Thï¿½o Mercier",
         "Th%C3%A9o_Mercier",
         "ThÃ©o Mercier",
         "Mercier, Th%C3%A9o",
-        "ThŽo_Mercier",
+        "Thï¿½o_Mercier",
         "Mercier, Theo",
         "Th%C3%A9o Mercier",
         "Mercier, ThÃ©o",
-        "Mercier, ThŽo",
+        "Mercier, Thï¿½o",
         "Theo Mercier"
       ]
     },
@@ -1356,10 +1356,8 @@
       "alias": [
         "Aharon Brick",
         "Barak, Aharon",
-        "???, ????",
         "Barak, Aaron",
         "Brick, Aharon",
-        "???? ???",
         "Aaron Barak",
         "Aharon Barak",
         "Aharon_Barak"
@@ -1990,16 +1988,16 @@
         "Fernando_J._Corbat%C3%B3",
         "Corbato, Fernando",
         "Fernando JosÃ© \"Corby\" CorbatÃ³",
-        "Fernando Corbat—",
-        "Corbat—'s law",
-        "Corbat—, Fernando",
+        "Fernando Corbatï¿½",
+        "Corbatï¿½'s law",
+        "Corbatï¿½, Fernando",
         "Fernando Corbato",
         "Fernando J. Corbato",
         "Corbato's law",
-        "Fernando_J._Corbat—",
+        "Fernando_J._Corbatï¿½",
         "law, Corbato's",
-        "Fernando J. Corbat—",
-        "law, Corbat—'s",
+        "Fernando J. Corbatï¿½",
+        "law, Corbatï¿½'s",
         "Fernando J. Corbat%C3%B3"
       ]
     },
