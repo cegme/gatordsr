@@ -28,6 +28,7 @@ import scala.collection.JavaConversions._
 import java.io.StringReader
 import edu.stanford.nlp.process.DocumentPreprocessor
 import edu.stanford.nlp.ling.HasWord
+import java.util.regex.Pattern
 
 /**
  * Preload entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json then populate
@@ -135,6 +136,7 @@ object WikiAPI {
       e.alias.clear()
       e.alias.addAll(temp)
       removeDuplicate(e.alias)
+      addWithoutParenthesis(e.alias)
       println(e.alias)
       //      Searcher.searchEntity(e.target_id, e.alias)
     })
@@ -145,6 +147,20 @@ object WikiAPI {
     p.close()
     //  println(json)
 
+  }
+  
+  def addWithoutParenthesis(arlList: ArrayList[String]){
+   var  temp = new ArrayList[String];
+   arlList.foreach(f => {
+     if(f.contains("(") && f.contains(")")){
+            val expr = f.replaceAll("\\(.+?\\)", "").trim();
+            temp.add(expr)
+     }
+       
+     
+   })
+   arlList.addAll(temp)
+    
   }
 
   def removeDuplicate(arlList: ArrayList[String]) {
