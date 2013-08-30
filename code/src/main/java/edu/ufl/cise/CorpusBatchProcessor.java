@@ -51,7 +51,7 @@ import edu.ufl.cise.pipeline.Preprocessor;
  */
 public class CorpusBatchProcessor {
 
-	public final static String				JSON_FILE													= "resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json";
+	public final static String				JSON_FILE													= "resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-06-11.json"; //"resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json";
 
 	/** Corpus directory on server/local */
 	public final static String				CORPUS_DIR_SERVER_SDE							= "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
@@ -74,9 +74,9 @@ public class CorpusBatchProcessor {
 	 * </ul>
 	 */
 	public static String							BASE_DIR													= "";
-	public final static String				LOG_DIR														= BASE_DIR + "runs/";
-	public final static String				TO_PROCESS_DIR										= BASE_DIR + "toProcess/";
-	public final static String				ALREADY_PROCESSED_DIR							= BASE_DIR + "alreadyProcessed/";
+	public  static String				LOG_DIR														= BASE_DIR + "runs/";
+	public  static String				TO_PROCESS_DIR										= BASE_DIR + "toProcess/";
+	public  static String				ALREADY_PROCESSED_DIR							= BASE_DIR + "alreadyProcessed/";
 	// "/media/sde/backupFinal/";
 	// "/home/morteza/trec/backup/";
 	// "/media/sde/toProcess/";
@@ -113,9 +113,9 @@ public class CorpusBatchProcessor {
 
 	List<Entity>											listEntity												= Preprocessor.entity_list();
 
-	final Hashtable<String, Boolean>	alreadyProcessedGPGFileHashTable	= LogReader
+	 Hashtable<String, Boolean>	alreadyProcessedGPGFileHashTable	= LogReader
 																																					.getPreLoggedFileList(ALREADY_PROCESSED_DIR);
-	final Hashtable<String, Boolean>	toBeProcessedGPGFileHashTable			= LogReader.getToProcessFileList(TO_PROCESS_DIR);
+	 Hashtable<String, Boolean>	toBeProcessedGPGFileHashTable			= LogReader.getToProcessFileList(TO_PROCESS_DIR);
 
 	/**
 	 * gets the index of thus process and total # of processes that this process is a member of to
@@ -145,6 +145,11 @@ public class CorpusBatchProcessor {
 		indexOfThisProcess = -1;
 		this.totalNumProcesses = -1;
 		this.BASE_DIR = base_dir;
+
+        LOG_DIR                                                     = BASE_DIR + "runs/";
+              TO_PROCESS_DIR                                      = BASE_DIR + "toProcess/";
+               ALREADY_PROCESSED_DIR                           = BASE_DIR + "alreadyProcessed/";
+//        System.out.println(base_dir);
 		init();
 	}
 
@@ -152,23 +157,28 @@ public class CorpusBatchProcessor {
 		Preprocessor.initEntityList(JSON_FILE);
 		File temp = new File(BASE_DIR);
 		if (!temp.exists())
-			throw new RuntimeException("BASE_DIR" + BASE_DIR + ". Not found");
+			throw new RuntimeException("BASE_DIR " + BASE_DIR + ". Not found");
 
 		temp = new File(LOG_DIR);
 		if (!temp.exists())
-			throw new RuntimeException("LOG_DIR" + LOG_DIR + ". Not found");
+			throw new RuntimeException("LOG_DIR " + LOG_DIR + ". Not found");
 		if (temp.listFiles().length != 0)
-			throw new RuntimeException("LOG_DIR" + LOG_DIR + " is not empty. LOG_DIR should be clean to avoid over riding."
+			throw new RuntimeException("LOG_DIR " + LOG_DIR + " is not empty. LOG_DIR should be clean to avoid over riding."
 					+ " Either delete its content or move them to ALREADY_PROCESSED_DIR.");
 
 		temp = new File(TO_PROCESS_DIR);
 		if (!temp.exists())
-			throw new RuntimeException("TO_PROCESS_DIR" + TO_PROCESS_DIR + ". Not found");
+			throw new RuntimeException("TO_PROCESS_DIR " + TO_PROCESS_DIR + ". Not found");
 
 		temp = new File(TO_PROCESS_DIR);
 		if (!temp.exists())
-			throw new RuntimeException("ALREADY_PROCESSED_DIR" + ALREADY_PROCESSED_DIR + ". Not found");
-	}
+			throw new RuntimeException("ALREADY_PROCESSED_DIR " + ALREADY_PROCESSED_DIR + ". Not found");
+
+       try{
+        alreadyProcessedGPGFileHashTable    = LogReader.getPreLoggedFileList(ALREADY_PROCESSED_DIR);        
+   toBeProcessedGPGFileHashTable           = LogReader.getToProcessFileList(TO_PROCESS_DIR);                                                                             
+       } catch(Exception e){e.printStackTrace();}
+       }
 
 	/**
 	 * Are we running on a local PC or the server? to setup proper addresssing.
@@ -424,6 +434,7 @@ public class CorpusBatchProcessor {
 			Thread worker = new Thread() {
 				public void run() {
 
+                    System.out.println("run thread." + threadIndex);
 					PrintWriter pw = null;
 					try {
 						pw = new PrintWriter(new File(LOG_DIR + "run" + threadIndex + "Log.txt"));
@@ -438,6 +449,7 @@ public class CorpusBatchProcessor {
 									final String fileName = fileStr.substring(fileStr.lastIndexOf('/') + 1);
 									String dateFile = date + "/" + fileName;
 
+                                   // System.out.println("In loop: " + fileStr);
 									if (isAlreadyProcessed(dateFile)) {
 										System.out.println("@ " + dateFile);
 									} else if (isToBeProcessed(fileStr)) {
@@ -457,7 +469,9 @@ public class CorpusBatchProcessor {
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
-									}
+									} else{
+                                       System.out.println("X" + date + "/" + fileName);
+                                    }
 								}
 							} catch (Exception e1) {
 								e1.printStackTrace();
