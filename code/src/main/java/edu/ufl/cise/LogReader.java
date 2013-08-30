@@ -68,7 +68,7 @@ public class LogReader {
 			Scanner sc = new Scanner(new File(s));
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
-				System.out.println(line);
+//				System.out.println(line);
                 String filePath = LogReader.getToProcessFileName(line);
 				// System.out.println(filePath);
 				if (filePath != null) {

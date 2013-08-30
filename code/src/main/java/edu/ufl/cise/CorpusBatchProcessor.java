@@ -51,7 +51,9 @@ import edu.ufl.cise.pipeline.Preprocessor;
  */
 public class CorpusBatchProcessor {
 
-	public final static String JSON_FILE = "resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-06-11.json"; // "resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08.json";
+	public final static String JSON_FILE = 
+        //resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-06-11.json"; 
+"resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json";
 
 	/** Corpus directory on server/local */
 	public final static String CORPUS_DIR_SERVER_SDE = "/media/sde/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/";
@@ -293,6 +295,7 @@ public class CorpusBatchProcessor {
 					}
 				}
 			} else {
+                System.out.println("lingpipe = NOT Null: " + siw);
 				/** initiing all sentences. */
 				List<String> listStr = new LinkedList<String>();
 				for (Sentence sentence : listSentence) {
@@ -316,7 +319,7 @@ public class CorpusBatchProcessor {
 							String s = listStr.get(isentence);
 
 							String alias = entity.alias().get(ientity);
-							if (s.contains(alias)) {
+							if (s.contains(alias.toLowerCase())) {
 								if (!printedFileName) {
 									pw.print("ling>" + siw.day + " | "
 											+ siw.fileName + " | "
