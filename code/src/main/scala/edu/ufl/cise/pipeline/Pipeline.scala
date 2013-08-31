@@ -61,7 +61,7 @@ object Pipeline extends Logging {
   "killed | assasinated executed | shot | fell | claimed life | succumbed | slain | to death | dies"
   val contactMeetPlaceTime = "at | in | met"  
 
-  val relativeTimes = "last night|yesterday|tomorrow|last week|thisevening|last afternoon|days ago".r
+  val relativeTimes = "last night|yesterday|tomorrow|last week|this evening|last afternoon|days ago".r
     
   logInfo("entities and patterns are loaded")
   
