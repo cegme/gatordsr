@@ -448,9 +448,9 @@ object Pipeline extends Logging {
             val txt = SimpleJob.transform(tokens.slice(entity.end + 1, target.begin));
             logInfo("The txt: %s".format(txt));
             
-            val slot_value = relativeTimes findFirstIn txt match { case Some(x) => x; case _ => "---" } 
+            val slot_value = relativeTimes findFirstIn text match { case Some(x) => x; case _ => "---" } 
 
-            val comment = "# <" + entity.content + "| " + txt + "| " + slot_value  + "> -m- " + prettySentence(tokens).mkString(" ");
+            val comment = "# <" + entity.content + "| " + date  + "| " + slot_value  + "> -m- " + prettySentence(tokens).mkString(" ");
             //val byte_range = getByteRange(target, tokens); TODO how to get these bytes?
             KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", -1 ,"000-000", comment, array);
 
