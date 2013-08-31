@@ -251,7 +251,6 @@ public class CorpusBatchProcessor {
 	 * @param siw
 	 */
 	private void process(PrintWriter pw, SIWrapper siw) {
-		String reason = "*";
 
 		List<String> listMatchedSenteces = new LinkedList<String>();
 
@@ -278,7 +277,6 @@ public class CorpusBatchProcessor {
 					}
 				}
 			} else {
-				reason += "lingpipe = NOT Null ";
 				System.out.println("lingpipe = NOT Null: " + siw);
 				/** initiing all sentences. */
 				List<String> listStr = new LinkedList<String>();
@@ -343,8 +341,10 @@ public class CorpusBatchProcessor {
 						pw.println("Sentence>" + s);
 					}
 				} else{
+					String reason = "* lingpipe = NOT Null ";
+
 					reason += "Failed to match alias.";
-					pw.println(reason);
+					pw.println(reason);	
 				}
 			}
 		}
