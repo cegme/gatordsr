@@ -25,6 +25,8 @@ import opennlp.tools.chunker.ChunkerModel
 import opennlp.tools.namefind.NameFinderME
 import opennlp.tools.namefind.TokenNameFinderModel
 
+import scala.util.matching.Regex
+
 import scala.collection.JavaConversions._
 
 
@@ -58,6 +60,8 @@ object Pipeline extends Logging {
   val dateOfDeath = "dead | died | passed away | drown | perished | deceased | murdered | " + 
   "killed | assasinated executed | shot | fell | claimed life | succumbed | slain | to death | dies"
   val contactMeetPlaceTime = "at | in | met"  
+
+  val relativeTimes = "last night|yesterday|tomorrow|last week|thisevening|last afternoon|days ago".r
     
   logInfo("entities and patterns are loaded")
   
@@ -419,19 +423,37 @@ object Pipeline extends Logging {
       // Search for one of the terms in dateOfDeath between the target entity and another entity
       logInfo("farPatternMatch text: %s".format(text))
       dateOfDeath.split(" \\| ").foreach(date => {
-          //logInfo("farPatternMatch text.contains(%s): %s?".format(date, text.contains(date)))
-          if (text.contains(date)) { // slot found            
+        if (text.contains(date) ) { // slot found            
+          logInfo("farPatternMatch text.contains(%s): %s".format(date, text.contains(date)))
+          logInfo("index: %d, entities.size: %d".format( index, entities.size))
           // find the target entity
           for (i <- index + 1 until entities.size) {
             val target = entities.get(i);
             val txt = SimpleJob.transform(tokens.slice(entity.end + 1, target.begin));
+            logInfo("The txt: %s".format(txt));
+            
+            //relativeTimes findFirstIn txt match { case Some(x) => logInfo("---> " + x); case None => logInfo("") }
             if(txt.contains(date)) logInfo("target.entity_type: %s".format( target.entity_type) )
-            if(txt.contains(date) && (target.entity_type.equals("TIME") || target.entity_type.equals("DATE"))) {
+            if((relativeTimes findFirstIn txt).nonEmpty || (txt.contains(date) && (target.entity_type.equals("TIME") || target.entity_type.equals("DATE")) )) {
               // generate results and output
               val comment = "# <" + entity.content + "| " + txt + "| " + target.content + "> -m- " + prettySentence(tokens).mkString(" ");
               val byte_range = getByteRange(target, tokens);
               KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", tokens(target.begin).equiv_id, byte_range, comment, array);
             }
+          }
+          
+          // Check for non entity text
+          if (index + 1 - entities.size == 0 && (relativeTimes findFirstIn text).nonEmpty) {
+            val target = entities.get(index);
+            val txt = SimpleJob.transform(tokens.slice(entity.end + 1, target.begin));
+            logInfo("The txt: %s".format(txt));
+            
+            val slot_value = relativeTimes findFirstIn txt match { case Some(x) => x; case _ => "---" } 
+
+            val comment = "# <" + entity.content + "| " + txt + "| " + slot_value  + "> -m- " + prettySentence(tokens).mkString(" ");
+            //val byte_range = getByteRange(target, tokens); TODO how to get these bytes?
+            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", -1 ,"000-000", comment, array);
+
           }
         }
       })
