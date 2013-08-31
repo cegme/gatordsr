@@ -21,18 +21,18 @@ namespace streamcorpus {
     std::string group;
     std::string entity_type;
     std::string alias;
-    boost::regex alias_regex;
+    //boost::regex alias_regex;
     found_entity() {}
     found_entity(std::string _t, std::string _g, std::string _e, std::string _a): 
       targetid(_t), group(_g), entity_type(_e), alias(_a) {
         // Keep the aliases lowercase
         boost::algorithm::to_lower(alias);
-        init_regex();
+        //init_regex();
       }
-    inline void init_regex() {
+    /*inline void init_regex() {
       std::string r("\\b" + alias + "\\b");
       alias_regex = r;
-    }
+    }*/
   };
 
   std::vector<found_entity> get_aliases() {
@@ -60,7 +60,7 @@ namespace streamcorpus {
       e.alias = line.substr(start+1);
 
       boost::algorithm::to_lower(e.alias);
-      e.init_regex();
+      //e.init_regex();
       boost::algorithm::to_lower(e.targetid);
       boost::algorithm::to_lower(e.group);
       boost::algorithm::to_lower(e.entity_type);

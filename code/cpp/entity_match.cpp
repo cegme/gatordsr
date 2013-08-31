@@ -116,14 +116,14 @@ int main(int argc, char **argv) {
       }
 
       // Check for an entity match
-      //struct HasEntity has_entity(content);
-      boost::algorithm::to_lower(content);
+      struct HasEntity has_entity(content);
+      //boost::algorithm::to_lower(content);
       
-     //if(streamcorpus::any_of(aliases.begiin(), aliases.end(), has_entity)) {
-      if(streamcorpus::any_of(aliases.begin(), aliases.end(), [content] (const found_entity &a) {
+      if(streamcorpus::any_of(aliases.begin(), aliases.end(), has_entity)) {
+      //if(streamcorpus::any_of(aliases.begin(), aliases.end(), [content] (const found_entity &a) {
             //return content.find(a.alias) != std::string::npos;
-            return boost::regex_search(content, a.alias_regex);
-        })) {
+            //return boost::regex_search(content, a.alias_regex);
+        //})) {
 
         // Found an entity, print which one
         ++si_match;
