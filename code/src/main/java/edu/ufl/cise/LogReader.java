@@ -49,7 +49,7 @@ public class LogReader {
 
 	public static String getToProcessFileName(String lineFileLog) {
 		if (lineFileLog.length() > 0 && lineFileLog.charAt(0) == '+') {
-			return lineFileLog.substring(3);
+			return lineFileLog.split("|")[1];
 		}
 		return null;
 	}
@@ -101,7 +101,7 @@ public class LogReader {
 
 		String lineToProcess = "+ |/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/"
 				+ "kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-02-04-18/"
-				+ "social-290-a5b943086422bd475f72a4507836b581-25627e7a7754d4d426b0f415bb1a43f8.sc.xz.gpg";
+				+ "social-290-a5b943086422bd475f72a4507836b581-25627e7a7754d4d426b0f415bb1a43f8.sc.xz.gpg|56";
 
 		System.out.println(getToProcessFileName(lineToProcess));
 
