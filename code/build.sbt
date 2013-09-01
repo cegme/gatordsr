@@ -78,3 +78,8 @@ libraryDependencies += "net.sourceforge.htmlcleaner" % "htmlcleaner" % "2.6"
 libraryDependencies += "edu.stanford.nlp" % "stanford-parser" % "3.2.0"
 
 libraryDependencies += "com.google.code.gson" % "gson" % "2.2.4"
+
+libraryDependencies += "org.ocpsoft.prettytime" % "prettytime" % "3.0.2.Final"
+
+libraryDependencies += "joda-time" % "joda-time" % "2.3"
+

@@ -1,23 +1,25 @@
 package edu.ufl.cise.pipeline
 
 import edu.ufl.cise.Logging
-import streamcorpus.StreamItem
-import streamcorpus.Sentence
-import java.util.ArrayList
 import edu.ufl.cise.KBAOutput
 import edu.ufl.cise.RemoteGPGRetrieval
+import java.util.ArrayList
+import streamcorpus.StreamItem
+import streamcorpus.Sentence
 import streamcorpus.Token
-import java.lang.Integer
 import scala.io.Source
 import java.io.PrintWriter
-import org.apache.thrift.protocol.TProtocol
 import streamcorpus.OffsetType
 import com.google.common.base.Stopwatch
+import java.lang.Integer
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.io.FileInputStream
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.{MILLISECONDS, NANOSECONDS, SECONDS}
+
 import opennlp.tools.tokenize.TokenizerME
 import opennlp.tools.tokenize.TokenizerModel
-import java.io.FileInputStream
 import opennlp.tools.postag.POSTaggerME
 import opennlp.tools.postag.POSModel
 import opennlp.tools.chunker.ChunkerME
@@ -26,8 +28,10 @@ import opennlp.tools.namefind.NameFinderME
 import opennlp.tools.namefind.TokenNameFinderModel
 
 import scala.util.matching.Regex
-
 import scala.collection.JavaConversions._
+
+import org.ocpsoft.prettytime.PrettyTime
+import org.apache.thrift.protocol.TProtocol
 
 
 object Pipeline extends Logging {
@@ -96,7 +100,7 @@ object Pipeline extends Logging {
       KBAOutput.outputPrefix = args(1)
 //    if(args.size > 2)
 //      SimpleJob.filterUsingStreamFiles(args(0))
-    SimpleJob.filterSentencesCoref(args(0))//,args(1)) 
+      SimpleJob.filterSentencesCoref(args(0))//,args(1)) 
 }
 
   def annotate(sentence: streamcorpus.Sentence, sentenceStr: String, targetIndex: Int, le: LingEntity) = {
@@ -107,8 +111,8 @@ object Pipeline extends Logging {
     val target = entities(targetIndex)
 
     logInfo("sentenceStr: %s".format(sentenceStr))
-    //logInfo("senetence: %s".format(tokens.map{_.token}.mkString("["," ","]")))
-    logInfo("senetence: %s".format(prettySentence(sentence).mkString(" ")))
+    //logInfo("sentence: %s".format(tokens.map{_.token}.mkString("["," ","]")))
+    logInfo("sentence: %s".format(prettySentence(sentence).mkString(" ")))
 
     val index = getCorresEntity(target, entity_list, le)
     if (index != -1) { // when finding the target index in the list of Ling Entities, try to match the patterns in that sentence
@@ -235,9 +239,9 @@ object Pipeline extends Logging {
 
   // get the byte range of one LingPipe Entity
   def getByteRange(target : LingEntity, tokens:Array[Token]) : String = {
-    val first = tokens(target.begin).getOffsets().get(OffsetType.findByValue(1)).first
-    val last = tokens(target.end).getOffsets().get(OffsetType.findByValue(1)).first + 
-    tokens(target.end).getOffsets().get(OffsetType.findByValue(1)).length - 1
+    val first = tokens(target.begin).getOffsets().get(OffsetType.BYTES).first
+    val last = tokens(target.end).getOffsets().get(OffsetType.BYTES).first + 
+      tokens(target.end).getOffsets().get(OffsetType.BYTES).length - 1
     first + "-" + last
   }
 
@@ -410,6 +414,16 @@ object Pipeline extends Logging {
     list
   }
 
+
+  def relativeToAbsoluteDate(date_string:String, relative_time:String): String = {
+    // Get the date of the extraction
+    val date = new SimpleDateFormat("YYYY-MM-d-k", Locale.ENGLISH).parse(date_string) // Format YYYY-MM-DD-HH
+    // Use that relative date to get the actual date
+    //val absolute_date_string = new PrettyTime(date).parse(relative_time)
+    //absolute_date_string
+    relative_time
+  }
+
   def farPatternMatch(entity : LingEntity, index : Integer, 
     tokens : Array[Token], entities : ArrayList[LingEntity], array:Array[String]) {
     // find slot values for CauseOfDeath, DateOfDeath, ContactMeetPlaceTime 
@@ -423,7 +437,7 @@ object Pipeline extends Logging {
       // Search for one of the terms in dateOfDeath between the target entity and another entity
       logInfo("farPatternMatch text: %s".format(text))
       dateOfDeath.split(" \\| ").foreach(date => {
-        if (text.contains(date) ) { // slot found            
+        if (text.contains(date) ) { // slot found
           logInfo("farPatternMatch text.contains(%s): %s".format(date, text.contains(date)))
           logInfo("index: %d, entities.size: %d".format( index, entities.size))
           // find the target entity
@@ -442,17 +456,37 @@ object Pipeline extends Logging {
             }
           }
           
-          // Check for non entity text
+          // TODO Check for non entity text and a relative time mention
           if (index + 1 - entities.size == 0 && (relativeTimes findFirstIn text).nonEmpty) {
             val target = entities.get(index);
             val txt = SimpleJob.transform(tokens.slice(entity.end + 1, target.begin));
             logInfo("The txt: %s".format(txt));
             
             val slot_value = relativeTimes findFirstIn text match { case Some(x) => x; case _ => "---" } 
+            val slot_value_time = relativeToAbsoluteDate(array(0), slot_value)
 
-            val comment = "# <" + entity.content + "| " + date  + "| " + slot_value  + "> -m- " + prettySentence(tokens).mkString(" ");
+            logInfo("token.size: %d".format(tokens.size))
+            val tmp = slot_value.split(" ")
+            logInfo("slot_value: %s, first: [%s], last: [%s]".format(slot_value, tmp.head, tmp.last ))
+            logInfo("token: %s".format(tokens.drop(target.end+1).map{_.token}.mkString("["," ","]")))
+            logInfo("token_offsets: %s".format(tokens.drop(target.end+1).map{_.getOffsets.get(OffsetType.BYTES).first}.mkString("["," ","]")))
+            logInfo("token_index: %s".format(tokens.drop(target.end+1).map{_.sentence_pos}.mkString("["," ","]")))
+
+            val first_index = tokens.indexWhere(x => x.token.equalsIgnoreCase(slot_value.split(" ").head), target.sentence_pos)
+            logInfo("first_index: %d | %s".format(first_index, tokens(first_index).token))
+            var last_index  = tokens.indexWhere(x => x.token.equalsIgnoreCase(slot_value.split(" ").last), target.sentence_pos)
+            if (last_index == -1) last_index = tokens.size - 1
+            logInfo("last_index: %d".format(last_index))
+            logInfo("last_index: %d | %s".format(last_index, tokens(last_index).token))
+            val first = tokens(first_index).getOffsets().get(OffsetType.BYTES).first
+            val last = tokens(last_index).getOffsets().get(OffsetType.BYTES).first + 
+              tokens(last_index).getOffsets().get(OffsetType.BYTES).length - 1
+
+            val byte_range = first + "-" + last
+
+            val comment = "# <" + entity.content + "| " + date  + "| " + slot_value  + "> -n- " + prettySentence(tokens).mkString(" ");
             //val byte_range = getByteRange(target, tokens); TODO how to get these bytes?
-            KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "DateOfDeath", -1 ,"000-000", comment, array);
+            KBAOutput.add(array(6), entity.topic_id, 1000, slot_value_time, "DateOfDeath", -1 , byte_range, comment, array);
 
           }
         }
@@ -468,7 +502,7 @@ object Pipeline extends Logging {
           if(txt.contains(contact) && (target.entity_type.equals("TIME") || target.entity_type.equals("DATE") || 
             target.entity_type.equals("FAC"))) {
             // generate results and output
-            val comment = "# <" + entity.content + "| " + txt + "| " + target.content + "> -n- " + prettySentence(tokens).mkString(" ");
+            val comment = "# <" + entity.content + "| " + txt + "| " + target.content + "> -o- " + prettySentence(tokens).mkString(" ");
             val byte_range = getByteRange(target, tokens);
             KBAOutput.add(array(6), entity.topic_id, 1000, array(0), "Contact_Meet_PlaceTime", tokens(target.begin).equiv_id, byte_range, comment, array);
           }
