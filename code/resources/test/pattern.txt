@@ -129,3 +129,7 @@ PER, Contact_Meet_PlaceTime, met, right, TIME
 PER, Contact_Meet_PlaceTime, met, right, ORG
 PER, Contact_Meet_PlaceTime, in, right, ORG
 PER, Contact_Meet_PlaceTime, at, right, ORG
+PER, Cause_of_Death, died of, right, ORG
+PER, Cause_of_Death, killed by, right, ORG
+PER, Cause_of_Death, succumbed to, right, ORG
+PER, Cause_of_Death, mudered by, right, ORG
