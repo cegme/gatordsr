@@ -99,10 +99,12 @@ public class LogReader {
 		Hashtable<String, Boolean> hash = getPreLoggedFileList(CorpusBatchProcessor.BASE_DIR + CorpusBatchProcessor.LOG_DIR);
 		System.out.println(hash);
 
-		String lineToProcess = "+ |/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/"
-				+ "kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-02-04-18/"
-				+ "social-290-a5b943086422bd475f72a4507836b581-25627e7a7754d4d426b0f415bb1a43f8.sc.xz.gpg|56";
+//		String lineToProcess = "+ |/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/"
+//				+ "kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-02-04-18/"
+//				+ "social-290-a5b943086422bd475f72a4507836b581-25627e7a7754d4d426b0f415bb1a43f8.sc.xz.gpg|56";
 
+		String lineToProcess = "+ |/media/sdd/s3.amazonaws.com/aws-publicdatasets/trec/kba/kba-streamcorpus-2013-v0_2_0-english-and-unknown-language/2012-03-02-17/news-296-0c462de4e017480602d42941f6c69a79-52d7cba8571dea806edf565fc3de481a.sc.xz.gpg|56";
+		
 		System.out.println(getToProcessFileName(lineToProcess));
 
 		// if (lineEntity.length() > 0 && lineEntity.charAt(0) == '>') {
