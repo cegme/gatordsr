@@ -2,6 +2,15 @@
 
 import argparse
 import collections
+try:
+  from collections import Counter
+except ImportError:
+  try:
+    import counter
+    from counter import Counter
+  except ImportError:
+    pass
+
 import io
 import json
 import pdb
@@ -253,7 +262,7 @@ def sentence_histogram(ssf_file):
   """
   with open(ssf_file, 'r') as f:
 
-    c = collections.Counter()
+    c = Counter()
     file_iter = iter(f.readline, ' ')
     for line in file_iter:
       if line == '': break
