@@ -10,10 +10,8 @@ from django.utils.encoding import smart_str
 
 
 ENTITYJSONFILE = "../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08i-wiki-alias.json"
-
 ex_re = re.compile(r"^# <(?P<entity>.*) \| (?P<slot_name>.*) \| (?P<slot_value>.*) > -.- (?P<sentence>.*)$") 
 entity_re = re.compile(r"(\S+)/(ORG|PER|LOC|FAC)")
-
 
 
 def extract_triple(e):
@@ -108,15 +106,12 @@ def byte_range_correction(s,g,e):
   return ' '.join(new_ssf)
 
 
-def check_similar_byte_range(s1,g1,e1,s2,g2,e2):
+def is_similar_byte_range(s1, s2):
   """ Compares the old and new byte range, if similar, and other fields are equal return true.
 
       This returns true if there is an overlap in the byte ranges.
       We only do this if the other fields are equal.
   """
-  if s1.split()[:-1] != s2.split()[:-1]:
-    return False
-
   #pdb.set_trace()
   br1 = s1.split()[-1]
   br2 = s2.split()[-1]
@@ -152,12 +147,10 @@ def do_dedupe(ssf_file):
     old_gpg_line = None
     old_ex_line = None
 
-    #while (f.hasNext()):
     file_iter = iter(f.readline, ' ')
     for line in file_iter:
       if line == '': break
 
-      #pdb.set_trace()
       ssf_line = line
       gpg_line = file_iter.next()
       ex_line = file_iter.next()
@@ -176,12 +169,12 @@ def do_dedupe(ssf_file):
         continue
 
       # If it is Contact_Meet_PlaceTime, update the byte range
-      if "Contact_Meet_PlaceTime" in ssf_line:
+      if "Contact_Meet_PlaceTime" == ssf_line.split()[9]:
         ssf_line = byte_range_correction(ssf_line, gpg_line, old_ex_line)
 
       # If all is the same except for a small variation in the byte range
-      if not check_similar_byte_range(ssf_line, gpg_line, ex_line, old_ssf_line,\
-        old_gpg_line, old_ex_line):
+      if ssf_line.split()[:-1] == old_ssf_line.split()[:-1] and \
+        not is_similar_byte_range(ssf_line, old_ssf_line):
         dups += 1
         continue
       
@@ -190,16 +183,16 @@ def do_dedupe(ssf_file):
         should_be_contact_entity(ssf_line, gpg_line, ex_line):
 
         new_ssf_line = change_entity("Contact_Meet_Entity", ssf_line)
-        print >> sys.stdout, new_ssf_line
-        print >> sys.stdout, gpg_line
-        print >> sys.stdout, ex_line
+        print >> sys.stdout, new_ssf_line.strip()
+        print >> sys.stdout, gpg_line()
+        print >> sys.stdout, ex_line()
         change_entity += 1
 
 
       (old_ssf_line, old_gpg_line, old_ex_line) = (ssf_file, gpg_line, ex_line)
-      print >> sys.stdout, ssf_line
-      print >> sys.stdout, gpg_line
-      print >> sys.stdout, ex_line
+      print >> sys.stdout, ssf_line.strip()
+      print >> sys.stdout, gpg_line.strip()
+      print >> sys.stdout, ex_line.strip()
 
   return (total_items, dups, change_entity)
 
