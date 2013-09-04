@@ -171,6 +171,7 @@ def do_dedupe(ssf_file):
   dups = 0
   total_items = 0
   change_entity = 0
+  too_long = 0
   with open(ssf_file, 'r') as f:
 
     old_ssf_line = None
