@@ -224,7 +224,7 @@ def do_dedupe(ssf_file):
         new_ssf_line = transform_entity("FoundedBy", ssf_line)
         new_new_ssf_line = byte_range_correction(new_ssf_line, gpg_line, ex_line)
      
-        print >> sys.stdout, new_ssf_line.strip()
+        print >> sys.stdout, new_new_ssf_line.strip()
         print >> sys.stdout, gpg_line.strip()
         print >> sys.stdout, ex_line.strip()
         change_entity += 1
