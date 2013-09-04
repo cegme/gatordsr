@@ -6,8 +6,6 @@ import pdb
 import re
 import sys
 
-from django.utils.encoding import smart_str
-
 
 ENTITYJSONFILE = "../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08i-wiki-alias.json"
 ex_re = re.compile(r"^# <(?P<entity>.*) \| (?P<slot_name>.*) \| (?P<slot_value>.*) > -.- (?P<sentence>.*)$") 
@@ -76,7 +74,7 @@ def transform_entity(new_entity, ssf_line):
       Returns the new entity.
   """
   line = ssf_line.split()
-  line[9] = new_entity
+  line[8] = new_entity
   return ' '.join(line)
 
 
@@ -199,7 +197,7 @@ def do_dedupe(ssf_file):
         continue
 
       # If it is Contact_Meet_PlaceTime, update the byte range
-      if "Contact_Meet_PlaceTime" == ssf_line.split()[9]:
+      if "Contact_Meet_PlaceTime" == ssf_line.split()[8]:
         ssf_line = byte_range_correction(ssf_line, gpg_line, ex_line)
 
       # If all is the same except for a small variation in the byte range
@@ -209,7 +207,7 @@ def do_dedupe(ssf_file):
         continue
       
       # If this is a Contact_Meet_PlaceTime, it could also be a Contact_Meet_Entity
-      if "Contact_Meet_PlaceTime" == ssf_line.split()[9] and\
+      if "Contact_Meet_PlaceTime" == ssf_line.split()[8] and\
         should_be_contact_entity(ssf_line, gpg_line, ex_line):
 
         new_ssf_line = transform_entity("Contact_Meet_Entity", ssf_line)
@@ -220,15 +218,18 @@ def do_dedupe(ssf_file):
         change_entity += 1
 
       # enumerate founder of to generete founded by
-      if "FounderOf" == ssf_line.split()[9]:
+      if "FounderOf" == ssf_line.split()[8].strip():
         new_ssf_line = transform_entity("FoundedBy", ssf_line)
         new_new_ssf_line = byte_range_correction(new_ssf_line, gpg_line, ex_line)
+        print "-------", new_new_ssf_line 
 
         print >> sys.stdout, new_new_ssf_line.strip()
         print >> sys.stdout, gpg_line.strip()
         print >> sys.stdout, ex_line.strip()
         change_entity += 1
 
+      if ssf_line.split()[8] in ("DateOfDeath", "Contact_Meet_Entity", "Contact_Meet_PlaceTime"):
+        pass
 
       (old_ssf_line, old_gpg_line, old_ex_line) = (ssf_line, gpg_line, ex_line)
       print >> sys.stdout, ssf_line.strip()
