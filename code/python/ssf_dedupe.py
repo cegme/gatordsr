@@ -271,7 +271,8 @@ def sentence_histogram(ssf_file):
 if __name__ == '__main__':
   usage = """
     Takes an SSF output file as input, and removes duplicate results.
-    The output is printed to stdout.
+    The output is printed to stdout. If the '-p' flag is used a histogram
+    of the sentence sizes will be output.
     """
  
   parser = argparse.ArgumentParser(description=usage)
@@ -279,6 +280,7 @@ if __name__ == '__main__':
   parser.add_argument("--print_histogram", '-p', default=False, action='store_true', help='If set it retuns a histogram a series of two numbers size and the frequency.') 
   args = parser.parse_args()
 
+  # Print the histogram only if the flag is present
   if args.print_histogram:
     sentence_histogram(args.ssf_file)
   else:
