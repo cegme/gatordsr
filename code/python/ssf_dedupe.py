@@ -71,8 +71,9 @@ def should_be_contact_entity(ssf_line, gpg_line, ex_line):
   return len(x) > 0
 
 
-def change_entity(new_entity, ssf_line):
+def transform_entity(new_entity, ssf_line):
   """ Change the entity fromfrom whatever it was before to new_entity.
+      Returns the new entity.
   """
   line = ssf_line.split()
   line[9] = new_entity
@@ -125,6 +126,32 @@ def is_similar_byte_range(s1, s2):
   return len(set1 & set2) != 0 # If there is overlap then this is similar
 
 
+def print_differences(old_ssf_line, old_gpg_line, old_ex_line, ssf_line, gpg_line, ex_line):
+
+  for ssf in enumerate(zip(old_ssf_line.split(), ssf_line.split())):
+    if ssf[1][0] != ssf[1][1]:
+      print >> sys.stderr, "ssf_line %d: %s==%s" % (ssf[0], ssf[1][0], ssf[1][1])
+  
+  if old_gpg_line.split("|")[0] !=  gpg_line.split("|")[0]:
+    print >> sys.stderr, "gpgline 0: %d==%d"%(old_gpg_line.split("|")[0],gpg_line.split("|")[0])
+  if old_gpg_line.split("|")[1] !=  gpg_line.split("|")[1]:
+    print >> sys.stderr, "gpg_line 1: %d==%d"%(old_gpg_line.split("|")[1],gpg_line.split("|")[1])
+
+  olde = ex_re.match(old_ex_line)
+  newe = ex_re.match(ex_line)
+  if olde.group("entity") != newe.group("entity"):
+    print >> sys.stderr, "ex_line: (entity) %s==%s"%(olde.group("entity"), newe.group("entity"))
+
+  if olde.group("slot_name") != newe.group("slot_name"):
+    print >> sys.stderr, "ex_line: (slot_name) %s==%s"%(olde.group("slot_name"), newe.group("slot_name"))
+
+  if olde.group("slot_value") != newe.group("slot_value"):
+    print >> sys.stderr, "ex_line: (slot_value) %s==%s"%(olde.group("slot_value"), newe.group("slot_value"))
+
+  # if olde.group("sentence") != newe.group("sentence"):
+    # print >> sys.stderr, "ex_line: (sentence) %s==%s"%(olde.group("sentence"), newe.group("sentence"))
+      
+
 def do_dedupe(ssf_file):
   """ Run the dedupe from the file `ssf_file`.
 
@@ -163,6 +190,9 @@ def do_dedupe(ssf_file):
         print >> sys.stdout, ex_line.strip()
         continue
 
+      # Use this to debug and see the diferences in the adjacent records
+      # print_differences(old_ssf_line, old_gpg_line, old_ex_line, ssf_line, gpg_line, ex_line)
+
       # If ssf_lines are the same
       if ssf_line == old_ssf_line:
         dups += 1
@@ -178,18 +208,18 @@ def do_dedupe(ssf_file):
         dups += 1
         continue
       
-      # If this is a Contact_Meet_PlaceTime, could it also be a Contact_Meet_Entity
-      if "Contact_Meet_Entity" in ssf_line and\
+      # If this is a Contact_Meet_PlaceTime, it could also be a Contact_Meet_Entity
+      if "Contact_Meet_PlaceTime" == ssf_line.split()[9] and\
         should_be_contact_entity(ssf_line, gpg_line, ex_line):
 
-        new_ssf_line = change_entity("Contact_Meet_Entity", ssf_line)
+        new_ssf_line = transform_entity("Contact_Meet_Entity", ssf_line)
+
         print >> sys.stdout, new_ssf_line.strip()
-        print >> sys.stdout, gpg_line()
-        print >> sys.stdout, ex_line()
+        print >> sys.stdout, gpg_line.strip()
+        print >> sys.stdout, ex_line.strip()
         change_entity += 1
 
-
-      (old_ssf_line, old_gpg_line, old_ex_line) = (ssf_file, gpg_line, ex_line)
+      (old_ssf_line, old_gpg_line, old_ex_line) = (ssf_line, gpg_line, ex_line)
       print >> sys.stdout, ssf_line.strip()
       print >> sys.stdout, gpg_line.strip()
       print >> sys.stdout, ex_line.strip()
