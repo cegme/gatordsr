@@ -21,7 +21,7 @@ import sys
 
 
 ENTITYJSONFILE = "../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"
-ex_re = re.compile(r"^# <(?P<entity>.*) \| (?P<slot_name>.*) \| (?P<slot_value>.*) > -.- (?P<sentence>.*)$") 
+ex_re = re.compile(r"^# <(?P<entity>.*)\|(?P<slot_name>.*)\|(?P<slot_value>.*)> -.- (?P<sentence>.*)$") 
 entity_re = re.compile(r"(\S+)/(ORG|PER|LOC|FAC)")
 
 
@@ -41,6 +41,7 @@ def extract_sentence(e):
   """
   m = ex_re.match(e)
   if m is None:
+    print >> sys.stderr, "Error with a sentence: %s"%e
     return None
   else:
     return m.group('sentence')
@@ -109,7 +110,7 @@ def byte_range_correction(s,g,e):
   # Find the last location location of the slot value
   idx = sentence.rfind(slot_value)
 
-  br_s -= idx
+  br_s -= idx - sentence.count(' ', 0, idx)
   if br_s < 0:
     br_s = 0
   
@@ -195,7 +196,18 @@ def do_dedupe(ssf_file):
       gpg_line = file_iter.next()
       ex_line = file_iter.next()
       total_items += 1
-      
+
+      # Ignore really long files over this many characters
+      if len(extract_sentence(ex_line)) > 2000 and\
+        ("Boris" in ssf_line or "Basic_Element" in ssf_line) :
+        #print >> sys.stderr, ssf_line.strip()
+        #print >> sys.stderr, extract_sentence(ex_line)[:50], "...", extract_sentence(ex_line)[-50:]
+        print >> sys.stderr, ssf_line.strip()
+        print >> sys.stderr, gpg_line.strip()
+        print >> sys.stderr, ex_line.strip()
+        too_long +=1 
+        continue
+
       if (old_ssf_line, old_gpg_line, old_ex_line) == (None, None, None):
         (old_ssf_line, old_gpg_line, old_ex_line) = (ssf_line, gpg_line, ex_line)
         print >> sys.stdout, ssf_line.strip()
@@ -254,7 +266,7 @@ def do_dedupe(ssf_file):
       print >> sys.stdout, gpg_line.strip()
       print >> sys.stdout, ex_line.strip()
 
-  return (total_items, dups, change_entity)
+  return (total_items, dups, change_entity, too_long)
 
 
 def sentence_histogram(ssf_file):
@@ -296,6 +308,6 @@ if __name__ == '__main__':
   if args.print_histogram:
     sentence_histogram(args.ssf_file)
   else:
-    (total_items, dups, change_entity) = do_dedupe(args.ssf_file)
-    print >> sys.stderr, "\nRead %d items, found %d duplicates and changed %d entities." % (total_items, dups, change_entity)
+    (total_items, dups, change_entity, too_long) = do_dedupe(args.ssf_file)
+    print >> sys.stderr, "\nRead %d items, found %d duplicates, changed %d entities and long sentence %s." % (total_items, dups, change_entity, too_long)
 
