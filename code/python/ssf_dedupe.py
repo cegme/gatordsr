@@ -223,15 +223,18 @@ def do_dedupe(ssf_file):
       if "FounderOf" == ssf_line.split()[8].strip():
         new_ssf_line = transform_entity("FoundedBy", ssf_line)
         new_new_ssf_line = byte_range_correction(new_ssf_line, gpg_line, ex_line)
-        print "-------", new_new_ssf_line 
 
         print >> sys.stdout, new_new_ssf_line.strip()
         print >> sys.stdout, gpg_line.strip()
         print >> sys.stdout, ex_line.strip()
         change_entity += 1
 
-      if ssf_line.split()[8] in ("DateOfDeath", "Contact_Meet_Entity", "Contact_Meet_PlaceTime"):
-        pass
+      # For DateOfDeath Contact_Meet_Entity and Contact_Meet_PlaceTime compare on equal sentences
+      if ssf_line.split()[8] in ("DateOfDeath", "Contact_Meet_Entity", "Contact_Meet_PlaceTime") and\
+        ssf_line.split()[8] == old_ssf_line.split()[8] and\
+        extract_sentence(ex_line) == extract_sentence(old_ex_line):
+        dups += 1
+        continue
 
       (old_ssf_line, old_gpg_line, old_ex_line) = (ssf_line, gpg_line, ex_line)
       print >> sys.stdout, ssf_line.strip()
