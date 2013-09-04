@@ -200,7 +200,7 @@ def do_dedupe(ssf_file):
 
       # If it is Contact_Meet_PlaceTime, update the byte range
       if "Contact_Meet_PlaceTime" == ssf_line.split()[9]:
-        ssf_line = byte_range_correction(ssf_line, gpg_line, old_ex_line)
+        ssf_line = byte_range_correction(ssf_line, gpg_line, ex_line)
 
       # If all is the same except for a small variation in the byte range
       if ssf_line.split()[:-1] == old_ssf_line.split()[:-1] and \
@@ -218,6 +218,17 @@ def do_dedupe(ssf_file):
         print >> sys.stdout, gpg_line.strip()
         print >> sys.stdout, ex_line.strip()
         change_entity += 1
+      
+      # enumerate founder of to generete founded by
+      if "FounderOf" == ssf_line.split()[9]:
+        new_ssf_line = transform_entity("FoundedBy", ssf_line)
+        new_new_ssf_line = byte_range_correction(new_ssf_line, gpg_line, ex_line)
+     
+        print >> sys.stdout, new_ssf_line.strip()
+        print >> sys.stdout, gpg_line.strip()
+        print >> sys.stdout, ex_line.strip()
+        change_entity += 1
+
 
       (old_ssf_line, old_gpg_line, old_ex_line) = (ssf_line, gpg_line, ex_line)
       print >> sys.stdout, ssf_line.strip()
