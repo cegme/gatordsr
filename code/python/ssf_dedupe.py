@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import argparse
+import collections
 import io
 import json
 import pdb
@@ -244,21 +246,42 @@ def do_dedupe(ssf_file):
   return (total_items, dups, change_entity)
 
 
+def sentence_histogram(ssf_file):
+  """ Extracts the sentence length from all the items ssf items and returns a histogram on the length.
+  """
+  with open(ssf_file, 'r') as f:
+
+    c = collections.Counter()
+    file_iter = iter(f.readline, ' ')
+    for line in file_iter:
+      if line == '': break
+
+      ssf_line = line
+      gpg_line = file_iter.next()
+      ex_line = file_iter.next()
+
+      sentence = extract_sentence(ex_line)
+      c.update([len(sentence)])
+
+  sorted_list = sorted(c.items())
+  for k,v in sorted_list:
+    print >> sys.stdout, "%d %d"%(k,v)
+   
 
 if __name__ == '__main__':
   usage = """
     Takes an SSF output file as input, and removes duplicate results.
     The output is printed to stdout.
-
-      Usage: python ssf_dedupe.py <ssf_file>
     """
  
-  if (len(sys.argv) > 2 or len(sys.argv) <= 1):
-    print sys.stderr, "%s" % usage
-    exit(-1)
+  parser = argparse.ArgumentParser(description=usage)
+  parser.add_argument("--ssf_file", action='store', dest="ssf_file", required=True, type=str, help='The ssf_file')
+  parser.add_argument("--print_histogram", '-p', default=False, action='store_true', help='If set it retuns a histogram a series of two numbers size and the frequency.') 
+  args = parser.parse_args()
 
-  ssf_file = sys.argv[-1]
-  (total_items, dups, change_entity) = do_dedupe(ssf_file)
-
-  print >> sys.stderr, "\nRead %d items, found %d duplicates and changed %d entities." % (total_items, dups, change_entity)
+  if args.print_histogram:
+    sentence_histogram(args.ssf_file)
+  else:
+    (total_items, dups, change_entity) = do_dedupe(args.ssf_file)
+    print >> sys.stderr, "\nRead %d items, found %d duplicates and changed %d entities." % (total_items, dups, change_entity)
 
