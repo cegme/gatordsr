@@ -6,6 +6,8 @@ import pdb
 import re
 import sys
 
+#from django.utils.encoding import smart_str
+
 
 ENTITYJSONFILE = "../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08i-wiki-alias.json"
 ex_re = re.compile(r"^# <(?P<entity>.*) \| (?P<slot_name>.*) \| (?P<slot_value>.*) > -.- (?P<sentence>.*)$") 
