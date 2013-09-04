@@ -11,7 +11,7 @@ import sys
 #from django.utils.encoding import smart_str
 
 
-ENTITYJSONFILE = "../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08i-wiki-alias.json"
+ENTITYJSONFILE = "../resources/entity/trec-kba-ccr-and-ssf-query-topics-2013-04-08-wiki-alias.json"
 ex_re = re.compile(r"^# <(?P<entity>.*) \| (?P<slot_name>.*) \| (?P<slot_value>.*) > -.- (?P<sentence>.*)$") 
 entity_re = re.compile(r"(\S+)/(ORG|PER|LOC|FAC)")
 
@@ -53,7 +53,8 @@ def this_entity_type(entity_url):
     j = json.load(f)
     result = [k["entity_type"] for k in j["targets"] if k["target_id"] == entity_url]
     if result is not None:
-      result[0]
+      #print >> sys.stderr, "Result: %s, entity_url: %s"  % (result, entity_url)
+      return result[0]
 
   return None
 
@@ -63,12 +64,12 @@ def should_be_contact_entity(ssf_line, gpg_line, ex_line):
       entities exist.
   """
   entity_url = ssf_line.split()[3]
-  if this_entity_type(ssf_line) != "FAC":
+  if this_entity_type(entity_url) != "FAC":
     return False
 
   # Look for any entities in the sentence of type PER or ORG
   elist = entity_re.findall(ex_line)
-  x = filter(lambda x: x[1] in ("PER","ORG"))
+  x = filter(lambda x: x[1] in ("PER","ORG"), elist)
 
   return len(x) > 0
 
@@ -261,7 +262,8 @@ def sentence_histogram(ssf_file):
       ex_line = file_iter.next()
 
       sentence = extract_sentence(ex_line)
-      c.update([len(sentence)])
+      if sentence is not None:
+        c.update([len(sentence)])
 
   sorted_list = sorted(c.items())
   for k,v in sorted_list:
