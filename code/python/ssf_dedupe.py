@@ -218,13 +218,13 @@ def do_dedupe(ssf_file):
         print >> sys.stdout, gpg_line.strip()
         print >> sys.stdout, ex_line.strip()
         change_entity += 1
-      
+
       # enumerate founder of to generete founded by
       if "FounderOf" == ssf_line.split()[9]:
         new_ssf_line = transform_entity("FoundedBy", ssf_line)
         new_new_ssf_line = byte_range_correction(new_ssf_line, gpg_line, ex_line)
-     
-        print >> sys.stdout, new_new_ssf_line.strip()
+
+        print >> sys.stdout, new_new_ssf_line.strip()
         print >> sys.stdout, gpg_line.strip()
         print >> sys.stdout, ex_line.strip()
         change_entity += 1
@@ -237,7 +237,7 @@ def do_dedupe(ssf_file):
 
   return (total_items, dups, change_entity)
 
-    
+
 
 if __name__ == '__main__':
   usage = """
