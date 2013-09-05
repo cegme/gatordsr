@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import argparse
+import sre_constants
 import collections
 try:
   from collections import Counter
@@ -13,6 +14,7 @@ except ImportError:
 
 import io
 import json
+import math
 import pdb
 import re
 import sys
@@ -91,6 +93,36 @@ def transform_entity(new_entity, ssf_line):
   line = ssf_line.split()
   line[8] = new_entity
   return ' '.join(line)
+
+
+def minimum_anchorword_distance(s,g,e):
+  """ Finds the minimum distance between the entity and the slot name.
+  """
+  try:
+    sentence = extract_sentence(e)
+    sentence = remove_ner(sentence)
+
+    (entity, slot_name, slot_value) = extract_triple(e)
+
+    eidx_search = re.search(entity, sentence, flags=re.IGNORECASE)
+    svidx_search = re.search(slot_value, sentence, flags=re.IGNORECASE)
+   
+    if eidx_search is None or svidx_search is None:
+      #print >> sys.stderr, "Could not find the entity or slot in the sentence"
+      return 0
+
+    eidx = [m.start() for m in re.finditer(entity, sentence, flags=re.IGNORECASE)]
+    svidx= [m.start() for m in re.finditer(slot_value, sentence, flags=re.IGNORECASE)]
+
+    if len(eidx) == 0  or len(svidx) == 0:
+      #print >> sys.stderr, "Could not find the entity or slot in the sentence"
+      return 0
+
+    min_val = min([math.fabs(i-j) for i in eidx for j in svidx])
+    return min_val
+  except sre_constants.error:
+    #print >> sys.stderr, "Error compiling the expression"
+    return 0
 
 
 def byte_range_correction(s,g,e):
@@ -182,6 +214,7 @@ def do_dedupe(ssf_file):
   total_items = 0
   change_entity = 0
   too_long = 0
+  anchor_distance = 0
   with open(ssf_file, 'r') as f:
 
     old_ssf_line = None
@@ -197,14 +230,21 @@ def do_dedupe(ssf_file):
       ex_line = file_iter.next()
       total_items += 1
 
+      # Ignore this entry if the max entry is less than the threshold
+      if minimum_anchorword_distance(ssf_line, gpg_line, ex_line) > 273:
+        print >> sys.stderr, ssf_line.strip()
+        print >> sys.stderr, gpg_line.strip()
+        print >> sys.stderr, ex_line.strip()
+        anchor_distance += 1
+        continue
+        
+
       # Ignore really long files over this many characters
       if len(extract_sentence(ex_line)) > 2000 and\
         ("Boris" in ssf_line or "Basic_Element" in ssf_line) :
         #print >> sys.stderr, ssf_line.strip()
-        #print >> sys.stderr, extract_sentence(ex_line)[:50], "...", extract_sentence(ex_line)[-50:]
-        print >> sys.stderr, ssf_line.strip()
-        print >> sys.stderr, gpg_line.strip()
-        print >> sys.stderr, ex_line.strip()
+        #print >> sys.stderr, gpg_line.strip()
+        #print >> sys.stderr, ex_line.strip()
         too_long +=1 
         continue
 
@@ -266,7 +306,7 @@ def do_dedupe(ssf_file):
       print >> sys.stdout, gpg_line.strip()
       print >> sys.stdout, ex_line.strip()
 
-  return (total_items, dups, change_entity, too_long)
+  return (total_items, dups, change_entity, too_long, anchor_distance)
 
 
 def sentence_histogram(ssf_file):
@@ -290,7 +330,26 @@ def sentence_histogram(ssf_file):
   sorted_list = sorted(c.items())
   for k,v in sorted_list:
     print >> sys.stdout, "%d %d"%(k,v)
-   
+ 
+ 
+def print_anchor_distance(ssf_file):
+  """ Extracts the sentence length from all the items ssf items and returns a histogram on the length.
+  """
+  with open(ssf_file, 'r') as f:
+
+    c = Counter()
+    file_iter = iter(f.readline, ' ')
+    for line in file_iter:
+      if line == '': break
+
+      ssf_line = line
+      gpg_line = file_iter.next()
+      ex_line = file_iter.next()
+
+      dist = minimum_anchorword_distance(ssf_line, gpg_line, ex_line)
+      if dist != 0:
+        print >> sys.stdout, minimum_anchorword_distance(ssf_line, gpg_line, ex_line)
+  
 
 if __name__ == '__main__':
   usage = """
@@ -298,16 +357,19 @@ if __name__ == '__main__':
     The output is printed to stdout. If the '-p' flag is used a histogram
     of the sentence sizes will be output.
     """
- 
+
   parser = argparse.ArgumentParser(description=usage)
   parser.add_argument("--ssf_file", action='store', dest="ssf_file", required=True, type=str, help='The ssf_file')
   parser.add_argument("--print_histogram", '-p', default=False, action='store_true', help='If set it retuns a histogram a series of two numbers size and the frequency.') 
+  parser.add_argument("--print_anchor_distance", '-a', default=False, action='store_true', help='Prints the distance between the entity and the slot values for all the entries.') 
   args = parser.parse_args()
 
   # Print the histogram only if the flag is present
   if args.print_histogram:
     sentence_histogram(args.ssf_file)
+  elif args.print_anchor_distance:
+    print_anchor_distance(args.ssf_file)
   else:
-    (total_items, dups, change_entity, too_long) = do_dedupe(args.ssf_file)
-    print >> sys.stderr, "\nRead %d items, found %d duplicates, changed %d entities and long sentence %s." % (total_items, dups, change_entity, too_long)
+    (total_items, dups, change_entity, too_long, anchor_distance) = do_dedupe(args.ssf_file)
+    print >> sys.stderr, "\nRead %d items, found %d duplicates, changed %d entities, long sentence %d and long anchor instances %d." % (total_items, dups, change_entity, too_long, anchor_distance)
 
