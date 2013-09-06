@@ -131,7 +131,8 @@ def byte_range_correction(s,g,e):
       
   """
   # Extract the current byte range
-  (br_s, br_e) = map(int, s.split()[-1].split("-"))
+  (old_br_s, br_e) = map(int, s.split()[-1].split("-"))
+  br_s = old_br_s
 
   # Extract the size of the sentence
   sentence = extract_sentence(e)
@@ -142,7 +143,8 @@ def byte_range_correction(s,g,e):
   # Find the last location location of the slot value
   idx = sentence.rfind(slot_value)
 
-  br_s -= idx - sentence.count(' ', 0, idx)
+  br_s -= idx 
+  br_s -= sentence.count(' ', 0, idx)
   if br_s < 0:
     br_s = 0
   
