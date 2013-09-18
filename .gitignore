@@ -22,3 +22,5 @@ trec-kba-rsa.secret-key
 .project
 .ensime
 .cache
+
+.DS_Store
