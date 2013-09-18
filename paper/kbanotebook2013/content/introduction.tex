@@ -1,6 +1,63 @@
 
 \section{Introduction}
 
+In this article we will describe the approach the GatorDSR team from the University of Florida takes at addressing the challenge at NIST’s Text REtrieval Conference (TREC) - Knowledge Base Acceleration track 2013 - Stream Slot Filling (SSF) section. In the first section of this article we describe the system design and articulate its evolution during the whole process, challenges and needs that we have overcome. In the second section we will go through the details of the NLP techniques we took at streaming slot filling (SSF): given a slot name (entity + relation type) we fill in the slot value (relation value) on structured text documents.
+
+The task is that given certain Wikipedia or Twitter entities (wiki/twitter URLs) and certain relations of interest given in Table 1, extract as many binary relations as possible (hence, slot filling). The corpus is in English and is a snapshot of part of the web containing arXiv, social, news, linking, weblog, forum, classifieds, reviews, and memetracker documents. Each document is annotated using lingpipe and is called StreamItem, a bundle of StreamItems are put together and serialized as Apache Thrift objects, then compressed using xz compression with Lempel–Ziv–Markov chain algorithm (LZMA2) and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys. To have a sense of the scale of objects and compression is e.g. 6mb gpg.xz files → 45 mb thrift objects. Some of the documents have null values for their annotation fields.
+
+Since this is \textit{streaming} slot filling, we are only interested in new slot values that were not substantiated earlier in the stream corpus, which ranges from October 2011 to February 2013. Below you can view the slot values and their types, the comprehensive description of which can be found at http://www.nist.gov/tac/
+2012/KBP/task\_guidelines/TAC\_KBP\_Slots\_V2.4.pdf and http://projects.ldc.up
+enn.edu/ace/docs/English-Events-Guidelines\_v5.4.3.pdf 
+
+\begin{table}[b]
+\caption{Ontology of Slot Name Categories }
+\centering
+
+\begin{tabular}{|c|c|c|}
+\hline 
+PER & FAC & ORG \\ 
+\hline 
+\begin{tabular}{@{}l@{}}Affiliate \\ AssociateOf \\ Contact\_Meet\_PlaceTime \\ AwardsWon \\ 
+DateOfDeath \\ 
+CauseOfDeath\\
+Titles\\
+FounderOf\\
+EmployeeOf\end{tabular}
+  &
+   \begin{tabular}[b]{l}Affiliate \\ Contact\_Meet\_Entity \end{tabular} 
+   & 
+   \begin{tabular}{@{}l@{}}Affiliate \\ TopMembers \\ FoundedBy\end{tabular} \\ 
+\hline 
+\end{tabular} 
+\end{table}
+
+Example 1: "Matthew DeLorenzo and Josiah Vega, both 14 years old and students at Elysian Charter School, were honored Friday morning by C-SPAN and received \$1,500 as well as an iPod Touch after winning a nationwide video contest."
+
+target\_id:  http://en.wikipedia.org/wiki/Elysian\_Charter\_School
+
+Affiliate:  "Matthew DeLorenzo"
+Affiliate:  "Josiah Vega"
+
+NOT an affiliate:  "C-SPAN"
+NOT an affiliate:  "iPod Touch"
+
+Example 2: "Veteran songwriters and performers Ben Mason, Jeff Severson and Jeff Smith will perform on Saturday, April 14 at 7:30 pm at Creative Cauldron at ArtSpace, 410 S. Maple Avenue."
+
+target\_id: http://en.wikipedia.org/wiki/Jeff\_Severson
+
+Affiliate: "Ben Mason"
+Affiliate: "Jeff Severson"
+Affiliate: "Jeff Smith"
+
+NOT an Affiliate: "Creative Caldron"
+NOT an Affiliate: "Art Space"
+
+Example 3:  "Lt. Gov. Drew Wrigley and Robert Wefald, a retired North Dakota district judge and former state attorney general, unveiled the crest Friday during a ceremony at the North Dakota Capitol."
+
+target\_id: http://en.wikipedia.org/wiki/Hjemkomst\_Center
+
+Contact\_Meet\_PlaceTime: "Friday during a ceremony at the North Dakota Capitol"
+
 % Motivation
 
 
