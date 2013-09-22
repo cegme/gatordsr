@@ -18,25 +18,54 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 \end{tabular} 
 \end{table}
 
-\begin{table}[b]
-\caption{SSF Performance Measure on Submission Infer }
+\begin{table}
+\caption{SSF Accuracy Measure on Submission Infer }
 \centering
 \begin{tabular}{|c|c|c|c|}
 \hline 
  & Correct & Incorrect Entity name & Incorrect Value \\ 
 \hline 
-Affiliate & \% & \% & \% \\ \hline 
-AssociateOf & \% & \% & \%  \\ \hline 
-AwardsWon & \% & \% & \%  \\ \hline 
-CauseOfDeath & \% & \% & \%  \\ \hline 
-Contact\_Meet\_Entity & \% & \% & \%  \\ \hline 
-Contact\_Meet\_PlaceTime & \% & \% & \%  \\ \hline 
-DateOfDeath & \% & \% & \%  \\ \hline 
-EmployeeOf & \% & \% & \%  \\ \hline 
-FoundedBy & \% & \% & \%  \\ \hline 
-FounderOf & \% & \% & \%  \\ \hline 
-Titles & \% & \% & \%  \\ \hline 
-TopMembers & \% & \% & \%  \\ \hline 
+Affiliate & 1\% & 95\% & 5\% \\ \hline 
+AssociateOf & 63.6\% & 9.1\% & 27.3\%  \\ \hline 
+AwardsWon & 10\% & 10\% & 80\%  \\ \hline 
+CauseOfDeath & 0\% & 0\% & 0\%  \\ \hline 
+Contact\_Meet\_Entity & 21\% & 42\% & 37\%  \\ \hline 
+Contact\_Meet\_PlaceTime & 5\% & 20\% & 85\%  \\ \hline 
+DateOfDeath & 29.6\% & 71\% & 25\%  \\ \hline 
+EmployeeOf & 5\% & 30\% & 65\%  \\ \hline 
+FoundedBy & 62\% & 17\% & 21\%  \\ \hline 
+FounderOf & 50\% & 0\% & 50\%  \\ \hline 
+Titles & 55\% & 0\% & 45\%  \\ \hline 
+TopMembers & 33\% & 17\% & 50\%  \\ \hline 
+
+\end{tabular} 
+\end{table}
+
+
+
+
+
+
+
+\begin{table}
+\caption{Recall Measure on Submission Infer }
+\centering
+\begin{tabular}{|c|p{3cm}|p{4cm}|}
+\hline 
+ & Total instances of slot value found & \# of entities covered by slot value \\ 
+\hline 
+Affiliate & 108598 & 80 \\ \hline 
+AssociateOf & 25278 & 106 \\ \hline 
+AwardsWon & 38 & 14 \\ \hline 
+CauseOfDeath & 0 & 0 \\ \hline 
+Contact\_Meet\_Entity & 191 & 8 \\ \hline 
+Contact\_Meet\_PlaceTime & 5974 & 109 \\ \hline 
+DateOfDeath & 87 & 14 \\ \hline 
+EmployeeOf & 75 & 16 \\ \hline 
+FoundedBy & 326 & 30 \\ \hline 
+FounderOf & 302 &  29 \\ \hline 
+Titles & 26823 & 118 \\ \hline 
+TopMembers & 314 & 26 \\ \hline 
 
 \end{tabular} 
 \end{table}
