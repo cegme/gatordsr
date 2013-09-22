@@ -3,11 +3,9 @@
 
 In this article we will describe the approach the GatorDSR team from the University of Florida takes at addressing the challenge at NIST’s Text REtrieval Conference (TREC) - Knowledge Base Acceleration track 2013 - Stream Slot Filling (SSF) section. In the first section of this article we describe the system design and articulate its evolution during the whole process, challenges and needs that we have overcome. In the second section we will go through the details of the NLP techniques we took at streaming slot filling (SSF): given a slot name (entity + relation type) we fill in the slot value (relation value) on structured text documents.
 
-The task is that given certain Wikipedia or Twitter entities (wiki/twitter URLs) and certain relations of interest given in Table 1, extract as many binary relations as possible (hence, slot filling). The corpus is in English and is a snapshot of part of the web containing arXiv, social, news, linking, weblog, forum, classifieds, reviews, and memetracker documents. Each document is annotated using lingpipe and is called StreamItem, a bundle of StreamItems are put together and serialized as Apache Thrift objects, then compressed using xz compression with Lempel–Ziv–Markov chain algorithm (LZMA2) and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys. To have a sense of the scale of objects and compression is e.g. 6mb gpg.xz files → 45 mb thrift objects. Some of the documents have null values for their annotation fields.
+The task is that given certain Wikipedia or Twitter entities (wiki/twitter URLs) and certain relations of interest given in Table 1, extract as many triple relations as possible (hence, slot filling). This can be used to automatically populate knowledgebases such as free-base or DBPedia or even filling in the information boxes at Wikipedia. The corpus is in English and is a snapshot of part of the web containing arXiv, social, news, linking, weblog, forum, classifieds, reviews, and memetracker documents. Each document is annotated using lingpipe and is called StreamItem, a bundle of StreamItems are put together and serialized as Apache Thrift objects, then compressed using xz compression with Lempel–Ziv–Markov chain algorithm (LZMA2) and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys. To have a sense of the scale of objects and compression as an example a 6mb gpg.xz files would become 45 mb thrift objects which can contain a couple of thousand StreamItems depending on their size. Some of the documents have null values for their annotation fields.
 
-Since this is \textit{streaming} slot filling, we are only interested in new slot values that were not substantiated earlier in the stream corpus, which ranges from October 2011 to February 2013. Below you can view the slot values and their types, the comprehensive description of which can be found at http://www.nist.gov/tac/
-2012/KBP/task\_guidelines/TAC\_KBP\_Slots\_V2.4.pdf and http://projects.ldc.up
-enn.edu/ace/docs/English-Events-Guidelines\_v5.4.3.pdf 
+Since this is \textit{streaming} slot filling, we are only interested in new slot values that were not substantiated earlier in the stream corpus, which ranges from October 2011 to February 2013. Below you can view the slot values and their types, the comprehensive description of which can be found at \cite{tackbp} and \cite{aec} 
 
 \begin{table}[b]
 \caption{Ontology of Slot Name Categories }
@@ -57,6 +55,8 @@ Example 3:  "Lt. Gov. Drew Wrigley and Robert Wefald, a retired North Dakota dis
 target\_id: http://en.wikipedia.org/wiki/Hjemkomst\_Center
 
 Contact\_Meet\_PlaceTime: "Friday during a ceremony at the North Dakota Capitol"
+
+In our approach we will perform pattern matching that conforms to each slot value along with post-processings to eliminate noisy outputs. 
 
 % Motivation
 

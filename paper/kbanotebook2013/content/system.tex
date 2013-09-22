@@ -1,160 +1,30 @@
 
-\section{System}
-
-In this section we describe the system design for big data analysis regarding TREC KBA the Stream Slot Filling (SSF) task. Due to our limited time, human resources and the computational capabilities, we started off by trying to use the off-the-shelf tools for this task. Mainly we started by using Scala/Spark. But Spark was not as efficient as expected, then we got rid of it and tried to use Scala parallelization itself to do the job, and it didn’t satisfy our needs, there was excessive memory overhead. We migrated the core of the system to Java Parallelism APIs and that was not good enough either, we still needed better. So we built our own parallel system which in actual performance had the least of overhead, the least memory consumption and  the most robust memory model which avoided unpredictable CPU stalls. In what follows we will describe each step of this evolution in details. The system that we run our pipeline over was a 32 core server having 64GB of memory.
-
-\subsection{Spark}
-
-Spark is “an open source cluster computing system that aims to make data analytics fast — both fast to run and fast to write. To run programs faster, Spark provides primitives for in-memory cluster computing: your job can load data into memory and query it repeatedly much more quickly than with disk-based systems like Hadoop MapReduce.To make programming faster, Spark provides clean, concise APIs in Scala, Java and Python. You can also use Spark interactively from the Scala and Python shells to rapidly query big datasets” \cite{ferc11}. 
-
-Spark is supposed to be an in memory map-reduce versus Hadoop which accesses disk in each iteration. Spark can also run on the multi-cores of a single processors by replicating the binary code of the system. For example by replicating Jar files of the system code into each process local memory and running each in parallel while having an abstract layers to merge/match results and recover from failures. We experimented with various parameters trying to maximize the performance of Spark in processing the corpus and extracting entity StreamItems. 
-
-The initial system was coded in Scala (which has goals for scalability) with double systems being coded along side with each other to explore the capabilities of Scala/Spark and pick the best out of each world. One approach was trying to be as smart as possible trying to use all the cool features of Scala/Spark with the hope that all these optimizations will help us in the long run; another approach was looking into KISS metrics (Keep It Stupid Simple) the ideology to make sure we do as little processing per data unit as possible, keep as little data references as possible and taking care of everything ourselves instead of letting Spark decide for us. 
-
-Unfortunately for our scenario it did not perform as expected. It seems to be targeted at large scale cluster systems whereas for small scale systems it was not as performant. JVM was too slow Garbage Collection caused large pauses because of memory fragmentation. We really needed more control over the memory usage. Spark suffered from huge memory dependencies in multi-stage map-reduce tasks which would be used in failure recovery in big data cluster processing. This is an essential need for such a system as otherwise there is no point to migrate from a generic Hadoop system to Spark. Reliability overhead was a very big disadvantage of Spark which sacrificed performance. The CPU usage was at 100% memory use at 100% Java heap to maximum, plentiful of monitoring threads and after a while the system started thrashing. We even got in touch with Matei Zaharia, one the main designers and developers of Spark at UC Berkeley but the overall conversation was not on our side with our constraints. 
-Spark RDD does not perform better that parallel scala. The intermediate collections they create also cause GC problems and there is also a non-trivial startup time for each job.
-
-On huge memory consumption of spark, one of the features of spark we ignored is that in spark if a system fails while the map-reduce is still in progress it can specifically rebuild that section and doesn't need to do the whole job from scratch. It makes sense if they keep references of the upstream objects even if a piece of a multi-stage map-reduce is done for reliability and not release its memory.
-
-Given that the already generated lingpipe is not very accurate, our initial ambition was at using StanforNLP. Using Spark and StanfordNLP our statistics were at around 500 documents processing in an overnight execution which was unacceptably slow given our data scale challenge.
-
-\subsection{Scala Parallelism}
-
-From Spark to scala parallelization: In Scala, using 'map' or 'filter' to iterate over large collections creates intermediate collections. These variable may hold reference to large objects and delay their disposal. Instead using a mix between 'withFilter' and 'foreach' let's you iterate without creating another intermediate collection. Conceptually a reduce job is an aggregate over the set of tasks that have been mapped, in our scenario we could bypass this step and process the corpus regardless of different sections, hence avoiding map-reduce. Onthe other hand the the method scala offers to download/decrypt the files (ProcessBuilder class) leaks resources, which was a bug that was later on fixed in Scala 2.10 form version 2.92 that we were using on our server. 
-
-The take-away was that Scala is a very powerful language and can help in concise code for map-reduce type of jobs that can be coded extremely fast. and Spark is a powerful tool but neither could prove their performance to us even after plenty experiments and parameter adjustments. In the long run, scala could not get rid of memory references and after a while we were clogged up in heap space.
-
-Below you can view the profiling of the system in scala using Java VisualVM. As you can see the CPU utilization is very unpredictable and we lose CPU utilization after a while.
-\begin{table}
-\caption{Ontology of Slot Name Categories }
+\begin{figure}[b]
 \centering
-\begin{tabular}[c]{ |l| c |r| } \hline
-  1 & 2 & 3 \\\hline
-  4 & 5 & 6 \\\hline
-  7 & 8 & 9 \\\hline
-\end{tabular}
-\end{table}
+\includegraphics[width=4.5in]{./images/system.eps}
+\vspace*{-.1in} \caption{Pipeline Design }\label{fig:system}
+\vspace*{-.2in}
+\end{figure}
 
-Thus ended up being saturated as below - zero CPU utilization, Heap overloaded, almost all threads sleeping:
+\section{Pipeline}
 
-\begin{table}
-\caption{Ontology of Slot Name Categories }
-\centering
-\begin{tabular}[c]{ |l| c |r| } \hline
-  1 & 2 & 3 \\\hline
-  4 & 5 & 6 \\\hline
-  7 & 8 & 9 \\\hline
-\end{tabular}
-\end{table}
-
-After fixing memory issues we could optimize to:
-
-\begin{table}
-\caption{Ontology of Slot Name Categories }
-\centering
-\begin{tabular}[c]{ |l| c |r| } \hline
-  1 & 2 & 3 \\\hline
-  4 & 5 & 6 \\\hline
-  7 & 8 & 9 \\\hline
-\end{tabular}
-\end{table}
-
-The jump in the number of the classes was due to the java profiling tool we use JVisualVM.
-
-\subsection{ Java Parallelism API}
-
-After porting the project to Java and migrating scala sbt to java's Maven build tool and going through some major optimizations we could achieve several major gains:
-
-\begin{itemize}
-  \item Reduce the memory usage by 73% (from peak 20GB to 5GB).
-  \item  We can use the newly available memory for fast clustering, classification, etc. for slot filling.
-  \item Reduce unwanted run-time class generation by 80% (from 8,000 loaded
-   classes to 1,500)
-   \item Reduce \# of threads by 47% (Live peak from 138 to 72)
-   
-    \ldots
-\end{itemize}
-
-cons:
-
-\begin{itemize}
-  \item Increased run-time by 3% (MB/hour). scala parallel engine acts smarter
-   than we just manually trying to adjust the parameters in java.
-
-    \ldots
-\end{itemize}
+In this section we provide a high level description of the pipeline(system) design for big data analysis regarding TREC KBA the Stream Slot Filling (SSF) task. Our pipeline of processing the corpus consists of a two layer indexing system main section in our system regarding indexing the corpus, We started off by trying to use the off-the-shelf tools for this task. Mainly we started by using Scala/Spark\cite{ferc11} to benefit from the paralellization performance there.  Spark was not as efficient as expected and the overhead was much more than tolerable. We tried to use Scala parallelization itself to do the job, and unfortunately it did not satisfy our needs, there was excessive memory overhead on map reduce jobs. We migrated the core of the system to Java Parallelism APIs and that was not good enough either, we wanted better. So we built our own parallel system which in actual performance had the least of overhead, the least memory consumption and the most robust memory model which avoided unpredictable CPU stalls on garbage collections in processing the corpus. In what follows we will describe each step of this evolution in details. Figure \ref{fig:system} shows a schematic view of the system. The platform that we run our pipeline over was a 32 core server having 64GB of memory.
 
 
-An interesting phenomona that happened was that JVM appeared to be adapting to the behavior of the system, after around 20-30 minutes of execution JVM adapted heap size by 50% while still maintaining near optimal performance. You can review this phenomena in the figures below.
 
-We tried various parameters (\# of threads 31,32, 64, 128, 256) and via extensive simulations 31 was the optimal one but the margin was very small from 32 (one thread per core), this could be due the race conditions at the server for other services running. The performance was linear over time. The code base is as simple as possible and as smart as possible to ensure scalability demands. 
-
-\begin{table}
-\caption{Ontology of Slot Name Categories }
-\centering
-\begin{tabular}[c]{ |l| c |r| } \hline
-  1 & 2 & 3 \\\hline
-  4 & 5 & 6 \\\hline
-  7 & 8 & 9 \\\hline
-\end{tabular}
-\end{table}
-
-\begin{table}
-\caption{Ontology of Slot Name Categories }
-\centering
-\begin{tabular}[c]{ |l| c |r| } \hline
-  1 & 2 & 3 \\\hline
-  4 & 5 & 6 \\\hline
-  7 & 8 & 9 \\\hline
-\end{tabular}
-\end{table}
-
-The code is as simple as possible to ensure there's no reference kept any where and there is no extra processing. CPU utilization is at 98% without any kernel overhead (its all our threads unlike before that kernel took over the CPU after a while) and adding more threads just added to more delays.
-
-To put things into perspective and talk in numbers: 
-
-\begin{itemize}
-  \item org.apache.thrift is the dominant CPU time user 
-\item Then is the decompression of thrift objects and decrypt the RSA encrypted data (note that asymetric cryptography is very expensive and we are looking at some thing like 2 seconds per file)
-\item Then is streamcorpus (the TREC KBA library to deserialize from their StreamItems objects). 
-\item Our code takes less than 3\% of the CPU time. 
-\end{itemize}
-
-
-\begin{table}
-\caption{Ontology of Slot Name Categories }
-\centering
-\begin{tabular}[c]{ |l| c |r| } \hline
-  1 & 2 & 3 \\\hline
-  4 & 5 & 6 \\\hline
-  7 & 8 & 9 \\\hline
-\end{tabular}
-\end{table}
-
-\subsection{Bare Java Thread Pool}
-
-Following our efforts to speed up the system we even went down more low level and created our own thread pool instead of using Java's ExecutorService Library. Still according to java visualvm more than 40\% of CPU time is  taken by sun.rmi.transport.tcp.TCPTransport\$ConnectionHandler.run(). In ExecutorService this number was even higher at 60\%-80\%. We were expecting ExecutorService to be implicitly taking up TCP connections for inter-thread communications, but this experiment proves that this is not correct and this method call is related to even lower java issues which is out of our reach.
-
-At this point we are running at 20GB/hour on 64 threads with 98\% CPU utilization. A multi-processing idea that we had did not work and java was causing troubles at memory management. These changes increased processing speed by 65\% from 12-13 GB/hours that we were getting before. Not bad! Some more micro optimizations took us even farther to 22GB per hours of encrypted and compressed thrift objects.
-
-\subsection{Back to C++}
-
-At the end we developed a C++ version of the system to go through the corpus in batch process, as we didn’t have any more time on processing the data, but kept the entity matcher and pipeline in Java for ease of pipeline development as time was tight and we were short on human resources. With C++ it was going at about 74-100 GB/hour on bare string matching but this was not an option for the development of the pipeline and using NLP tools and libraries.
-
-\subsection{Other notes}
-
-Java’s library for decompressing the .xz files performed faster than using the Linux file systems. We believe this is because keeping a 45mb file in memory and moving it is slower than decompressing it in java and streaming into the output to the thrift builder.
 
 % Note: Describe the algorithms of each phase
 % Talk in abstract terms not implementation.
 % Use formal representations (Math, SQL etc)
 
-\subsection{Cumulative Citation Recommentation}
+\subsection{Cumulative Citation Recommendation}
 
+Regarding Cumulative Citation Recommendation we perform exact string matching and treat all the documents that mention an entity equally likely to be citable. For future iterations of the paper we have ideas on how to score documents based on their likelihood of citation worthiness but for this iterations we treat all mentioning documents equally likely. One of the reasons for this is that in former TREC KBA reports \cite{JFrank12} there were observations of how non-mentioning documents have highly low chance of being citeable in wikipedia. So we take on that and ignore non-citing documents. Regarding mentioning but garbage, neutral or central documents we produce more slot values which can be later on filtered out in the high accuracy filter section.
 
 \subsection{Streaming Slot Filling}
 
+Stream slot filling is done by pattern matching documents with manually produced patterns for slots of interest. The way we do this is by observing a sentence that has a mention of the entity or one of its coreferences. An anchor word in the sentence related to the slot name is located and we match either left or right of the anchor word for potential slot values. 
 
 \subsection{Post Processing Algorithm}
 
-
+The SSF output of many extractions is noisy. The data contains duplicates and incorrect extractions. We can define rules to sanitize the output only using the information present in the SSF file. The file is processed in time order, in a tuple-at-a-time fashion to minimize the impact on accuracy. . We define two classes of rules deduplication rules and inference rules.
