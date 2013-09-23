@@ -8,6 +8,8 @@
 
 \section{Pipeline}
 
+\ceg{Discuss current system first. If you want to keep the decisions points
+that led to the current architecture, make it a subsection.}
 In this section we provide a high level description of the pipeline(system) 
 design for big data analysis regarding TREC KBA the Stream Slot Filling (SSF) 
 task. Our pipeline of processing the corpus consists of a two layer indexing 
@@ -36,6 +38,11 @@ system. The platform that we run our pipeline over was a 32 core server having
 
 \subsection{Cumulative Citation Recommendation}
 
+\ceg{This section should be structured as follows:
+1: Introduce CCR (Motivation, Expectations)
+2: Our high level approach
+3: Discussion of our design (Like already discussed)
+}
 Regarding Cumulative Citation Recommendation we perform exact string matching 
 and treat all the documents that mention an entity equally likely to be citable.
 For future iterations of the paper we have ideas on how to score documents 
@@ -48,7 +55,7 @@ garbage, neutral or central documents we produce more slot values which can be
 later on filtered out in the high accuracy filter section.
 
 \subsection{Streaming Slot Filling}
-
+\ceg{See the previous note.}
 Stream slot filling is done by pattern matching documents with manually 
 produced patterns for slots of interest. The way we do this is by observing a 
 sentence that has a mention of the entity or one of its coreferences. An 

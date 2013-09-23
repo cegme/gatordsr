@@ -2,15 +2,16 @@
 \section{Introduction}
 
 In this article we will describe the approach the GatorDSR team from the 
-University of Florida takes at addressing the challenge at NIST’s Text 
-REtrieval Conference (TREC) - Knowledge Base Acceleration track 2013 - Stream 
-Slot Filling (SSF) section. In the first section of this article we describe 
+University of Florida in addressing the challenge at NIST’s Text 
+REtrieval Conference (TREC) --- Knowledge Base Acceleration track 2013 
+In the first section we describe 
 the system design and articulate its evolution during the whole process, 
 challenges and needs that we have overcome. In the second section we will go 
 through the details of the NLP techniques we took at streaming slot filling
 (SSF): given a slot name (entity + relation type) we fill in the slot value
 (relation value) on structured text documents.
 
+\ceg{Add a discussion of why machine driven kb population is important.}
 The task is that given certain Wikipedia or Twitter entities 
 (wiki/twitter URLs) and certain relations of interest given in Table 1, 
 extract as many triple relations as possible (hence, slot filling). This can 
@@ -90,6 +91,8 @@ Contact\_Meet\_PlaceTime: "Friday during a ceremony at the North Dakota Capitol"
 
 In our approach we will perform pattern matching that conforms to each slot 
 value along with post-processings to eliminate noisy outputs. 
+
+\ceg{How will each submission be evaluated?}
 
 % Motivation
 
