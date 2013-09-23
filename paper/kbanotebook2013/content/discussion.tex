@@ -2,11 +2,25 @@
 
 \section{Discussion}
 
-As mentioned before, when we evaluate the results of slot extraction, we find three kinds of problems for accuracy: 1) wrong entities found; 2) wrong tags by the Lingpipe; 3) wrong results matched by the patterns.  We also have recall problems: 1) not enough good alias names to find all the entities. 2) not enough and powerful patterns to capture all the slot values. 
+As mentioned before, when we evaluate the results of slot extraction, we find 
+three kinds of problems for accuracy: 1) wrong entities found; 2) wrong tags 
+by the Lingpipe; 3) wrong results matched by the patterns.  We also have 
+recall problems: 1) not enough good alias names to find all the entities. 2) 
+not enough and powerful patterns to capture all the slot values. 
 
-We will use entity resolution methods and other advanced methods to improve the accuracy and recall of entity extraction part. 
+We will use entity resolution methods and other advanced methods to improve 
+the accuracy and recall of entity extraction part. 
 
-For slot extraction part, in order to improve the performance, what we need to are: 1) Using multi-class classifiers instead of pattern matching method to extract slot values in order to increase both recall and accuracy for slots “Affiliate”, “AssociateOf”, “FounderOf”, “EmployeeOf”, “FoundedBy” “TopMembers”, “Contact\_Meet\_Entity” and so on. 2) For special slots, like “Titles”, “DateOfDeath”, “CauseOfDeath”, “AwardsWon”, using different kind of advanced methods, e.g. classifiers, matching methods. 3) Using other NLP tools or using classifiers to overcome the drawbacks of the LingPipe’s inaccurate tags. The first and second tasks are the most important tasks we need to do.
+For slot extraction part, in order to improve the performance, what we need to 
+are: 1) Using multi-class classifiers instead of pattern matching method to 
+extract slot values in order to increase both recall and accuracy for slots
+``Affiliate'', ``AssociateOf'', ``FounderOf'', ``EmployeeOf'', ``FoundedBy'',
+``TopMembers'', ``Contact\_Meet\_Entity'' and so on. 2) For special slots, 
+like “Titles”, “DateOfDeath”, “CauseOfDeath”, “AwardsWon”, using different 
+kind of advanced methods, e.g.\ classifiers, matching methods. 3) Using other 
+NLP tools or using classifiers to overcome the drawbacks of the LingPipe’s 
+inaccurate tags. The first and second tasks are the most important tasks we 
+need to do.
 
 % Note: Here we discuss why the results are the way they are
 % Give pros and cons, talk about how the implemented algorithms

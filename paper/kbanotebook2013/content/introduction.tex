@@ -1,11 +1,37 @@
 
 \section{Introduction}
 
-In this article we will describe the approach the GatorDSR team from the University of Florida takes at addressing the challenge at NIST’s Text REtrieval Conference (TREC) - Knowledge Base Acceleration track 2013 - Stream Slot Filling (SSF) section. In the first section of this article we describe the system design and articulate its evolution during the whole process, challenges and needs that we have overcome. In the second section we will go through the details of the NLP techniques we took at streaming slot filling (SSF): given a slot name (entity + relation type) we fill in the slot value (relation value) on structured text documents.
+In this article we will describe the approach the GatorDSR team from the 
+University of Florida takes at addressing the challenge at NIST’s Text 
+REtrieval Conference (TREC) - Knowledge Base Acceleration track 2013 - Stream 
+Slot Filling (SSF) section. In the first section of this article we describe 
+the system design and articulate its evolution during the whole process, 
+challenges and needs that we have overcome. In the second section we will go 
+through the details of the NLP techniques we took at streaming slot filling
+(SSF): given a slot name (entity + relation type) we fill in the slot value
+(relation value) on structured text documents.
 
-The task is that given certain Wikipedia or Twitter entities (wiki/twitter URLs) and certain relations of interest given in Table 1, extract as many triple relations as possible (hence, slot filling). This can be used to automatically populate knowledgebases such as free-base or DBPedia or even filling in the information boxes at Wikipedia. The corpus is in English and is a snapshot of part of the web containing arXiv, social, news, linking, weblog, forum, classifieds, reviews, and memetracker documents. Each document is annotated using lingpipe and is called StreamItem, a bundle of StreamItems are put together and serialized as Apache Thrift objects, then compressed using xz compression with Lempel–Ziv–Markov chain algorithm (LZMA2) and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys. To have a sense of the scale of objects and compression as an example a 6mb gpg.xz files would become 45 mb thrift objects which can contain a couple of thousand StreamItems depending on their size. Some of the documents have null values for their annotation fields.
+The task is that given certain Wikipedia or Twitter entities 
+(wiki/twitter URLs) and certain relations of interest given in Table 1, 
+extract as many triple relations as possible (hence, slot filling). This can 
+be used to automatically populate knowledgebases such as free-base or DBPedia 
+or even filling in the information boxes at Wikipedia. The corpus is in 
+English and is a snapshot of part of the web containing arXiv, social, news, 
+linking, weblog, forum, classifieds, reviews, and memetracker documents. Each 
+document is annotated using lingpipe and is called StreamItem, a bundle of 
+StreamItems are put together and serialized as Apache Thrift objects, then 
+compressed using xz compression with Lempel–Ziv–Markov chain algorithm (LZMA2) 
+and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys.
+To have a sense of the scale of objects and compression as an example a 6mb
+gpg.xz files would become 45 mb thrift objects which can contain a couple of 
+thousand StreamItems depending on their size. Some of the documents have null 
+values for their annotation fields.
 
-Since this is \textit{streaming} slot filling, we are only interested in new slot values that were not substantiated earlier in the stream corpus, which ranges from October 2011 to February 2013. Below you can view the slot values and their types, the comprehensive description of which can be found at \cite{tackbp} and \cite{aec} 
+Since this is \textit{streaming} slot filling, we are only interested in new 
+slot values that were not substantiated earlier in the stream corpus, which 
+ranges from October 2011 to February 2013. Below you can view the slot values 
+and their types, the comprehensive description of which can be found at
+\cite{tackbp} and \cite{aec} 
 
 \begin{table}[b]
 \caption{Ontology of Slot Name Categories }
@@ -29,7 +55,9 @@ EmployeeOf\end{tabular}
 \end{tabular} 
 \end{table}
 
-Example 1: "Matthew DeLorenzo and Josiah Vega, both 14 years old and students at Elysian Charter School, were honored Friday morning by C-SPAN and received \$1,500 as well as an iPod Touch after winning a nationwide video contest."
+Example 1: "Matthew DeLorenzo and Josiah Vega, both 14 years old and students 
+at Elysian Charter School, were honored Friday morning by C-SPAN and received 
+\$1,500 as well as an iPod Touch after winning a nationwide video contest."
 
 target\_id:  http://en.wikipedia.org/wiki/Elysian\_Charter\_School
 
@@ -39,7 +67,9 @@ Affiliate:  "Josiah Vega"
 NOT an affiliate:  "C-SPAN"
 NOT an affiliate:  "iPod Touch"
 
-Example 2: "Veteran songwriters and performers Ben Mason, Jeff Severson and Jeff Smith will perform on Saturday, April 14 at 7:30 pm at Creative Cauldron at ArtSpace, 410 S. Maple Avenue."
+Example 2: "Veteran songwriters and performers Ben Mason, Jeff Severson and 
+Jeff Smith will perform on Saturday, April 14 at 7:30 pm at Creative Cauldron 
+at ArtSpace, 410 S. Maple Avenue."
 
 target\_id: http://en.wikipedia.org/wiki/Jeff\_Severson
 
@@ -50,13 +80,16 @@ Affiliate: "Jeff Smith"
 NOT an Affiliate: "Creative Caldron"
 NOT an Affiliate: "Art Space"
 
-Example 3:  "Lt. Gov. Drew Wrigley and Robert Wefald, a retired North Dakota district judge and former state attorney general, unveiled the crest Friday during a ceremony at the North Dakota Capitol."
+Example 3:  "Lt. Gov. Drew Wrigley and Robert Wefald, a retired North Dakota 
+district judge and former state attorney general, unveiled the crest Friday 
+during a ceremony at the North Dakota Capitol."
 
 target\_id: http://en.wikipedia.org/wiki/Hjemkomst\_Center
 
 Contact\_Meet\_PlaceTime: "Friday during a ceremony at the North Dakota Capitol"
 
-In our approach we will perform pattern matching that conforms to each slot value along with post-processings to eliminate noisy outputs. 
+In our approach we will perform pattern matching that conforms to each slot 
+value along with post-processings to eliminate noisy outputs. 
 
 % Motivation
 
