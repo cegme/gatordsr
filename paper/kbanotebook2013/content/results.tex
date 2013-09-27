@@ -1,20 +1,39 @@
 
 \section{Results}
 
-\ceg{We can add data on the total document size, The number of each document type.  }
-
-Document extraction using query entity matching with aliases, sentence 
+%\ceg{We can add data on the total document size, The %number of each document type.  } 
+ We had a single node cluster. The configuration of the server running the jobs is according to Table \ref{table:serverspec}. All together, The total size of the data after XZ compression and GPG encryption is 4.5TB and just over 500M StreamItems \cite{s3}. Data is stored in date-hour directories: From 2011-20-05-00 (12am) ) until 2013-02-13-23 (11pm) there are 11952 date-hour combinations. The source code of our system is stored as an open source project where enthusiasts can also contribute to \cite{github}, also the relevant discussion mailing list is accessible here \cite{googlegroups}.
+ 
+ 
+ 
+ Our results are as follows: Document extraction using query entity matching with aliases, sentence 
 extraction using alias matching and co-reference. Slot extraction using 
 patterns, NER tags and NP tags. 158,052 documents with query entities, 17885 
 unique extracted slot values for 8 slots and 139 entities, 4 slots and 31 
 entities missing.
 
 On the performance of the first submission run we performed some random 
-sampling via two processes, the results of which are as follows:
+sampling via two processes, the results of which are as in Table \ref{table:initialresult}. Our final submission has been elaborated in Tables \ref{table:finalresultaccuracy} and \ref{table:finalresultrecall}. You can observe that only CauseOfDeath is missing from the set of found slot values. 
 
 \begin{table}[b]
+\caption{Benchmark Server Specifications }
+\centering
+\label{table:serverspec}
+\begin{tabular}{|c|l|}
+\hline 
+Model & Dell xxx 32 cores \\ \hline 
+OS & CentOS release 6.4 Final \\ \hline 
+Software Stack & GCC version 4.4.7, Java 1.7.0\_25, Scala 2.9.2, SBT 0.12.3 \\ \hline 
+ RAM & 64GB\\ \hline 
+ Drives & 2x2.7TB disks, 6Gbps, 7200RPM\\ \hline 
+\end{tabular} 
+\end{table}
+
+\begin{table}[t]
 \caption{SSF Performance Measure on Initial Submission }
 \centering
+\label{table:initialresult}
+
 \begin{tabular}{|c|c|c|c|}
 \hline 
  & Correct & Incorrect Entity name & Incorrect Value \\ 
@@ -25,9 +44,10 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 \end{tabular} 
 \end{table}
 
-\begin{table}
+\begin{table}[b]
 \caption{SSF Accuracy Measure on Submission Infer }
 \centering
+\label{table:finalresultaccuracy}
 \begin{tabular}{|c|c|c|c|}
 \hline 
  & Correct & Incorrect Entity name & Incorrect Value \\ 
@@ -54,9 +74,10 @@ TopMembers & 33\% & 17\% & 50\%  \\ \hline
 
 
 
-\begin{table}
+\begin{table}[t]
 \caption{Recall Measure on Submission Infer }
 \centering
+\label{table:finalresultrecall}
 \begin{tabular}{|c|p{3cm}|p{4cm}|}
 \hline 
  & Total instances of slot value found & \# of entities covered by slot value \\ 
