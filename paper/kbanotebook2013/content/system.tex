@@ -1,49 +1,27 @@
 
-\begin{figure}[b]
+\begin{figure}
 \centering
-\includegraphics[width=4.5in]{./images/system.eps}
+%\includegraphics[width=4.5in]{./images/system.eps}
+\includegraphics[width=6in]{./images/SystemBW.eps}
 \vspace*{-.1in} \caption{Pipeline Design }\label{fig:system}
 \vspace*{-.2in}
 \end{figure}
 
-\section{Pipeline}
+\section{System Architecture}
 
-\ceg{Discuss current system first. If you want to keep the decisions points
-that led to the current architecture, make it a subsection.}
-In this section we provide a high level description of the pipeline(system) 
-design for big data analysis regarding TREC KBA the Stream Slot Filling (SSF) 
-task. Our pipeline of processing the corpus consists of a two layer indexing 
-system main section in our system regarding indexing the corpus, We started 
-off by trying to use the off-the-shelf tools for this task. Mainly we started 
-by using Scala/Spark\cite{ferc11} to benefit from the parallelization 
-performance there.  Spark was not as efficient as expected and the overhead 
-was much more than tolerable. We tried to use Scala parallelization itself to 
-do the job, and unfortunately it did not satisfy our needs, there was 
-excessive memory overhead on map reduce jobs. We migrated the core of the 
-system to Java Parallelism APIs and that was not good enough either, we wanted 
-better. So we built our own parallel system which in actual performance had 
-the least of overhead, the least memory consumption and the most robust memory 
-model which avoided unpredictable CPU stalls on garbage collections in 
-processing the corpus. In what follows we will describe each step of this 
-evolution in details. Figure~\ref{fig:system} shows a schematic view of the 
-system. The platform that we run our pipeline over was a 32 core server having 
-64GB of memory.
+As shown in Figure \ref{fig:system}, our system is built in a pipeline manner which gives it the advantage to run each section separately and allow stream processing without wasting resources being clogged by one operation while others are waiting. Below, we describe each component briefly and in Section \ref{section:implementation} we will go through technical details.
 
+%\ceg{Discuss current system first. If you want to keep the decisions points that led to the current architecture, make it a subsection.}
 
+\subsection{Preprocessing}
 
+To begin, we need to have real world aliases of entities. TREC KBA prohibits Wikipedia entities to have any manual aliases being added and only allows automatic ways. We use Wikipedia API backlink references (redirects to a wiki entity) as aliases of the entity. We also use some techniques to extract some aliases from within the text of a wiki entity, which will be described later on. This whole process is referred to as \textbf{Alias Extraction (Wiki API, Wiki text)} Regarding Twitter entities this limit is lifted and participants are allowed to manually add aliases for them. Part of the reason is that Twitter environment is composed of so much informal and dialectic language which makes it extremely difficult to extract context out of tweets or entities descriptions in their profiles. This process of extracting aliases for Twitter entities is referred to as \textbf{Manual Alias Extraction (Twitter)}.
 
-% Note: Describe the algorithms of each phase
-% Talk in abstract terms not implementation.
-% Use formal representations (Math, SQL etc)
+Once aliases are available we pass them through some rules of generating proper name orders which will produce various instances of writing a name. As a basic example Bill Gates can be written as Gates, Bill. This will allow the system to capture various notation forms of aliases. This part of the system is referred to as \textbf{Name Order Generator}.
 
 \subsection{Cumulative Citation Recommendation}
 
-\ceg{This section should be structured as follows:
-1: Introduce CCR (Motivation, Expectations)
-2: Our high level approach
-3: Discussion of our design (Like already discussed)
-}
-Regarding Cumulative Citation Recommendation we perform exact string matching 
+The main goal of Cumulative Citation Recommendation is to have an aggregate list of documents that are worthy of being cited in a Wikipedia page. Regarding Cumulative Citation Recommendation we perform exact string matching 
 and treat all the documents that mention an entity equally likely to be citable.
 For future iterations of the paper we have ideas on how to score documents 
 based on their likelihood of citation worthiness but for this iterations we 
@@ -54,9 +32,25 @@ So we take on that and ignore non-citing documents. Regarding mentioning but
 garbage, neutral or central documents we produce more slot values which can be 
 later on filtered out in the high accuracy filter section.
 
+Our pipeline of processing the corpus consists of a two layer indexing system referred to as \textbf{Chunk Files Index Generator} and \textbf{StreamItems Index Generator}.  Chunk Files Index Generator will generate indexes of the chunk files that contain a mention of any of the desired entities. StreamItems Index Generator on the other hand will index StreamItems that contain a mention of a given entity respectively. This two level indexing will eliminate the need to process each and every ChunkFile/StreamItem for every entity. 
+
+
+
+% Note: Describe the algorithms of each phase
+% Talk in abstract terms not implementation.
+% Use formal representations (Math, SQL etc)
+
+
+%\ceg{This section should be structured as follows:
+%1: Introduce CCR (Motivation, Expectations)
+%2: Our high level approach
+%3: Discussion of our design (Like already discussed)
+%}
+
+
 \subsection{Streaming Slot Filling}
-\ceg{See the previous note.}
-Stream slot filling is done by pattern matching documents with manually 
+%\ceg{See the previous note.}
+As described in the Introduction, the general purpose of slot filling is to extract proper values for relations of interest, some of which can be found in Table \ref{table:slotNameOntology}. This is called Stream Slot Filling due to the fact that it is assumed that data is being generated as time goes on and for each extraction we should only consider current or past data. In our schematic diagram we refer to this as \textbf{Streaming Slot Value Extraction}. Stream slot filling is done by pattern matching documents with manually 
 produced patterns for slots of interest. The way we do this is by observing a 
 sentence that has a mention of the entity or one of its coreferences. An 
 anchor word in the sentence related to the slot name is located and we match 
@@ -68,4 +62,4 @@ The SSF output of many extractions is noisy. The data contains duplicates and
 incorrect extractions. We can define rules to sanitize the output only using 
 the information present in the SSF file. The file is processed in time order, 
 in a tuple-at-a-time fashion to minimize the impact on accuracy. We define 
-two classes of rules deduplication rules and inference rules.
+two classes of rules deduplication rules and inference rules. In our diagram we refer to this component as \textbf{High Accuracy Filter}.
