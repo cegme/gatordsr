@@ -2,7 +2,42 @@
 \section{Results}
 
 %\ceg{We can add data on the total document size, The %number of each document type.  } 
- We had a single node cluster. The configuration of the server running the jobs is according to Table \ref{table:serverspec}. All together, The total size of the data after XZ compression and GPG encryption is 4.5TB and just over 500M StreamItems \cite{s3}. Data is stored in date-hour directories: From 2011-20-05-00 (12am) ) until 2013-02-13-23 (11pm) there are 11952 date-hour combinations. The source code of our system is stored as an open source project where enthusiasts can also contribute to \cite{github}, also the relevant discussion mailing list is accessible here \cite{googlegroups}.
+ Our system was composed of a single node cluster, which we refer to as the \textit{server}; the configuration of which is as described in Table \ref{table:serverspec}. The corpus is a snapshot of the web in English. Each document is annotated using lingpipe and is called StreamItem, a bundle of 
+StreamItems are put together and serialized as Apache Thrift objects, then 
+compressed using xz compression with Lempel–Ziv–Markov chain algorithm (LZMA2) 
+and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys. The total size of the data after XZ compression and GPG encryption is 4.5TB and just over 500M StreamItems \cite{s3}. Data is stored in directories the naming of which is date-hour combination: from 2011-10-05-00 (5th of October 2011, 12am) until 2013-02-13-23 (13th of Feburary 2013, 11pm), which consists of 11952 date-hour combinations. This corpora consists of various media types the distribution of which can be found in \ref{table:documentsDist}. To have a sense of the scale of objects and compression as an example a 6mb
+gpg.xz files would become 45 mb thrift objects which can contain a couple of 
+thousand StreamItems depending on their size. Some of the documents have null 
+values for their annotation fields. The first portion of the data which 
+ranges from October 2011 to February 2013 is considered as training data. The source code of our system is stored as an open source project where enthusiasts can also contribute to \cite{github}, also the relevant discussion mailing list is accessible here \cite{googlegroups}.
+ 
+ 
+\begin{table}[b]
+\caption{Document Chunks Distribution }
+\centering
+\label{table:documentsDist}
+
+\begin{tabular}{|c|l|}
+\hline 
+\textbf{\# of Documents} & \textbf{Document Type}\\ 
+\hline 
+10988 & 	arxiv (full text, abstracts in StreamItem.other\_content) \\ \hline
+34887 & CLASSIFIED (spinn3r)  \\ \hline
+77674 & FORUM (spinn3r)  \\ \hline
+12947 & linking (reprocessed from kba-stream-corpus-2012, same stream\_id)  \\ \hline
+141936 & MAINSTREAM\_NEWS (spinn3r)  \\ \hline
+4137 & MEMETRACKER (spinn3r)  \\ \hline
+280629 & news (reprocessed from kba-stream-corpus-2012, same stream\_id)  \\ \hline
+6347 &  REVIEW (spinn3r) \\ \hline
+688848 & 	 social (reprocessed from kba-stream-corpus-2012 plus extension, same stream\_id)  \\ \hline
+740987 & WEBLOG (spinn3r)  \\ \hline
+
+  
+\hline 
+\end{tabular} 
+\end{table}
+
+
  
  
  
@@ -12,10 +47,10 @@ patterns, NER tags and NP tags. 158,052 documents with query entities, 17885
 unique extracted slot values for 8 slots and 139 entities, 4 slots and 31 
 entities missing.
 
-On the performance of the first submission run we performed some random 
-sampling via two processes, the results of which are as in Table \ref{table:initialresult}. Our final submission has been elaborated in Tables \ref{table:finalresultaccuracy} and \ref{table:finalresultrecall}. You can observe that only CauseOfDeath is missing from the set of found slot values. 
+On the performance of the first submission run we performed random 
+sampling via two processes, the results of which are according to Table \ref{table:initialresult}. You can view that we have had an accuracy of around 55\%, and about 15\% wrong entity identified and 30\% incorrect value extracted across all entities and slot types. For our final submission, we provide a more detailed statistics, which has been elaborated in Tables \ref{table:finalresultrecall} and \ref{table:finalresultaccuracy}. Table \ref{table:finalresultrecall} shows the extent of search outreach for each slot name. You can see that \textit{Affiliate} has been the slot name with highest hits and \textit{CauseOfDeath} our lowest hit with 0 instances found matching our patterns, after that \textit{AwardsWon} has been the next with 38 instances found. Table \ref{table:finalresultaccuracy} addresses the relative accuracy measure per slot value. There you can view that we have had the highest accuracy of 63.6\% for \textit{AssociateOf} and the lowest of 1\% - 5\%  for \textit{Affiliate}, \textit{Contact\_Meet\_PlaceTime} and \textit{EmployeeOf}.
 
-\begin{table}[b]
+\begin{table}
 \caption{Benchmark Server Specifications }
 \centering
 \label{table:serverspec}
@@ -29,7 +64,13 @@ Software Stack & GCC version 4.4.7, Java 1.7.0\_25, Scala 2.9.2, SBT 0.12.3 \\ \
 \end{tabular} 
 \end{table}
 
-\begin{table}[t]
+
+
+
+
+
+
+\begin{table}
 \caption{SSF Performance Measure on Initial Submission }
 \centering
 \label{table:initialresult}
@@ -44,13 +85,48 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 \end{tabular} 
 \end{table}
 
-\begin{table}[b]
+
+
+
+
+
+\begin{table}
+\caption{Recall Measure on Submission Infer }
+\centering
+\label{table:finalresultrecall}
+\begin{tabular}{|c|p{3cm}|p{4cm}|}
+\hline 
+ Slot Name & Total instances of slot value found & \# of entities covered by slot value \\ 
+\hline 
+Affiliate & 108598 & 80 \\ \hline 
+AssociateOf & 25278 & 106 \\ \hline 
+AwardsWon & 38 & 14 \\ \hline 
+CauseOfDeath & 0 & 0 \\ \hline 
+Contact\_Meet\_Entity & 191 & 8 \\ \hline 
+Contact\_Meet\_PlaceTime & 5974 & 109 \\ \hline 
+DateOfDeath & 87 & 14 \\ \hline 
+EmployeeOf & 75 & 16 \\ \hline 
+FoundedBy & 326 & 30 \\ \hline 
+FounderOf & 302 &  29 \\ \hline 
+Titles & 26823 & 118 \\ \hline 
+TopMembers & 314 & 26 \\ \hline 
+
+\end{tabular} 
+\end{table}
+
+
+
+
+
+
+
+\begin{table}
 \caption{SSF Accuracy Measure on Submission Infer }
 \centering
 \label{table:finalresultaccuracy}
 \begin{tabular}{|c|c|c|c|}
 \hline 
- & Correct & Incorrect Entity name & Incorrect Value \\ 
+ Slot Name  & Correct & Incorrect Entity name & Incorrect Value \\ 
 \hline 
 Affiliate & 1\% & 95\% & 5\% \\ \hline 
 AssociateOf & 63.6\% & 9.1\% & 27.3\%  \\ \hline 
@@ -74,29 +150,6 @@ TopMembers & 33\% & 17\% & 50\%  \\ \hline
 
 
 
-\begin{table}[t]
-\caption{Recall Measure on Submission Infer }
-\centering
-\label{table:finalresultrecall}
-\begin{tabular}{|c|p{3cm}|p{4cm}|}
-\hline 
- & Total instances of slot value found & \# of entities covered by slot value \\ 
-\hline 
-Affiliate & 108598 & 80 \\ \hline 
-AssociateOf & 25278 & 106 \\ \hline 
-AwardsWon & 38 & 14 \\ \hline 
-CauseOfDeath & 0 & 0 \\ \hline 
-Contact\_Meet\_Entity & 191 & 8 \\ \hline 
-Contact\_Meet\_PlaceTime & 5974 & 109 \\ \hline 
-DateOfDeath & 87 & 14 \\ \hline 
-EmployeeOf & 75 & 16 \\ \hline 
-FoundedBy & 326 & 30 \\ \hline 
-FounderOf & 302 &  29 \\ \hline 
-Titles & 26823 & 118 \\ \hline 
-TopMembers & 314 & 26 \\ \hline 
-
-\end{tabular} 
-\end{table}
 
 % Note: Here is where we give as much stats as possible on our runs
 
