@@ -6,11 +6,12 @@ University of Florida has adopted in addressing the challenge at NIST’s Text
 REtrieval Conference (TREC) --- Knowledge Base Acceleration track 2013. There are two main sections designed for this track. Cumulative Citation Recommendation and Streaming Slot Filling. Due to the importance of knowledgebases, both of these tracks aim to accelerating populating them, hence the title Knowledgebase Acceleration (KBA).
 Below we describe each of these tracks and their purposes in full detail.
 
+An important challenge in maintaining Wikipedia.org (WP) which is the most popular free, web-based, collaborative, multilingual encyclopedia in the internet, is to make sure its contents are uptodate. Currently, there is considerable time lag between the publication date of cited news articles and the date of an edit to WP creating the citation. As an example, the median time lag for a sample of about 60,000 web pages cited by WP articles in the \textit{living\_people} category is over a year and the distribution has a long and heavy tail\cite{JFrank12}. It is also noted that the majority of Wikipedia entities have updates on their associated Wiki article much less frequently than their mention frequency. Such stale entries are the norm in any large knowledge base (KB), because the number of humans maintaining the knowledge base is far fewer than the number of entities in the KB. Further, the number of mentions is much larger than the number of entities\cite{JFrank12}. 
+
+
 \subsection{Cumulative Citation Recommendation (CCR)}
 
-An important challenge in maintaining Wikipedia (WP) which is the most popular free, web-based, collaborative, multilingual encyclopedia in the internet, is to make sure its contents are uptodate. Currently, there is considerable time lag between the publication date of cited news articles and the date of an edit to WP creating the citation. As an example, the median time lag for a sample of about 60,000 web pages cited by WP articles in the \textit{living\_people} category is over a year and the distribution has a long and heavy tail\cite{JFrank12}. It is also noted that the majority of Wikipedia entities have updates on their associated Wiki article much less frequently than their mention frequency. Such stale entries are the norm in any large knowledge base (KB), because the number of humans maintaining the knowledge base is far fewer than the number of entities in the KB. Further, the number of mentions is much larger than the number of entities\cite{JFrank12}. 
-
-For this track, assessors were instructed to ``use the wikipedia article to identify (disambiguate) the entity, and then imagine forgetting all info in the WP article and asking whether the text provides any information about the entity''\cite{JFrank12}. Documents would be divided according to two metrics: 1) mentioning the entity or not, 2) relevance level to the entity:
+For this track, assessors were instructed to ``use the wikipedia article to identify (disambiguate) the entity, and then imagine forgetting all info in the WP article and asking whether the text provides any information about the entity''\cite{JFrank12}. Documents would be divided according to two metrics: a) mentioning the entity or not, b) relevance level to the entity:
 \begin{itemize}
 \item \textbf{Mention} 
 \begin{itemize}
@@ -31,7 +32,7 @@ central figure in topics/events.
 
 
 \subsection{Streaming Slot Filling (SSF)}
-The task is that given certain Wikipedia or Twitter entities 
+The task is that given certain WP or Twitter entities 
 (wiki/twitter URLs) and certain relations of interest (given in Table  \ref{table:slotNameOntology}), extract as many triple relations as possible (hence, slot filling). This can be used to automatically populate knowledgebases such as free-base or DBPedia 
 or even fill-in the information boxes at Wikipedia. Below, you can view some examples of what it means to fill in a slot value; in each example there is a sentence of interest that we wish to extract slot values from, an entity that the slot value is related to, and a slot name which can be thought of as the topic of the slot value:
 
@@ -70,7 +71,7 @@ Slot name: Contact\_Meet\_PlaceTime
 Slot value: ``Friday during a ceremony at the North Dakota Capitol''
 
 
-\noindent Since this is \textit{streaming} slot filling, we are only interested in new 
+\noindent In \textit{streaming} slot filling, we are only interested in new 
 slot values that were not substantiated earlier in the stream corpus. In Table \ref{table:slotNameOntology} you can view some slot values 
 and their types, the comprehensive description of which can be found at
 \cite{tackbp} and \cite{aec}. The details of the metric for SSF will favor systems that most closely match the changes in the ground truth time line of slot values. This is done by searching for other documents that mentioned an entity and exactly matched the slot fill strings selected by the assessors.

@@ -23,8 +23,7 @@ not enough and powerful patterns to capture all the slot values.
 We will use entity resolution methods and other advanced methods to improve 
 the accuracy and recall of entity extraction part. 
 
-For slot extraction part, in order to improve the performance, what we need
-are: 1) Using multi-class classifiers instead of pattern matching method to 
+For slot extraction, to improve the performance, we need: 1) Using multi-class classifiers instead of pattern matching method to 
 extract slot values in order to increase both recall and accuracy for slots
 ``Affiliate'', ``AssociateOf'', ``FounderOf'', ``EmployeeOf'', ``FoundedBy'',
 ``TopMembers'', ``Contact\_Meet\_Entity'' and so on. 2) For special slots, 
@@ -34,7 +33,7 @@ NLP tools or using classifiers to overcome the drawbacks of the LingPipe’s
 inaccurate tags. The first and second tasks are the most important tasks we 
 need to do.
 
-About 50\% of twitter entities are missing. One reason could be 
+About 50\% of twitter entities are not found by the system. One reason could be 
 that those entities are not very famous. For example Brenda Weiler google 
 search result has 860,000 documents over the whole web. For our 
 small portion of the web it might make sense. If you pay attention to the 

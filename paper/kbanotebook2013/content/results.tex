@@ -9,7 +9,7 @@ and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys. Th
 gpg.xz files would become 45 mb thrift objects which can contain a couple of 
 thousand StreamItems depending on their size. Some of the documents have null 
 values for their annotation fields. The first portion of the data which 
-ranges from October 2011 to February 2013 is considered as training data. The source code of our system is stored as an open source project where enthusiasts can also contribute to \cite{github}, also the relevant discussion mailing list is accessible here \cite{googlegroups}.
+ranges from October 2011 to February 2012 is considered as training data. The source code of our system is stored as an open source project where enthusiasts can also contribute to \cite{github}, also the relevant discussion mailing list is accessible here \cite{googlegroups}.
  
  
 \begin{table}[b]
@@ -56,6 +56,7 @@ sampling via two processes, the results of which are according to Table \ref{tab
 \label{table:serverspec}
 \begin{tabular}{|c|l|}
 \hline 
+\textbf{Spec} & \textbf{Details} \\ \hline
 Model & Dell xxx 32 cores \\ \hline 
 OS & CentOS release 6.4 Final \\ \hline 
 Software Stack & GCC version 4.4.7, Java 1.7.0\_25, Scala 2.9.2, SBT 0.12.3 \\ \hline 
@@ -77,7 +78,7 @@ Software Stack & GCC version 4.4.7, Java 1.7.0\_25, Scala 2.9.2, SBT 0.12.3 \\ \
 
 \begin{tabular}{|c|c|c|c|}
 \hline 
- & Correct & Incorrect Entity name & Incorrect Value \\ 
+ & \textbf{Correct} & \textbf{Incorrect Entity name} & \textbf{Incorrect Value} \\ 
 \hline 
 Sampling \#1 & 55\% & 17\% & 27\% \\ 
 \hline Sampling \#2 & 54\% & 15\% & 31\%  \\ 
@@ -94,9 +95,9 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 \caption{Recall Measure on Submission Infer }
 \centering
 \label{table:finalresultrecall}
-\begin{tabular}{|c|p{3cm}|p{4cm}|}
+\begin{tabular}{|c|p{3.5cm}|p{4cm}|}
 \hline 
- Slot Name & Total instances of slot value found & \# of entities covered by slot value \\ 
+ \textbf{Slot Name} & \textbf{Total instances of slot value found} & \textbf{\# of entities covered by slot value} \\ 
 \hline 
 Affiliate & 108598 & 80 \\ \hline 
 AssociateOf & 25278 & 106 \\ \hline 
@@ -126,7 +127,7 @@ TopMembers & 314 & 26 \\ \hline
 \label{table:finalresultaccuracy}
 \begin{tabular}{|c|c|c|c|}
 \hline 
- Slot Name  & Correct & Incorrect Entity name & Incorrect Value \\ 
+ \textbf{Slot Name}  & \textbf{Correct} & \textbf{Incorrect Entity name} & \textbf{Incorrect Value} \\ 
 \hline 
 Affiliate & 1\% & 95\% & 5\% \\ \hline 
 AssociateOf & 63.6\% & 9.1\% & 27.3\%  \\ \hline 
