@@ -3,16 +3,17 @@
 \section{Implementation}
 \label{section:implementation}
 
-Our contribution is that we perform pattern matching that conforms to each slot 
-value along with post-processings to eliminate noisy outputs. We extract aliases for entities from Wikipedia automatically both using API 
+We extract aliases for entities from Wikipedia automatically both using API 
 and using the actual page content, then apply pattern matching rules for slot 
-value extraction. 
+value extraction. Our contribution is that we perform pattern matching that conforms to each slot 
+value along with post-processings to eliminate noisy outputs. 
 
 %\ceg{Instead of this paragraph we talk about what this %section will
 %contain. We can discuss the input/output of the system %too.
 %}
 
 \subsection{Alias Generation}
+\label{section:aliasgeneration}
 
 We use Wikipedia API to get some aliases automatically. This is done by 
 retrieving backlink references (redirects of a wiki entity). Unfortunately 
@@ -22,46 +23,60 @@ expressions to extract the bold phrases of the first paragraph as alias of the
 actual entity. Based on our observation this is a very accurate heuristic and 
 provides us with lots of famous aliases of the entities. To consider other 
 typical cases we consider some generic first name last name order swapping 
-conventions such as Bill Gates $\rightarrow$ Gates, Bill.  
+conventions such as Bill Gates $\rightarrow$ Gates, Bill.  Meanwhile, William Henry Gates is an alias for Bill Gates in WP as a backlink reference. These kinds of aliases are also included in matching entities. 
 
 \subsection{Streaming Slot Value Extraction}
 
-In this system, we use pattern matching methods to find corresponding slot 
-values for entities. This is done by observing the training data which is the first four months of the corpus(Oct 2011 - Feb 2012). The procedure is: 1) Find stream items that contain the 
-entities by using alias names of the entities. 2) Inside these stream items, 
-fetch the sentences which contain entities by using alias names and the 
-coreference information provided by Lingpipe tags. 3) Use these sentences to 
-match existing patterns. 4) When patterns matched, generate SSF results.
+\begin{figure}
+\centering
+%\includegraphics[width=4.5in]{./images/system.eps}
+\includegraphics[width=6in]{./images/Pattern.eps}
+\vspace*{-.1in} \caption{Pattern Matching with Slot Value on the Right Side of Entity. }\label{fig:pattern}
+\vspace*{-.2in}
+\end{figure}
 
-The format of the patterns is consist of five fields:
-1) the type of the entity. 
-2) the slot name.
-3) the pattern content.
-4) the direction of the slot value to the entity.
-5) the type of the slot values. When we match one pattern, we match all the 
-fields except the third field. The type of slot values could be the entity 
+In this system, we use pattern matching methods to find corresponding slot 
+values for entities. This is done by observing the training data which is the first four months of the corpus (October 2011 - February 2012). The procedure is: First Find stream items that contain the 
+entities by using alias names of the entities. Then Inside these stream items, 
+fetch the sentences which contain entities by using alias names and the 
+coreference information provided by Lingpipe tags. Use these sentences to 
+match existing patterns, and when patterns matched, generate SSF results.
+
+Each pattern consists of five fields:
+
+\begin{itemize}
+\item Type of the entity
+\item Slot name
+\item Pattern content
+\item Direction of the slot value to the entity
+\item Type of the slot values
+\end{itemize}
+
+ When we match one pattern, we match all the 
+fields except the third field, which is extracted as the final result.
+
+ The type of slot values could be the entity 
 type tagged by Lingpipe, noun phrase tagged by OpenNLP and the time phrases we 
 hard-code. For these three kinds of patterns, we implement them in different 
-ways accordingly. 
+ways accordingly. Next we will explain the patterns with more details, a brief example can be found in Figure \ref{fig:pattern}. 
 
-Next we will explain the patterns with more details. Lets’s first look at one 
-example of the first kind of patterns. For slot FounderOf, we have this
-pattern: \textless PER, FounderOf, founder, right, ORG\textgreater. PER means 
+\textbf{Slot value type, tagged by Lingpipe:} For slot FounderOf, we have this
+pattern: \textless \texttt{PER, FounderOf, founder, right, ORG}\textgreater. PER means 
 that the entity we are finding slot values for is a PER entity; FounderOf 
 means this is a pattern for FounderOf slot. Founder is the anchor word we are 
 trying to match in the sentence text; right means that we are going to the 
 right part of the sentence to match the pattern and find the slot value; ORG 
 means the slot value should be a ORG entity.
 
-Here is an example for the second type: \textless PER, AwardsWon, awarded, 
-right, NP\textgreater, NP meaning noun phrase. This pattern can be interpreted 
+\textbf{Slot value tagged as noun phrase by OpenNLP:} \textless \texttt{PER, AwardsWon, awarded, 
+right, NP}\textgreater, NP meaning noun phrase. This pattern can be interpreted 
 as that we are looking for a noun phrase after the “awarded'' since that noun 
 phrase could possibly represent an award. Since titles and awards are usually 
 not the Lingpipe entities, we use the OpenNLP noun phrase chunker to fetch the 
 noun phrases.
 
-Another example for the third type: \textless PER, DateOfDeath, died, right, 
-last night\textgreater. In this pattern, “last night'' means we are looking for 
+\textbf{Slot value of time phrases, hard coded:} \textless \texttt{PER, DateOfDeath, died, right, 
+last night}\textgreater. In this pattern, “last night'' means we are looking for 
 exactly the phrase ``last night'' to the right of ``died''. This pattern is 
 inspired by the intuition that in news articles, people often mention that 
 somebody died last night instead of mentioning the accurate date information 
@@ -73,19 +88,20 @@ between the accuracy and recall. This is one drawback of using pattern
 matching method, meaning it is really hard to find good patterns with both 
 high accuracy and recall. 
 
-For accuracy, we have found that there are three major kinds of errors: 1) 
-wrong entities found; 2) wrong tags by the Lingpipe; 3) wrong results matched 
+For accuracy, we have found that there are three major kinds of errors: First,  
+wrong entities found; next, wrong tags by the Lingpipe; and finally wrong results matched 
 by the patterns. We solve the first problem by using the Wikipedia or twitter 
 information of the entities to get better alias names. And we use
-post- processing to reduce the second and third types of errors.
+post-processing to reduce the second and third types of errors (Section \ref{section:highAccuracyFilter}).
 
 \subsection{High Accuracy Filter}
+\label{section:highAccuracyFilter}
 
 The SSF output of many extractions is noisy. The data contains duplicates and 
 incorrect extractions. We can define rules to sanitize the output only using 
 the information present in the SSF file. The file is processed in time order, 
 in a tuple-at-a-time fashion to minimize the impact on accuracy. We define 
-two classes of rules deduplication rules and inference rules.
+two classes of rules: deduplication rules and inference rules.
 
 The output contains many duplicate entries. As we read the list of extracted 
 slots we create rules to define ``duplicate''. Duplicates can be present in a 
