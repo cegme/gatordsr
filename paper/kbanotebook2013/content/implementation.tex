@@ -58,62 +58,80 @@ done in Java with ideas in mind for later on extensibility by adding other Java 
 \vspace*{-.2in}
 \end{figure}
 
-In this system, we use pattern matching methods to find corresponding slot 
-values for entities. This is done by observing the training data which is the first four months of the corpus (October 2011 - February 2012). The procedure is: First Find stream items that contain the 
-entities by using alias names of the entities. Then Inside these stream items, 
+In the data set, we are given 4 months of data (October 2011 - February 2012) as training data.
+Instead of building a classifier we use pattern matching methods to find
+corresponding slot values for entities. 
+Pattern matching is simple to manipulate results and implement.
+Additionally, we can simply to explain and evaluate results.
+
+The procedure to extract slots with the patterns is to 
+first find Streamitems that contain the 
+entities by using alias names of the entities. Next, inside these Streamitems, 
 fetch the sentences which contain entities by using alias names and the 
 coreference information provided by Lingpipe tags. Use these sentences to 
 match existing patterns, and when patterns matched, generate SSF results.
 
-Each pattern consists of five fields:
+\begin{algorithm}
+  \textbf{Given a set of Streamitems $\mathcal{S} = \{s_0, \ldots, s_{|\mathcal{S}|}\}$}\\
+  \textbf{Set of patterns $P = \{p_0, \ldots, p_{|P|}\}$}\\
+  \begin{algorithmic}[1]
+    \FOR{$si \in \mathcal{S}$}
+    \FOR{$s \in si$}
+    \IF{$ check\_one\_of\_the\_patterns$}
+    \STATE Emit(sentence, pattern)
+  \ENDIF
+\ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
 
-\begin{itemize}
-\item Type of the entity
-\item Slot name
-\item Pattern content
-\item Direction of the slot value to the entity
-\item Type of the slot values
-\end{itemize}
 
- When we match one pattern, we match all the 
-fields except the third field, which is extracted as the final result.
+A pattern is defined as a record representing knowledge going to be added to a knowledge base.
+A pattern $\mathcal{P}$ is represented as $\mathcal{P} = \langle p_1, p_2, p_3, p_4, p_5 \rangle$.
 
- The type of slot values could be the entity 
-type tagged by Lingpipe, noun phrase tagged by OpenNLP and the time phrases we 
-hard-code. For these three kinds of patterns, we implement them in different 
+The first value, $p_1$ represents the type of entity. These entity types are in
+the set $\{ \text{\tt FAC}, \text{\tt ORG}, \text{\tt PER} \}$ where \texttt{FAC}
+represents a type of facility, \texttt{ORG} represents an organization and \texttt{PER}
+represents a person.
+The $p_2$ represents a slot name.
+A list of slot names is present in Table~\ref{table:slotNameOntology}.
+The third element $p_3$ is the pattern content. This is a string found in the sentence.
+The extractor looks for this exact string or pattern in a sentence.
+The pattern evaluator uses a direction (\texttt{left} or \texttt{right}) found in
+$p_4$ to explore sentence.
+The final element $p_5$ represent the slot value of a pattern. Thois
+%When we match one pattern, we match all the 
+%fields except the third field, which is extracted as the final result.
+The type of slot value may be the entity 
+type tagged by Lingpipe, a noun phrase (\texttt{NP}) tagged by OpenNLP or a hard-coded phrase. 
+For these three kinds of patterns, we implement them in different 
 ways accordingly. Next we will explain the patterns with more details, a brief
 example can be found in Figure~\ref{fig:pattern}. 
 
 \textbf{Slot value type, tagged by Lingpipe:} For slot FounderOf, we have this
-pattern: \textless \texttt{PER, FounderOf, founder, right, ORG}\textgreater. PER means 
+pattern: \textless \texttt{PER, FounderOf, ``founder'', right, ORG}\textgreater. PER means 
 that the entity we are finding slot values for is a PER entity; FounderOf 
 means this is a pattern for FounderOf slot. Founder is the anchor word we are 
 trying to match in the sentence text; right means that we are going to the 
 right part of the sentence to match the pattern and find the slot value; ORG 
 means the slot value should be a ORG entity.
 
-\textbf{Slot value tagged as noun phrase by OpenNLP:} \textless \texttt{PER, AwardsWon, awarded, 
+\textbf{Slot value tagged as noun phrase by OpenNLP:} \textless \texttt{PER, AwardsWon, ``awarded'', 
 right, NP}\textgreater, NP meaning noun phrase. This pattern can be interpreted 
-as that we are looking for a noun phrase after the “awarded'' since that noun 
+as that we are looking for a noun phrase after the ``awarded'' since that noun 
 phrase could possibly represent an award. Since titles and awards are usually 
 not the Lingpipe entities, we use the OpenNLP noun phrase chunker to fetch the 
 noun phrases.
 
-\textbf{Slot value of time phrases, hard coded:} \textless \texttt{PER, DateOfDeath, died, right, 
-last night}\textgreater. In this pattern, “last night'' means we are looking for 
+\textbf{Slot value of time phrases, hard coded:} \textless \texttt{PER, DateOfDeath, ``died'', right, 
+``last night''}\textgreater. In this pattern, ``last night'' means we are looking for 
 exactly the phrase ``last night'' to the right of ``died''. This pattern is 
 inspired by the intuition that in news articles, people often mention that 
 somebody died last night instead of mentioning the accurate date information 
 and Lingpipe tends not to tag phrases like ``last night'' as a DATE entity. 
 
-To improve recall, we introduce generic patterns that can generate many results.
-But these patterns generate many errors, too. Thus there is a trade-off 
-between the accuracy and recall. This is one drawback of using pattern 
-matching method, meaning it is really hard to find good patterns with both 
-high accuracy and recall. 
-
-For accuracy, we have found that there are three major kinds of errors: First,  
-wrong entities found; next, wrong tags by the Lingpipe; and finally wrong results matched 
+We have found that there are three major classes of accuracy errors:
+wrong entities found, wrong tags by the Lingpipe, and finally wrong results matched 
 by the patterns. We solve the first problem by using the Wikipedia or twitter 
 information of the entities to get better alias names. And we use
 post-processing to reduce the second and third types of errors (Section~\ref{section:highAccuracyFilter}).

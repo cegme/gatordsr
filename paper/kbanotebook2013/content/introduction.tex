@@ -36,15 +36,15 @@ We built this system as part of a formal task described in Section~\ref{sec:kbat
 The data set from this task drop most our our design systems.
 Overall, our contributions are the following:
 \begin{itemize}[noitemsep,nolistsep]
-\item we introduce a method to build models of name variations (Section~\ref{sec:preproc},~\ref{section:aliasgeneration});
-\item we built a system to filter a large amount of diverse documents (Section~\ref{sec:ccr1},~\ref{sec:ccrimpl});
-\item we extract entity-slot-value triples of information to be added to KB (Section~\ref{sec:ssf1},~\ref{sec:ssve});
-\item we filter the final results using deduplication and inference (Section~\ref{sec:postproc},~\ref{section:highAccuracyFilter});
+\item we introduce a method to build models of name variations (Section~\ref{section:aliasgeneration});
+\item we built a system to filter a large amount of diverse documents (Section~\ref{sec:ccrimpl});
+\item we extract entity-slot-value triples of information to be added to KB (Section~\ref{sec:ssve});
+\item we filter the final results using deduplication and inference (Section~\ref{section:highAccuracyFilter});
 \item we self-evaluate our results over a 4.5 TB data set (Section~\ref{sec:results}).
 \end{itemize}
 
 
-\section{KBA Task Background\ceg{Move this to appendix?}}
+\section{KBA Task Background}
 \label{sec:kbatask}
 The National Institute of Standards (NIST) hosted the
 Text REtrieval Conference (TREC) --- Knowledge Base Acceleration challenge in 2013. The task
@@ -58,35 +58,33 @@ Below we describe each of these tracks and their purposes.
 For this track, assessors were instructed to ``use the Wikipedia article to 
 identify (disambiguate) the entity, and then imagine forgetting all info in the WP 
 article and asking whether the text provides any information about the entity'' \cite{JFrank12}.
-Documents would be divided according to two metrics: a) mentioning the entity or 
-not, b) relevance level to the entity:
-\begin{itemize}
-  \item \textbf{Mention} 
-    \begin{itemize}
-      \item \textbf{Mention:} Document explicitly mentions target entity, such as full 
-        name, partial name, nickname, pseudonym, title, stage name.
-      \item \textbf{Zero-mention:} Document does not directly mention target. Could 
-        still be relevant, e.g.\ metonymic references like ``this administration'' --
-        \textgreater ``Obama''. See also synecdoche. A document could also be relevant to 
-        target entity through relation to entities mentioned in document -- apply this 
-        test question: can I learn something from this document about target entity using 
-        whatever other information I have about entity?
-    \end{itemize}
-  \item \textbf{Relevance}
-    \begin{itemize}
-      \item \textbf{Garbage:} not relevant, e.g.\ spam.
-      \item \textbf{Neutral:} Not relevant, i.e.\ no info could be deduced about entity, 
-        e.g., entity name used in product name, or only pertains to community of target 
-        such that no information could be learned about entity, although you can see how 
-        an automatic algorithm might have thought it was relevant.
-      \item \textbf{Relevant:} Relates indirectly, e.g., tangential with substantive 
-        implications, or topics or events of likely
-        impact on entity.
-      \item \textbf{Central:} Relates directly to target such that you would cite it in 
-        the WP article for this entity, e.g.\ entity is a
-        central figure in topics/events.
+Documents are divided according if an entity is mentioned and a relevance level to the entity.
 
-    \end{itemize}
+More specifically, a document may have a mention or be without a mention.
+\begin{itemize}[noitemsep]
+  \item \textbf{Mention:} Document explicitly mentions target entity, such as full 
+    name, partial name, nickname, pseudonym, title, stage name.
+  \item \textbf{Zero-mention:} Document does not directly mention target. Could 
+    still be relevant, e.g.\ metonymic references like ``this administration'' 
+    $\rightarrow$ ``Obama''. See also synecdoche. A document could also be relevant to 
+    target entity through relation to entities mentioned in document -- apply this 
+    test question: can I learn something from this document about target entity using 
+    whatever other information I have about entity?
+\end{itemize}
+
+The relevance of a document to a query is split into the four classifications.
+\begin{itemize}[noitemsep]
+  \item \textbf{Garbage:} not relevant, e.g.\ spam.
+  \item \textbf{Neutral:} Not relevant, i.e.\ no info could be deduced about entity, 
+    e.g., entity name used in product name, or only pertains to community of target 
+    such that no information could be learned about entity, although you can see how 
+    an automatic algorithm might have thought it was relevant.
+  \item \textbf{Relevant:} Relates indirectly, e.g., tangential with substantive 
+    implications, or topics or events of likely
+    impact on entity.
+  \item \textbf{Central:} Relates directly to target such that you would cite it in 
+    the WP article for this entity, e.g.\ entity is a
+    central figure in topics/events.
 \end{itemize}
 
 
