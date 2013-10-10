@@ -23,10 +23,32 @@ expressions to extract the bold phrases of the first paragraph as alias of the
 actual entity. Based on our observation this is a very accurate heuristic and 
 provides us with lots of famous aliases of the entities. To consider other 
 typical cases we consider some generic first name last name order swapping 
-conventions such as Bill Gates $\rightarrow$ Gates, Bill.  Meanwhile, William Henry Gates is an alias for Bill Gates in WP as a backlink reference. These kinds of aliases are also included in matching entities. 
+conventions such as Bill Gates $\rightarrow$ Gates, Bill.  Meanwhile, William Henry
+Gates is an alias for Bill Gates in WP as a backlink reference. These kinds of
+aliases are also included in matching entities. 
+
+\subsection{Cumulative Citation Recommendation}
+\label{sec:ccrimpl}
+
+Our pipeline of processing the corpus consists of a two layer indexing system 
+referred to as \textit{Chunk Files Index Generator} and \textit{StreamItems Index Generator}.
+Chunk Files Index Generator will generate indexes of the chunk files 
+that contain a mention of any of the desired entities. StreamItems Index Generator 
+on the other hand will index StreamItems that contain a mention of a given entity 
+respectively. This two level indexing will eliminate the need to process each and 
+every ChunkFile/StreamItem for every entity. The reason for splitting this task 
+into two steps is that not all chunk files contain any mention of the entities and 
+we want to get rid of them as soon as possible. Chunk Files Index Generator which 
+is written in C++ will discard non-mentioning chunk files and will stop further 
+processing a chunk file as soon as it finds a mention there. Each chunk file can 
+contain up to thousands of SIs which can be so time consuming if we were to 
+process them in our Java base code.Processing StreamItems on the other hand is 
+done in Java with ideas in mind for later on extensibility by adding other Java libraries.
+
+
 
 \subsection{Streaming Slot Value Extraction}
-
+\label{sec:ssve}
 \begin{figure}
 \centering
 %\includegraphics[width=4.5in]{./images/system.eps}
@@ -59,7 +81,8 @@ fields except the third field, which is extracted as the final result.
  The type of slot values could be the entity 
 type tagged by Lingpipe, noun phrase tagged by OpenNLP and the time phrases we 
 hard-code. For these three kinds of patterns, we implement them in different 
-ways accordingly. Next we will explain the patterns with more details, a brief example can be found in Figure \ref{fig:pattern}. 
+ways accordingly. Next we will explain the patterns with more details, a brief
+example can be found in Figure~\ref{fig:pattern}. 
 
 \textbf{Slot value type, tagged by Lingpipe:} For slot FounderOf, we have this
 pattern: \textless \texttt{PER, FounderOf, founder, right, ORG}\textgreater. PER means 
@@ -93,7 +116,7 @@ For accuracy, we have found that there are three major kinds of errors: First,
 wrong entities found; next, wrong tags by the Lingpipe; and finally wrong results matched 
 by the patterns. We solve the first problem by using the Wikipedia or twitter 
 information of the entities to get better alias names. And we use
-post-processing to reduce the second and third types of errors (Section \ref{section:highAccuracyFilter}).
+post-processing to reduce the second and third types of errors (Section~\ref{section:highAccuracyFilter}).
 
 \subsection{High Accuracy Filter}
 \label{section:highAccuracyFilter}

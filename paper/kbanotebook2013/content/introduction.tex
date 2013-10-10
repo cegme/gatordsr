@@ -16,11 +16,12 @@ maintaining the KB is far fewer than the number of entities.
 %Further, the number of mentions is much larger than the number of entities~\cite{JFrank12}. 
 Reducing latency keeps KBs such as WP relevant and helpful it users.
 
-Given a set of entities, possible citations may come from a large variety of sources.
-To attack this problem we develop a system to read streaming data and
-filter out articles that are candidates for citations.
+Given an entity page, possible citations may come from a variety of sources.
+The actual citable information is a small percentage of the total documents that appear on the web.
+We develop a system to read streaming data and filter out articles that are candidates for citations.
 Given these documents, we extract the pairs of information in the 
-article that is recommended for citations.
+article that is recommended for citations for each knowledge base page.
+\ceg{add details}
 
 Our system contains three main components. First, we pre-process the data and
 build models representing the knowledge base entries.
@@ -28,15 +29,18 @@ Next, we use the models to filter a stream of documents so they only contain
 candidate recommendations.
 Lastly, we processes sentences from candidate extractions and return 
 specific information to be cited.
+\ceg{add details}
 
 
 We built this system as part of a formal task described in Section~\ref{sec:kbatask}.
 The data set from this task drop most our our design systems.
 Overall, our contributions are the following:
 \begin{itemize}[noitemsep,nolistsep]
-\item we built a system to filter a large amount of diverse documents (Section~\ref{},\ref{});
-\item we extract entity-slot-value triples of information to be added to KB (Section~\ref{},\ref{});
-\item we self-evaluate our results over a 4.5 TB data set (Section~\ref{},\ref{}).
+\item we introduce a method to build models of name variations (Section~\ref{sec:preproc},~\ref{section:aliasgeneration});
+\item we built a system to filter a large amount of diverse documents (Section~\ref{sec:ccr1},~\ref{sec:ccrimpl});
+\item we extract entity-slot-value triples of information to be added to KB (Section~\ref{sec:ssf1},~\ref{sec:ssve});
+\item we filter the final results using deduplication and inference (Section~\ref{sec:postproc},~\ref{section:highAccuracyFilter});
+\item we self-evaluate our results over a 4.5 TB data set (Section~\ref{sec:results}).
 \end{itemize}
 
 
@@ -45,8 +49,8 @@ Overall, our contributions are the following:
 The National Institute of Standards (NIST) hosted the
 Text REtrieval Conference (TREC) --- Knowledge Base Acceleration challenge in 2013. The task
 contains two main sections designed for this track, Cumulative Citation Recommendation 
-and Streaming Slot Filling. Due to the importance of knowledgebases, both of these 
-tracks aim to accelerating populating them, hence the title Knowledgebase Acceleration (KBA).
+and Streaming Slot Filling. Due to the importance of knowledge bases, both of these 
+tracks aim to accelerating populating them, hence the title Knowledge Base Acceleration (KBA).
 Below we describe each of these tracks and their purposes.
 
 \subsection{Cumulative Citation Recommendation (CCR)}
