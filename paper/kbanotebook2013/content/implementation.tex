@@ -65,24 +65,28 @@ Pattern matching is simple to manipulate results and implement.
 Additionally, we can simply to explain and evaluate results.
 
 The procedure to extract slots with the patterns is to 
-first find Streamitems that contain the 
+first find Streamitems that contain the
 entities by using alias names of the entities. Next, inside these Streamitems, 
 fetch the sentences which contain entities by using alias names and the 
 coreference information provided by Lingpipe tags. Use these sentences to 
 match existing patterns, and when patterns matched, generate SSF results.
 
 \begin{algorithm}
-  \textbf{Given a set of Streamitems $\mathcal{S} = \{s_0, \ldots, s_{|\mathcal{S}|}\}$}\\
-  \textbf{Set of patterns $P = \{p_0, \ldots, p_{|P|}\}$}\\
-  \begin{algorithmic}[1]
+  \textbf{List of entities $\mathcal{E} = \{e_0, \ldots, e_{170}\}$}\\
+  \textbf{List of Streamitems $\mathcal{S} = \{s_0, \ldots, s_{|\mathcal{S}|}\}$}\\
+  \textbf{List of patterns $P = \{p_0, \ldots, p_{|P|}\}$}\\
+  \begin{algorithmic}%[1]
     \FOR{$si \in \mathcal{S}$}
-    \FOR{$s \in si$}
-    \IF{$ check\_one\_of\_the\_patterns$}
-    \STATE Emit(sentence, pattern)
-  \ENDIF
-\ENDFOR
-\ENDFOR
-\end{algorithmic}
+      \FOR{$sentence \in si$}
+        %%\IF{check\_pattern(sentence, pattern)}
+        \FOR{$pattern \in P$}
+          \IF{Satisfies($sentence$, $pattern$)}
+            \STATE Emit($sentence$, $pattern$)
+          \ENDIF
+        \ENDFOR
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
 \end{algorithm}
 
 
@@ -105,26 +109,26 @@ The final element $p_5$ represent the slot value of a pattern. Thois
 The type of slot value may be the entity 
 type tagged by Lingpipe, a noun phrase (\texttt{NP}) tagged by OpenNLP or a hard-coded phrase. 
 For these three kinds of patterns, we implement them in different 
-ways accordingly. Next we will explain the patterns with more details, a brief
+ways accordingly. Next, we will explain the patterns with more details, an
 example can be found in Figure~\ref{fig:pattern}. 
 
 \textbf{Slot value type, tagged by Lingpipe:} For slot FounderOf, we have this
-pattern: \textless \texttt{PER, FounderOf, ``founder'', right, ORG}\textgreater. PER means 
+pattern: $\langle$ \texttt{PER, FounderOf, ``founder'', right, ORG} $\rangle$. PER means 
 that the entity we are finding slot values for is a PER entity; FounderOf 
 means this is a pattern for FounderOf slot. Founder is the anchor word we are 
 trying to match in the sentence text; right means that we are going to the 
 right part of the sentence to match the pattern and find the slot value; ORG 
 means the slot value should be a ORG entity.
 
-\textbf{Slot value tagged as noun phrase by OpenNLP:} \textless \texttt{PER, AwardsWon, ``awarded'', 
-right, NP}\textgreater, NP meaning noun phrase. This pattern can be interpreted 
+\textbf{Slot value tagged as noun phrase by OpenNLP:} $\langle$ \texttt{PER, AwardsWon, ``awarded'', 
+right, NP}$\rangle$, NP meaning noun phrase. This pattern can be interpreted 
 as that we are looking for a noun phrase after the ``awarded'' since that noun 
 phrase could possibly represent an award. Since titles and awards are usually 
 not the Lingpipe entities, we use the OpenNLP noun phrase chunker to fetch the 
 noun phrases.
 
-\textbf{Slot value of time phrases, hard coded:} \textless \texttt{PER, DateOfDeath, ``died'', right, 
-``last night''}\textgreater. In this pattern, ``last night'' means we are looking for 
+\textbf{Slot value of time phrases, hard coded:} $\langle$ \texttt{PER, DateOfDeath, ``died'', right, 
+``last night''}$\rangle$. In this pattern, ``last night'' means we are looking for 
 exactly the phrase ``last night'' to the right of ``died''. This pattern is 
 inspired by the intuition that in news articles, people often mention that 
 somebody died last night instead of mentioning the accurate date information 
