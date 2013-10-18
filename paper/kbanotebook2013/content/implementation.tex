@@ -39,7 +39,7 @@ respectively. This two level indexing will eliminate the need to process each an
 every ChunkFile/StreamItem for every entity. The reason for splitting this task 
 into two steps is that not all chunk files contain any mention of the entities and 
 we want to get rid of them as soon as possible. Chunk Files Index Generator which 
-is written in C++ will discard non-mentioning chunk files and will stop further 
+is written in C++ discards non-mentioning chunk files and will stop further 
 processing a chunk file as soon as it finds a mention there. Each chunk file can 
 contain up to thousands of SIs which can be so time consuming if we were to 
 process them in our Java base code.Processing StreamItems on the other hand is 
@@ -62,7 +62,7 @@ In the data set, we are given 4 months of data (October 2011 - February 2012) as
 Instead of building a classifier we use pattern matching methods to find
 corresponding slot values for entities. 
 Pattern matching is simple to manipulate results and implement.
-Additionally, we can simply to explain and evaluate results.
+Additionally, a classifier approach is more difficult to evaluate and explain results.
 
 The procedure to extract slots with the patterns is to 
 first find Streamitems that contain the
@@ -72,6 +72,7 @@ coreference information provided by Lingpipe tags. Use these sentences to
 match existing patterns, and when patterns matched, generate SSF results.
 
 \begin{algorithm}
+  \caption{Streaming Slot Value Extraction Pseudocode}
   \textbf{List of entities $\mathcal{E} = \{e_0, \ldots, e_{170}\}$}\\
   \textbf{List of Streamitems $\mathcal{S} = \{s_0, \ldots, s_{|\mathcal{S}|}\}$}\\
   \textbf{List of patterns $P = \{p_0, \ldots, p_{|P|}\}$}\\
@@ -81,7 +82,7 @@ match existing patterns, and when patterns matched, generate SSF results.
         %%\IF{check\_pattern(sentence, pattern)}
         \FOR{$pattern \in P$}
           \IF{Satisfies($sentence$, $pattern$)}
-            \STATE Emit($sentence$, $pattern$)
+            \STATE Emit($sentence$, $pattern$) // Deal specifically with the three types
           \ENDIF
         \ENDFOR
       \ENDFOR
@@ -90,8 +91,10 @@ match existing patterns, and when patterns matched, generate SSF results.
 \end{algorithm}
 
 
+\subsubsection{Types of patterns}
 A pattern is defined as a record representing knowledge going to be added to a knowledge base.
-A pattern $\mathcal{P}$ is represented as $\mathcal{P} = \langle p_1, p_2, p_3, p_4, p_5 \rangle$.
+A pattern $\mathcal{P}$ is represented as a five-tuple $\mathcal{P} = \langle p_1, p_2, p_3, p_4, p_5 \rangle$.
+
 
 The first value, $p_1$ represents the type of entity. These entity types are in
 the set $\{ \text{\tt FAC}, \text{\tt ORG}, \text{\tt PER} \}$ where \texttt{FAC}
@@ -109,45 +112,57 @@ The final element $p_5$ represent the slot value of a pattern. Thois
 The type of slot value may be the entity 
 type tagged by Lingpipe, a noun phrase (\texttt{NP}) tagged by OpenNLP or a hard-coded phrase. 
 For these three kinds of patterns, we implement them in different 
-ways accordingly. Next, we will explain the patterns with more details, an
+ways accordingly. Next, we explain the patterns with more details, an
 example can be found in Figure~\ref{fig:pattern}. 
 
-\textbf{Slot value type, tagged by Lingpipe:} For slot FounderOf, we have this
-pattern: $\langle$ \texttt{PER, FounderOf, ``founder'', right, ORG} $\rangle$. PER means 
-that the entity we are finding slot values for is a PER entity; FounderOf 
-means this is a pattern for FounderOf slot. Founder is the anchor word we are 
-trying to match in the sentence text; right means that we are going to the 
+\textbf{Type I.} This pattern type is driven by the slot value type, a pattern
+tagged by Lingpipe. For example, pattern
+$\langle$\texttt{PER, FounderOf, \textit{founder}, right, ORG}$\rangle$. \texttt{PER} means 
+that the entity we are finding slot values for a PER entity; \texttt{FounderOf} 
+means this is a pattern for FounderOf slot. \textit{founder} is the anchor word we are 
+match in a sentence; \texttt{right} means that we are going to the 
 right part of the sentence to match the pattern and find the slot value; ORG 
 means the slot value should be a ORG entity.
 
-\textbf{Slot value tagged as noun phrase by OpenNLP:} $\langle$ \texttt{PER, AwardsWon, ``awarded'', 
-right, NP}$\rangle$, NP meaning noun phrase. This pattern can be interpreted 
-as that we are looking for a noun phrase after the ``awarded'' since that noun 
-phrase could possibly represent an award. Since titles and awards are usually 
-not the Lingpipe entities, we use the OpenNLP noun phrase chunker to fetch the 
+\textbf{Type II.} This pattern type is unique because it only looks for a
+slot value tagged as noun phrase (NP) by OpenNLP.\@ For example,
+pattern $\langle$\texttt{PER, AwardsWon, \textit{awarded}, 
+right, NP}$\rangle$. This pattern can be interpreted 
+as that we are looking for a noun phrase after the \textit{awarded} since that noun 
+phrase may represent an award. Titles and awards are usually 
+not the Lingpipe entities, hence the use of the OpenNLP noun phrase chunker to fetch the 
 noun phrases.
 
-\textbf{Slot value of time phrases, hard coded:} $\langle$ \texttt{PER, DateOfDeath, ``died'', right, 
-``last night''}$\rangle$. In this pattern, ``last night'' means we are looking for 
-exactly the phrase ``last night'' to the right of ``died''. This pattern is 
+\textbf{Type III.} Some relations are best discovered by hard coding the slot values.
+Examples of these include time phrases: $\langle$\texttt{PER, DateOfDeath, \textit{died}, right, 
+\textit{last night}}$\rangle$. In this pattern, \textit{last night} means we are looking for 
+exactly the phrase \textit{last night} to the right of \textit{died}. This pattern is 
 inspired by the intuition that in news articles, people often mention that 
 somebody died last night instead of mentioning the accurate date information 
-and Lingpipe tends not to tag phrases like ``last night'' as a DATE entity. 
+and Lingpipe tends not to tag phrases like \textit{last night} as a DATE entity. 
 
-We have found that there are three major classes of accuracy errors:
-wrong entities found, wrong tags by the Lingpipe, and finally wrong results matched 
-by the patterns. We solve the first problem by using the Wikipedia or twitter 
-information of the entities to get better alias names. And we use
+We sampled documents from the training data period to generate an initial set of
+patterns. We then use these patterns to generate SSF results. By manully looking at these results, we
+prune some patterns with poor­performance and add more patterns that we identified from these results.
+We use several iterations to find the best patterns.
+We found that it is time consuming to identity quality pattern.
+
+
+We found three major classes of accuracy errors:
+incorrect entities selected, incorrect tags by Lingpipe and incorrect pattern extractions.
+The first issue is ameliorated by generating better aliases (Section~\ref{section:aliasgeneration}). And we use
 post-processing to reduce the second and third types of errors (Section~\ref{section:highAccuracyFilter}).
+We didn't use more advanced NLP packages such as Stanford NLP because of the large size of the data set.
+The post-processing step to improve the results is discussed in the next section.
 
 \subsection{High Accuracy Filter}
 \label{section:highAccuracyFilter}
 
-The SSF output of many extractions is noisy. The data contains duplicates and 
+The SSF output of streaming slot value extraction is noisy. The data contains duplicates and 
 incorrect extractions. We can define rules to sanitize the output only using 
 the information present in the SSF file. The file is processed in time order, 
 in a tuple-at-a-time fashion to minimize the impact on accuracy. We define 
-two classes of rules: deduplication rules and inference rules.
+two classes of rules: \textit{deduplication} and \textit{inference} rules.
 
 The output contains many duplicate entries. As we read the list of extracted 
 slots we create rules to define ``duplicate''. Duplicates can be present in a 
