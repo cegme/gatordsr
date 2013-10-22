@@ -55,24 +55,24 @@ mailing list is accessible here \cite{googlegroups}.
  
  
  
- Our results are as follows: Document extraction using query entity matching with aliases, sentence 
+We have 135 extraction patterns coverin each slot-name/entity-type combinations. Our final submission was named \textit{submission\_infer}. Our results are as follows: Document extraction using query entity matching with aliases, sentence 
 extraction using alias matching and co-reference. Slot extraction using 
 patterns, NER tags and NP tags. 158,052 documents with query entities, 17885 
 unique extracted slot values for 8 slots and 139 entities, 4 slots and 31 
 entities missing.
 
-On the performance of the first submission run we performed random 
+On the performance of our initial submission run we performed random 
 sampling via two processes, the results of which are according to
 Table~\ref{table:initialresult}. You can view that we have had an accuracy of
 around 55\%, and about 15\% wrong entity identified and 30\% incorrect value
-extracted across all entities and slot types. For our final submission, we
+extracted across all entities and slot types. Most of our issues for this submission were regarding poor slot value extraction patterns and incomplete aliases whih were tried to be mtigated later on. For our final submission, we
 provide a more detailed statistics, which has been elaborated in
 Table~\ref{table:finalresultrecall} and Table~\ref{table:finalresultaccuracy}.
 Table~\ref{table:finalresultrecall} shows the extent of search outreach for
 each slot name. You can see that \textit{Affiliate} has been the slot name with
 highest hits and \textit{CauseOfDeath} our lowest hit with 0 instances found
 matching our patterns, after that \textit{AwardsWon} has been the next with 38
-instances found. Table~\ref{table:finalresultaccuracy} addresses the relative
+instances found. Affiliate is a very generic term and extracting real affiliates can be quite challenging using the extraction patterns provided. This can lead to noisy results. On the other hand for more precise terms our accuracy increases but we have less recall. Table~\ref{table:finalresultaccuracy} addresses the relative
 accuracy measure per slot value. There you can view that we have had the
 highest accuracy of 63.6\% for \textit{AssociateOf} and the lowest of
 1\% - 5\%  for \textit{Affiliate}, \textit{Contact\_Meet\_PlaceTime} and \textit{EmployeeOf}.
@@ -99,7 +99,7 @@ Software Stack & GCC version 4.4.7, Java 1.7.0\_25, Scala 2.9.2, SBT 0.12.3 \\ \
 
 
 \begin{table}
-\caption{SSF Performance Measure on Initial Submission }
+\caption{SSF Performance Measure on \textit{initial\_submission} }
 \centering
 \label{table:initialresult}
 
@@ -118,8 +118,8 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 
 
 
-\begin{table}
-\caption{Recall Measure on Submission Infer }
+\begin{table}    
+\caption{ Recall Measure on \textit{submission\_infer}: Generic slot names like affiliate had the most recall, compared to less popular slot names e.g. DateOfDeath }
 \centering
 \label{table:finalresultrecall}
 \begin{tabular}{|c|p{3.5cm}|p{4cm}|}
@@ -149,7 +149,7 @@ TopMembers & 314 & 26 \\ \hline
 
 
 \begin{table}
-\caption{SSF Accuracy Measure on Submission Infer }
+\caption{SSF Accuracy Measure on \textit{submission\_infer}: Accuracy of AffiliateOf was the best and Affiliate applied poorly due to ambiguity of being an affiliate of somebody/something }
 \centering
 \label{table:finalresultaccuracy}
 \begin{tabular}{|c|c|c|c|}
