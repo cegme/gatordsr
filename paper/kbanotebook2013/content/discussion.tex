@@ -14,6 +14,9 @@ the least of overhead, the least memory consumption and the most robust memory
 model which avoided unpredictable CPU stalls on garbage collections in 
 processing the corpus.
 
+In table 4, there are a lot more values extracted for some slots than other slots. This may be caused by several reasons.
+First, some slots naturally have more results than other slots. For example, AssociateOf and Affiliate definitely have more slot values than DateOfDeath and CauseOfDeath, since there are only so few entities that are dead. Second, it also depends on the patterns we use. For example, for Affiliate, we use "and", "with" as ankor words. These words are more common than "dead" or "died" or "founded" in other patterns. 
+
 As mentioned before, when we evaluate the results of slot extraction, we find 
 three kinds of problems for accuracy: 1) wrong entities found; 2) wrong tags 
 by the Lingpipe; 3) wrong results matched by the patterns.  We also have 
