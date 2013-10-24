@@ -3,8 +3,7 @@
 \label{sec:results}
 
 %\ceg{We can add data on the total document size, The %number of each document type.  } 
- Our system was composed of a single node cluster, which we refer to as the
- \textit{server}; the configuration of which is as described in
+ Our system was developed on a 32-core server described in
  Table~\ref{table:serverspec}. The corpus is a snapshot of the web in English.
  Each document is annotated using lingpipe and is called StreamItem, a bundle of 
 StreamItems are put together and serialized as Apache Thrift objects, then 
@@ -26,7 +25,7 @@ enthusiasts can also contribute to \cite{github}, also the relevant discussion
 mailing list is accessible here \cite{googlegroups}.
  
  
-\begin{table}[b]
+\begin{table}
 \caption{Document Chunks Distribution }
 \centering
 \label{table:documentsDist}
@@ -114,45 +113,11 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 \end{table}
 
 
-
-
-
-
-\begin{table}    
-\caption{ Recall Measure on \textit{submission\_infer}: Generic slot names like affiliate had the most recall, compared to less popular slot names e.g. DateOfDeath }
-\centering
-\label{table:finalresultrecall}
-\begin{tabular}{|c|p{3.5cm}|p{4cm}|}
-\hline 
- \textbf{Slot Name} & \textbf{Total instances of slot value found} & \textbf{\# of entities covered by slot value} \\ 
-\hline 
-Affiliate & 108598 & 80 \\ \hline 
-AssociateOf & 25278 & 106 \\ \hline 
-AwardsWon & 38 & 14 \\ \hline 
-CauseOfDeath & 0 & 0 \\ \hline 
-Contact\_Meet\_Entity & 191 & 8 \\ \hline 
-Contact\_Meet\_PlaceTime & 5974 & 109 \\ \hline 
-DateOfDeath & 87 & 14 \\ \hline 
-EmployeeOf & 75 & 16 \\ \hline 
-FoundedBy & 326 & 30 \\ \hline 
-FounderOf & 302 &  29 \\ \hline 
-Titles & 26823 & 118 \\ \hline 
-TopMembers & 314 & 26 \\ \hline 
-
-\end{tabular} 
-\end{table}
-
-
-
-
-
-
-
 \begin{table}
-\caption{SSF Accuracy Measure on \textit{submission\_infer}: Accuracy of AffiliateOf was the best and Affiliate applied poorly due to ambiguity of being an affiliate of somebody/something }
+\caption{SSF Accuracy Measure on \textit{submission\_infer}: Accuracy of AffiliateOf was the best and Affiliate applied poorly due to ambiguity of being an affiliate of somebody/something}
 \centering
 \label{table:finalresultaccuracy}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|}
 \hline 
  \textbf{Slot Name}  & \textbf{Correct} & \textbf{Incorrect Entity name} & \textbf{Incorrect Value} \\ 
 \hline 
