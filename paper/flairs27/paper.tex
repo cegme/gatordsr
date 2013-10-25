@@ -1,0 +1,68 @@
+
+
+
+\documentclass[letterpaper]{article}
+\usepackage{aaai}
+\usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
+\usepackage{xcolor}
+\usepackage{cite }
+\usepackage{graphicx, epsfig}
+\usepackage[margin=1in]{geometry}
+\usepackage[hyphens]{url}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\pagenumbering{gobble} %Do not print page numbers
+
+\newcommand\ceg[1]{\textcolor{red}{#1}} % Red marker to declare errors.
+
+\begin{document}
+
+\title{University of Florida Knowledge Base Acceleration Notebook}
+
+%\numberofauthors{3}
+
+
+
+
+\author{Morteza Shahriari Nia, Christan Grant, Yang Peng, Daisy Zhe Wang\footnote{University of Florida, Gainesville, Florida, USA}\\
+       {\{msnia, cgrant, ypeng, daisyw\}@cise.ufl.edu}
+\and
+  Milenko Petrovic\footnote{Institute for Human and Machine Cognition, Ocala, Florida, USA}\\
+       {mpetrovic@ihmc.us}
+}
+
+\maketitle
+
+\input{content/abstract.tex}
+
+\input{content/introduction.tex}
+
+\input{content/system.tex}
+
+\input{content/implementation.tex}
+
+\input{content/results.tex}
+
+\input{content/discussion.tex}
+
+\input{content/conclusion.tex}
+
+\section*{Acknowledgements}
+Christan Grant is funded by a National Science Foundation Graduate Research
+Fellowship under Grant No. DGE-0802270. 
+
+%\bibliographystyle{acm}
+%\bibliography{citation}
+
+\bibliography{citation}
+\bibliographystyle{aaai}
+
+\input{content/appendix.tex}
+
+
+\end{document}

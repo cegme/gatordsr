@@ -1,0 +1,95 @@
+
+
+\section{Discussion \& Future Works}
+
+%In this section we address some of the challenges that we faced during the course of this project. We started 
+%off by trying to use the off-the-shelf tools for this task. We started 
+%by using Scala/Spark~\cite{ferc11} to benefit from the parallelization 
+%performance there. Unfortunately Spark was not performant and the distributed reliability overhead 
+%was much more than tolerable. We moved on to use Scala parallelization  framework itself, and unfortunately it did not satisfy our needs as well; there was 
+%excessive memory overhead on map-reduce jobs. We migrated the core of the 
+%system to Java Parallelism APIs and that was not good enough either, we still demanded 
+%better. So we built our own parallel system which in actual performance had 
+%the least of overhead, the least memory consumption and the most robust memory 
+%model which avoided unpredictable CPU stalls on garbage collections in 
+%processing the corpus.
+
+Table~\ref{table:finalresultrecall} show a varied distribution of 
+extracted slot names.
+Some slots naturally have more results than other slots. For example,
+AssociateOf and Affiliate have more slot values than DateOfDeath and
+CauseOfDeath, since there are only so few entities that are deceased.
+Also, some patterns are more general causing more extractions.
+For example, for Affiliate, we use \textit{and},
+\textit{with} as anchor words. These words are more common than \textit{dead} or \textit{died} or \textit{founded} in other patterns. 
+
+\begin{table}    
+\caption{Recall Measure on \textit{submission\_infer}: Generic slot names like affiliate had the most recall, compared to less popular slot names e.g. DateOfDeath}
+\centering
+\label{table:finalresultrecall}
+\begin{tabular}{|l|p{3.5cm}|p{4cm}|}
+\hline 
+ \textbf{Slot Name} & \textbf{Total instances of slot value found} & \textbf{\# of entities covered by slot value} \\ 
+\hline 
+Affiliate & 108598 & 80 \\ \hline 
+AssociateOf & 25278 & 106 \\ \hline 
+AwardsWon & 38 & 14 \\ \hline 
+CauseOfDeath & 0 & 0 \\ \hline 
+Contact\_Meet\_Entity & 191 & 8 \\ \hline 
+Contact\_Meet\_PlaceTime & 5974 & 109 \\ \hline 
+DateOfDeath & 87 & 14 \\ \hline 
+EmployeeOf & 75 & 16 \\ \hline 
+FoundedBy & 326 & 30 \\ \hline 
+FounderOf & 302 &  29 \\ \hline 
+Titles & 26823 & 118 \\ \hline 
+TopMembers & 314 & 26 \\ \hline 
+
+\end{tabular} 
+\end{table}
+
+
+
+
+
+When we evaluate the results of slot extraction, we find 
+three kinds of problems for accuracy: 1) wrong entities found; 2) wrong tags 
+by the Lingpipe; 3) wrong results matched by the patterns.  We also have 
+recall problems: 1) not enough good alias names to find all the entities. 2) 
+not enough and powerful patterns to capture all the slot values. 
+
+We will use entity resolution methods and other advanced methods to improve 
+the accuracy and recall of entity extraction part. 
+
+For slot extraction, to improve the performance, we need: 1) Using multi-class classifiers instead of pattern matching method to 
+extract slot values in order to increase both recall and accuracy for slots
+``Affiliate'', ``AssociateOf'', ``FounderOf'', ``EmployeeOf'', ``FoundedBy'',
+``TopMembers'', ``Contact\_Meet\_Entity'' and so on. 2) For special slots, 
+like ``Titles'', ``DateOfDeath'', ``CauseOfDeath'', ``AwardsWon'', using different 
+kind of advanced methods, e.g.\ classifiers, matching methods. 3) Using other 
+NLP tools or using classifiers to overcome the drawbacks of the LingPipe’s 
+inaccurate tags. The first and second tasks are the most important tasks we 
+need to do.
+
+About 50\% of twitter entities are not found by the system. One reason
+is those entities are not popular. For example, a `Brenda Weiler' Google 
+search result has 860,000 documents over the whole web. For our 
+small portion of the web it might make sense. The 
+histogram of the entities shows that more than half of the 
+entities have appeared in less than 10 StreamItems. A good portion have 
+appeared only once.
+
+%A theory is that we are falling behind because we are using the cleansed (from HTML tags)
+%version of the corpus. We believe there has been a reason that TREC has 
+%included the actual HTML document as well as the cleansed version. This 
+%definitely will convey some information to us. If it was as easy as reading 
+%some clean text they wouldn't bother including so much data for teams to be 
+%useless. So we guess is that we are missing some information from not using 
+%the actual document. And, we are looking for tokens with entity value set 
+%which will depend us dramatically on the accuracy of lingpipe, which is a fast 
+%algorithm but is not as good as other NLP tools can be e.g. Stanford NLP.
+
+% Note: Here we discuss why the results are the way they are
+% Give pros and cons, talk about how the implemented algorithms
+% performed in the actual implementation.
+% Answer the `why' question about all the trends in the results section.
+

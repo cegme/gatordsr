@@ -1,0 +1,51 @@
+
+\section{Introduction}
+
+
+An important challenge in maintaining Wikipedia.org (WP), the most popular 
+web-based, collaborative, multilingual knowledge base on the internet, is  
+making sure its contents are up-to-date. Presently, there is considerable time lag 
+between the publication date of cited news and the date of an edit to WP 
+creating the citation. The median time lag for a sample of about 60K
+web pages cited by WP articles in the \textit{living\_people} category is over 
+a year and the distribution has a long and heavy tail \cite{JFrank12}. 
+Also, the majority of WP entities have updates on their associated article much 
+less frequently than their mention frequency. Such stale entries 
+are the norm in any large knowledge base (KB) because the number of humans 
+maintaining the KB is far fewer than the number of entities. 
+%Further, the number of mentions is much larger than the number of entities~\cite{JFrank12}. 
+Reducing latency keeps KBs such as WP relevant and helpful it users.
+
+Given an entity page, possible citations may come from a variety of sources.
+The actual citable information is a small percentage of the total documents that appear on the web.
+We develop a system to read streaming data and filter out articles that are candidates for citations.
+Given these documents, we extract the pairs of information in the 
+article that is recommended for citations for each knowledge base page.
+
+Our system contains three main components. First, we pre-process the data and
+build models representing the knowledge base entries.
+Next, we use the models to filter a stream of documents so they only contain 
+candidate recommendations.
+Lastly, we processes sentences from candidate extractions and return 
+specific information to be cited.
+
+
+In this paper, we describe the system we built to process the data.
+We built this system as part of a formal task described in Section~\ref{sec:kbatask}.
+Our approach to this task is to build a modular system
+that allows us to explore the nuances of the training data and queries.
+Overall, we contribute the following:
+\begin{itemize}[noitemsep,nolistsep]
+\item introduce a method to build models of name variations (Section~\ref{section:aliasgeneration});
+\item built a system to filter a large amount of diverse documents (Section~\ref{sec:ccrimpl});
+\item extract entity-slot-value triples of information to be added to KB (Section~\ref{sec:ssve});
+\item filter the final results using deduplication and inference (Section~\ref{section:highAccuracyFilter});
+\item self-evaluate our results over a 4.5 TB data set (Section~\ref{sec:results}).
+\end{itemize}
+
+
+% Evaluation Criteria
+
+
+% Quick Discussion of our approach
+
