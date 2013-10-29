@@ -25,7 +25,7 @@ enthusiasts can also contribute to \cite{github}, also the relevant discussion
 mailing list is accessible here \cite{googlegroups}.
  
  
-\begin{table}
+\begin{table*}
 \caption{Document Chunks Distribution }
 \centering
 \label{table:documentsDist}
@@ -48,7 +48,7 @@ mailing list is accessible here \cite{googlegroups}.
   
 \hline 
 \end{tabular} 
-\end{table}
+\end{table*}
 
 
  
@@ -80,7 +80,7 @@ highest accuracy of 63.6\% for \textit{AssociateOf} and the lowest of
 \caption{Benchmark Server Specifications }
 \centering
 \label{table:serverspec}
-\begin{tabular}{|c|l|}
+\begin{tabular}{| c | p{5cm} |}
 \hline 
 \textbf{Spec} & \textbf{Details} \\ \hline
 Model & Dell xxx 32 cores \\ \hline 
@@ -102,7 +102,7 @@ Software Stack & GCC version 4.4.7, Java 1.7.0\_25, Scala 2.9.2, SBT 0.12.3 \\ \
 \centering
 \label{table:initialresult}
 
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{ | c | c | p{2cm} | p{13mm} |}
 \hline 
  & \textbf{Correct} & \textbf{Incorrect Entity name} & \textbf{Incorrect Value} \\ 
 \hline 
@@ -112,8 +112,31 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 \end{tabular} 
 \end{table}
 
+\begin{table*}    
+\caption{Recall Measure on \textit{submission\_infer}: Generic slot names like affiliate had the most recall, compared to less popular slot names e.g. DateOfDeath}
+\centering
+\label{table:finalresultrecall}
+\begin{tabular}{|l|p{3.5cm}|p{4cm}|}
+\hline 
+ \textbf{Slot Name} & \textbf{Total instances of slot value found} & \textbf{\# of entities covered by slot value} \\ 
+\hline 
+Affiliate & 108598 & 80 \\ \hline 
+AssociateOf & 25278 & 106 \\ \hline 
+AwardsWon & 38 & 14 \\ \hline 
+CauseOfDeath & 0 & 0 \\ \hline 
+Contact\_Meet\_Entity & 191 & 8 \\ \hline 
+Contact\_Meet\_PlaceTime & 5974 & 109 \\ \hline 
+DateOfDeath & 87 & 14 \\ \hline 
+EmployeeOf & 75 & 16 \\ \hline 
+FoundedBy & 326 & 30 \\ \hline 
+FounderOf & 302 &  29 \\ \hline 
+Titles & 26823 & 118 \\ \hline 
+TopMembers & 314 & 26 \\ \hline 
 
-\begin{table}
+\end{tabular} 
+\end{table*}
+
+\begin{table*}
 \caption{SSF Accuracy Measure on \textit{submission\_infer}: Accuracy of AffiliateOf was the best and Affiliate applied poorly due to ambiguity of being an affiliate of somebody/something}
 \centering
 \label{table:finalresultaccuracy}
@@ -135,7 +158,7 @@ Titles & 55\% & 0\% & 45\%  \\ \hline
 TopMembers & 33\% & 17\% & 50\%  \\ \hline 
 
 \end{tabular} 
-\end{table}
+\end{table*}
 
 
 
