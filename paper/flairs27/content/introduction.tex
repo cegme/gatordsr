@@ -1,48 +1,25 @@
 
 \section{Introduction}
 
-In this paper we develop a targeted knowledge extraction for certain wikipedia entities from the internet. Entities from three categories of \textit{person}, \textit{organization} and \textit{facility} are considered and we apply a query driven approach on extracting knowledge for these entities. 
+In this paper we develop an efficient query-driven slot value extraction for certain wikipedia entities from a timely stream of documents on internet. Entities from three categories of \textit{person}, \textit{organization} and \textit{facility} are considered. This can be regarded as an automatic way to expand and automate Wikipedia citation system and a way to automatically populate knowledge bases such as freebase. The challenges that we address are the scale, precision and recall of the extent we can extract slot values from internet for entities of interest. Examples of these facts are 'Who a person has met during a certain period of time?', 'Who are the employees of this organization?', 'Who has met who in this facility at a certain time?'
+
+ An important challenge in maintaining Wikipedia.org (WP), the most popular web-based, collaborative, multilingual knowledge base on the internet, is making sure its contents are up-to-date. Presently, there is considerable time lag between the publication date of cited news and the date of an edit to WP creating the citation. The median time lag for a sample of about 60K web pages cited by WP articles in the \textit{living\_people} category is over a year and the distribution has a long and heavy tail \cite{JFrank12}. Also, the majority of WP entities have updates on their associated article much less frequently than their mention frequency. Such stale entries are the norm in any large knowledge base (KB) because the number of humans maintaining the KB is far fewer than the number of entities. %Further, the number of mentions is much larger than the number of entities~\cite{JFrank12}. 
+Reducing latency keeps KBs such as WP relevant and helpful to it users.
+
+Given an entity page, possible citations may come from a variety of sources. The actual citable information is a small percentage of the total documents that appear on the web. We develop a system to read streaming data and filter out articles that are candidates for citations. Given these documents, we extract the pairs of information in the article that is recommended for citations for each entity page in  WP. Some of the challenges that we face in this regard includes: having to balance between infamous and obscure enitities, ambiguous entities (entities of exact same name that are differnet in real life), facts that can very broad (e.g. things that an entity is affiliated with) or very specific (such as cause of death of a \textit{person} entity).
+
+Our system contains three main components. First, we pre-process the data and build models representing the knowledge base entries. Next, we use the models to filter a stream of documents so they only contain 
+candidate recommendations. Lastly, we processes sentences from candidate extractions and return specific information to be cited. The system can handle infrequent entities, but adding of new entities requries going thorugh full dataset.
 
 
-An important challenge in maintaining Wikipedia.org (WP), the most popular 
-web-based, collaborative, multilingual knowledge base on the internet, is  
-making sure its contents are up-to-date. Presently, there is considerable time lag 
-between the publication date of cited news and the date of an edit to WP 
-creating the citation. The median time lag for a sample of about 60K
-web pages cited by WP articles in the \textit{living\_people} category is over 
-a year and the distribution has a long and heavy tail \cite{JFrank12}. 
-Also, the majority of WP entities have updates on their associated article much 
-less frequently than their mention frequency. Such stale entries 
-are the norm in any large knowledge base (KB) because the number of humans 
-maintaining the KB is far fewer than the number of entities. 
-%Further, the number of mentions is much larger than the number of entities~\cite{JFrank12}. 
-Reducing latency keeps KBs such as WP relevant and helpful it users.
-
-Given an entity page, possible citations may come from a variety of sources.
-The actual citable information is a small percentage of the total documents that appear on the web.
-We develop a system to read streaming data and filter out articles that are candidates for citations.
-Given these documents, we extract the pairs of information in the 
-article that is recommended for citations for each knowledge base page.
-
-Our system contains three main components. First, we pre-process the data and
-build models representing the knowledge base entries.
-Next, we use the models to filter a stream of documents so they only contain 
-candidate recommendations.
-Lastly, we processes sentences from candidate extractions and return 
-specific information to be cited.
-
-
-In this paper, we describe the system we built to process the data.
-We built this system as part of a formal task described in Section~\ref{sec:kbatask}.
-Our approach to this task is to build a modular system
-that allows us to explore the nuances of the training data and queries.
-Overall, we contribute the following:
+In this paper, we describe the system we built to process the data. We built this system as part of a formal task described in Section~\ref{sec:kbatask}. Our approach to this task is to build a modular system
+that allows us to explore the nuances of the training data and queries. Overall, we contribute the following:
 \begin{itemize}[noitemsep,nolistsep]
-\item introduce a method to build models of name variations (Section~\ref{section:aliasgeneration});
-\item built a system to filter a large amount of diverse documents (Section~\ref{sec:ccrimpl});
-\item extract entity-slot-value triples of information to be added to KB (Section~\ref{sec:ssve});
-\item filter the final results using deduplication and inference (Section~\ref{section:highAccuracyFilter});
-\item self-evaluate our results over a 4.5 TB data set (Section~\ref{sec:results}).
+\item Introduce a method to build models of name variations %(Section \ref{section:aliasgeneration});
+\item Built a system to filter a large amount of diverse documents %(Section~\ref{sec:ccrimpl});
+\item Extract entity-slot-value triples of information to be added to KB %(Section~\ref{sec:ssve});
+\item Filter the final results using deduplication and inference %(Section~\ref{section:highAccuracyFilter});
+\item Self-evaluate our results over a 4.5 TB data set %(Section\ref{sec:results}).
 \end{itemize}
 
 

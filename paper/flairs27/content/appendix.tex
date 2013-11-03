@@ -4,19 +4,12 @@
 
 \section{KBA Task Background}
 \label{sec:kbatask}
-The National Institute of Standards (NIST) hosted the
-Text REtrieval Conference (TREC) --- Knowledge Base Acceleration challenge in 2013. The task
-contains two main sections designed for this track, Cumulative Citation Recommendation 
-and Streaming Slot Filling. Due to the importance of knowledge bases, both of these 
-tracks aim to accelerating populating them, hence the title Knowledge Base Acceleration (KBA).
-Below we describe each of these tracks and their purposes.
+The National Institute of Standards (NIST) hosted the Text REtrieval Conference (TREC) --- Knowledge Base Acceleration challenge in 2013. The task contains two main sections designed for this track, Cumulative Citation Recommendation and Streaming Slot Filling. Due to the importance of knowledge bases, both of these 
+tracks aim to accelerating populating them, hence the title Knowledge Base Acceleration (KBA). Below we describe each of these tracks and their purposes.
 
 \subsection{Cumulative Citation Recommendation (CCR)}
 
-For this track, assessors were instructed to ``use the Wikipedia article to 
-identify (disambiguate) the entity, and then imagine forgetting all info in the WP 
-article and asking whether the text provides any information about the entity'' \cite{JFrank12}.
-Documents are divided according if an entity is mentioned and a relevance level to the entity.
+For this track, assessors were instructed to ``use the Wikipedia article to identify (disambiguate) the entity, and then imagine forgetting all info in the WP article and asking whether the text provides any information about the entity'' \cite{JFrank12}. Documents are divided according if an entity is mentioned and a relevance level to the entity.
 
 More specifically, a document may have a mention or be without a mention.
 \begin{itemize}[noitemsep]
@@ -47,19 +40,9 @@ The relevance of a document to a query is split into the four classifications.
 
 
 \subsection{Streaming Slot Filling (SSF)}
-The task is that given certain WP or Twitter entities 
-(wiki/twitter URLs) and certain relations of interest (given in
-Table~\ref{table:slotNameOntology}), extract as many triple relations as possible (
-hence, slot filling). This can be used to automatically populate knowledgebases 
-such as free-base or DBPedia or even fill-in the information boxes at Wikipedia. 
-Below, you can view some examples of what it means to fill in a slot value; in 
-each example there is a sentence of interest that we wish to extract slot values 
-from, an entity that the slot value is related to, and a slot name which can be 
-thought of as the topic of the slot value:
+The task is that given certain WP or Twitter entities (wiki/twitter URLs) and certain relations of interest (given in Table~\ref{table:slotNameOntology}), extract as many triple relations as possible (hence, slot filling). This can be used to automatically populate knowledgebases such as free-base or DBPedia or even fill-in the information boxes at Wikipedia. Below, you can view some examples of what it means to fill in a slot value; in each example there is a sentence of interest that we wish to extract slot values from, an entity that the slot value is related to, and a slot name which can be thought of as the topic of the slot value:
 
-\noindent \textbf{Example 1:} ``Matthew DeLorenzo and Josiah Vega, both 14 years old and students 
-at Elysian Charter School, were honored Friday morning by C-SPAN and received 
-\$1,500 as well as an iPod Touch after winning a nationwide video contest.''
+\noindent \textbf{Example 1:} ``Matthew DeLorenzo and Josiah Vega, both 14 years old and students at Elysian Charter School, were honored Friday morning by C-SPAN and received \$1,500 as well as an iPod Touch after winning a nationwide video contest.''
 
 Entity:  http://en.wikipedia.org/wiki/Elysian\_Charter\_School
 
@@ -69,9 +52,7 @@ Possible slot values: ``Matthew DeLorenzo'', ``Josiah Vega''
 
 Incorrect slot values: ``C-SPAN'', ``iPod Touch''
 
-\noindent \textbf{Example 2:} ``Veteran songwriters and performers Ben Mason, Jeff Severson and 
-Jeff Smith will perform on Saturday, April 14 at 7:30 pm at Creative Cauldron 
-at ArtSpace, 410 S. Maple Avenue.''
+\noindent \textbf{Example 2:} ``Veteran songwriters and performers Ben Mason, Jeff Severson and Jeff Smith will perform on Saturday, April 14 at 7:30 pm at Creative Cauldron at ArtSpace, 410 S. Maple Avenue.''
 
 Entity: http://en.wikipedia.org/wiki/Jeff\_Severson
 
@@ -81,9 +62,7 @@ Possible slot values: ``Ben Mason'', ``Jeff Severson'', ``Jeff Smith''
 
 Incorrect slot values: ``Creative Caldron'', ``Art Space''
 
-\noindent \textbf{Example 3:}  ``Lt. Gov. Drew Wrigley and Robert Wefald, a retired North Dakota 
-district judge and former state attorney general, unveiled the crest Friday 
-during a ceremony at the North Dakota Capitol.''
+\noindent \textbf{Example 3:}  ``Lt. Gov. Drew Wrigley and Robert Wefald, a retired North Dakota district judge and former state attorney general, unveiled the crest Friday during a ceremony at the North Dakota Capitol.''
 
 Entity: http://en.wikipedia.org/wiki/Hjemkomst\_Center
 
@@ -92,13 +71,7 @@ Slot name: Contact\_Meet\_PlaceTime
 Slot value: ``Friday during a ceremony at the North Dakota Capitol''
 
 
-\noindent In \textit{streaming} slot filling, we are only interested in new 
-slot values that were not substantiated earlier in the stream corpus.
-In Table~\ref{table:slotNameOntology} you can view some slot values 
-and their types, the comprehensive description of which can be found at
-\cite{tackbp} and \cite{aec}. The details of the metric for SSF will favor systems 
-that most closely match the changes in the ground truth time line of slot values. 
-This is done by searching for other documents that mentioned an entity and exactly 
+\noindent In \textit{streaming} slot filling, we are only interested in new slot values that were not substantiated earlier in the stream corpus. In Table~\ref{table:slotNameOntology} you can view some slot values and their types, the comprehensive description of which can be found at \cite{tackbp} and \cite{aec}. The details of the metric for SSF will favor systems that most closely match the changes in the ground truth time line of slot values. This is done by searching for other documents that mentioned an entity and exactly 
 matched the slot fill strings selected by the assessors.
 
 

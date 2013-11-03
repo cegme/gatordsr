@@ -1,6 +1,6 @@
 
 
-\section{Discussion \& Future Works}
+\section{Discussions \& Conclusion}
 
 %In this section we address some of the challenges that we faced during the course of this project. We started 
 %off by trying to use the off-the-shelf tools for this task. We started 
@@ -14,14 +14,7 @@
 %model which avoided unpredictable CPU stalls on garbage collections in 
 %processing the corpus.
 
-Table~\ref{table:finalresultrecall} show a varied distribution of 
-extracted slot names.
-Some slots naturally have more results than other slots. For example,
-AssociateOf and Affiliate have more slot values than DateOfDeath and
-CauseOfDeath, since there are only so few entities that are deceased.
-Also, some patterns are more general causing more extractions.
-For example, for Affiliate, we use \textit{and},
-\textit{with} as anchor words. These words are more common than \textit{dead} or \textit{died} or \textit{founded} in other patterns. 
+Table~\ref{table:finalresultrecall} show a varied distribution of extracted slot names. Some slots naturally have more results than other slots. For example, AssociateOf and Affiliate have more slot values than DateOfDeath and CauseOfDeath, since there are only so few entities that are deceased. Also, some patterns are more general causing more extractions. For example, for Affiliate, we use \textit{and}, \textit{with} as anchor words. These words are more common than \textit{dead} or \textit{died} or \textit{founded} in other patterns. 
 
 
 
@@ -29,32 +22,13 @@ For example, for Affiliate, we use \textit{and},
 
 
 
-When we evaluate the results of slot extraction, we find 
-three kinds of problems for accuracy: 1) wrong entities found; 2) wrong tags 
-by the Lingpipe; 3) wrong results matched by the patterns.  We also have 
-recall problems: 1) not enough good alias names to find all the entities. 2) 
-not enough and powerful patterns to capture all the slot values. 
-
-We will use entity resolution methods and other advanced methods to improve 
+When we evaluate the results of slot extraction, we find three kinds of problems for accuracy: 1) wrong entities found; 2) wrong tags by the Lingpipe; 3) wrong results matched by the patterns.  We also have 
+recall problems: 1) not enough good alias names to find all the entities. 2) not enough and powerful patterns to capture all the slot values. We will use entity resolution methods and other advanced methods to improve 
 the accuracy and recall of entity extraction part. 
 
-For slot extraction, to improve the performance, we need: 1) Using multi-class classifiers instead of pattern matching method to 
-extract slot values in order to increase both recall and accuracy for slots
-``Affiliate'', ``AssociateOf'', ``FounderOf'', ``EmployeeOf'', ``FoundedBy'',
-``TopMembers'', ``Contact\_Meet\_Entity'' and so on. 2) For special slots, 
-like ``Titles'', ``DateOfDeath'', ``CauseOfDeath'', ``AwardsWon'', using different 
-kind of advanced methods, e.g.\ classifiers, matching methods. 3) Using other 
-NLP tools or using classifiers to overcome the drawbacks of the LingPipe’s 
-inaccurate tags. The first and second tasks are the most important tasks we 
-need to do.
+For slot extraction, to improve the performance, we need: 1) Using multi-class classifiers instead of pattern matching method to extract slot values in order to increase both recall and accuracy for slots ``Affiliate'', ``AssociateOf'', ``FounderOf'', ``EmployeeOf'', ``FoundedBy'', ``TopMembers'', ``Contact\_Meet\_Entity'' and so on. 2) For special slots, like ``Titles'', ``DateOfDeath'', ``CauseOfDeath'', ``AwardsWon'', using different kind of advanced methods, e.g.\ classifiers, matching methods. 3) Using other NLP tools or using classifiers to overcome the drawbacks of the LingPipe’s inaccurate tags. The first and second tasks are the most important tasks we need to do.
 
-About 50\% of twitter entities are not found by the system. One reason
-is those entities are not popular. For example, a `Brenda Weiler' Google 
-search result has 860,000 documents over the whole web. For our 
-small portion of the web it might make sense. The 
-histogram of the entities shows that more than half of the 
-entities have appeared in less than 10 StreamItems. A good portion have 
-appeared only once.
+About 50\% of twitter entities are not found by the system. One reason is those entities are not popular. For example, a `Brenda Weiler' Google search result has 860,000 documents over the whole web. For our small portion of the web it might make sense. The histogram of the entities shows that more than half of the entities have appeared in less than 10 StreamItems. A good portion have appeared only once.
 
 %A theory is that we are falling behind because we are using the cleansed (from HTML tags)
 %version of the corpus. We believe there has been a reason that TREC has 
@@ -71,3 +45,10 @@ appeared only once.
 % performed in the actual implementation.
 % Answer the `why' question about all the trends in the results section.
 
+
+
+
+Alltogether, We experimented through different tools and approaches to best process the massive amounts of data on the platform that we had available to us. We generate aliases for wikipedia entities using Wiki API and extract some aliases from wikipedia pages text itself. On twitter entities we extract aliases manually as it is part of the rule of the KBA track. We process documents that mention entities for slot value extraction. Slot values are determined using pattern matching over coreferences of entities in sentences. Finally post processing will filter, cleanup and infers some new slot values to enhance recall and accuracy. 
+
+We noticed that some tools that claim to be performant for using the hardware capabilities at hand sometimes don't really work as claimed and you should not always rely on one without a thorough A/B testing of performance which we ended up in generating our in-house system for processing the corpus and generating the index. Furthermore, on extracting slot values, pattern matching might not be the best options but definitely can produce some good results at hand. We have plans on generating classifiers for slot value extraction 
+purposes. Entity resolution on the other hand was a topic we spent sometime on but could not get to stable grounds for it. Entity resolution will distinguish between entities of the same name but different contexts. Further improvements on this component of the system are required. 
