@@ -1,6 +1,6 @@
 
 
-\section{Discussions \& Conclusion}
+\section{Discussions}
 
 %In this section we address some of the challenges that we faced during the course of this project. We started 
 %off by trying to use the off-the-shelf tools for this task. We started 
@@ -52,3 +52,14 @@ Alltogether, We experimented through different tools and approaches to best proc
 
 We noticed that some tools that claim to be performant for using the hardware capabilities at hand sometimes don't really work as claimed and you should not always rely on one without a thorough A/B testing of performance which we ended up in generating our in-house system for processing the corpus and generating the index. Furthermore, on extracting slot values, pattern matching might not be the best options but definitely can produce some good results at hand. We have plans on generating classifiers for slot value extraction 
 purposes. Entity resolution on the other hand was a topic we spent sometime on but could not get to stable grounds for it. Entity resolution will distinguish between entities of the same name but different contexts. Further improvements on this component of the system are required. 
+
+
+We sampled documents from the training data period to generate an initial set of patterns. We then use these patterns to generate SSF results. By manully looking at these results, we prune some patterns with poor­performance and add more patterns that we identified from these results. We use several iterations to find the best patterns. We found that it is time consuming to identity quality pattern.
+
+
+
+
+We found three major classes of accuracy errors: incorrect entities selected, incorrect tags by Lingpipe and incorrect pattern extractions. The first issue is ameliorated by generating better aliases . And we use post-processing to reduce the second and third types of errors. We didn't use more advanced NLP packages such as Stanford NLP because of the large size of the data set. The post-processing step to improve the results is discussed in the next section.
+
+\textit{Post Processing Algorithm.}
+The SSF output of many extractions is noisy. The data contains duplicates and incorrect extractions. We can define rules to sanitize the output only using the information present in the SSF file. The file is processed in time order, in a tuple-at-a-time fashion to minimize the impact on accuracy. We define two classes of rules deduplication rules and inference rules. In our diagram we refer to this component as \textbf{High Accuracy Filter}.
