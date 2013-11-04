@@ -1,12 +1,10 @@
 
-\section{System Overview}
+\section{System}
 
-In this section, we introduce the main components of the system. Our system is built with a pipeline architecture in mind giving it the advantage to run each section separately to allow stream processing without blocking the data flow of components (Figure~\ref{fig:system}). The three logical components include sections for performing preprocessing to prepare the required data, Cumulative Citation Recommendation to annotate cite-worthy documents, Streaming Slot Filling to generate the actual slot values and PostProcessing to increase precision/recall. We work on a streaming data set and entities are from Twitter or WP to query.
+In this section, we introduce the main components of the system. Our system is built with a pipeline architecture in mind giving it the advantage to run each section separately to allow stream processing without blocking the data flow of components (Figure~\ref{fig:system}). The three logical components include sections on \textit{Model} for entity resolution purposes, \textit{Wiki Citation} to annotate cite-worthy documents, \textit{Slot Filling} to generate the actual slot values.
 
 
 To walk you through the steps we take, assume we only care about on single WP entity, the first step is to extract aliases of the entity. We use several approaches to get as many viable aliases as possible. Then we look into the stream of content that is being generated on the internet, apply two levels of filtering to finally end up with the documents are central to that entity. To extract the relevnat slot values we perform pattern matching in each sentence or coreferent sentence to see if we can find a match. As a match is found from the content of the sentence to the patterns that we have generated regarding slot name, the associated slot value is extracted as a final result.
-
-As mentioned before the time lag from an event occurance until it is cited in WP is in average over a year due to the fact that human maintainers are much less than the number of entities in WP and that the frequency of news update on entities escalates this difference. Hence having an automatic way to extract this knowldge for entities can be a very valuable asset.
 
 %\ceg{Discuss current system first. If you want to keep the decisions points that led to the current architecture, make it a subsection.}
 
@@ -16,19 +14,19 @@ As mentioned before the time lag from an event occurance until it is cited in WP
   \includegraphics[width=3in]{./images/System_Diagram_with_model_Vertical-crop.pdf}
 % http://convert.neevia.com/pdfconvert/
   \vspace*{-.1in} 
-  \caption{The GatorDSR team System Architecture.
-  Components are logically groups with dotted boxes.
-  Color details the programing language implementation of components.}
+  \caption{System Architecture.
+  Components are logical groups noted with dotted boxes.}
   \label{fig:system}
   \vspace*{-.2in}
 \end{figure}
 
 
 
-\textit{Preprocessing.}
-The contest prohibits Wikipedia entities to have any manual aliases being added and only allows automatic ways. We use Wikipedia API backlink references (redirects to a wiki entity) as aliases of the entity. We also extract aliases from within the text of a wiki entity, which will be described in Section~\ref{section:aliasgeneration}. This whole process is referred to as \textit{Alias Extraction}. The manual extraction rule is lifted and participants are allowed to manually add aliases for Twitter entities. This is allowed because the Twitter website does not provide an example page from the beginning of the document stream. This process of extracting aliases for Twitter entities is referred to as \textit{Manual Alias Extraction}.
+\subsection{Model}
 
-Once aliases are available we pass them through rules of generating proper name orders which will produce various forms of writing a name. As a basic example Bill Gates can be written as Gates, Bill. This will allow the system to capture various notation forms of aliases. We refer to this part as \textit{Name Order Generator}.
+We use Wikipedia API to get these aliases automatically. This is done by retrieving backlink references (redirects of a wiki entity), e.g. William Henry Gates is an alias for Bill Gates in WP as a backlink reference. Unfortunately this is not good enough and to enhance recall we need more aliases. To have better use of a wiki page we parse HTML DOM of the page, then use regular expressions to extract the bold phrases of the first paragraph as alias of the actual entity. Based on our observation this is a very accurate heuristic and provides us with lots of famous aliases of the entities. As an example of when this might not wirk, is that there might be occasions that some other topic is written in bold typesetting in the first paraph apart from the entity aliases itself but these are very rare.
+
+Once aliases are available we pass them through rules of generating proper name orders which will produce various forms of writing a name. As a basic example Bill Gates can be written as Gates, Bill also. This will allow the system to capture various notation forms of aliases. We refer to this part as \textit{Alias Order Generator}.
 
 \textit{Cumulative Citation Recommendation.}
 The main goal of CCR is to have an aggregate list of documents that are worthy of being cited in a Wikipedia page. We perform exact string matching and treat all the documents that mention an entity equally likely to be citable. One of the reasons for this is that in former TREC KBA reports \cite{JFrank12} there were observations of how non-mentioning documents have a low chance of being citable in Wikipedia. So we take on that and ignore non-citing documents. 
