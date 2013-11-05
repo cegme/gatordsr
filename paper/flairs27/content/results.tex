@@ -6,25 +6,25 @@
  Our system was developed on a 32-core server described in Table~\ref{table:serverspec}. The corpus is a snapshot of the web in English. Each document is annotated using lingpipe and is called StreamItem, a bundle of StreamItems are put together and serialized as Apache Thrift objects, then compressed using xz compression with Lempel–Ziv–Markov chain algorithm (LZMA2) and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys. The total size of the data after XZ compression and GPG encryption is 4.5TB and just over 500M StreamItems \cite{s3}. Data is stored in directories the naming of which is date-hour combination: from 2011-10-05-00 (5th of October 2011, 12am) until 2013-02-13-23 (13th of Feburary 2013, 11pm), which consists of 11952 date-hour combinations, 4 months of data (October 2011 - February 2012) is for training purposes. This corpora consists of various media types the distribution of which can be found in Table~\ref{table:documentsDist}. To have a sense of the scale of objects and compression as an example a 6mb gpg.xz files would become 45 mb thrift objects which can contain a couple of thousand StreamItems depending on their size. Some of the documents have null values for their annotation fields. The first portion of the data which ranges from October 2011 to February 2012 is considered as training data. The source code of our system is stored as an open source project where enthusiasts can also contribute to \cite{github}, also the relevant discussion mailing list is accessible here \cite{googlegroups}.
  
  
-\begin{table}
+\begin{table}[b]
 \caption{Document Chunks Distribution }
 \centering
 \label{table:documentsDist}
 
-\begin{tabular}{|c|l|}
+\begin{tabular}{|l|c|c|}
 \hline 
-\textbf{\# of Documents} & \textbf{Document Type}\\ 
+\textbf{\# of Documents} & \textbf{Document Type} & \textbf{Slots Found}\\ 
 \hline 
-10988 & 	arxiv  \\ \hline
-34887 & Classified \\ \hline
-77674 & Forum  \\ \hline
-12947 & Linking  \\ \hline
-141936 & Mainstream News  \\ \hline
-4137 & Memetracker \\ \hline
-280629 & News \\ \hline
-6347 &  Review \\ \hline
-688848 & 	 Social  \\ \hline
-740987 & Weblog \\ \hline
+	Arxiv & 10988 & \\ \hline
+ Classified & 34887 & \\ \hline
+ Forum & 77674 & \\ \hline
+ Linking & 12947 & \\ \hline
+ Mainstream News & 141936 & \\ \hline
+ Memetracker & 4137 & \\ \hline
+ News & 280629 & \\ \hline
+ Review & 6347 & \\ \hline
+ 	 Social & 688848 & \\ \hline
+ Weblog & 740987 & \\ \hline
 
   
 \hline 
@@ -35,7 +35,7 @@
  
  
  
-We have 135 extraction patterns coverin each slot-name/entity-type combinations. Our final submission was named \textit{submission\_infer}. Our results are as follows: Document extraction using query entity matching with aliases, sentence extraction using alias matching and co-reference. Slot extraction using patterns, NER tags and NP tags. 158,052 documents with query entities, 17885 unique extracted slot values for 8 slots and 139 entities, 4 slots and 31 entities missing.
+We have 135 extraction patterns covering each slot-name/entity-type combinations. Our final submission was named \textit{submission\_infer}. Our results are as follows: Document extraction using query entity matching with aliases, sentence extraction using alias matching and co-reference. Slot extraction using patterns, NER tags and NP tags. 158,052 documents with query entities, 17885 unique extracted slot values for 8 slots and 139 entities, 4 slots and 31 entities missing.
 
 On the performance of our initial submission run we performed random sampling via two processes, the results of which are according to Table~\ref{table:initialresult}. You can view that we have had an accuracy of around 55\%, and about 15\% wrong entity identified and 30\% incorrect value extracted across all entities and slot types. Most of our issues for this submission were regarding poor slot value extraction patterns and incomplete aliases whih were tried to be mtigated later on. For our final submission, we provide a more detailed statistics, which has been elaborated in Table~\ref{table:finalresultrecall} and Table~\ref{table:finalresultaccuracy}. Table~\ref{table:finalresultrecall} shows the extent of search outreach for
 each slot name. You can see that \textit{Affiliate} has been the slot name with highest hits and \textit{CauseOfDeath} our lowest hit with 0 instances found matching our patterns, after that \textit{AwardsWon} has been the next with 38 instances found. Affiliate is a very generic term and extracting real affiliates can be quite challenging using the extraction patterns provided. This can lead to noisy results. On the other hand for more precise terms our accuracy increases but we have less recall. Table~\ref{table:finalresultaccuracy} addresses the relative accuracy measure per slot value. There you can view that we have had the highest accuracy of 63.6\% for \textit{AssociateOf} and the lowest of 1\% - 5\%  for \textit{Affiliate}, \textit{Contact\_Meet\_PlaceTime} and \textit{EmployeeOf}.
@@ -61,7 +61,7 @@ Software Stack & GCC version 4.4.7, Java 1.7.0\_25, Scala 2.9.2, SBT 0.12.3 \\ \
 
 
 
-\begin{table}[htp]
+\begin{table}
 \caption{SSF Performance Measure on \textit{initial\_submission} }
 \centering
 \label{table:initialresult}

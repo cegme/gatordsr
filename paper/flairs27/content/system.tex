@@ -125,10 +125,3 @@ The output contains many duplicate entries. As we read the list of extracted slo
 
  New slots can be deduced from existing slots by defining inference rules. For example, two slots for the task are ``FounderOf'' and ``FoundedBy''. A safe assumption is these slot names are biconditional logical connectives with the entities and slot values. Therefore, we can express a rule ``X FounderOf Y'' equals ``Y FoundedBy X'' where X and Y are single unique entities. Additionally, we found that the slot names ``Contact\_Meet\_PlaceTime'' could be inferred as ``Contact\_Meet\_Entity'' if the Entity was a FAC and the extracted sentence contained an additional ORG/FAC tag. We also remove erronious slots that have extractions that are several pages in length or tool small. Errors of extracting long sentences can typically be 
 attributed to poor sentence parsing of web documents. We have some valid ``small'' extractions. For example a comma may separate a name and a title (e.g. ``John, Professor at MIT''). But such extraction rules can be particularly noisy, so we check to see if the extracted values have good entity values.
-
-
-
-
-
-\subsubsection{A short discussion}
-
