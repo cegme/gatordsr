@@ -6,7 +6,7 @@
  Our system was developed on a 32-core server described in Table~\ref{table:serverspec}. The corpus is a snapshot of the web in English. Each document is annotated using lingpipe and is called StreamItem, a bundle of StreamItems are put together and serialized as Apache Thrift objects, then compressed using xz compression with Lempel–Ziv–Markov chain algorithm (LZMA2) and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys. The total size of the data after XZ compression and GPG encryption is 4.5TB and just over 500M StreamItems \cite{s3}. Data is stored in directories the naming of which is date-hour combination: from 2011-10-05-00 (5th of October 2011, 12am) until 2013-02-13-23 (13th of Feburary 2013, 11pm), which consists of 11952 date-hour combinations, 4 months of data (October 2011 - February 2012) is for training purposes. This corpora consists of various media types the distribution of which can be found in Table~\ref{table:documentsDist}. To have a sense of the scale of objects and compression as an example a 6mb gpg.xz files would become 45 mb thrift objects which can contain a couple of thousand StreamItems depending on their size. Some of the documents have null values for their annotation fields. The first portion of the data which ranges from October 2011 to February 2012 is considered as training data. The source code of our system is stored as an open source project where enthusiasts can also contribute to \cite{github}, also the relevant discussion mailing list is accessible here \cite{googlegroups}.
  
  
-\begin{table*}
+\begin{table}
 \caption{Document Chunks Distribution }
 \centering
 \label{table:documentsDist}
@@ -15,21 +15,21 @@
 \hline 
 \textbf{\# of Documents} & \textbf{Document Type}\\ 
 \hline 
-10988 & 	arxiv (full text, abstracts in StreamItem.other\_content) \\ \hline
-34887 & CLASSIFIED (spinn3r)  \\ \hline
-77674 & FORUM (spinn3r)  \\ \hline
-12947 & linking (reprocessed from kba-stream-corpus-2012, same stream\_id)  \\ \hline
-141936 & MAINSTREAM\_NEWS (spinn3r)  \\ \hline
-4137 & MEMETRACKER (spinn3r)  \\ \hline
-280629 & news (reprocessed from kba-stream-corpus-2012, same stream\_id)  \\ \hline
-6347 &  REVIEW (spinn3r) \\ \hline
-688848 & 	 social (reprocessed from kba-stream-corpus-2012 plus extension, same stream\_id)  \\ \hline
-740987 & WEBLOG (spinn3r)  \\ \hline
+10988 & 	arxiv  \\ \hline
+34887 & Classified \\ \hline
+77674 & Forum  \\ \hline
+12947 & Linking  \\ \hline
+141936 & Mainstream News  \\ \hline
+4137 & Memetracker \\ \hline
+280629 & News \\ \hline
+6347 &  Review \\ \hline
+688848 & 	 Social  \\ \hline
+740987 & Weblog \\ \hline
 
   
 \hline 
 \end{tabular} 
-\end{table*}
+\end{table}
 
 
  
@@ -44,7 +44,7 @@ each slot name. You can see that \textit{Affiliate} has been the slot name with 
 \caption{Benchmark Server Specifications }
 \centering
 \label{table:serverspec}
-\begin{tabular}{| c | p{5cm} |}
+\begin{tabular}{| c | p{4.8cm} |}
 \hline 
 \textbf{Spec} & \textbf{Details} \\ \hline
 Model & Dell xxx 32 cores \\ \hline 
@@ -61,7 +61,7 @@ Software Stack & GCC version 4.4.7, Java 1.7.0\_25, Scala 2.9.2, SBT 0.12.3 \\ \
 
 
 
-\begin{table}
+\begin{table}[htp]
 \caption{SSF Performance Measure on \textit{initial\_submission} }
 \centering
 \label{table:initialresult}
@@ -76,20 +76,25 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 \end{tabular} 
 \end{table}
 
-\begin{table*}    
+
+\begin{table}[h]
+
+
+
+
 \caption{Recall Measure on \textit{submission\_infer}: Generic slot names like affiliate had the most recall, compared to less popular slot names e.g. DateOfDeath}
 \centering
 \label{table:finalresultrecall}
-\begin{tabular}{|l|p{3.5cm}|p{4cm}|}
+\begin{tabular}{|l|c|c|}
 \hline 
- \textbf{Slot Name} & \textbf{Total instances of slot value found} & \textbf{\# of entities covered by slot value} \\ 
+ \textbf{Slot Name} & \textbf{Instances Found} & \textbf{Entity Coverage} \\ 
 \hline 
 Affiliate & 108598 & 80 \\ \hline 
 AssociateOf & 25278 & 106 \\ \hline 
 AwardsWon & 38 & 14 \\ \hline 
 CauseOfDeath & 0 & 0 \\ \hline 
-Contact\_Meet\_Entity & 191 & 8 \\ \hline 
-Contact\_Meet\_PlaceTime & 5974 & 109 \\ \hline 
+{\tiny Contact\_Meet\_Entity} & 191 & 8 \\ \hline 
+{\tiny Contact\_Meet\_PlaceTime} & 5974 & 109 \\ \hline 
 DateOfDeath & 87 & 14 \\ \hline 
 EmployeeOf & 75 & 16 \\ \hline 
 FoundedBy & 326 & 30 \\ \hline 
@@ -98,22 +103,22 @@ Titles & 26823 & 118 \\ \hline
 TopMembers & 314 & 26 \\ \hline 
 
 \end{tabular} 
-\end{table*}
 
-\begin{table*}
+
+
 \caption{SSF Accuracy Measure on \textit{submission\_infer}: Accuracy of AffiliateOf was the best and Affiliate applied poorly due to ambiguity of being an affiliate of somebody/something}
 \centering
 \label{table:finalresultaccuracy}
-\begin{tabular}{|l|c|c|c|}
+\begin{tabular}{|l|c|c|p{13mm}|}
 \hline 
- \textbf{Slot Name}  & \textbf{Correct} & \textbf{Incorrect Entity name} & \textbf{Incorrect Value} \\ 
+ \textbf{Slot Name}  & \textbf{Correct} & \textbf{Wrong Entity} & {\small \textbf{Incorrect Value}} \\ 
 \hline 
 Affiliate & 1\% & 95\% & 5\% \\ \hline 
 AssociateOf & 63.6\% & 9.1\% & 27.3\%  \\ \hline 
 AwardsWon & 10\% & 10\% & 80\%  \\ \hline 
 CauseOfDeath & 0\% & 0\% & 0\%  \\ \hline 
-Contact\_Meet\_Entity & 21\% & 42\% & 37\%  \\ \hline 
-Contact\_Meet\_PlaceTime & 5\% & 20\% & 85\%  \\ \hline 
+{\tiny Contact\_Meet\_Entity} & 21\% & 42\% & 37\%  \\ \hline 
+{\tiny Contact\_Meet\_PlaceTime} & 5\% & 20\% & 85\%  \\ \hline 
 DateOfDeath & 29.6\% & 71\% & 25\%  \\ \hline 
 EmployeeOf & 5\% & 30\% & 65\%  \\ \hline 
 FoundedBy & 62\% & 17\% & 21\%  \\ \hline 
@@ -122,7 +127,7 @@ Titles & 55\% & 0\% & 45\%  \\ \hline
 TopMembers & 33\% & 17\% & 50\%  \\ \hline 
 
 \end{tabular} 
-\end{table*}
+\end{table}
 
 
 
