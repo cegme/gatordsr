@@ -6,12 +6,12 @@ The website is estimated to have nearly 365 million readers worldwide.
 An important part of keeping WP usable it to include new and current content.
 %An important challenge in maintaining WP, the most popular web-based, collaborative, multilingual KB on the internet, is making sure its contents are up-to-date.
 Presently, there is considerable time lag between the publication of an event and its citation in WP\@.
-The median time lag for a sample of about 60K web pages cited by WP articles in the \textit{living\_people} category is over a year and the distribution has a long and heavy tail \cite{JFrank12}.
+The median time lag for a sample of about 60K web pages cited by WP articles in the \textit{living\_people} category is over a year and the distribution has a long and heavy tail~\cite{JFrank12}.
 %Also, the majority of WP entities have updates on their associated article much less frequently than their mention frequency.
 Such stale entries are the norm in any large reference work because the number
 of humans maintaining the reference is far fewer than the number of entities.
 Reducing latency keeps WP relevant and helpful to its users.
-Given an entity page, such as \textit{wiki/Boris_Berezovsky_(businessman)}~\footnote{http://en.wikipedia.org/wiki/Boris_Berezovsky_(businessman)},
+Given an entity page, such as \textit{wiki/Boris\_Berezovsky\_(businessman)}\footnote{http://en.wikipedia.org/wiki/Boris\_Berezovsky\_(businessman)},
 possible citations may come from a variety of sources.
 Notable news may be derived from newspapers, tweets, blogs and a variety of different sources~\ref{}.
 The actual citable information is a small percentage of the total documents that appear on the web.
@@ -19,18 +19,28 @@ The actual citable information is a small percentage of the total documents that
 The goal of this system is to read web documents and recommend citable facts for WP pages.
 
 
-Discovering arbitrary web pages that contain information that is relevant and citable 
-to the WP entities is a non trivial task.
-Entities from three categories of \textit{person}, \textit{organization} and \textit{facility} are considered.
+Previous approaches are able to find relevant documents given a list of WP entities as query nodes \cite{}.
+Entities of three categories \textit{person}, \textit{organization} and \textit{facility} are considered.
+This task involves processing large sets of information to determine which facts may contain references to a WP entity. 
+This problem becomes increasingly more difficult when we look to extract specific relevant task from
+each document.
+Each relevant document must now be parsed and processed to determine if a sentence or paragraph is worth being cited.
 % Reorder this paragraph
-The challenges that we address are: first finding documents that contain useful information about the entity (avoid spams, documents that do not have direct information about the entity even though they mention them, etc), the scale where \textit{stream processing} nature of the system makes it suitable to avoid batch processing natures of Hadoop and operate in the realm of streams such as twitter storm~\footnote{http://storm-project.net/} which similarly processes unblounded streams of twitter data or Spark Streaming~\footnote{http://spark.incubator.apache.org/}. Further, this is called streaming because data is being generated as time goes
-on and for each extraction we should only consider current or past data. As other Natural Language Processing tasks, precision and recall of the extent we can extract slot values are very important metrics that we will discuss later on. Having to balance between infamous and obscure entities, dealing with slots that can be very broad (e.g.\ things that an entity is affiliated with) or very specific (such as cause of death of a \textit{person} entity).
+%The challenges that we address are: first finding documents that contain useful information about the entity (avoid spams, documents that do not have direct information about the entity even though they mention them, etc), the scale where \textit{stream processing} nature of the system makes it suitable to avoid batch processing natures of Hadoop and operate in the realm of streams such as twitter storm~\footnote{http://storm-project.net/} which similarly processes unblounded streams of twitter data or Spark Streaming~\footnote{http://spark.incubator.apache.org/}. Further, this is called streaming because data is being generated as time goes
+%on and for each extraction we should only consider current or past data. As other Natural Language Processing tasks, precision and recall of the extent we can extract slot values are very important metrics that we will discuss later on. Having to balance between infamous and obscure entities, dealing with slots that can be very broad (e.g.\ things that an entity is affiliated with) or very specific (such as cause of death of a \textit{person} entity).
 
-As an example, take a sentence from the internet \texttt{\underline{Boris Berezovsky} made his fortune in Russia in the 1990s when the country went through privatisation of state property and `robber capitalism', and passed away March 2013.}
-First we have to pay attentions that there are two \textit{Boris Berezovsky} entities in WP, one a businessman and the other a pianist. Any slot value extraction shall take this into account and try to come up with a viable distinguishing policy (Entity Resolution). Then, we match the sentence to find a slot value such as \textit{DateOfDeath} valued at March 2013. Other examples that this system can answer could be `Who a person has met during a certain period of time?', `Who are the employees of this organization?', `Who has met who in this facility at a certain time?'.
+Discovering facts from the Internet that are relevant and citable to the WP entities is a non-trivial task.
+For example, take a sentence from the internet \texttt{Boris Berezovsky made his fortune in Russia in the 1990s when the country went through privatisation of state property and `robber capitalism', and passed away March 2013.}
+First, we must realize that there are two \textit{Boris Berezovsky} entities in WP, one a businessman and the other a pianist.
+Any extraction needs to take this into account and employ a viable distinguishing policy (entity resolution).
+Then, we match the sentence to find a topic (slot) such as \textit{DateOfDeath} valued at March 2013.
+Each of these operations is expensive so an intelligent efficient framework is necessary to execute these operations at web scale.
+%Other examples that this system can answer could be `Who a person has met during a certain period of time?', `Who are the employees of this organization?', `Who has met who in this facility at a certain time?'.
 
 
-In this paper we develop an efficient query-driven slot value extraction for given Wikipedia.org (WP) entities from a timely stream of documents on internet as they are being created. Slot value extraction is formally defined as follows: match each sentence to the generic sentence structure of [\textit{Subject} - \textit{Verb} - \textit{Adverbial/Complement}]\cite{sentencePatterns08}, where  \textit{Subject} represents the entity and \textit{Verb} is the relation type we are interested in (e.g. Table~\ref{table:slotNameOntology}). If a sentence matches these two components of the sentence pattern, \textit{Adverbial/Complement} would be returned as the other side of the relation (which we refer to as slot value). Slot value extraction is a challenging task in current state of the art Knowledge Bases (KB). Popular graphical KB such as Freebase or DBPedia keep data in structured format where entities are connected via relationships (\textit{Verb}) and the associated attributes (\textit{Adverbial/Compelement}). Our system can be used to automatically populate such KBs or even fill-in the information boxes at entity WP page itself.
+In this paper we develop an efficient query-driven slot extraction for given WP entities from a timely stream of documents on internet as they are being created.
+Slot or fact extraction is formally defined as follows: match each sentence to the generic sentence structure of [\textit{Subject} - \textit{Verb} - \textit{Adverbial/Complement}]~\cite{sentencePatterns08}, where  \textit{Subject} represents the entity and \textit{Verb} is the relation type we are interested in (e.g. Table~\ref{table:slotNameOntology}).
+If a sentence matches these two components of the sentence pattern, \textit{Adverbial/Complement} would be returned as the other side of the relation (which we refer to as slot value). Slot value extraction is a challenging task in current state of the art Knowledge Bases (KB). Popular graphical KB such as Freebase or DBPedia keep data in structured format where entities are connected via relationships (\textit{Verb}) and the associated attributes (\textit{Adverbial/Compelement}). Our system can be used to automatically populate such KBs or even fill-in the information boxes at entity WP page itself.
 
 
 Our system contains three main components. First, we pre-process the data and build models representing the WP query entities. Next, we use the models to filter a stream of documents so they only contain candidate citations. Lastly, we processes sentences from candidate extractions and return slot values. 
