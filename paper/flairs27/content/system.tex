@@ -4,7 +4,20 @@
 In this section, we introduce the main components of the system. Our system is built with a pipeline architecture in mind giving it the advantage to run each section separately to allow stream processing without blocking the data flow of components (Figure~\ref{fig:system}). The three logical components include sections on \textit{Model} for entity resolution purposes, \textit{Wiki Citation} to annotate cite-worthy documents, \textit{Slot Filling} to generate the actual slot values.
 
 
-To walk you through the steps we take, assume we only care about on single WP entity, the first step is to extract aliases of the entity. We use several approaches to get as many viable aliases as possible. Then we look into the stream of content that is being generated on the internet, apply two levels of filtering to finally end up with the documents are central to that entity. To extract the relevnat slot values we perform pattern matching in each sentence or coreferent sentence to see if we can find a match. As a match is found from the content of the sentence to the patterns that we have generated regarding slot name, the associated slot value is extracted as a final result.
+If we are looking to discover facts for a single WP entity, the first step is to extract aliases of the entity.
+%We use several approaches to get as many viable aliases as possible.
+We extract several name variations from the Wikipedia api and from the WP entity page.
+Also, if the entity type is \textit{person} we can change the order of user names to increase coverage (e.g. `Boris Berezovsky' $\rightarrow$ `Berezovsky, Boris').
+Next, we iterator over documents in the stream and filter out all document that are not central to the entity.
+To extract relevant facts we perform pattern matching in each sentence that matches the entity based on a dictionary
+of patterns.
+If the sentence can activate on of the patterns in the dictionary we emit this sentence as a candidate contribution
+to the WP entity.
+With the candidate set, we infer new facts from the set and clean up the set
+by removing the set that violate a list of constraints such as duplicates.
+Lastly, we try to infer a new set of facts based on a list of rules.
+
+%As a match is found from the content of the sentence to the patterns that we have generated regarding slot name, the associated slot value is extracted as a final result.
 
 %\ceg{Discuss current system first. If you want to keep the decisions points that led to the current architecture, make it a subsection.}
 
@@ -23,11 +36,24 @@ To walk you through the steps we take, assume we only care about on single WP en
 
 
 
-\subsection{Model}
+\subsection{Entity Model}
 
-We use Wikipedia API to get these aliases automatically. This is done by retrieving backlink references (redirects of a wiki entity), e.g. William Henry Gates is an alias for Bill Gates in WP as a backlink reference. Unfortunately this is not good enough and to enhance recall we need more aliases. To have better use of a wiki page we parse HTML DOM of the page, then use regular expressions to extract the bold phrases of the first paragraph as alias of the actual entity. Based on our observation this is a very accurate heuristic and provides us with lots of famous aliases of the entities. As an example of when this might not wirk, is that there might be occasions that some other topic is written in bold typesetting in the first paraph apart from the entity aliases itself but these are very rare.
+We use Wikipedia API to automatically retrieve aliases. 
+The API allows us to requests pages that redirect users to an entity page.
+For example, if a WP user tries to access the \textsl{William Henry Gates} they are sent to the page for 
+\textsl{Bill Gates} therefore we treat these two names as aliases. 
+To extract more aliases  is we parse the HTML source of a WP entity page.
+Then using regular expressions we extract the bold phrases of the initial paragraph as aliases.
+Based on our observation this is a very accurate method and it provides several entities of 
+WP entities \ceg{Do we know how many additional aliases this method provides?}.
+\ceg{Do you want to give a more concrete example of how this might now work? It may be TMI.}
+%As an example of when this might not wirk, is that there might be occasions that some other topic is written in bold typesetting in the first paraph apart from the entity aliases itself but these are very rare.
 
-Once aliases are available we pass them through rules of generating proper name orders which will produce various forms of writing a name. As a basic example Bill Gates can be written as Gates, Bill also. This will allow the system to capture various notation forms of aliases. We refer to this part as \textit{Alias Order Generator}.
+We pass the full set of \textit{person} entities through rules for generating proper name orders.
+This module produces various forms of writing entity names and titles.
+For example, \textsl{Bill Gates} can be written as \textsl{Gates, Bill}.
+This allows the system to capture various notation forms of aliases that appear in text documents.
+%We refer to this part as \textit{Alias Order Generator}.
 
 \subsection{Wikipedia Citation}
 The main goal of this section is to have an aggregate list of documents that are worthy of being cited in a Wikipedia page. We perform exact string matching and treat all the documents that mention an entity equally likely to be citable. One of the reasons for this is that there have been observations of how non-mentioning documents have a low chance of being citable in Wikipedia \cite{JFrank12}. So we take on that and ignore non-citing documents. 
