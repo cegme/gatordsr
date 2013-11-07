@@ -56,9 +56,26 @@ This allows the system to capture various notation forms of aliases that appear 
 %We refer to this part as \textit{Alias Order Generator}.
 
 \subsection{Wikipedia Citation}
-The main goal of this section is to have an aggregate list of documents that are worthy of being cited in a Wikipedia page. We perform exact string matching and treat all the documents that mention an entity equally likely to be citable. One of the reasons for this is that there have been observations of how non-mentioning documents have a low chance of being citable in Wikipedia \cite{JFrank12}. So we take on that and ignore non-citing documents. 
+The goal of this section is to use the models created to discover a set of documents that are relevant to the WP entity.
+%We perform exact string matching and treat all the documents that mention an entity equally likely to be citable.
+As a stream of documents come in we first perform a string match between the model aliases and document text. 
+We use this technique as a first filter with confidence because previous work has stated non-mentioning
+documents have a low chance of being citable in Wikipedia \cite{JFrank12}.
+Given our large number of aliases we can be confident if an alias does not appear in a document it does not need to be cited.
 
-Our pipeline of processing the corpus consists of a two layer indexing system referred to as \textit{Document Chunks Indexer} and \textit{Document Filter}. The purpose of these indexes is to reduce I/O cost while generating slot values for various entities. Document chunks Indexer will generate indexes of the chunk files that contain a mention of any of the desired entities. Document Filter on the other hand will index documents that contain a mention of a given entity respectively. This two level indexing will eliminate the need to process each and every chunk file/document for every entity. The reason for splitting this task into two steps is that not all chunk files contain any mention of the entities and we want to get rid of them as soon as possible. Document Chunks Indexer which discards non-mentioning chunk files and will stop further processing a chunk file as soon as it finds a mention there. Each chunk file can contain up to thousands of documents which can be so time consuming if we were to process them in our Java base code. Processing StreamItems on the other hand is done in Java with ideas in mind for later on extensibility by adding other Java libraries.
+Our stream system receives documents in the from of chunk files.
+Each chunk file contains thousands of documents.
+This corpus of documents is processed by a two-layer filter system referred to as \textit{Document Chunk Filter} and \textit{Document Filter}.
+The purpose of these filters is to reduce I/O cost while generating slot values for various entities.
+Document Chunk Filter removes the chunk files that do not contain a mention of any of the desired entities.
+Each chunk file may contain thousands of documents --- each document is expensive to process.
+The Document Filter removes documents that do not contain a mention of an  entity.
+This two-level filter allows us to perform detailed slower processing over a smaller set of documents.
+Not all chunk files contain mention of the entities so filtering out large chunk files early saves no I/O and processing.
+Document Chunk Filter discards non-mentioning chunk files and promotes chunk files as soon as an entity mention is found.
+%Processing StreamItems on the other hand is done in Java with ideas in mind for later on extensibility by adding other Java libraries.
+The document filter additionally notes the sentences that contain entity mentions.
+This data is passed to the Slot Filling system.
 
 
 % Note: Describe the algorithms of each phase
