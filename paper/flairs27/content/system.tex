@@ -200,15 +200,31 @@ In this pattern, the phrase \textit{last night} is exactly searched in the text 
 This intuition behind this pattern is in news articles that report events in the past relative to the article. 
 For example, an article will mention that  
 a person died `last night' instead of mentioning precise date-time information.
-Additionally, part of speech taggers and and name entity extractors did not label these terms such as 
+Additionally, part of speech taggers and name entity extractors did not label these terms such as 
 \textit{last night} as a DATE entity. 
 
 
-\subsubsection{Constraints - Inference}
+\subsubsection{Constraints and Inference}\ceg{what specifically about the algorithm causes duplicates and errors?}
 
-The output of streaming slot value extraction is noisy. The data contains duplicates and incorrect extractions. We can define rules to sanitize the output only using the information present at this stage. The input file is processed in time order, in a tuple-at-a-time fashion to minimize the impact on accuracy. We define two classes of rules: \textit{deduplication} and \textit{inference} rules.
+The fact extractions match patterns that are general and highly susceptible to noisy.
+The data contains duplicates and incorrect extractions.
+We define rules to read ordered sets of facts to sanitize the output.
+The input is processed in time order, in a tuple-at-a-time fashion to allow rules to discover noisy slots 
+that appears in close proximity.
+%We found that the proximity of an extraction has a high correlation on the presence of duplicates. 
+We define two classes of rules: \textit{deduplication} and \textit{inference} rules.
 
-The output contains many duplicate entries. As we read the list of extracted slots we create rules to define ``duplicate''. Duplicates can be present in a window of rows; we use a window size of 2 meaning we only be adjacent rows. Two rows are duplicates if they have the same exact extraction, or if the rows have the same slot name and a similar slot value or if the extracted sentence for a particular slot types come from the same sentence.
+The output contains many duplicate entries.
+As we read the list of extracted slots we create rules to define ``duplicate''.
+Duplicates can be present in a window of rows; we use a window size of 2 meaning we only be adjacent rows.
+Two rows are duplicates if they have the same exact extraction or if the rows have the same slot name and a similar slot value or if the extracted sentence for a particular slot types come from the same sentence.
 
- New slots can be deduced from existing slots by defining inference rules. For example, two slots for the task are ``FounderOf'' and ``FoundedBy''. A safe assumption is these slot names are biconditional logical connectives with the entities and slot values. Therefore, we can express a rule ``X FounderOf Y'' equals ``Y FoundedBy X'' where X and Y are single unique entities. Additionally, we found that the slot names ``Contact\_Meet\_PlaceTime'' could be inferred as ``Contact\_Meet\_Entity'' if the Entity was a FAC and the extracted sentence contained an additional ORG/FAC tag. We also remove erronious slots that have extractions that are several pages in length or tool small. Errors of extracting long sentences can typically be 
-attributed to poor sentence parsing of web documents. We have some valid ``small'' extractions. For example a comma may separate a name and a title (e.g. ``John, Professor at MIT''). But such extraction rules can be particularly noisy, so we check to see if the extracted values have good entity values.
+New slots can be deduced from existing slots by defining inference rules.
+For example, two slots for the task are ``FounderOf'' and ``FoundedBy''.
+A safe assumption is these slot names are biconditional logical connectives with the entities and slot values.
+Therefore, we can express a rule ``$X$ FounderOf $Y$'' $\leftrightarrow$ ``$Y$ FoundedBy $X$'' where $X$ and $Y$ are single unique entities.
+Additionally, we found that the slot names ``Contact\_Meet\_PlaceTime'' could be inferred as ``Contact\_Meet\_Entity'' if the Entity was a FAC and the extracted sentence contained an additional ORG/FAC tag.
+We also remove erroneous slots that have extractions that are thousands of characters in length or tool small.
+Errors of extracting long sentences can typically be attributed to poor sentence parsing of web documents.
+We have some valid ``small'' extractions. For example, a comma may separate a name and a title (e.g. ``John, Professor at MIT'').
+But such extraction rules can be particularly noisy, so we check to see if the extracted values have good entity values.
