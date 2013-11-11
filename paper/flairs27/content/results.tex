@@ -2,46 +2,24 @@
 \section{Evaluation}
 \label{sec:results}
 
-%\ceg{We can add data on the total document size, The %number of each document type.  } 
- The purpose of evaluation is to measure the effectiveness of extracting slot values for various entities, metrics such as precision and recall would be considered. We perform random samplings to extract these. Our system was developed on a 32-core server described in Table~\ref{table:serverspec}. The corpus is a snapshot of the web in English. Each document is annotated using lingpipe and is called StreamItem, a bundle of StreamItems are put together and serialized as Apache Thrift objects, then compressed using xz compression with Lempel–Ziv–Markov chain algorithm (LZMA2) and finally encrypted using GNU Privacy Guard (GPG) with RSA asymmetric keys. The total size of the data after XZ compression and GPG encryption is 4.5TB and just over 500M StreamItems \cite{s3}. Data is stored in directories the naming of which is date-hour combination: from 2011-10-05-00 (5th of October 2011, 12am) until 2013-02-13-23 (13th of Feburary 2013, 11pm), which consists of 11952 date-hour combinations. The first four months of data (October 2011 - February 2012) is for training purposes, and we use this portion to lookup sample lines and for system parameter settings purposes. This corpora consists of various media types the distribution of which can be found in Table~\ref{table:documentsDist}. To have a sense of the scale of objects and compression as an example a 6mb gpg.xz files would become 45 mb thrift objects which can contain a couple of thousand StreamItems depending on their size. Some of the documents have null values for their annotation fields. The source code of our system is stored as an open source project where enthusiasts can also contribute to \cite{github}, also the relevant discussion mailing list is accessible here \cite{googlegroups}.
+We evaluate the effectiveness of extracting slot values for 139 entities.
+We look at the baseline coverage for entities and slot names we present in a 500M page snapshot of the English web.
+We estimate the precision and recall of our extractions over several extracted fact. 
+
+Our system was developed on a 32-core server described in Table~\ref{table:serverspec}.
+Each document is annotated using a name entity extraction and in document coreference.
+A bundle of documents are serialized into chunks and encrypted.
+The total size of the data after compression and encryption is 4.5TB~\footnote{TREC Knowledge base acceleration stream corpus is available  \url{http://aws-publicdatasets.s3.amazonaws.com/trec/kba/index.html}}.
+Data is ordered into 11952 date-hour buckets ranged from 2011-10-05-00 (5th of October 2011, 12am)
+until 2013-02-13-23 (13th of Feburary 2013, 11pm).
+The first four months of data (October 2011 - February 2012) is for training purposes, 
+and we use this portion for rule and pattern creation and tuning.
+The data set contains text from several web page types as listed in Table~\ref{table:documentsDist}.
+%To have a sense of the scale of objects and compression as an example a 6mb gpg.xz files would become 45 mb thrift objects which can contain a couple of thousand StreamItems depending on their size.
+%Some of the documents have null values for their annotation fields. The source code of our system is stored as an open source project where enthusiasts can also contribute to \cite{github}, also the relevant discussion mailing list is accessible here \cite{googlegroups}.
  
- 
-\begin{table}[b]
-\caption{Document Chunk Distribution }
-\centering
-\label{table:documentsDist}
-
-\begin{tabular}{|l|c|c|}
-\hline 
-\textbf{\# of Documents} & \textbf{Document Type} & \textbf{Slots Found}\\ 
-\hline 
-	Arxiv & 10988 & \\ \hline
- Classified & 34887 & \\ \hline
- Forum & 77674 & \\ \hline
- Linking & 12947 & \\ \hline
- Mainstream News & 141936 & \\ \hline
- Memetracker & 4137 & \\ \hline
- News & 280629 & \\ \hline
- Review & 6347 & \\ \hline
- 	 Social & 688848 & \\ \hline
- Weblog & 740987 & \\ \hline
-
-  
-\hline 
-\end{tabular} 
-\end{table}
-
-
- 
- 
- 
-We have 172 extraction patterns covering each slot-name/entity-type combinations. Our final submission was named \textit{submission\_infer}. Our results are as follows: Document extraction using query entity matching with aliases, sentence extraction using alias matching and co-reference. Slot extraction using patterns, NER tags and NP tags. 158,052 documents with query entities, 17885 unique extracted slot values for 8 slots and 139 entities, 4 slots and 31 entities missing.
-
-On the performance of our initial submission run we performed random sampling via two processes, the results of which are according to Table~\ref{table:initialresult}. You can view that we have had an accuracy of around 55\%, and about 15\% wrong entity identified and 30\% incorrect value extracted across all entities and slot types. Most of our issues for this submission were regarding poor slot value extraction patterns and incomplete aliases whih were tried to be mtigated later on. For our final submission, we provide a more detailed statistics, which has been elaborated in Table~\ref{table:finalresultrecall} and Table~\ref{table:finalresultaccuracy}. Table~\ref{table:finalresultrecall} shows the extent of search outreach for
-each slot name. You can see that \textit{Affiliate} has been the slot name with highest hits and \textit{CauseOfDeath} our lowest hit with 0 instances found matching our patterns, after that \textit{AwardsWon} has been the next with 38 instances found. Affiliate is a very generic term and extracting real affiliates can be quite challenging using the extraction patterns provided. This can lead to noisy results. On the other hand for more precise terms our accuracy increases but we have less recall. Table~\ref{table:finalresultaccuracy} addresses the relative accuracy measure per slot value. There you can view that we have had the highest accuracy of 63.6\% for \textit{AssociateOf} and the lowest of 1\% - 5\%  for \textit{Affiliate}, \textit{Contact\_Meet\_PlaceTime} and \textit{EmployeeOf}.
-
 \begin{table}
-\caption{Benchmark Server Specifications }
+\caption{Benchmark Server Specifications}
 \centering
 \label{table:serverspec}
 \begin{tabular}{| c | p{4.8cm} |}
@@ -54,19 +32,55 @@ Software Stack & GCC version 4.4.7, Java 1.7.0\_25, Scala 2.9.2, SBT 0.12.3 \\ \
  Drives & 2x2.7TB disks, 6Gbps, 7200RPM\\ \hline 
 \end{tabular} 
 \end{table}
+ 
+\begin{table}
+\caption{Document Chunks Distribution }
+\centering
+\label{table:documentsDist}
+
+\begin{tabular}{|l|l|c|}
+\hline 
+\textbf{Document Type} & \textbf{\# of Documents} &  \textbf{Slots Found}\\ 
+\hline 
+Arxiv & 10988 & \\ \hline
+ Classified & 34887 & \\ \hline
+ Forum & 77674 & \\ \hline
+ Linking & 12947 & \\ \hline
+ Mainstream News & 141936 & \\ \hline
+ Memetracker & 4137 & \\ \hline
+ News & 280629 & \\ \hline
+ Review & 6347 & \\ \hline
+ Social & 688848 & \\ \hline
+ Weblog & 740987 & \\ \hline
+\hline 
+\end{tabular} 
+\end{table}
 
 
+ 
+ 
+ 
+We develop 172 extraction patterns covering each slot-name/entity-type combinations.
+%Our final submission was named \textit{submission\_infer}. 
+%Our results are as follows: Document extraction using query entity matching with aliases, sentence extraction using alias matching and co-reference.
+%Slot extraction using patterns, NER tags and NP tags.
+Out of the 500 M documents  and 139 entities we found 158,052 documents containing query entities, 17,885 unique extracted slot values for 8 different slots.
+We did not get any results from 31 entities missing and 4 slots.
 
-
-
-
+%On the performance of our initial submission run we performed random sampling via two processes, the results of which are according to Table~\ref{table:initialresult}.
+In Table~\ref{table:initialresult} we performed two samples of a baseline submission and estimate the correctness of the extraction.
+\ceg{Add here how the baseline is different from the final submission}
+We our methods produced an accuracies of  54\% and 55\%.
+We classify the errors into two sets, an incorrect entities and incorrect extractions.
+We found 15\% and 17\% incorrect entity names and we identified 27\% and 30\% incorrect value extracted across all entities and slot types.
+The majority of errors were regarding poor slot value extraction patterns and incomplete aliases.
 
 \begin{table}
-\caption{Initial Performance Measure }
+\caption{Sampled accuracy of the results of the extracted facts.}
 \centering
 \label{table:initialresult}
 
-\begin{tabular}{ | c | c | p{2cm} | p{13mm} |}
+\begin{tabular}{| c | c | p{2cm} | p{13mm} |}
 \hline 
  & \textbf{Correct} & \textbf{Incorrect Entity name} & \textbf{Incorrect Value} \\ 
 \hline 
@@ -77,11 +91,21 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 \end{table}
 
 
-\begin{table}[h]
+\ceg{Probably should add again here a reason why our method is different from the baseline.}
+Using our methods, we provide we provide more detailed statistics, as displayed in Table~\ref{table:finalresultrecall} and Table~\ref{table:finalresultaccuracy}.
+Table~\ref{table:finalresultrecall} shows the recall for each slot name. \ceg{(define `entity coverage' here)}
+The slot name \textit{Affiliate} has was extracted the most number of times and \textit{CauseOfDeath} was extracted the
+fewest with 0 instances found matching the pattern list. \textit{AwardsWon} contained the next fewest with 38 instances found. 
+Affiliate is a generic slot name, using patterns to extract these relationships is difficult because almost any
+two items can be affiliated in some way.
+\ceg{Define the affiliate slot name.}
+Our patterns for this relationship led to noisy results.
+On the other hand for more precise slot names our accuracy increases but we have less recall.
+Table~\ref{table:finalresultaccuracy} addresses the relative accuracy measure per slot value.
+\textit{AssociateOf} has the highest accuracy with 63.6\% and  \textit{Affiliate}, \textit{Contact\_Meet\_PlaceTime} and \textit{EmployeeOf} have the lowest with lowest of 1\%, 1\% and 5\% accuracy respectively.
 
 
-
-
+\begin{table}
 \caption{Recall Measure: Generic slot names like affiliate had the most recall, compared to less popular slot names e.g. DateOfDeath}
 \centering
 \label{table:finalresultrecall}
