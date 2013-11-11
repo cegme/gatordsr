@@ -45,8 +45,10 @@ For example, if a WP user tries to access the \textsl{William Henry Gates} they 
 To extract more aliases  is we parse the HTML source of a WP entity page.
 Then using regular expressions we extract the bold phrases of the initial paragraph as aliases.
 Based on our observation this is a very accurate method and it provides several entities of 
-WP entities \ceg{Do we know how many additional aliases this method provides?}.
-\ceg{Do you want to give a more concrete example of how this might now work? It may be TMI.}
+WP with more inline aliases from the wiki page itself. As an example, for `Boris Berezovski' which was mentioned early-on, there is an alias of `Boris Abramovich Berezovsky' given in bold in the wiki page which will be obtained via thi method.
+
+%\ceg{Do we know how many additional aliases this method provides?}.
+%\ceg{Do you want to give a more concrete example of how this might now work? It may be TMI.}
 %As an example of when this might not wirk, is that there might be occasions that some other topic is written in bold typesetting in the first paraph apart from the entity aliases itself but these are very rare.
 
 We pass the full set of \textit{person} entities through rules for generating proper name orders.
@@ -172,7 +174,7 @@ The matching methods using these three types of patterns are implemented accordi
 %\includegraphics[width=4.5in]{./images/system.eps}
 %\includegraphics[width=6in]{./images/Pattern.eps}
 %\includegraphics[width=6in]{./images/Pattern-eps-converted-to.pdf}
-\includegraphics[width = 13cm]{./images/Pattern-crop.pdf}
+\includegraphics[width = 11cm]{./images/Pattern-crop.pdf}
 % cropped pdf created using $ pdfcrop Pattern.pdf
 \vspace*{-.1in}
 \caption{Pattern matching for rule evaluation. The slot value is on the right side of the 
@@ -204,7 +206,7 @@ Additionally, part of speech taggers and name entity extractors did not label th
 \textit{last night} as a DATE entity. 
 
 
-\subsubsection{Constraints and Inference}\ceg{what specifically about the algorithm causes duplicates and errors?}
+\subsubsection{Constraints and Inference}\ceg{what specifically about the algorithm causes duplicates and errors? --- I asked Yang to elaborate on this as he is more familiar but still not sure what's causing those issues} 
 
 The fact extractions match patterns that are general and highly susceptible to noisy.
 The data contains duplicates and incorrect extractions.
