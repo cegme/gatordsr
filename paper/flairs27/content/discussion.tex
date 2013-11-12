@@ -14,20 +14,27 @@
 %model which avoided unpredictable CPU stalls on garbage collections in 
 %processing the corpus.
 
-Table~\ref{table:finalresultrecall} show a varied distribution of extracted slot names. Some slots naturally have more results than other slots. For example, AssociateOf and Affiliate have more slot values than DateOfDeath and CauseOfDeath, since there are only so few entities that are deceased. Also, some patterns are more general causing more extractions. For example, for Affiliate, we use \textit{and}, \textit{with} as anchor words. These words are more common than \textit{dead} or \textit{died} or \textit{founded} in other patterns. 
+Table~\ref{table:finalresultrecall} shows the distribution of extracted slot names.
+The number of extraction between slot names vary greatly.
+Some slots naturally have more results than other slots.
+For example DateOfDeath and CauseOfDeath have some of the fewest entities because only a few entities are deceased.
+Some patterns use common words as as part of their patterns causing more extractions.
+For example, Affiliate looks for common words like  \textit{and} and  \textit{with} as part of the pattern content.
+These words are more common than \textit{dead}, \textit{died} or \textit{founded} in other patterns. 
 
+%As part of future work regarding enhancing precision, we can focus on fixing the wrong entities found, remove noisy tags by the Lingpipe or use more accurate NLP taggers such as Stanford NLP (Due to the fact that Stanford NLP is very slow we avoided using it, as due to speed its use was out of question) and finally use better patterns to enahnce results matched by the patterns.
+%On the other hand to increase recall we need to find better aliases and go for more resources to discover other ways that an entity might be addressed (e.g.\ twitter id, website, etc), add powerful patterns that can capture more cases of slot values. We would also use entity resolution methods and other advanced methods to improve 
+%the accuracy and recall of entity extraction part. 
 
+%For slot extraction, to improve the performance, we need: 1) Using multi-class classifiers instead of pattern matching method to extract slot values in order to increase both recall and accuracy for slots ``Affiliate'', ``AssociateOf'', ``FounderOf'', ``EmployeeOf'', ``FoundedBy'', ``TopMembers'', ``Contact\_Meet\_Entity'' and so on. 2) For special slots, like ``Titles'', ``DateOfDeath'', ``CauseOfDeath'', ``AwardsWon'', using different kind of advanced methods, e.g.\ classifiers, matching methods. 3) Using other NLP tools or using classifiers to overcome the drawbacks of the LingPipe’s inaccurate tags. The first and second tasks are the most important tasks we need to do.
 
-
-
-
-
-As part of future work regarding enhancing precision, we can focus on fixing the wrong entities found, remove noisy tags by the Lingpipe or use more accurate NLP taggers such as Stanford NLP (Due to the fact that Stanford NLP is very slow we avoided using it, as due to speed its use was out of question) and finally use better patterns to enahnce results matched by the patterns.  On the other hand to increase recall we need to find better aliases and go for more resources to discover other ways that an entity might be addressed (e.g. twitter id, website, etc), add powerful patterns that can capture more cases of slot values. We would also use entity resolution methods and other advanced methods to improve 
-the accuracy and recall of entity extraction part. 
-
-For slot extraction, to improve the performance, we need: 1) Using multi-class classifiers instead of pattern matching method to extract slot values in order to increase both recall and accuracy for slots ``Affiliate'', ``AssociateOf'', ``FounderOf'', ``EmployeeOf'', ``FoundedBy'', ``TopMembers'', ``Contact\_Meet\_Entity'' and so on. 2) For special slots, like ``Titles'', ``DateOfDeath'', ``CauseOfDeath'', ``AwardsWon'', using different kind of advanced methods, e.g.\ classifiers, matching methods. 3) Using other NLP tools or using classifiers to overcome the drawbacks of the LingPipe’s inaccurate tags. The first and second tasks are the most important tasks we need to do.
-
-Some of the entities are not popular. For example, a `Brenda Weiler' Google search result has 860,000 documents over the whole web. For our small portion of the web it might make sense. The histogram of the entities shows that more than half of the entities have appeared in less than 10 StreamItems. A good portion have appeared only once.
+Some of the entities are popular and appear at a greater frequency in the data set.
+For example, a `Brenda Weiler' Google search results in 860,000 documents.
+\ceg{Add an example of someone who is either much larger of smaller.}
+For our small portion of the web it might make sense.
+The histogram of the entities shows that more than half of the entities have appeared in less than 10 documents.
+\ceg{Can we add this figure}
+A large portion have appeared only once.
 
 %A theory is that we are falling behind because we are using the cleansed (from HTML tags)
 %version of the corpus. We believe there has been a reason that TREC has 
@@ -47,9 +54,20 @@ Some of the entities are not popular. For example, a `Brenda Weiler' Google sear
 
 
 
-Alltogether, We experimented through different tools and approaches to best process the massive amounts of data on the platform that we had available to us. We generate aliases for wikipedia entities using Wiki API and extract some aliases from wikipedia pages text itself. We process documents that mention entities for slot value extraction. Slot values are determined using pattern matching over coreferences of entities in sentences. Finally post processing will filter, cleanup and infers some new slot values to enhance recall and accuracy. 
+In this paper we described an approach to perform fact extraction over one of the largest data sets to date. 
+We generate aliases for Wikipedia entities using an API and extract some aliases from Wikipedia pages text itself.
+We process documents that mention entities for slot value extraction.
+Slot values are determined using pattern matching over coreferences of entities in sentences. Finally post processing will filter, cleanup and infers some new slot values to enhance recall and accuracy. 
 
-We noticed that some tools that claim to be performant for using the hardware capabilities at hand sometimes don't really work as claimed and you should not always rely on one without a thorough A/B testing of performance which we ended up in generating our in-house system for processing the corpus and passing through the filter. Furthermore, on extracting slot values, pattern matching might not be the best options but definitely can produce some good results at hand. We have plans on generating classifiers for slot value extraction purposes. Entity resolution on the other hand was a topic we spent sometime on but could not get to stable grounds for it. Entity resolution will distinguish between entities of the same name but different contexts. Further improvements on this component of the system are required. 
+We sampled documents from the training data period to generate an initial set of patterns and then use these patterns to generate results.
+After manually examining the results, we prune patterns with poor performance and add patterns that may add to extraction coverage.
+We use several iterations to find the best patterns.
+%We found that it is very time consuming to identify quality patterns.
+
+%We noticed that some tools that claim to be performant for using the hardware capabilities at hand sometimes don't really work as claimed and you should not always rely on one without a thorough A/B testing of performance which we ended up in generating our in-house system for processing the corpus and passing through the filter. Furthermore, on extracting slot values, pattern matching might not be the best options but definitely can produce some good results at hand. We have plans on generating classifiers for slot value extraction purposes. Entity resolution on the other hand was a topic we spent sometime on but could not get to stable grounds for it. Entity resolution will distinguish between entities of the same name but different contexts. Further improvements on this component of the system are required. 
 
 
-We sampled documents from the training data period to generate an initial set of patterns. We then use these patterns to generate  results. By manully looking at these results, we prune some patterns with poor ­performance and add more patterns that we identified from these results. We use several iterations to find the best patterns. We found that it is very time consuming to identity quality patterns.
+We look to continue exploration of streaming extraction models over this large data set.
+Our models are simple and provide a great baseline framework to develop and compare innovative techniques.
+
+
