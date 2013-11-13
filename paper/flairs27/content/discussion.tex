@@ -29,12 +29,11 @@ These words are more common than \textit{dead}, \textit{died} or \textit{founded
 %For slot extraction, to improve the performance, we need: 1) Using multi-class classifiers instead of pattern matching method to extract slot values in order to increase both recall and accuracy for slots ``Affiliate'', ``AssociateOf'', ``FounderOf'', ``EmployeeOf'', ``FoundedBy'', ``TopMembers'', ``Contact\_Meet\_Entity'' and so on. 2) For special slots, like ``Titles'', ``DateOfDeath'', ``CauseOfDeath'', ``AwardsWon'', using different kind of advanced methods, e.g.\ classifiers, matching methods. 3) Using other NLP tools or using classifiers to overcome the drawbacks of the LingPipe’s inaccurate tags. The first and second tasks are the most important tasks we need to do.
 
 Some of the entities are popular and appear at a greater frequency in the data set.
-For example, a `Brenda Weiler' Google search results in 860,000 documents.
-\ceg{Add an example of someone who is either much larger of smaller.}
-For our small portion of the web it might make sense.
-The histogram of the entities shows that more than half of the entities have appeared in less than 10 documents.
-\ceg{Can we add this figure}
-A large portion have appeared only once.
+For example, a `Corn Belt Power Cooperative' Google search results in 86,800 documents, where as `William H. Gates' returns 3,880,000 documents. 
+%\ceg{Add an example of someone who is either much larger of smaller.}
+We observed that more than half of the entities have appeared in less than 10 documents.
+%\ceg{Can we add this figure - } 
+A large portion have appeared only once. This magnificient change in coverage support the viability of our seach and filter schemes.
 
 %A theory is that we are falling behind because we are using the cleansed (from HTML tags)
 %version of the corpus. We believe there has been a reason that TREC has 
