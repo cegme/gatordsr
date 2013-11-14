@@ -208,8 +208,10 @@ Additionally, part of speech taggers and name entity extractors did not label th
 
 \subsubsection{Constraints and Inference}%\ceg{what specifically about the algorithm causes duplicates and errors? --- I asked Yang to elaborate on this as he is more familiar but still not sure what's causing those issues} 
 
-Due to duplicate crawls of the same webpages in the dataset or reasons such as incompelete taggings in sentences we end up with lots of duplicates or highly similar content in slot values list. 
-We implement a filter to remove duplicates or The fact extractions match patterns that are general and highly susceptible to noisy.
+Our data set contains some duplicate webpages, webpage texts with similar content, 
+and some of the entity tags are incomplete.
+This cause some duplicates or highly similar content in the extracted list. 
+We implement a filter to remove duplicates or the fact extractions match patterns that are general and highly susceptible to noisy.
 The data contains duplicates and incorrect extractions.
 We define rules to read ordered sets of facts to sanitize the output.
 The input is processed in time order, in a tuple-at-a-time fashion to allow rules to discover noisy slots 
