@@ -1,6 +1,6 @@
 
 
-\section{Discussions}
+\section{Discussion}
 
 %In this section we address some of the challenges that we faced during the course of this project. We started 
 %off by trying to use the off-the-shelf tools for this task. We started 
@@ -52,21 +52,5 @@ a large portion have appeared only once. This magnificient change in coverage su
 
 
 
-
-In this paper we described an approach to perform fact extraction over one of the largest data sets to date. 
-We generate aliases for Wikipedia entities using an API and extract some aliases from Wikipedia pages text itself.
-We process documents that mention entities for slot value extraction.
-Slot values are determined using pattern matching over coreferences of entities in sentences. Finally post processing will filter, cleanup and infers some new slot values to enhance recall and accuracy. 
-
-We sampled documents from the training data period to generate an initial set of patterns and then use these patterns to generate results.
-After manually examining the results, we prune patterns with poor performance and add patterns that may add to extraction coverage.
-We use several iterations to find the best patterns.
-%We found that it is very time consuming to identify quality patterns.
-
-%We noticed that some tools that claim to be performant for using the hardware capabilities at hand sometimes don't really work as claimed and you should not always rely on one without a thorough A/B testing of performance which we ended up in generating our in-house system for processing the corpus and passing through the filter. Furthermore, on extracting slot values, pattern matching might not be the best options but definitely can produce some good results at hand. We have plans on generating classifiers for slot value extraction purposes. Entity resolution on the other hand was a topic we spent sometime on but could not get to stable grounds for it. Entity resolution will distinguish between entities of the same name but different contexts. Further improvements on this component of the system are required. 
-
-
-We look to continue exploration of streaming extraction models over this large data set.
-Our models are simple and provide a great baseline framework to develop and compare innovative techniques.
 
 
