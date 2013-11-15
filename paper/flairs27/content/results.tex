@@ -70,10 +70,11 @@ We did not get any results from 31 entities missing and 4 slots.
 %On the performance of our initial submission run we performed random sampling via two processes, the results of which are according to Table~\ref{table:initialresult}.
 In Table~\ref{table:initialresult} we performed two samples of a baseline submission and estimate the correctness of the extraction.
 %\ceg{Add here how the baseline is different from the final submission}
+The first was addressing the overall performance measures of the system, e.g. precision and recall but the latter experiment was an enhanced version of the system with automating the alias generation process along with several other enhancements and more detailed e.g. producing per slot value results. 
 We produced accuracies in range of  54\% and 55\%.
-The errors present can be classified into two sets, incorrect entities and incorrect extractions.
-We found 15\% and 17\% incorrect entity names and we identified 27\% and 30\% incorrect values extracted across all entities and slot types.
-The majority of these errors were the result of poor extraction patterns and an incomplete alias set.
+We classify the errors into two sets, an incorrect entities and incorrect extractions.
+We found 15\% and 17\% incorrect entity names and we identified 27\% and 30\% incorrect value extracted across all entities and slot types.
+The majority of errors were regarding poor slot value extraction patterns and incomplete aliases.
 
 \begin{table}
 \caption{Sampled accuracy of the results of the extracted facts.}
@@ -92,24 +93,20 @@ Sampling \#1 & 55\% & 17\% & 27\% \\
 
 
 %\ceg{Probably should add again here a reason why our method is different from the baseline.}
-After the implementation of the baseline system, we developed an enhanced version. 
-In this version we increased the number of extraction patterns and a generate a larger set of aliases.
-More detailed statistics are available in Table~\ref{table:finalresultrecall} and Table~\ref{table:finalresultaccuracy}.
-Table~\ref{table:finalresultrecall} shows the recall of each slot name. 
-Entities can have different coverages across the entire web, some are more popular such as William H. Gates or less well known such as Stevens Cooperative School.
-Similarly slot names have various coverages --- \textit{Affiliate} is more frequent compared to \textit{AwardsWon}. 
-More sentences describing affiliate relationships exist across the WP entities than
-sentences describing awards won. %\ceg{(define `entity coverage' here)}
-The slot name \textit{Affiliate} has was extracted the most number of times and \textit{CauseOfDeath} was extracted the
-fewest with 0 instances found matching the pattern list. \textit{AwardsWon} contained the next fewest with 38 instances found. 
-Affiliate slot has a broad definition; any relation that directly connects an entity to another entity of any type can describe an Affiliate relationship.
+After enahncing the system via better and more extraction patterns  we provide more detailed statistics, as displayed in Table~\ref{table:finalresultrecall} and Table~\ref{table:finalresultaccuracy}.
+Table~\ref{table:finalresultrecall} shows the recall for each slot name. 
+Entities can have different coverages across the entire web, some are more popular such as William H. Gates or less well known such as Stevens Cooperative School; similarly slot names have various coverages e.g. being an \textit{Affiliate} is much more probable across the entities vs \textit{AwardsWon}. %\ceg{(define `entity coverage' here)}
+The slot name \textit{Affiliate} has was extracted the most number of times; \textit{AwardsWon} contained the next fewest with 38 instances found. 
+Affiliate is a generic slot name, to be more concrete, regading affiliations of an organization the following cases have been enumerated \cite{tackbp}: 
 
-%\begin{itemize}
-%\item  any relation that is not of parent-child form, e.g. a sub-organization of an organization is not an affiliate of that organization but rather a member of.
-%\item  A relationship consisting solely of the two groups
-%interacting in a specific event context is not enough evidence to constitute a religious/political affiliation. 
-%\item Former political or religious affiliations are correct responses for this slot. 
-%\end{itemize}
+\begin{itemize}
+\item  Any relation that is not of parent-child form, e.g. a sub-organization of an organization is not an affiliate of that organization but rather a member of.
+\item  A relationship consisting solely of the two groups
+interacting in a specific event context is not enough evidence to constitute a religious/political affiliation. 
+\item Former political or religious affiliations are correct responses for this slot. 
+
+
+\end{itemize}
 
 To extract relationships such as affiliate is difficult because almost any
 two items can be affiliated in some way.
@@ -118,7 +115,6 @@ Our patterns for this relationship led to noisy results.
 On the other hand for more precise slot names our accuracy increases but we have less recall.
 Table~\ref{table:finalresultaccuracy} addresses the relative accuracy measure per slot value.
 \textit{AssociateOf} has the highest accuracy with 63.6\% and  \textit{Affiliate}, \textit{Contact\_Meet\_PlaceTime} and \textit{EmployeeOf} have the lowest with lowest of 1\%, 1\% and 5\% accuracy respectively.
-A discussion of different slots is available in literature \cite{tackbp}.
 
 
 \begin{table}
@@ -132,7 +128,6 @@ A discussion of different slots is available in literature \cite{tackbp}.
 Affiliate & 108598 & 80 \\ \hline 
 AssociateOf & 25278 & 106 \\ \hline 
 AwardsWon & 38 & 14 \\ \hline 
-CauseOfDeath & 0 & 0 \\ \hline 
 Contact\_Meet\_Entity & 191 & 8 \\ \hline 
 Contact\_Meet\_PlaceTime & 5974 & 109 \\ \hline 
 DateOfDeath & 87 & 14 \\ \hline 
@@ -156,7 +151,6 @@ TopMembers & 314 & 26 \\ \hline
 Affiliate & 1\% & 95\% & 5\% \\ \hline 
 AssociateOf & 63.6\% & 9.1\% & 27.3\%  \\ \hline 
 AwardsWon & 10\% & 10\% & 80\%  \\ \hline 
-CauseOfDeath & 0\% & 0\% & 0\%  \\ \hline 
 Contact\_Meet\_Entity & 21\% & 42\% & 37\%  \\ \hline 
 Contact\_Meet\_PlaceTime & 5\% & 20\% & 85\%  \\ \hline 
 DateOfDeath & 29.6\% & 71\% & 25\%  \\ \hline 
