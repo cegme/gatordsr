@@ -1,20 +1,20 @@
 
 \section{System}
 
-In this section, we introduce the main components of the system. Our system is built with a pipeline architecture in mind giving it the advantage to run each section separately to allow stream processing without blocking the data flow of components (Figure~\ref{fig:system}). The three logical components include sections on \textit{Model} for entity resolution purposes, \textit{Wiki Citation} to annotate cite-worthy documents, \textit{Slot Filling} to generate the actual slot values.
+In this section, we introduce the main components of the system. Our system is built with a pipeline architecture in mind giving it the advantage to run each section separately to allow stream processing without blocking the data flow of components (Figure~\ref{fig:system}). The three logical components include sections on \textit{Model} for entity resolution purposes, \textit{Wiki Citation} to annotate cite-worthy documents, and \textit{Slot Filling} to generate the actual slot values.
 
 
 If we are looking to discover facts for a single WP entity, the first step is to extract aliases of the entity.
 %We use several approaches to get as many viable aliases as possible.
-We extract several name variations from the Wikipedia api and from the WP entity page.
+We extract several name variations from the Wikipedia API and from the WP entity page.
 Also, if the entity type is \textit{person} we can change the order of user names to increase coverage (e.g. `Boris Berezovsky' $\rightarrow$ `Berezovsky, Boris').
-Next, we iterator over documents in the stream and filter out all document that are not central to the entity.
+Next, we iterator over documents in the stream and filter out all documents that are not directly citable for the entity.
 To extract relevant facts we perform pattern matching in each sentence that matches the entity based on a dictionary
 of patterns.
-If the sentence can activate on of the patterns in the dictionary we emit this sentence as a candidate contribution
+If the sentence can activate one of the patterns in the dictionary we emit this sentence as a candidate contribution
 to the WP entity.
 With the candidate set, we infer new facts from the set and clean up the set
-by removing the set that violate a list of constraints such as duplicates.
+by removing the set of values that violate a list of constraints such as duplicates.
 Lastly, we try to infer a new set of facts based on a list of rules.
 
 %As a match is found from the content of the sentence to the patterns that we have generated regarding slot name, the associated slot value is extracted as a final result.
@@ -42,10 +42,10 @@ We use Wikipedia API to automatically retrieve aliases.
 The API allows us to requests pages that redirect users to an entity page.
 For example, if a WP user tries to access the \textsl{William Henry Gates} they are sent to the page for 
 \textsl{Bill Gates} therefore we treat these two names as aliases. 
-To extract more aliases  is we parse the HTML source of a WP entity page.
-Then using regular expressions we extract the bold phrases of the initial paragraph as aliases.
+To extract more aliases we parse the HTML source of a WP entity page.
+Using regular expressions we extract the bold phrases of the initial paragraph as aliases.
 Based on our observation this is a very accurate method and it provides several entities of 
-WP with more inline aliases from the wiki page itself. As an example, for `Boris Berezovski' which was mentioned early-on, there is an alias of `Boris Abramovich Berezovsky' given in bold in the wiki page which will be obtained via thi method.
+WP with more inline aliases from the wiki page itself. As an example, for `Boris Berezovski' which was mentioned early-on, there is an alias of `Boris Abramovich Berezovsky' given in bold in the wiki page which will be obtained via this method.
 
 %\ceg{Do we know how many additional aliases this method provides?}.
 %\ceg{Do you want to give a more concrete example of how this might now work? It may be TMI.}
@@ -73,7 +73,7 @@ Document Chunk Filter removes the chunk files that do not contain a mention of a
 Each chunk file may contain thousands of documents --- each document is expensive to process.
 The Document Filter removes documents that do not contain a mention of an  entity.
 This two-level filter allows us to perform detailed slower processing over a smaller set of documents.
-Not all chunk files contain mention of the entities so filtering out large chunk files early saves no I/O and processing.
+Not all chunk files contain mention of the entities so filtering out large chunk files early saves on I/O and processing.
 Document Chunk Filter discards non-mentioning chunk files and promotes chunk files as soon as an entity mention is found.
 %Processing StreamItems on the other hand is done in Java with ideas in mind for later on extensibility by adding other Java libraries.
 The document filter additionally notes the sentences that contain entity mentions.
@@ -94,8 +94,8 @@ This data is passed to the Slot Filling system.
 
 \subsection{Slot Filling}
 %\ceg{See the previous note.}
-Streaming Slot Filling (SSF) extracts fact values from sentences according to a list of pattern.
-Table~\ref{table:slotNameOntology} list the slot relationships that we looks to extract.
+Streaming Slot Filling (SSF) extracts fact values from sentences according to a list of patterns.
+Table~\ref{table:slotNameOntology} lists the slot relationships that we looks to extract.
 In Figure~\ref{fig:system} we refer to this task as \textit{Slot Filling}. 
 
 %Slot filling is done by pattern matching documents with manually produced patterns for slots of interest.
@@ -149,7 +149,7 @@ A pattern $\mathcal{P}$ is represented as a five-tuple $\mathcal{P} = \langle p_
 The first value, $p_1$ represents the type of entity.
 These entity types are in the set $\{\text{\tt FAC}, \text{\tt ORG}, \text{\tt PER} \}$ where \texttt{FAC} represents a type of facility, \texttt{ORG} represents an organization and \texttt{PER} represents a person.
 %\texttt{FAC}, \texttt{ORG} and \texttt{PER} are Lingpipe entity types.
-The $p_2$ represents a slot name.
+ $p_2$ represents a slot name.
 A list of slot names is present in Table~\ref{table:slotNameOntology}.
 The third element $p_3$ is the pattern content --- 
 a string found in the sentence that identifies a slot name.
@@ -163,7 +163,7 @@ a noun phrase (\texttt{NP}) tagged by a part of speech tagger\footnote{OpenNLP w
 %For these three kinds of patterns, we implement them in different ways accordingly. 
 
 %Next, we explain the patterns with more details, an example of which can be found in Figure~\ref{fig:pattern}. 
-Figure~\ref{fig:pattern} contains the example sentence from the introduction labeled by the rule engine.
+Figure~\ref{fig:pattern} contains the example sentence from the introduction labeled by the rule engine. The matching pattern is $\langle$\texttt{PER, DateOfDeath, \textit{passed away}, right, NP}$\rangle$. In the figure, `Boris Berezovsky' matches as an alias for WP entity \textsl{wiki/Boris\_Berezovsky\_(businessman)}, DateOfDeath is the slot name, `passed away' is the content of the pattern, direction is `Right' and the actual value of the slot is `March 2013' which is a Noun Phrase.
 
 %\textbf{Types of patterns}
 There are three types of patterns distinguished by different types of slot values in the patterns.
@@ -184,9 +184,9 @@ entity. The pattern context discovered is `passed away' with a value of `March 2
  
 \textbf{Type I.} This pattern type is driven by the entity type.
 For example, in pattern $\langle$\texttt{PER, FounderOf, \textit{founder}, right, ORG}$\rangle$ the \texttt{PER} 
-tag means the entity we are finding slot values for a PER entity;
+tag means the entity we are finding slot values for is a PER entity;
 \texttt{FounderOf} means this is a pattern for FounderOf slot.
-\textit{founder} is the anchor word we are match in a sentence;
+\textit{founder} is the word we match in a sentence - the content of pattern occuring in the sentence;
 \texttt{right} means that we are going to the right part of the sentence to match the pattern and find the slot value;
 ORG means the slot value should be a ORG entity to the right of the entity.
 
@@ -196,10 +196,10 @@ For example, pattern $\langle$\texttt{PER, AwardsWon, \textit{awarded}, right, N
 is looking for a noun phrase after the \textit{awarded} that may represent an award.
 Titles and awards are not named entity tagged hence the use of the part of speech tagger to fetch the noun phrases.
 
-\textbf{Type III.} These type of facts are best discovered by hard coding the slot values.
+\textbf{Type III.} These types of facts are best discovered by hard coding the slot values.
 Examples of these include time phrases: $\langle$\texttt{PER, DateOfDeath, \textit{died}, right, \textit{last night}}$\rangle$.
 In this pattern, the phrase \textit{last night} is exactly searched in the text {last night} to the right of the term \textit{died}.
-This intuition behind this pattern is in news articles that report events in the past relative to the article. 
+The intuition behind this pattern is in news articles that report events in the past relative to the article. 
 For example, an article will mention that  
 a person died `last night' instead of mentioning precise date-time information.
 Additionally, part of speech taggers and name entity extractors did not label these terms such as 
@@ -211,7 +211,7 @@ Additionally, part of speech taggers and name entity extractors did not label th
 Our data set contains some duplicate webpages, webpage texts with similar content, 
 and some of the entity tags are incomplete.
 This cause some duplicates or highly similar content in the extracted list. 
-We implement a filter to remove duplicates or the fact extractions match patterns that are general and highly susceptible to noisy.
+We implement a filter to remove duplicates or the fact extractions that match patterns that are general and highly susceptible to be noisy.
 The data contains duplicates and incorrect extractions.
 We define rules to read ordered sets of facts to sanitize the output.
 The input is processed in time order, in a tuple-at-a-time fashion to allow rules to discover noisy slots 

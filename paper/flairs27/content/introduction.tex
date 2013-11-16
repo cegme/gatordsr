@@ -18,14 +18,14 @@ Notable news may be derived from newspapers, tweets, blogs and a variety of
 different sources include Twitter, Facebook, iBlogs, arxiv, etc.\
 The actual citable information is a small percentage of the total documents that appear on the web.
 %We develop a system to read streaming data and filter out articles that are candidates for citations. 
-The goal of this system is to read web documents and recommend citable facts for WP pages.
+The goal of this system is to read web documents and recommend citable facts (attributes) for WP pages.
 
 
 Previous approaches are able to find relevant documents given a list of WP
 entities as query nodes \cite{mcnamee2012hltcoe, dalton2013bi,
 Bonnefoy:2013:WDE:2484028.2484180, Balog:2013:CCR:2484028.2484151,ji2011knowledge}.
 Entities of three categories \textit{person}, \textit{organization} and \textit{facility} are considered.
-This task involves processing large sets of information to determine which facts may contain references to a WP entity. 
+This work involves processing large sets of information to determine which facts may contain references to a WP entity. 
 This problem becomes increasingly more difficult when we look to extract relevant facts from
 each document.
 Each relevant document must now be parsed and processed to determine if a sentence or paragraph is worth being cited.
@@ -44,7 +44,7 @@ Here we produce an example sentence from a new website:
 First, we must realize that there are two \textit{Boris Berezovsky} entities in WP, one a businessman and the other a pianist.
 Any extraction needs to take this into account and employ a viable distinguishing policy (entity resolution).
 Then, we match the sentence to find a topic such as \textit{DateOfDeath} valued at \textit{March 2013}.
-Each of these operations is expensive so an intelligent efficient framework is necessary to execute these operations at web scale.
+Each of these operations is expensive so an intelligent and efficient framework is necessary to execute these operations at web scale.
 %Other examples that this system can answer could be `Who a person has met during a certain period of time?', `Who are the employees of this organization?', `Who has met who in this facility at a certain time?'.
 
 
@@ -52,7 +52,7 @@ In this paper we develop an efficient query-driven slot extraction for given WP 
 Fact or slot extraction is defined as follows: match each sentence to the generic sentence structure of [\textit{subject} - \textit{verb} - \textit{adverbial/complement}]~\cite{sentencePatterns08}, where  \textit{subject} represents the entity and \textit{verb} is the relation type (slot) we are interested in (e.g. Table~\ref{table:slotNameOntology}).
 The third component, \textit{adverbial/complement}, represents the value of the enity slot.
 In our example sentence, the entity of the sentence is \textit{Boris Berezovsky} and the slot we extract is
-\textit{DateOfDeath} with a slot valye of \text{March 2013}.
+\textit{DateOfDeath} with a slot value of \text{March 2013}.
 
 
 %Slot extraction is a challenging task in current state of the art Knowledge Bases (KB).
