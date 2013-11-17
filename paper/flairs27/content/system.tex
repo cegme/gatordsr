@@ -1,21 +1,26 @@
 
 \section{System}
 
-In this section, we introduce the main components of the system. Our system is built with a pipeline architecture in mind giving it the advantage to run each section separately to allow stream processing without blocking the data flow of components (Figure~\ref{fig:system}). The three logical components include sections on \textit{Model} for entity resolution purposes, \textit{Wiki Citation} to annotate cite-worthy documents, and \textit{Slot Filling} to generate the actual slot values.
+In this section, we introduce the main components of the system.
+Our system is built with a pipeline style architecture giving it the advantage to run each section separately to allow stream processing without blocking the data flow of components (Figure~\ref{fig:system}).
+The three logical components are divided into sections entitled \textit{Model} for entity resolution purposes,
+\textit{Wikipedia Citation} to annotate cite-worthy documents,
+and \textit{Slot Filling} to generate the actual slot values.
 
 
-If we are looking to discover facts for a single WP entity, the first step is to extract aliases of the entity.
+To discover facts for a single WP entity, the first step is to extract aliases of the entity.
 %We use several approaches to get as many viable aliases as possible.
-We extract several name variations from the Wikipedia API and from the WP entity page.
+We extract several name variations from the Wikipedia.org API and from the WP entity page.
 Also, if the entity type is \textit{person} we can change the order of user names to increase coverage (e.g. `Boris Berezovsky' $\rightarrow$ `Berezovsky, Boris').
-Next, we iterator over documents in the stream and filter out all documents that are not directly citable for the entity.
-To extract relevant facts we perform pattern matching in each sentence that matches the entity based on a dictionary
+Next, we iterate over documents in the stream and filter out all documents that do not explicitly contain a string matching 
+the list of entities.
+To extract relevant facts we perform pattern matching over each sentence that matches the entity based on a dictionary
 of patterns.
-If the sentence can activate one of the patterns in the dictionary we emit this sentence as a candidate contribution
-to the WP entity.
+If a sentence activates one of the patterns in the dictionary we emit this sentence as a candidate contribution
+for the WP entity.
 With the candidate set, we infer new facts from the set and clean up the set
 by removing the set of values that violate a list of constraints such as duplicates.
-Lastly, we try to infer a new set of facts based on a list of rules.
+%Lastly, we try to infer a new set of facts based on a list of rules.
 
 %As a match is found from the content of the sentence to the patterns that we have generated regarding slot name, the associated slot value is extracted as a final result.
 
@@ -37,22 +42,23 @@ Lastly, we try to infer a new set of facts based on a list of rules.
 
 
 \subsection{Entity Model}
+\label{sec:entitymodel}
 
-We use Wikipedia API to automatically retrieve aliases. 
+We use the Wikipedia.org API to retrieve aliases. 
 The API allows us to requests pages that redirect users to an entity page.
-For example, if a WP user tries to access the \textsl{William Henry Gates} they are sent to the page for 
-\textsl{Bill Gates} therefore we treat these two names as aliases. 
+For example, if a WP user tries to access the \textsl{William Henry Gates} entry they are sent to the page for 
+\textsl{Bill Gates} --- we treat  such redirects as aliases. 
 To extract more aliases we parse the HTML source of a WP entity page.
 Using regular expressions we extract the bold phrases of the initial paragraph as aliases.
-Based on our observation this is a very accurate method and it provides several entities of 
-WP with more inline aliases from the wiki page itself. As an example, for `Boris Berezovski' which was mentioned early-on, there is an alias of `Boris Abramovich Berezovsky' given in bold in the wiki page which will be obtained via this method.
+This method provides several inline aliases from the wiki page.
+In WP page for the businesman `Boris Berezovski' , there is a mention of `Boris Abramovich Berezovsky' given in bold in the wiki page which obtained by regular expression extraction.
 
 %\ceg{Do we know how many additional aliases this method provides?}.
 %\ceg{Do you want to give a more concrete example of how this might now work? It may be TMI.}
 %As an example of when this might not wirk, is that there might be occasions that some other topic is written in bold typesetting in the first paraph apart from the entity aliases itself but these are very rare.
 
-We pass the full set of \textit{person} entities through rules for generating proper name orders.
-This module produces various forms of writing entity names and titles.
+We pass the full set of \textit{person} entities through rules for generating alternate name orders.
+This module produces various forms of expressing entity names and titles.
 For example, \textsl{Bill Gates} can be written as \textsl{Gates, Bill}.
 This allows the system to capture various notation forms of aliases that appear in text documents.
 %We refer to this part as \textit{Alias Order Generator}.
@@ -61,17 +67,17 @@ This allows the system to capture various notation forms of aliases that appear 
 The goal of this section is to use the models created to discover a set of documents that are relevant to the WP entity.
 %We perform exact string matching and treat all the documents that mention an entity equally likely to be citable.
 As a stream of documents come in we first perform a string match between the model aliases and document text. 
-We use this technique as a first filter with confidence because previous work has stated non-mentioning
+We use this technique as a first filter with confidence because previous work states non-mentioning
 documents have a low chance of being citable in Wikipedia \cite{JFrank12}.
-Given our large number of aliases we can be confident if an alias does not appear in a document it does not need to be cited.
+Given our large number of aliases we can be confident that if an alias does not appear in a document it does not need to be cited.
 
-Our stream system receives documents in the from of chunk files.
+Our system streams in documents in the form of chunk files.
 Each chunk file contains thousands of documents.
 This corpus of documents is processed by a two-layer filter system referred to as \textit{Document Chunk Filter} and \textit{Document Filter}.
 The purpose of these filters is to reduce I/O cost while generating slot values for various entities.
 Document Chunk Filter removes the chunk files that do not contain a mention of any of the desired entities.
 Each chunk file may contain thousands of documents --- each document is expensive to process.
-The Document Filter removes documents that do not contain a mention of an  entity.
+The Document Filter removes documents that do not contain a mention of an entity.
 This two-level filter allows us to perform detailed slower processing over a smaller set of documents.
 Not all chunk files contain mention of the entities so filtering out large chunk files early saves on I/O and processing.
 Document Chunk Filter discards non-mentioning chunk files and promotes chunk files as soon as an entity mention is found.
@@ -93,6 +99,7 @@ This data is passed to the Slot Filling system.
 
 
 \subsection{Slot Filling}
+\label{sec:slotfilling}
 %\ceg{See the previous note.}
 Streaming Slot Filling (SSF) extracts fact values from sentences according to a list of patterns.
 Table~\ref{table:slotNameOntology} lists the slot relationships that we looks to extract.
@@ -142,7 +149,8 @@ Following, we discuss out approach to inference over the extracted facts.
 \subsubsection{Rule Engine}
 
 %\textbf{Format of Patterns.}
-A pattern is as a record representing knowledge going to be added to a WP entity.
+A pattern is a template of a fact to be extracted and added to a WP entity.
+Patterns are used to find and extract facts from text.
 A pattern $\mathcal{P}$ is represented as a five-tuple $\mathcal{P} = \langle p_1, p_2, p_3, p_4, p_5 \rangle$.
 
 
@@ -153,7 +161,7 @@ These entity types are in the set $\{\text{\tt FAC}, \text{\tt ORG}, \text{\tt P
 A list of slot names is present in Table~\ref{table:slotNameOntology}.
 The third element $p_3$ is the pattern content --- 
 a string found in the sentence that identifies a slot name.
-The extractor looks specifically for a pattern content.
+The extractor looks specifically for pattern content.
 The pattern evaluator uses a direction (\texttt{left} or \texttt{right}) found in $p_4$ to explore sentence.
 The final element $p_5$ represents the slot value of a pattern. 
 %When we match one pattern, we match all the 
@@ -166,7 +174,7 @@ a noun phrase (\texttt{NP}) tagged by a part of speech tagger\footnote{OpenNLP w
 Figure~\ref{fig:pattern} contains the example sentence from the introduction labeled by the rule engine. The matching pattern is $\langle$\texttt{PER, DateOfDeath, \textit{passed away}, right, NP}$\rangle$. In the figure, `Boris Berezovsky' matches as an alias for WP entity \textsl{wiki/Boris\_Berezovsky\_(businessman)}, DateOfDeath is the slot name, `passed away' is the content of the pattern, direction is `Right' and the actual value of the slot is `March 2013' which is a Noun Phrase.
 
 %\textbf{Types of patterns}
-There are three types of patterns distinguished by different types of slot values in the patterns.
+There are three types of patterns, each distinguished by different types of slot values ($p_5$) in the patterns.
 The matching methods using these three types of patterns are implemented according to the different structures of slot values.
 
 \begin{figure}
@@ -206,11 +214,12 @@ Additionally, part of speech taggers and name entity extractors did not label th
 \textit{last night} as a DATE entity. 
 
 
-\subsubsection{Constraints and Inference}%\ceg{what specifically about the algorithm causes duplicates and errors? --- I asked Yang to elaborate on this as he is more familiar but still not sure what's causing those issues} 
+\subsection{Constraints and Inference}%\ceg{what specifically about the algorithm causes duplicates and errors? --- I asked Yang to elaborate on this as he is more familiar but still not sure what's causing those issues} 
+\label{sec:constraintsandinference}
 
 Our data set contains some duplicate webpages, webpage texts with similar content, 
 and some of the entity tags are incomplete.
-This cause some duplicates or highly similar content in the extracted list. 
+This causes some duplicates or highly similar content in the extracted list. 
 We implement a filter to remove duplicates or the fact extractions that match patterns that are general and highly susceptible to be noisy.
 The data contains duplicates and incorrect extractions.
 We define rules to read ordered sets of facts to sanitize the output.
