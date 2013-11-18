@@ -3,6 +3,22 @@
 
 % TODO this can be updated at the end
 
-In this paper we address extracting slot values from internet pertinent to entities in wikipedia, which is the most popular web-based, colaborative multilingual encyclopieda on the internet. This is comparable to Freebase in a query-driven manner. Our contributions are two fold, first we design a system to efficiently find central documents on the internet that contain directly citable content regarding a given wikipedia entity; second, we design a system to extract certain slot-values of the entity from those documents. Our results demonstrate that the system is very efficient in the web scale nature of the problem: being highly memory and I/O efficient and that we can achieve high accuracy and recall for given slot values.
+%In this paper we address extracting slot values from internet pertinent to entities in wikipedia, which is the most popular web-based, colaborative multilingual encyclopieda on the internet. This is comparable to Freebase in a query-driven manner. Our contributions are two fold, first we design a system to efficiently find central documents on the internet that contain directly citable content regarding a given wikipedia entity; second, we design a system to extract certain slot-values of the entity from those documents. Our results demonstrate that the system is very efficient in the web scale nature of the problem: being highly memory and I/O efficient and that we can achieve high accuracy and recall for given slot values.
+
+
+
+Wikipedia.org is the largest online resource for free information and maintained by a small number of volunteer editors.
+Because of its large size, information on some pages can easily be neglected and can easily become out of date.
+To address the issues of stale articles we create a system that is able to read
+in a stream in a web of diverse documents from across the web and recommend
+facts to be added to specified Wikipedia pages.
+We developed a three-stage stream system to create models of entities,
+filter out irrelevant documents and 
+extract facts from documents mentioning entities.
+The systems over a 4.5 TB web document corpus data set over 16 months and 139 Wikipedia pages.
+Our results show a promising framework for fact extraction from arbitrary web pages for Wikipedia pages.
+
+
+
 
 \end{abstract}
