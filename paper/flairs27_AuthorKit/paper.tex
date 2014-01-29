@@ -7,9 +7,8 @@
 \usepackage{graphicx}
 \usepackage{algorithm}
 \usepackage[noend]{algorithmic} 
-\usepackage{cite }
+%\usepackage{cite }
 %\usepackage{natbib}
-
 \frenchspacing
 \setlength{\pdfpagewidth}{8.5in}
 \setlength{\pdfpageheight}{11in}
@@ -22,8 +21,8 @@
 % proceedings, working notes, and technical reports.
 %
 \title{Streaming Fact Extraction for Wikipedia Entities at Web-Scale}
-\author{Morteza Shahriari Nia, Christan Grant, \\
-\bf \large Yang Peng, Daisy Zhe Wang\\
+\author{Morteza Shahriari Nia$*$, Christan Grant$*$, \\
+\bf \large Yang Peng\footnote{All authors contributed equally.}, Daisy Zhe Wang\\
 Data Science Research Lab\\
 University of Florida\\\
 Gainesville, Florida 32611\\
@@ -59,7 +58,7 @@ An important part of keeping WP usable it to include new and current content.
 Presently, there is considerable time lag between the publication of an event and its citation in WP\@.
 The median time lag for a sample of about 60K web pages cited by
  WP articles in the \textit{living\_people} category is over a year
- and the distribution has a long and heavy tail~
+ and the distribution has a long and heavy tail
  \cite{frank2013building}.
 %Also, the majority of WP entities have updates on their associated article much less frequently than their mention frequency.
 Such stale entries are the norm in any large reference work because the number
@@ -69,7 +68,7 @@ Reducing latency keeps WP relevant and helpful to its users.
 Given an entity page, such as \textsl{wiki/Boris\_Berezovsky\_(businessman)}\footnote{http://en.wikipedia.org/wiki/Boris\_Berezovsky\_(businessman)},
 possible citations may come from a variety of sources.
 Notable news may be derived from newspapers, tweets, blogs and a variety of
-different sources include Twitter, Facebook, iBlogs, arxiv, etc.
+different sources include Twitter, Facebook, Blogs, arxiv, etc.
 However, the actual citable information is a small percentage of the total documents that appear on the web.
 %We develop a system to read streaming data and filter out articles that are candidates for citations. 
 %The goal of this system is to read web documents and recommend citable facts (attributes) for WP pages.
@@ -80,8 +79,7 @@ and select facts that can be recommended to particular WP pages.
 Previous approaches are able to find relevant documents given a list of WP
 entities as query nodes \cite{mcnamee2012hltcoe}
  \cite{dalton2013bi}\,
-\cite{
-Bonnefoy:2013:WDE:2484028.2484180, Balog:2013:CCR:2484028.2484151,ji2011knowledge}.
+\cite{Bonnefoy:2013:WDE:2484028.2484180, Balog:2013:CCR:2484028.2484151,ji2011knowledge}.
 Entities of three categories \textit{person}, \textit{organization} and \textit{facility} are considered.
 This work involves processing large sets of information to determine which facts may contain references to a WP entity. 
 This problem becomes increasingly more difficult when we look to extract relevant facts from
@@ -672,8 +670,10 @@ Christan Grant is funded by a National Science Foundation Graduate Research Fell
 
 
 
+\bibliographystyle{aaai}  
+
 \bibliography{citation}
-\bibliographystyle{aaai}
+
 
 
 
