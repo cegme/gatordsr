@@ -8,7 +8,7 @@
 \usepackage{algorithm}
 \usepackage[noend]{algorithmic} 
 \usepackage{cite }
-\usepackage{natbib}
+%\usepackage{natbib}
 
 \frenchspacing
 \setlength{\pdfpagewidth}{8.5in}
@@ -59,7 +59,8 @@ An important part of keeping WP usable it to include new and current content.
 Presently, there is considerable time lag between the publication of an event and its citation in WP\@.
 The median time lag for a sample of about 60K web pages cited by
  WP articles in the \textit{living\_people} category is over a year
- and the distribution has a long and heavy tail~\cite{JFrank12}.
+ and the distribution has a long and heavy tail~
+ \cite{frank2013building}.
 %Also, the majority of WP entities have updates on their associated article much less frequently than their mention frequency.
 Such stale entries are the norm in any large reference work because the number
 of humans maintaining the reference is far fewer than the number of entities.
@@ -77,7 +78,9 @@ and select facts that can be recommended to particular WP pages.
 
 
 Previous approaches are able to find relevant documents given a list of WP
-entities as query nodes \cite{mcnamee2012hltcoe, dalton2013bi,
+entities as query nodes \cite{mcnamee2012hltcoe}
+ \cite{dalton2013bi}\,
+\cite{
 Bonnefoy:2013:WDE:2484028.2484180, Balog:2013:CCR:2484028.2484151,ji2011knowledge}.
 Entities of three categories \textit{person}, \textit{organization} and \textit{facility} are considered.
 This work involves processing large sets of information to determine which facts may contain references to a WP entity. 
@@ -189,11 +192,11 @@ by removing the set of values that violate a list of constraints such as duplica
 %  \includegraphics[width=6in]{./images/sdl-eps-converted-to.pdf}
   \includegraphics[width=8.5cm]{./images/System_Diagram_with_model_Vertical-crop.pdf}
 % http://convert.neevia.com/pdfconvert/
-  \vspace*{-.1in} 
+  %\vspace*{-.1in} 
   \caption{System Architecture.
   Components are logical groups noted with dotted boxes.}
   \label{fig:system}
-  \vspace*{-.2in}
+  %\vspace*{-.2in}
 \end{figure}
 
 
@@ -225,7 +228,7 @@ The goal of this section is to use the models created to discover a set of docum
 %We perform exact string matching and treat all the documents that mention an entity equally likely to be citable.
 As a stream of documents come in we first perform a string match between the model aliases and document text. 
 We use this technique as a first filter with confidence because previous work states non-mentioning
-documents have a low chance of being citable in Wikipedia \cite{JFrank12}.
+documents have a low chance of being citable in Wikipedia \cite{frank2013building}.
 Given our large number of aliases we can be confident that if an alias does not appear in a document it does not need to be cited.
 
 Our system streams in documents in the form of chunk files.
@@ -344,10 +347,10 @@ The matching methods using these three types of patterns are implemented accordi
 %\includegraphics[width=6in]{./images/Pattern-eps-converted-to.pdf}
 \includegraphics[width = 11cm]{./images/Pattern-crop.pdf}
 % cropped pdf created using $ pdfcrop Pattern.pdf
-\vspace*{-.1in}
+%\vspace*{-.1in}
 \caption{Pattern matching for rule evaluation. The slot value is on the right side of the 
 entity. The pattern context discovered is `passed away' with a value of `March 2013'. This conforms to type II of our pattern categories.}\label{fig:pattern}
-\vspace*{-.2in}
+%\vspace*{-.2in}
 \end{figure}
  
 \textbf{Type I.} This pattern type is driven by the entity type.
@@ -669,7 +672,7 @@ Christan Grant is funded by a National Science Foundation Graduate Research Fell
 
 
 
-\bibliography{citation}{99}
+\bibliography{citation}
 \bibliographystyle{aaai}
 
 
