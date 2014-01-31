@@ -78,9 +78,9 @@ and select facts that can be recommended to particular WP pages.
 
 
 Previous approaches are able to find relevant documents given a list of WP
-entities as query nodes \cite{mcnamee2012hltcoe}
- \cite{dalton2013bi}\,
-\cite{Bonnefoy:2013:WDE:2484028.2484180, Balog:2013:CCR:2484028.2484151,ji2011knowledge}.
+entities as query nodes \cite{mcnamee2012hltcoe,dalton2013bi,Bonnefoy:2013:WDE:2484028.2484180,Balog:2013:CCR:2484028.2484151,ji2011knowledge} 
+%,\cite{balog2013cumulative}
+.
 Entities of three categories \textit{person}, \textit{organization} and \textit{facility} are considered.
 This work involves processing large sets of information to determine which facts may contain references to a WP entity. 
 This problem becomes increasingly more difficult when we look to extract relevant facts from
@@ -187,7 +187,8 @@ by removing the set of values that violate a list of constraints such as duplica
 
 \begin{figure}
   \centering
-  \includegraphics{./images/sr.pdf}
+  %\includegraphics{./images/sr.pdf}
+  \includegraphics{./images/s_cropped_preview.jpg} % created using adjust size in Mac Preview app.
   \caption{System Architecture.
   Components are logical groups noted with dotted boxes.}
   \label{fig:system}
@@ -336,7 +337,7 @@ The matching methods using these three types of patterns are implemented accordi
 
 \begin{figure}
 \centering
-\includegraphics{./images/pr.pdf}
+\includegraphics{./images/pattern-crop_2.jpg}
 \caption{Pattern matching for rule evaluation. The slot value is on the right side of the 
 entity. The pattern context discovered is `passed away' with a value of `March 2013'. This conforms to type II of our pattern categories.}\label{fig:pattern}
 \end{figure}
@@ -653,7 +654,8 @@ Our models are simple and provide a great baseline framework to develop and comp
 
 \section*{Acknowledgements}
 We would like to thank John Frank and NIST for providing the data set.
-Christan Grant is funded by a National Science Foundation Graduate Research Fellowship under Grant No. DGE-0802270.
+Christan Grant is funded by a National Science Foundation Graduate Research Fellowship under Grant No. DGE-0802270. This work has also been supported in part by DARPA under
+FA8750-12-2-0348-2 (DEFT/CUBISM).
 
 
 
